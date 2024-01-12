@@ -94,6 +94,8 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
+
+    RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Brake, NeutralModeValue.Brake);
   }
 
   /** This function is called periodically during autonomous. */

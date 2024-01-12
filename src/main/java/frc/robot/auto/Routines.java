@@ -1,16 +1,20 @@
 package frc.robot.auto;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class Routines {
 
-    /** 
-     * Returns a full auto created in the PathPlanner application.
-     * Uses Named Commands to trigger commands along the path.
-     * @return A full autonomous command.
-     */
-    public static Command exampleAuto(){
-        return new PathPlannerAuto("ExampleAuto");
+    private static PathPlannerPath getPath(String pathName){
+        return PathPlannerPath.fromPathFile(pathName);
     }
+
+    public static Command testAuto(){
+        return new PathPlannerAuto("Test");
+    }
+
+
 }

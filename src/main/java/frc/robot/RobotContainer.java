@@ -12,6 +12,7 @@ import frc.robot.auto.Autonomous;
 import frc.robot.auto.Autonomous.PPEvent;
 import frc.robot.auto.Routines;
 import frc.robot.commands.swerve.TeleopSwerve;
+import frc.robot.commands.swerve.TrackVisionTarget;
 import frc.robot.controlboard.Controlboard;
 import frc.robot.shuffleboard.ShuffleboardTabManager;
 import frc.robot.subsystems.swerve.Swerve;
@@ -40,6 +41,7 @@ public class RobotContainer {
      */
     private void configButtonBindings() {
         Controlboard.getZeroGyro().onTrue(new InstantCommand(() -> m_swerve.zeroGyro()));
+        Controlboard.getBTestButton().whileTrue(new TrackVisionTarget(m_swerve));
     }
 
     private void configDefaultCommands() { 
@@ -67,7 +69,7 @@ public class RobotContainer {
         );
 
         Autonomous.addRoutines(
-            Routines.exampleAuto().withName("Example Auto")
+            Routines.testAuto().withName("Test Auto")
         );
     }
 
@@ -77,7 +79,7 @@ public class RobotContainer {
      * @return The selected autonomous command.
      */
     public Command getAutonomousCommand() {
-        System.out.println("Selected auto routine: " + Autonomous.getSelected().getName());
+        System.out.println("[Auto] Selected auto routine: " + Autonomous.getSelected().getName());
         return Autonomous.getSelected();
     }
 

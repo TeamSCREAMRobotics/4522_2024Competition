@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -143,7 +144,7 @@ public class SwerveModule {
      */
     public void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
             if(isOpenLoop){
-                m_driveMotor.setControl(new VoltageOut((desiredState.speedMetersPerSecond / SwerveConstants.MAX_SPEED) * 12).withEnableFOC(true));
+                m_driveMotor.setControl(new DutyCycleOut(desiredState.speedMetersPerSecond/SwerveConstants.MAX_SPEED));//new VoltageOut((desiredState.speedMetersPerSecond / SwerveConstants.MAX_SPEED) * 12).withEnableFOC(true));
             } else {
                 double velocity = Conversions.mpsToFalconRPS(desiredState.speedMetersPerSecond, SwerveConstants.MODULE_TYPE.wheelCircumference, 1);
                 double feedforward = m_feedforward.calculate(desiredState.speedMetersPerSecond);
@@ -267,5 +268,9 @@ public class SwerveModule {
 
     public BaseStatusSignal[] getSignals() {
         return m_signals;
+    }
+
+    public double getAcceleration(){
+        return m_driveMotor.getAcceleration().getValue();
     }
 }

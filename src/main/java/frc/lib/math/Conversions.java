@@ -78,4 +78,8 @@ public class Conversions {
     double wheelRPM = ((velocity * 60) / circumference);
     return rpmToFalconRPS(wheelRPM, gearRatio);
   }
+
+  public static double rpsToMps(double velocity, double circumference, double gearRatio){
+    return (velocity / gearRatio) * circumference;
+  }
 }

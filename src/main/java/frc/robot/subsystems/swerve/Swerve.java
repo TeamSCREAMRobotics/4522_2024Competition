@@ -11,9 +11,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.LimelightHelpers;
 import frc.lib.config.DeviceConfig;
+import frc.lib.math.Conversions;
 import frc.lib.pid.ScreamPIDConstants;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -106,6 +109,17 @@ public class Swerve extends SubsystemBase {
     public ChassisSpeeds fieldRelativeSpeeds(Translation2d translation, double angularVel){
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(translation.getX(), translation.getY(), angularVel, getYaw());
         return ChassisSpeeds.discretize(speeds, Constants.LOOP_TIME_SEC);
+    }
+
+    public ChassisSpeeds visionTargetSpeeds(boolean ta, double tx, double ty, ScreamPIDConstants xConstants, ScreamPIDConstants yConstants){
+        double xOutput = 0;
+        double yOutput = 0;
+        if(ta){
+            xOutput = xConstants.toPIDController().calculate(tx, 0.0);
+            yOutput = yConstants.toPIDController().calculate(ty, -17.5);
+        }
+        double rotOutput = SwerveConstants.HEADING_CONSTANTS.toPIDController().calculate(getYaw().getDegrees(), 0.0);
+        return new ChassisSpeeds(-yOutput, xOutput, rotOutput);
     }
 
     /**

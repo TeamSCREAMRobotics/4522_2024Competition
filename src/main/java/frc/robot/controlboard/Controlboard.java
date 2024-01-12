@@ -61,4 +61,8 @@ public class Controlboard{
         driverController.start().onTrue(new InstantCommand(() -> fieldCentric =! fieldCentric));
         return () -> fieldCentric;
     }
+
+    public static Trigger getBTestButton(){
+        return driverController.b();
+    }
 }

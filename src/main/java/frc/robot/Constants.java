@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
@@ -54,7 +55,8 @@ public final class Constants{
         public static final boolean GYRO_INVERT = false; // TODO Always ensure gyro reads CCW+ CW-
 
         /* Swerve Kinematics */
-        public static final double MAX_SPEED = 5.7349; // m/s
+        public static final double MAX_SPEED = 5.0; // m/s theoretical = 5.7
+        public static final double MAX_ACCELERATION = 4.0; // m/s^2 theoretical
         public static final double MAX_ANGULAR_VELOCITY = 8.0; // rad/s
 
         /* Swerve Kinematics */
@@ -75,8 +77,8 @@ public final class Constants{
         public static final double CORRECTION_TIME_THRESHOLD = 0.2;
 
         /* PathPlanner Constants */
-        public static final ScreamPIDConstants PATH_TRANSLATION_CONSTANTS = new ScreamPIDConstants(25, 0.0, 0.0); // TODO ROBOT SPECIFIC
-        public static final ScreamPIDConstants PATH_ROTATION_CONSTANTS = new ScreamPIDConstants(45, 0.0, 0.0);
+        public static final ScreamPIDConstants PATH_TRANSLATION_CONSTANTS = new ScreamPIDConstants(100, 0.0, 0.0); // TODO ROBOT SPECIFIC
+        public static final ScreamPIDConstants PATH_ROTATION_CONSTANTS = new ScreamPIDConstants(20, 0.0, 0.0);
 
         public static final HolonomicPathFollowerConfig PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(
                 PATH_TRANSLATION_CONSTANTS.toPathPlannerPIDConstants(), 
@@ -85,6 +87,13 @@ public final class Constants{
                 new Translation2d(SwerveConstants.WHEEL_BASE/2, SwerveConstants.TRACK_WIDTH/2).getNorm(), 
                 new ReplanningConfig(),
                 LOOP_TIME_SEC
+        );
+
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(
+            MAX_ANGULAR_VELOCITY, 
+            CORRECTION_TIME_THRESHOLD, 
+            LOOP_TIME_SEC, 
+            LOOP_TIME_HZ
         );
 
         

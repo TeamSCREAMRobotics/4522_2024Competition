@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4389491636126137,
-      "y": 5.541275082550166
+      "x": 0.5049725484066367,
+      "y": 4.114515152107228
     },
     "rotation": 0
   },
@@ -14,31 +14,37 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ClosePiece3"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "CenterPiece5"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 3.0
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "BackToSpeakerBottom"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CenterPiece4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 5.0
           }
         }
       ]
