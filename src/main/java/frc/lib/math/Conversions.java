@@ -79,7 +79,13 @@ public class Conversions {
     return rpmToFalconRPS(wheelRPM, gearRatio);
   }
 
-  public static double rpsToMps(double velocity, double circumference, double gearRatio){
-    return (velocity / gearRatio) * circumference;
-  }
+  public static double mapRange(double value, double fromLow, double fromHigh, double toLow, double toHigh) {
+    if (fromHigh - fromLow == 0) {
+        throw new IllegalArgumentException("Input range has zero width");
+    }
+
+    double mappedValue = toLow + (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow);
+
+    return Math.max(Math.min(mappedValue, toHigh), toLow);
+}
 }

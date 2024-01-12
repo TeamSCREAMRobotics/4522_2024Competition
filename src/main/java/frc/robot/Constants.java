@@ -30,7 +30,9 @@ public final class Constants{
          *   • CANivore name or serial number 
          *   • "*" for any CANivore seen by the program
          */
-        public static final String CAN_BUS_NAME = "canivore"; // TODO ROBOT SPECIFIC
+        public static final String CAN_BUS_NAME = "canivore"; // TODO ROBOT SPECIFIC\
+
+        public static final String LIMELIGHT_FRONT = "limelight-front";
 
         /* Pigeon2 */
         public static final int PIGEON_ID = 0; // TODO ROBOT SPECIFIC
@@ -69,15 +71,18 @@ public final class Constants{
         );
 
         /* Selected Module Constants */
-        // TODO ROBOT SPECIFIC
         public static final COTSFalconSwerveConstants MODULE_TYPE = COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.L3); 
 
         /* Swerve Heading Correction */
         public static final ScreamPIDConstants HEADING_CONSTANTS = new ScreamPIDConstants(0.1, 0.0, 0.001);
         public static final double CORRECTION_TIME_THRESHOLD = 0.2;
 
+        /* Swerve Controllers */
+        public static final ScreamPIDConstants VISION_TRANSLATION_CONSTANTS = new ScreamPIDConstants(5, 0, 0);
+        public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(1, 0, 0);
+
         /* PathPlanner Constants */
-        public static final ScreamPIDConstants PATH_TRANSLATION_CONSTANTS = new ScreamPIDConstants(100, 0.0, 0.0); // TODO ROBOT SPECIFIC
+        public static final ScreamPIDConstants PATH_TRANSLATION_CONSTANTS = new ScreamPIDConstants(10, 0.0, 0.0); // TODO ROBOT SPECIFIC
         public static final ScreamPIDConstants PATH_ROTATION_CONSTANTS = new ScreamPIDConstants(20, 0.0, 0.0);
 
         public static final HolonomicPathFollowerConfig PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(
@@ -157,7 +162,7 @@ public final class Constants{
         }
 
 
-        public static class ModuleConstants{
+        public static final class ModuleConstants{
 
             public record SwerveModuleConstants(int driveMotorID, int steerMotorID, int encoderID, Rotation2d angleOffset){}
 
@@ -206,5 +211,47 @@ public final class Constants{
                 5, 
                 Rotation2d.fromRotations(-0.3271484375)); // TODO ROBOT SPECIFIC
         }
+    }
+
+    public static final class VisionConstants {
+        public static final int DETECTOR_PIPELINE = 0;
+
+        public static final double DETECTOR_TARGET_TY = -17.5;
+        public static final double DETECTOR_TARGET_TX = 0.0;
+    }
+
+    public static final class FieldConstants{
+        // Numbered from amp station wall
+        public static final Translation2d CENTER_PIECE_1 = new Translation2d(8.256, 7.456);
+        public static final Translation2d CENTER_PIECE_2 = new Translation2d(8.256, 5.788);
+        public static final Translation2d CENTER_PIECE_3 = new Translation2d(8.256, 4.112);
+        public static final Translation2d CENTER_PIECE_4 = new Translation2d(8.256, 2.436);
+        public static final Translation2d CENTER_PIECE_5 = new Translation2d(8.256, 0.759);
+
+        public static final Translation2d BLUE_PIECE_1 = new Translation2d(2.882, 7.001);
+        public static final Translation2d BLUE_PIECE_2 = new Translation2d(2.882, 5.553);
+        public static final Translation2d BLUE_PIECE_3 = new Translation2d(2.882, 4.106);
+
+        public static final Translation2d RED_PIECE_1 = new Translation2d(13.631, 7.001);
+        public static final Translation2d RED_PIECE_2 = new Translation2d(13.631, 5.553);
+        public static final Translation2d RED_PIECE_3 = new Translation2d(13.631, 4.106);
+
+        public static final Translation2d ROBOT_OFFSET = new Translation2d(Units.inchesToMeters(38.0), 0);
+
+        private static final Translation2d[] BLUE_CENTER_TRANSLATIONS = new Translation2d[]{
+            FieldConstants.CENTER_PIECE_1.minus(FieldConstants.ROBOT_OFFSET),
+            FieldConstants.CENTER_PIECE_2.minus(FieldConstants.ROBOT_OFFSET),
+            FieldConstants.CENTER_PIECE_3.minus(FieldConstants.ROBOT_OFFSET),
+            FieldConstants.CENTER_PIECE_4.minus(FieldConstants.ROBOT_OFFSET),
+            FieldConstants.CENTER_PIECE_5.minus(FieldConstants.ROBOT_OFFSET),
+        };
+
+        private static final Translation2d[] RED_CENTER_TRANSLATIONS = new Translation2d[]{
+            FieldConstants.CENTER_PIECE_1.plus(FieldConstants.ROBOT_OFFSET),
+            FieldConstants.CENTER_PIECE_2.plus(FieldConstants.ROBOT_OFFSET),
+            FieldConstants.CENTER_PIECE_3.plus(FieldConstants.ROBOT_OFFSET),
+            FieldConstants.CENTER_PIECE_4.plus(FieldConstants.ROBOT_OFFSET),
+            FieldConstants.CENTER_PIECE_5.plus(FieldConstants.ROBOT_OFFSET),
+        };
     }
 }

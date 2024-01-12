@@ -8,11 +8,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.auto.Autonomous;
 import frc.robot.auto.Autonomous.PPEvent;
 import frc.robot.auto.Routines;
 import frc.robot.commands.swerve.TeleopSwerve;
-import frc.robot.commands.swerve.TrackVisionTarget;
+import frc.robot.commands.swerve.TrackDetectorTarget;
 import frc.robot.controlboard.Controlboard;
 import frc.robot.shuffleboard.ShuffleboardTabManager;
 import frc.robot.subsystems.swerve.Swerve;
@@ -41,7 +42,7 @@ public class RobotContainer {
      */
     private void configButtonBindings() {
         Controlboard.getZeroGyro().onTrue(new InstantCommand(() -> m_swerve.zeroGyro()));
-        Controlboard.getBTestButton().whileTrue(new TrackVisionTarget(m_swerve));
+        Controlboard.getBTestButton().whileTrue(new TrackDetectorTarget(m_swerve, SwerveConstants.VISION_TRANSLATION_CONSTANTS, SwerveConstants.SNAP_CONSTANTS));
     }
 
     private void configDefaultCommands() { 
