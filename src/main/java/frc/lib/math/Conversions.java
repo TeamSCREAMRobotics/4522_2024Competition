@@ -84,8 +84,6 @@ public class Conversions {
         throw new IllegalArgumentException("Input range has zero width");
     }
 
-    double mappedValue = toLow + (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow);
-
-    return Math.max(Math.min(mappedValue, toHigh), toLow);
-}
+    return toLow + ((value - fromLow) * (toHigh - toLow)) / (fromHigh - fromLow);
+  }
 }

@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.lib.util.AllianceFlippable;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.controlboard.Controlboard;
 import frc.robot.subsystems.swerve.Swerve;
@@ -20,6 +21,8 @@ public class TeleopSwerve extends Command {
     private DoubleSupplier rotationSup;
     private BooleanSupplier fieldRelativeSup;
     private Rotation2d lastAngle;
+
+    private int allianceCoeff = (int) AllianceFlippable.Number(1, -1);
     private Timer correctionTimer = new Timer();
 
 
@@ -56,7 +59,7 @@ public class TeleopSwerve extends Command {
     @Override
     public void execute() {
         
-        Translation2d translationVal = new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble()).times(SwerveConstants.MAX_SPEED);
+        Translation2d translationVal = new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble()).times(SwerveConstants.MAX_SPEED).times(allianceCoeff);
         double rotationVal = getRotation(rotationSup.getAsDouble());
         boolean fieldRelativeVal = fieldRelativeSup.getAsBoolean();
 

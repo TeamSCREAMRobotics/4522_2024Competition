@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.lib.math.Conversions;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.FieldConstants;
 
 public final class AllianceFlippable {
 
@@ -30,7 +32,7 @@ public final class AllianceFlippable {
     }
 
     public static Translation2d Translation2d(Translation2d blueValue){
-        double temp = Conversions.mapRange(blueValue.getX(), 0.0, 8.23, 16.46, 8.23);
+        double temp = Conversions.mapRange(blueValue.getX(), 0.0, FieldConstants.FIELD_DIMENSIONS.getX()/2, FieldConstants.FIELD_DIMENSIONS.getX(), FieldConstants.FIELD_DIMENSIONS.getX()/2);
         return new Translation2d(temp, blueValue.getY());
     }
 
@@ -40,5 +42,10 @@ public final class AllianceFlippable {
 
     public static Pose2d Pose2d(Pose2d blueValue){
         return new Pose2d(Translation2d(blueValue.getTranslation()), Rotation2d(blueValue.getRotation()));
+    }
+
+    public static Translation3d Translation3d(Translation3d blueValue){
+        Translation2d temp = Translation2d(blueValue.toTranslation2d());
+        return new Translation3d(temp.getX(), temp.getY(), blueValue.getZ());
     }
 }

@@ -6,11 +6,14 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import frc.lib.pid.ScreamPIDConstants;
+import frc.lib.util.AllianceFlippable;
 import frc.lib.util.COTSFalconSwerveConstants;
 
 /**
@@ -221,6 +224,8 @@ public final class Constants{
     }
 
     public static final class FieldConstants{
+
+        public static final Translation2d FIELD_DIMENSIONS = new Translation2d(16.54175, 8.21055);
         // Numbered from amp station wall
         public static final Translation2d CENTER_PIECE_1 = new Translation2d(8.256, 7.456);
         public static final Translation2d CENTER_PIECE_2 = new Translation2d(8.256, 5.788);
@@ -239,19 +244,22 @@ public final class Constants{
         public static final Translation2d ROBOT_OFFSET = new Translation2d(Units.inchesToMeters(38.0), 0);
 
         private static final Translation2d[] BLUE_CENTER_TRANSLATIONS = new Translation2d[]{
-            FieldConstants.CENTER_PIECE_1.minus(FieldConstants.ROBOT_OFFSET),
-            FieldConstants.CENTER_PIECE_2.minus(FieldConstants.ROBOT_OFFSET),
-            FieldConstants.CENTER_PIECE_3.minus(FieldConstants.ROBOT_OFFSET),
-            FieldConstants.CENTER_PIECE_4.minus(FieldConstants.ROBOT_OFFSET),
-            FieldConstants.CENTER_PIECE_5.minus(FieldConstants.ROBOT_OFFSET),
+            CENTER_PIECE_1.minus(ROBOT_OFFSET),
+            CENTER_PIECE_2.minus(ROBOT_OFFSET),
+            CENTER_PIECE_3.minus(ROBOT_OFFSET),
+            CENTER_PIECE_4.minus(ROBOT_OFFSET),
+            CENTER_PIECE_5.minus(ROBOT_OFFSET),
         };
 
         private static final Translation2d[] RED_CENTER_TRANSLATIONS = new Translation2d[]{
-            FieldConstants.CENTER_PIECE_1.plus(FieldConstants.ROBOT_OFFSET),
-            FieldConstants.CENTER_PIECE_2.plus(FieldConstants.ROBOT_OFFSET),
-            FieldConstants.CENTER_PIECE_3.plus(FieldConstants.ROBOT_OFFSET),
-            FieldConstants.CENTER_PIECE_4.plus(FieldConstants.ROBOT_OFFSET),
-            FieldConstants.CENTER_PIECE_5.plus(FieldConstants.ROBOT_OFFSET),
+            CENTER_PIECE_1.plus(ROBOT_OFFSET),
+            CENTER_PIECE_2.plus(ROBOT_OFFSET),
+            CENTER_PIECE_3.plus(ROBOT_OFFSET),
+            CENTER_PIECE_4.plus(ROBOT_OFFSET),
+            CENTER_PIECE_5.plus(ROBOT_OFFSET),
         };
+
+        private static final Translation3d BLUE_SPEAKER_OPENING = new Translation3d(0.0, 5.54, 2.106);
+        private static final Translation3d RED_SPEAKER_OPENING = AllianceFlippable.Translation3d(BLUE_SPEAKER_OPENING);
     }
 }
