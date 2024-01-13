@@ -18,6 +18,7 @@ public class Controlboard{
     public static final double STICK_DEADBAND = 0.05;
 
     private static final CommandXboxController driverController = new CommandXboxController(0);
+    private static final CommandXboxController operatorController = new CommandXboxController(1);
 
     private static boolean fieldCentric = true;
 
@@ -64,5 +65,41 @@ public class Controlboard{
 
     public static Trigger getBTestButton(){
         return driverController.b();
+    }
+
+    /* Shooter */
+    public static final Trigger getManualFire(){
+        return operatorController.rightTrigger(0.10);
+    }
+
+    public static Trigger getPrepShot(){
+        return operatorController.rightBumper();
+    }
+
+    public static Trigger getEject(){ //TODO should eject run an ejection through the shooter flywheel or the intake? Either?
+        return operatorController.leftTrigger(0.10);
+    }
+
+    /* Pivot */
+    public static Trigger getManualPivot_Boolean(){
+        return operatorController.back();
+    }
+    public static DoubleSupplier getManualPivot_Output(){
+        return () -> operatorController.getRightY();
+    }
+    //TODO Create setpoint buttons
+
+    /* Elevator */
+    public static Trigger getManualElevator_Boolean(){
+        return operatorController.start();
+    }
+    public static DoubleSupplier getManualElevator_Output(){
+        return () -> operatorController.getLeftY();
+    }
+    //TODO Create setpoint buttons
+
+    /* Conveyor */
+    public static final Trigger getAutoFire(){
+        return operatorController.a();
     }
 }

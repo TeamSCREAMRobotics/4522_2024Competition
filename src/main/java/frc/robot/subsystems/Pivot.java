@@ -1,0 +1,81 @@
+package frc.robot.subsystems;
+
+import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.config.DeviceConfig;
+import frc.robot.Constants;
+import frc.robot.Constants.PivotConstants;
+import frc.robot.Constants.Ports;
+
+public class Pivot extends SubsystemBase{
+    
+    private TalonFX m_pivotMotor;
+
+    private Rotation2d m_targetAngle = Rotation2d.fromDegrees(0);
+
+    public Pivot(){
+        m_pivotMotor = new TalonFX(Ports.PIVOTMOTOR_ID);
+        
+        configPivotMotor();
+    }
+
+    private void configPivotMotor() {
+        DeviceConfig.configureTalonFX("pivotMotor", m_pivotMotor, null, Constants.LOOP_TIME_HZ); //TODO create pivot config
+    }
+    
+    public void setNeutralModes(NeutralModeValue pivotMode){
+        m_pivotMotor.setNeutralMode(pivotMode);
+    }
+
+    public void zeroPivot(){
+        m_pivotMotor.setPosition(0.0);
+    }
+
+    public void pivotToTargetAngle(Rotation2d angle){
+        m_targetAngle = angle;
+
+        if(!isPivotAtTarget()) {
+            setPivot(new MotionMagicVoltage(m_targetAngle.getRotations()));
+        } else {
+            stopPivot();
+        }
+    }
+    
+    public void setPivot(ControlRequest control){
+        m_pivotMotor.setControl(control);
+    }
+
+    public void setPivot_Manual(double output){
+        m_pivotMotor.set(output);
+    }
+
+    public void stopPivot(){
+        m_pivotMotor.stopMotor();
+    }
+
+    public Rotation2d getPivotAngle(){
+        return Rotation2d.fromRotations(m_pivotMotor.getPosition().refresh().getValue());
+    }
+
+    public Rotation2d getPivotError(){
+        return m_targetAngle.minus(getPivotAngle());
+    }
+
+    public boolean isPivotAtTarget(){
+        return Math.abs(getPivotError().getDegrees()) < PivotConstants.TARGET_THRESHOLD;
+    }
+
+    public double getPivotAngle(double distance){
+        return PivotConstants.pivotTreeMap.get(distance);
+    }
+
+    @Override
+    public void periodic() {
+
+    }
+}

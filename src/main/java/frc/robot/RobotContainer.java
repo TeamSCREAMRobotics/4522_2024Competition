@@ -2,26 +2,43 @@ package frc.robot;
 
 import java.util.Optional;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.PivotConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.auto.Autonomous;
 import frc.robot.auto.Autonomous.PPEvent;
 import frc.robot.auto.Routines;
+import frc.robot.commands.ElevatorManualCommand;
+import frc.robot.commands.ElevatorTargetCommand;
+import frc.robot.commands.PivotManualCommand;
+import frc.robot.commands.PivotTargetCommand;
 import frc.robot.commands.swerve.TeleopSwerve;
 import frc.robot.commands.swerve.TrackDetectorTarget;
 import frc.robot.controlboard.Controlboard;
 import frc.robot.shuffleboard.ShuffleboardTabManager;
+import frc.robot.subsystems.Conveyor;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class RobotContainer {
 
     /* Subsystems */
     private static final Swerve m_swerve = new Swerve();
+    private static final Shooter m_Shooter = new Shooter();
+    private static final Pivot m_pivot = new Pivot();
+    private static final Elevator m_elevator = new Elevator();
+    private static final Conveyor m_conveyor = new Conveyor();
+
 
     private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager();
 
@@ -43,6 +60,21 @@ public class RobotContainer {
     private void configButtonBindings() {
         Controlboard.getZeroGyro().onTrue(new InstantCommand(() -> m_swerve.zeroGyro()));
         Controlboard.getBTestButton().whileTrue(new TrackDetectorTarget(m_swerve, SwerveConstants.VISION_TRANSLATION_CONSTANTS, SwerveConstants.SNAP_CONSTANTS));
+
+        /* Conveyor */
+        Controlboard.getAutoFire().toggleOnTrue(new InstantCommand(() -> m_conveyor.setConveyorSpeed(0.75))); //TODO Should be toggle or timer based or etc? Should it have an output based on a joystick or triger?
+
+        /* Elevator */
+        Controlboard.getManualElevator_Boolean().toggleOnTrue(new ElevatorManualCommand(m_elevator, Controlboard.getManualElevator_Output()));
+
+        /* Pivot */
+        Controlboard.getManualPivot_Boolean().toggleOnTrue(new PivotManualCommand(m_pivot, Controlboard.getManualPivot_Output()));
+
+        /* Shooter */
+        Controlboard.getManualFire().whileTrue(new InstantCommand(() -> m_Shooter.setShooterOutput(0.75))); //TODO Should be toggle or timer based or etc? Should it have an output based on a joystick or triger?
+
+        /* Auto Shot */
+        Controlboard.getPrepShot().toggleOnTrue(new ParallelCommandGroup(new PivotTargetCommand(m_pivot, Rotation2d.fromDegrees(PivotConstants.pivotTreeMap.get(null))), new ElevatorTargetCommand(m_elevator, ElevatorConstants.elevatorTreeMap.get(null)))); //TODO needs to input the distance from the speaker as the key
     }
 
     private void configDefaultCommands() { 

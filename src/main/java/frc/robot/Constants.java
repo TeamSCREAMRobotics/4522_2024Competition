@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import frc.lib.pid.ScreamPIDConstants;
@@ -39,6 +40,20 @@ public final class Constants{
 
         /* Pigeon2 */
         public static final int PIGEON_ID = 0; // TODO ROBOT SPECIFIC
+        
+        /* Shooter */
+        public static final int RIGHT_SHOOTERMOTOR_ID = 0; //TODO
+        public static final int LEFT_SHOOTERMOTOR_ID = 0; //TODO
+
+        /* Pivot */
+        public static final int PIVOTMOTOR_ID = 0; //TODO
+
+        /* Elevator */
+        public static final int LEFT_ELEVATORMOTOR_ID = 0; //TODO
+        public static final int RIGHT_ELEVATORMOTOR_ID = 0; //TODO
+
+        /* Conveyor */
+        public static final int CONVEYORMOTOR_ID = 0; //TODO
     }
 
     
@@ -213,6 +228,65 @@ public final class Constants{
                 18, 
                 5, 
                 Rotation2d.fromRotations(-0.3271484375)); // TODO ROBOT SPECIFIC
+        }
+    }
+
+    public static final class ShooterConstants { //TODO all values
+
+        public static final double CRUISE_VELOCITY = 40;
+        public static final double ACCELERATION = 10;
+
+        public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(60, 0.0, 0.0);
+
+        public static final InterpolatingDoubleTreeMap shooterTreeMap = new InterpolatingDoubleTreeMap();
+        static{
+            //shooterTreeMap.put(distance, speed)
+            shooterTreeMap.put(null, null);
+        }
+    }
+    
+    public static final class PivotConstants { //TODO all values
+
+        public static final double GEAR_RATIO = 0;
+        
+        public static final Rotation2d FORWARD_SOFT_LIMIT = Rotation2d.fromDegrees(180.0);
+        public static final Rotation2d REVERSE_SOFT_LIMIT = Rotation2d.fromDegrees(0.0);
+
+        public static final double TARGET_THRESHOLD = 1.00; //Degrees
+
+        public static final double CRUISE_VELOCITY = 40;
+        public static final double ACCELERATION = 10;
+
+        public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(60, 0.0, 0.0);
+
+        public static final InterpolatingDoubleTreeMap pivotTreeMap = new InterpolatingDoubleTreeMap();
+        static{
+            //pivotTreeMap.put(distance, angle)
+            pivotTreeMap.put(null, null);
+        }
+    }
+
+    public static final class ElevatorConstants { //TODO all values
+
+        public static final double GEAR_RATIO = 0;
+        
+        public static final Rotation2d FORWARD_SOFT_LIMIT = Rotation2d.fromDegrees(180.0);
+        public static final Rotation2d REVERSE_SOFT_LIMIT = Rotation2d.fromDegrees(0.0);
+
+        public static final double TARGET_THRESHOLD = 0.50;
+
+        public static final double CRUISE_VELOCITY = 40;
+        public static final double ACCELERATION = 10;
+
+        public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(15, 0.0, 0.0);
+
+        public static final InterpolatingDoubleTreeMap elevatorTreeMap = new InterpolatingDoubleTreeMap();
+        static{
+            //elevatorTreeMap.put(distance, height)
+            elevatorTreeMap.put(null, null);
         }
     }
 
