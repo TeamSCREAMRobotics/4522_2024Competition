@@ -2,6 +2,9 @@ package frc.lib.util;
 
 import frc.lib.pid.ScreamPIDConstants;
 
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -87,4 +90,8 @@ public class ScreamUtil {
 		controller.setIntegratorRange(-pidConstants.integralZone(), pidConstants.integralZone());
 		return controller;
 	}
+
+    public static PPHolonomicDriveController createHolonomicDriveController(HolonomicPathFollowerConfig config){
+        return new PPHolonomicDriveController(config.translationConstants, config.rotationConstants, config.period, config.maxModuleSpeed, config.driveBaseRadius);
+    }
 }

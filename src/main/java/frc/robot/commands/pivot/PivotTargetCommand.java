@@ -2,23 +2,22 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.pivot;
 
-import java.util.function.DoubleSupplier;
-
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Pivot;
 
-public class PivotManualCommand extends Command {
+public class PivotTargetCommand extends Command {
   
   Pivot pivot;
-  DoubleSupplier output;
+  Rotation2d target;
 
-  public PivotManualCommand(Pivot pivot, DoubleSupplier output) {
+  public PivotTargetCommand(Pivot pivot, Rotation2d target) {
     addRequirements(pivot);
 
     this.pivot = pivot;
-    this.output = output;
+    this.target = target;
   }
 
   // Called when the command is initially scheduled.
@@ -28,7 +27,7 @@ public class PivotManualCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pivot.setPivot_Manual(output.getAsDouble());
+    pivot.pivotToTargetAngle(target);
   }
 
   // Called once the command ends or is interrupted.

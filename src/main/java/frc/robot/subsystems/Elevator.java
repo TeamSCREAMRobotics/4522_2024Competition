@@ -20,8 +20,8 @@ public class Elevator extends SubsystemBase{
     private double m_targetHeight;
 
     public Elevator(){
-        m_rightElevatorMotor = new TalonFX(Ports.RIGHT_ELEVATORMOTOR_ID, Ports.CAN_BUS_NAME);
-        m_leftElevatorMotor = new TalonFX(Ports.LEFT_ELEVATORMOTOR_ID, Ports.CAN_BUS_NAME);
+        m_rightElevatorMotor = new TalonFX(Ports.RIGHT_ELEVATOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        m_leftElevatorMotor = new TalonFX(Ports.LEFT_ELEVATOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
 
         configShooterMotors();
 
@@ -29,13 +29,13 @@ public class Elevator extends SubsystemBase{
     }
     
     private void configShooterMotors() {
-        DeviceConfig.configureTalonFX("rightElevatorMotor", m_rightElevatorMotor, null, Constants.LOOP_TIME_HZ); //TODO create elevator config
-        DeviceConfig.configureTalonFX("leftElevatorMotor", m_leftElevatorMotor, null, Constants.LOOP_TIME_HZ); //TODO create elevator config
+        DeviceConfig.configureTalonFX("Right Elevator Motor", m_rightElevatorMotor, null, Constants.LOOP_TIME_HZ); //TODO create elevator config
+        DeviceConfig.configureTalonFX("Left Elevator Motor", m_leftElevatorMotor, null, Constants.LOOP_TIME_HZ); //TODO create elevator config
     }
 
-    public void setNeutralModes(NeutralModeValue elevatorMode){
-        m_rightElevatorMotor.setNeutralMode(elevatorMode);
-        m_leftElevatorMotor.setNeutralMode(elevatorMode);
+    public void setNeutralModes(NeutralModeValue mode){
+        m_rightElevatorMotor.setNeutralMode(mode);
+        m_leftElevatorMotor.setNeutralMode(mode);
     }
 
     public void zeroHeight(){
@@ -45,7 +45,7 @@ public class Elevator extends SubsystemBase{
     public void toTargetHeight(double height){
         m_targetHeight = height;
 
-        if(!isPivotAtTarget()) {
+        if(!elevatorAtTarget()) {
             setElevator(new MotionMagicVoltage(m_targetHeight));
         } else {
             stopElevator();
@@ -56,10 +56,6 @@ public class Elevator extends SubsystemBase{
         m_rightElevatorMotor.setControl(control);
     }
 
-    public void setElevator_Manual(double output){
-        m_rightElevatorMotor.set(output);
-    }
-
     public void stopElevator(){
         m_rightElevatorMotor.stopMotor();
     }
@@ -68,12 +64,12 @@ public class Elevator extends SubsystemBase{
         return m_rightElevatorMotor.getPosition().refresh().getValue();
     }
 
-    public double getPivotError(){
+    public double getElevatorError(){
         return m_targetHeight - getElevatorHeight();
     }
 
-    public boolean isPivotAtTarget(){
-        return Math.abs(getPivotError()) < ElevatorConstants.TARGET_THRESHOLD;
+    public boolean elevatorAtTarget(){
+        return Math.abs(getElevatorError()) < ElevatorConstants.TARGET_THRESHOLD;
     }
     
     public double getElevatorHeight(double distance){

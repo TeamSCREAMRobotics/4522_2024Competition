@@ -15,6 +15,10 @@ public final class AllianceFlippable {
 
     private static boolean flip = RobotContainer.getAlliance() == Alliance.Blue;
 
+    public static Rotation2d ForwardRotation(){
+        return flip ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180);
+    }
+
     public static double Number(double blueValue, double redValue){
         return flip ? blueValue : redValue;
     }
@@ -41,7 +45,7 @@ public final class AllianceFlippable {
     }
 
     public static Pose2d Pose2d(Pose2d blueValue){
-        return new Pose2d(Translation2d(blueValue.getTranslation()), Rotation2d(blueValue.getRotation()));
+        return new Pose2d(Translation2d(blueValue.getTranslation()), ForwardRotation());
     }
 
     public static Translation3d Translation3d(Translation3d blueValue){

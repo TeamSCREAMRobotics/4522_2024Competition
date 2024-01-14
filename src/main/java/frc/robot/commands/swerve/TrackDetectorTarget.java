@@ -6,6 +6,7 @@ package frc.robot.commands.swerve;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.pid.ScreamPIDConstants;
@@ -14,6 +15,7 @@ import frc.lib.util.LimelightHelpers;
 import frc.lib.util.LimelightHelpers.LimelightResults;
 import frc.lib.util.LimelightHelpers.LimelightTarget_Detector;
 import frc.robot.Constants.Ports;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -24,22 +26,20 @@ public class TrackDetectorTarget extends Command {
   PIDController yController;
   PIDController rotController;
 
-  double xDirection = AllianceFlippable.Number(1, -1);
-  double yDirection = AllianceFlippable.Number(-1, 1);
-  Rotation2d rotTarget = AllianceFlippable.Rotation2d(Rotation2d.fromDegrees(0.0));
+  Rotation2d rotTarget;//AllianceFlippable.Rotation2d(Rotation2d.fromDegrees(0.0));
 
-  LimelightResults results = LimelightHelpers.getLatestResults(Ports.LIMELIGHT_FRONT);
-  LimelightTarget_Detector[] detector = results.targetingResults.targets_Detector;
-  LimelightTarget_Detector target = detector[Math.round((detector.length - 1)/2)];
+  double xError;
+  double yError;
   
-  public TrackDetectorTarget(Swerve swerve, ScreamPIDConstants translationConstants, ScreamPIDConstants rotationConstants) {
+  public TrackDetectorTarget(Swerve swerve, ScreamPIDConstants translationXConstants, ScreamPIDConstants translationYConstants, ScreamPIDConstants rotationConstants) {
+    addRequirements(swerve);
     this.swerve = swerve;
-    xController = translationConstants.toPIDController();
-    yController = translationConstants.clone().toPIDController();
+    xController = translationXConstants.toPIDController();
+    yController = translationYConstants.toPIDController();
     rotController = rotationConstants.toPIDController();
 
     xController.setTolerance(0.1);
-    yController.setTolerance(0.25);
+    yController.setTolerance(0.5);
     rotController.setTolerance(0.5);
   }
 
@@ -52,11 +52,11 @@ public class TrackDetectorTarget extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double xValue = LimelightHelpers.getTV(Ports.LIMELIGHT_FRONT) ? -yController.calculate(LimelightHelpers.getTY(Ports.LIMELIGHT_FRONT), VisionConstants.DETECTOR_TARGET_TY) : 0;
+    double yValue = LimelightHelpers.getTV(Ports.LIMELIGHT_FRONT) ? xController.calculate(LimelightHelpers.getTX(Ports.LIMELIGHT_FRONT), VisionConstants.DETECTOR_TARGET_TX) : 0;
+    //double rotValue = rotController.calculate(swerve.getYaw().getDegrees(), rotTarget.getDegrees());
     swerve.setChassisSpeeds(
-      new ChassisSpeeds(
-        yController.calculate(target.ty, VisionConstants.DETECTOR_TARGET_TY) * yDirection, 
-        xController.calculate(target.tx, VisionConstants.DETECTOR_TARGET_TX * xDirection), 
-        rotController.calculate(swerve.getYaw().getDegrees(), rotTarget.getDegrees()))
+      swerve.robotRelativeSpeeds(new Translation2d(xValue, yValue), 0)
     );
   }
 
@@ -67,6 +67,6 @@ public class TrackDetectorTarget extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return xController.atSetpoint() && yController.atSetpoint() && rotController.atSetpoint();
+    return xController.atSetpoint();// && yController.atSetpoint();// && rotController.atSetpoint();
   }
 }

@@ -16,8 +16,8 @@ public class Shooter extends SubsystemBase{
     private TalonFX m_leftShooterMotor;
 
     public Shooter(){
-        m_rightShooterMotor = new TalonFX(Ports.RIGHT_SHOOTERMOTOR_ID, Ports.CAN_BUS_NAME);
-        m_leftShooterMotor = new TalonFX(Ports.LEFT_SHOOTERMOTOR_ID, Ports.CAN_BUS_NAME);
+        m_rightShooterMotor = new TalonFX(Ports.RIGHT_SHOOTER_MOTOR_ID, Ports.CANIVORE_NAME);
+        m_leftShooterMotor = new TalonFX(Ports.LEFT_SHOOTER_MOTOR_ID, Ports.CANIVORE_NAME);
 
         configShooterMotors();
 

@@ -2,22 +2,22 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.intake;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import com.ctre.phoenix6.controls.DutyCycleOut;
+
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Intake;
 
-public class PivotTargetCommand extends Command {
-  
-  Pivot pivot;
-  Rotation2d target;
+public class IntakeCommand extends Command {
 
-  public PivotTargetCommand(Pivot pivot, Rotation2d target) {
-    addRequirements(pivot);
+  Intake intake;
+  double speed;
 
-    this.pivot = pivot;
-    this.target = target;
+  public IntakeCommand(Intake intake, double speed) {
+    addRequirements(intake);
+    this.intake = intake;
+    this.speed = speed;
   }
 
   // Called when the command is initially scheduled.
@@ -27,7 +27,7 @@ public class PivotTargetCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pivot.pivotToTargetAngle(target);
+    intake.setIntake(new DutyCycleOut(speed));
   }
 
   // Called once the command ends or is interrupted.

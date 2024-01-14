@@ -1,10 +1,13 @@
 package frc.robot.subsystems.swerve;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.RotationTarget;
 
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -19,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.config.DeviceConfig;
 import frc.lib.math.Conversions;
 import frc.lib.pid.ScreamPIDConstants;
+import frc.lib.util.AllianceFlippable;
 import frc.lib.util.LimelightHelpers;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -35,6 +39,7 @@ import frc.robot.Constants.SwerveConstants.ModuleConstants.ModuleLocation;
 public class Swerve extends SubsystemBase {
     private Pigeon2 m_pigeon2;
     private SwerveModule[] m_swerveModules;
+    private SwerveModulePosition[] m_modulePositions;
     private SwerveDriveOdometry m_odometry;
     private OdometryThread m_odometryThread;
     private ChassisSpeeds m_currentSpeeds = new ChassisSpeeds();
@@ -45,7 +50,7 @@ public class Swerve extends SubsystemBase {
      * Initializes the gyro, swerve modules, odometry, and auto builder.
      */
     public Swerve() {
-        m_pigeon2 = new Pigeon2(Ports.PIGEON_ID, Ports.CAN_BUS_NAME);
+        m_pigeon2 = new Pigeon2(Ports.PIGEON_ID, Ports.CANIVORE_NAME);
         configGyro();
         
         /**
@@ -59,13 +64,15 @@ public class Swerve extends SubsystemBase {
                 new SwerveModule(ModuleLocation.BACK_LEFT, ModuleConstants.MODULE_2),
                 new SwerveModule(ModuleLocation.BACK_RIGHT, ModuleConstants.MODULE_3)
         };
+
+        m_modulePositions = new SwerveModulePosition[4];
         
         /**
          * Configures the odometry, which requires the kinematics, gyro reading, and module positions.
          * It uses these values to estimate the robot's position on the field.
          */
-        m_odometry = new SwerveDriveOdometry(SwerveConstants.KINEMATICS, getYaw(), getModulePositions(), new Pose2d());
-        m_odometryThread = new OdometryThread(m_odometry, m_swerveModules, m_pigeon2, m_swerveModules.length);
+        m_odometry = new SwerveDriveOdometry(SwerveConstants.KINEMATICS, getYaw(), getModulePositions(), new Pose2d(new Translation2d(), AllianceFlippable.ForwardRotation()));
+        m_odometryThread = new OdometryThread();
         m_odometryThread.start();
 
         /**
@@ -78,7 +85,7 @@ public class Swerve extends SubsystemBase {
             this::getRobotRelativeSpeeds,
             this::setChassisSpeeds,
             SwerveConstants.PATH_FOLLOWER_CONFIG,
-            () -> RobotContainer.getAlliance() == Alliance.Blue ? false : true,
+            () -> false,
             this
         );
     }
@@ -86,8 +93,8 @@ public class Swerve extends SubsystemBase {
     /**
      * Resets the yaw of the gyro to zero.
      */
-    public void zeroGyro() {
-        m_pigeon2.setYaw(0);
+    public void resetGyro(Rotation2d rotation) {
+        m_pigeon2.setYaw(rotation.getDegrees());
     }
 
     /**
@@ -109,7 +116,7 @@ public class Swerve extends SubsystemBase {
      * @return The calculated ChassisSpeeds.
      */
     public ChassisSpeeds fieldRelativeSpeeds(Translation2d translation, double angularVel){
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(translation.getX(), translation.getY(), angularVel, getYaw());
+        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(translation.getX(), translation.getY(), angularVel, getRotation());
         return ChassisSpeeds.discretize(speeds, Constants.LOOP_TIME_SEC);
     }
 
@@ -171,7 +178,7 @@ public class Swerve extends SubsystemBase {
      * @param pose The new pose to set.
      */
     public void resetPose(Pose2d pose) {
-        m_odometry.resetPosition(getYaw(), getModulePositions(), pose);
+        m_odometry.resetPosition(getRotation(), getModulePositions(), pose);
     }
 
     /**
@@ -225,18 +232,21 @@ public class Swerve extends SubsystemBase {
      * @return The current robot-centric ChassisSpeeds.
      */
     public ChassisSpeeds getRobotRelativeSpeeds(){
-        return ChassisSpeeds.fromFieldRelativeSpeeds(m_currentSpeeds, getYaw());
+        return SwerveConstants.KINEMATICS.toChassisSpeeds(getModuleStates());
     }
 
     /**
-     * Returns the yaw rotation in degrees.
-     * If {@code}invertGyro{@code} is set to true, the yaw rotation is inverted.
+     * Returns the odometry rotation in degrees.
      *
-     * @return The yaw rotation as a Rotation2d.
+     * @return The odometry rotation as a Rotation2d.
      */
-    public Rotation2d getYaw() {
+    public Rotation2d getRotation() {
+        return m_odometry.getPoseMeters().getRotation();
+    }
+
+    public Rotation2d getYaw(){
         return (SwerveConstants.GYRO_INVERT) ? m_pigeon2.getRotation2d().minus(Rotation2d.fromDegrees(360))
-                : m_pigeon2.getRotation2d();
+                :  m_pigeon2.getRotation2d();
     }
 
     /**
@@ -255,6 +265,7 @@ public class Swerve extends SubsystemBase {
      */
     public void configGyro() {
         DeviceConfig.configurePigeon2("Swerve Pigeon", m_pigeon2, DeviceConfig.swervePigeonConfig(), Constants.LOOP_TIME_HZ);
+        resetGyro(AllianceFlippable.ForwardRotation());
     }
 
    /**
@@ -273,4 +284,79 @@ public class Swerve extends SubsystemBase {
      */
     @Override
     public void periodic() {}
+
+    private class OdometryThread extends Thread {
+        private BaseStatusSignal[] m_allSignals;
+        public int SuccessfulDaqs = 0;
+        public int FailedDaqs = 0;
+        public int ModuleCount = m_swerveModules.length;
+
+        private LinearFilter lowpass = LinearFilter.movingAverage(50);
+        private double lastTime = 0;
+        private double currentTime = 0;
+        private double averageLoopTime = 0;
+
+        public OdometryThread() {
+            super();
+            // 4 signals for each module + 2 for Pigeon2
+            m_allSignals = new BaseStatusSignal[(ModuleCount * 4) + 2];
+            for (int i = 0; i < ModuleCount; ++i) {
+                var signals = m_swerveModules[i].getSignals();
+                m_allSignals[(i * 4) + 0] = signals[0];
+                m_allSignals[(i * 4) + 1] = signals[1];
+                m_allSignals[(i * 4) + 2] = signals[2];
+                m_allSignals[(i * 4) + 3] = signals[3];
+            }
+            m_allSignals[m_allSignals.length - 2] = m_pigeon2.getYaw();
+            m_allSignals[m_allSignals.length - 1] = m_pigeon2.getAngularVelocityZDevice();
+        }
+
+        @Override
+        public void run() {
+            /* Make sure all signals update at around 250hz */
+            for (var sig : m_allSignals) {
+                sig.setUpdateFrequency(250);
+            }
+            /* Run as fast as possible, our signals will control the timing */
+            while (true) {
+                /* Synchronously wait for all signals in drivetrain */
+                var status = BaseStatusSignal.waitForAll(0.1, m_allSignals);
+                lastTime = currentTime;
+                currentTime = Utils.getCurrentTimeSeconds();
+                averageLoopTime = lowpass.calculate(currentTime - lastTime);
+
+                /* Get status of the waitForAll */
+                if (status.isOK()) {
+                    SuccessfulDaqs++;
+                } else {
+                    FailedDaqs++;
+                }
+
+                /* Now update odometry */
+                for (int i = 0; i < ModuleCount; ++i) {
+                    /* No need to refresh since it's automatically refreshed from the waitForAll() */
+                    m_modulePositions[i] = m_swerveModules[i].getPosition(false);
+                }
+                // Assume Pigeon2 is flat-and-level so latency compensation can be performed
+                double yawDegrees =
+                        BaseStatusSignal.getLatencyCompensatedValue(
+                                m_pigeon2.getYaw(), m_pigeon2.getAngularVelocityZDevice());
+
+                m_odometry.update(Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
+            }
+        }
+        
+        public double getTime() {
+            return averageLoopTime;
+        }
+
+        public int getSuccessfulDaqs() {
+            return SuccessfulDaqs;
+        }
+
+        public int getFailedDaqs() {
+            return FailedDaqs;
+        }
+    }
 }
+

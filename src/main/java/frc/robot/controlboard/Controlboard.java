@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class Controlboard{
 
     public static final double STICK_DEADBAND = 0.05;
+    public static final double TRIGGER_DEADBAND = 0.10;
 
     private static final CommandXboxController driverController = new CommandXboxController(0);
     private static final CommandXboxController operatorController = new CommandXboxController(1);
@@ -52,6 +53,10 @@ public class Controlboard{
         return driverController.back();
     }
 
+    public static Trigger getResetPose() {
+        return driverController.povUp();
+    }
+
     /**
      * Retreives the current field-centric mode.
      *
@@ -60,7 +65,7 @@ public class Controlboard{
     public static BooleanSupplier getFieldCentric() {
         /* Toggles field-centric mode between true and false when the start button is pressed */
         driverController.start().onTrue(new InstantCommand(() -> fieldCentric =! fieldCentric));
-        return () -> fieldCentric;
+        return () -> true;
     }
 
     public static Trigger getBTestButton(){
@@ -69,7 +74,7 @@ public class Controlboard{
 
     /* Shooter */
     public static final Trigger getManualFire(){
-        return operatorController.rightTrigger(0.10);
+        return operatorController.rightTrigger(TRIGGER_DEADBAND);
     }
 
     public static Trigger getPrepShot(){
@@ -77,7 +82,7 @@ public class Controlboard{
     }
 
     public static Trigger getEject(){ //TODO should eject run an ejection through the shooter flywheel or the intake? Either?
-        return operatorController.leftTrigger(0.10);
+        return operatorController.leftTrigger(TRIGGER_DEADBAND);
     }
 
     /* Pivot */
@@ -101,5 +106,14 @@ public class Controlboard{
     /* Conveyor */
     public static final Trigger getAutoFire(){
         return operatorController.a();
+    }
+
+    /* Intake */
+    public static final Trigger getManualIntake(){
+        return driverController.rightTrigger(TRIGGER_DEADBAND);
+    }
+
+    public static final Trigger getEjectIntake(){
+        return driverController.rightBumper();
     }
 }

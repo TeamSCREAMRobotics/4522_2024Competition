@@ -7,8 +7,8 @@
     "Close Pieces"
   ],
   "autoFolders": [],
-  "defaultMaxVel": 5.0,
-  "defaultMaxAccel": 3.0,
+  "defaultMaxVel": 2.5,
+  "defaultMaxAccel": 2.5,
   "defaultMaxAngVel": 570.0,
   "defaultMaxAngAccel": 440.0,
   "maxModuleSpeed": 5.0

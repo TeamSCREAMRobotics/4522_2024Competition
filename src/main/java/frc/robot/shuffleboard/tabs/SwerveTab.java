@@ -36,7 +36,9 @@ public class SwerveTab extends ShuffleboardTabBase {
 
     private GenericEntry m_odometryX;
     private GenericEntry m_odometryY;
-    private ComplexWidget m_odometryYaw;
+    private GenericEntry m_odometryRotation;
+
+    private GenericEntry m_gyroYaw;
 
     private GenericEntry m_driveP;
 
@@ -63,7 +65,9 @@ public class SwerveTab extends ShuffleboardTabBase {
 
         m_odometryX = createNumberEntry("Odometry X", 0, new EntryProperties(2, 0));
         m_odometryY = createNumberEntry("Odometry Y", 0, new EntryProperties(2, 1));
-        m_odometryYaw = createSendableEntry("Odometry Angle", m_swerve.getGyro(), new EntryProperties(2, 2));
+        m_odometryRotation = createNumberEntry("Odometry Rotation", 0, new EntryProperties(2, 2));
+
+        m_gyroYaw = createNumberEntry("Gyro Yaw", 0, new EntryProperties());
 
         if (ShuffleboardConstants.UPDATE_SWERVE) {
             m_driveP = createNumberEntry("Drive P Gain", DriveConstants.PID_CONSTANTS.kP(), new EntryProperties(9, 0));
@@ -90,6 +94,9 @@ public class SwerveTab extends ShuffleboardTabBase {
 
         m_odometryX.setDouble(m_swerve.getPose().getX());
         m_odometryY.setDouble(m_swerve.getPose().getY());
+        m_odometryRotation.setDouble(m_swerve.getRotation().getDegrees());
+        
+        m_gyroYaw.setDouble(m_swerve.getYaw().getDegrees());
 
         if (ShuffleboardConstants.UPDATE_SWERVE) {
             m_swerve.configDrivePID(DriveConstants.PID_CONSTANTS.withP(m_driveP.get().getDouble()));

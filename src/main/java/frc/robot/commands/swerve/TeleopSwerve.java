@@ -25,7 +25,6 @@ public class TeleopSwerve extends Command {
     private int allianceCoeff = (int) AllianceFlippable.Number(1, -1);
     private Timer correctionTimer = new Timer();
 
-
     /**
      * Constructs a TeleopSwerve command with the given parameters.
      *
@@ -63,7 +62,7 @@ public class TeleopSwerve extends Command {
         double rotationVal = getRotation(rotationSup.getAsDouble());
         boolean fieldRelativeVal = fieldRelativeSup.getAsBoolean();
 
-        if(Controlboard.getZeroGyro().getAsBoolean()) lastAngle = Rotation2d.fromDegrees(0.0);
+        if(Controlboard.getZeroGyro().getAsBoolean()) lastAngle = AllianceFlippable.ForwardRotation();
 
         swerve.setChassisSpeeds(
             fieldRelativeVal ? swerve.fieldRelativeSpeeds(translationVal, rotationVal) : swerve.robotRelativeSpeeds(translationVal, rotationVal),

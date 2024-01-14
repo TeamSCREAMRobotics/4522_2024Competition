@@ -34,6 +34,7 @@ public class DeviceConfig {
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Audio.BeepOnBoot = false;
         config.Audio.BeepOnConfig = false;
+        config.Audio.AllowMusicDurDisable = true;
         config.MotorOutput = FXMotorOutputConfig(DriveConstants.MOTOR_INVERT, DriveConstants.NEUTRAL_MODE);
         config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, DriveConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
         config.CurrentLimits = FXCurrentLimitsConfig(
@@ -52,6 +53,7 @@ public class DeviceConfig {
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Audio.BeepOnBoot = false;
         config.Audio.BeepOnConfig = false;
+        config.Audio.AllowMusicDurDisable = true;
         config.MotorOutput = FXMotorOutputConfig(SteerConstants.MOTOR_INVERT, SteerConstants.NEUTRAL_MODE);
         config.Feedback = FXSteerFeedbackConfig(FeedbackSensorSourceValue.FusedCANcoder, remoteSensorID, SteerConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
         config.ClosedLoopGeneral = FXClosedLoopGeneralConfig(true);
@@ -122,6 +124,7 @@ public class DeviceConfig {
                     pigeon.getYaw().setUpdateFrequency(updateFrequencyHz),
                     pigeon.getPitch().setUpdateFrequency(updateFrequencyHz),
                     pigeon.getRoll().setUpdateFrequency(updateFrequencyHz),
+                    pigeon.getAngularVelocityZDevice().setUpdateFrequency(updateFrequencyHz),
                     pigeon.optimizeBusUtilization()
                     );
             }

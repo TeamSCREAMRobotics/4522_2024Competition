@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -16,6 +17,7 @@ import edu.wpi.first.math.util.Units;
 import frc.lib.pid.ScreamPIDConstants;
 import frc.lib.util.AllianceFlippable;
 import frc.lib.util.COTSFalconSwerveConstants;
+import frc.lib.util.ScreamUtil;
 
 /**
  * A class for constants used in various places in the project.
@@ -34,7 +36,8 @@ public final class Constants{
          *   • CANivore name or serial number 
          *   • "*" for any CANivore seen by the program
          */
-        public static final String CAN_BUS_NAME = "canivore"; // TODO ROBOT SPECIFIC\
+        public static final String CANIVORE_NAME = "canivore"; // TODO ROBOT SPECIFIC
+        public static final String RIO_CANBUS_NAME = "rio";
 
         public static final String LIMELIGHT_FRONT = "limelight-front";
 
@@ -42,18 +45,22 @@ public final class Constants{
         public static final int PIGEON_ID = 0; // TODO ROBOT SPECIFIC
         
         /* Shooter */
-        public static final int RIGHT_SHOOTERMOTOR_ID = 0; //TODO
-        public static final int LEFT_SHOOTERMOTOR_ID = 0; //TODO
+        public static final int RIGHT_SHOOTER_MOTOR_ID = 0; //TODO
+        public static final int LEFT_SHOOTER_MOTOR_ID = 0; //TODO
 
         /* Pivot */
-        public static final int PIVOTMOTOR_ID = 0; //TODO
+        public static final int PIVOT_MOTOR_ID = 0; //TODO
 
         /* Elevator */
-        public static final int LEFT_ELEVATORMOTOR_ID = 0; //TODO
-        public static final int RIGHT_ELEVATORMOTOR_ID = 0; //TODO
+        public static final int LEFT_ELEVATOR_MOTOR_ID = 0; //TODO
+        public static final int RIGHT_ELEVATOR_MOTOR_ID = 0; //TODO
 
         /* Conveyor */
-        public static final int CONVEYORMOTOR_ID = 0; //TODO
+        public static final int CONVEYOR_MOTOR_ID = 0; //TODO
+
+        /* Intake */
+        public static final int LEFT_INTAKE_MOTOR_ID = 8;
+        public static final int RIGHT_INTAKE_MOTOR_ID = 9;
     }
 
     
@@ -68,16 +75,17 @@ public final class Constants{
 
         /* Drivebase Constants */
         // TODO ROBOT SPECIFIC
-        public static final double TRACK_WIDTH = Units.inchesToMeters(19.75); // Distance from left wheels to right wheels
+        public static final double TRACK_WIDTH = Units.inchesToMeters(20.75); // Distance from left wheels to right wheels
         public static final double WHEEL_BASE = Units.inchesToMeters(22.65); // Distance from front wheels to back wheels
 
         /* Gyro Constants */
-        public static final boolean GYRO_INVERT = false; // TODO Always ensure gyro reads CCW+ CW-
+        public static final boolean GYRO_INVERT = false;
 
         /* Swerve Kinematics */
         public static final double MAX_SPEED = 5.0; // m/s theoretical = 5.7
-        public static final double MAX_ACCELERATION = 4.0; // m/s^2 theoretical
+        public static final double MAX_ACCELERATION = 3.0; // m/s^2 theoretical
         public static final double MAX_ANGULAR_VELOCITY = 8.0; // rad/s
+        public static final double MAX_ANGULAR_ACCELERATION = 7.679;
 
         /* Swerve Kinematics */
         // No need to ever change this unless there are more than four modules.
@@ -96,12 +104,13 @@ public final class Constants{
         public static final double CORRECTION_TIME_THRESHOLD = 0.2;
 
         /* Swerve Controllers */
-        public static final ScreamPIDConstants VISION_TRANSLATION_CONSTANTS = new ScreamPIDConstants(5, 0, 0);
+        public static final ScreamPIDConstants VISION_TRANSLATION_X_CONSTANTS = new ScreamPIDConstants(1, 0, 0.0);
+        public static final ScreamPIDConstants VISION_TRANSLATION_Y_CONSTANTS = new ScreamPIDConstants(4.5, 0, 0.0);
         public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(1, 0, 0);
 
         /* PathPlanner Constants */
-        public static final ScreamPIDConstants PATH_TRANSLATION_CONSTANTS = new ScreamPIDConstants(10, 0.0, 0.0); // TODO ROBOT SPECIFIC
-        public static final ScreamPIDConstants PATH_ROTATION_CONSTANTS = new ScreamPIDConstants(20, 0.0, 0.0);
+        public static final ScreamPIDConstants PATH_TRANSLATION_CONSTANTS = new ScreamPIDConstants(10.0, 0.0, 0.0);
+        public static final ScreamPIDConstants PATH_ROTATION_CONSTANTS = new ScreamPIDConstants(10.0, 0.0, 0.0);
 
         public static final HolonomicPathFollowerConfig PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(
                 PATH_TRANSLATION_CONSTANTS.toPathPlannerPIDConstants(), 
@@ -113,12 +122,11 @@ public final class Constants{
         );
 
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(
-            MAX_ANGULAR_VELOCITY, 
-            CORRECTION_TIME_THRESHOLD, 
-            LOOP_TIME_SEC, 
-            LOOP_TIME_HZ
+            MAX_SPEED, 
+            MAX_ACCELERATION, 
+            MAX_SPEED, 
+            MAX_ANGULAR_ACCELERATION
         );
-
         
         public static final class DriveConstants {
             /* Gear Ratio */
@@ -203,31 +211,31 @@ public final class Constants{
 
             /* Front Left */
             public static final SwerveModuleConstants MODULE_0 = new SwerveModuleConstants(
-                23, 
-                24, 
-                8, 
-                Rotation2d.fromRotations(-0.51025390625)); // TODO ROBOT SPECIFIC
+                1, 
+                0, 
+                0, 
+                Rotation2d.fromRotations(-0.19970703125)); // TODO ROBOT SPECIFIC
 
             /* Front Right */
             public static final SwerveModuleConstants MODULE_1 = new SwerveModuleConstants(
-                13, 
-                14, 
                 3, 
-                Rotation2d.fromRotations(-0.353759765625)); // TODO ROBOT SPECIFIC
+                2, 
+                1, 
+                Rotation2d.fromRotations(0.48583984375)); // TODO ROBOT SPECIFIC
 
             /* Back Left */
             public static final SwerveModuleConstants MODULE_2 = new SwerveModuleConstants(
-                19, 
-                20, 
-                6, 
-                Rotation2d.fromRotations(-0.2861328125)); // TODO ROBOT SPECIFIC
+                5, 
+                4, 
+                2, 
+                Rotation2d.fromRotations(-0.0849609375)); // TODO ROBOT SPECIFIC
 
             /* Back Right */
             public static final SwerveModuleConstants MODULE_3 = new SwerveModuleConstants(
-                17, 
-                18, 
-                5, 
-                Rotation2d.fromRotations(-0.3271484375)); // TODO ROBOT SPECIFIC
+                7, 
+                6, 
+                3, 
+                Rotation2d.fromRotations(0.17333984375)); // TODO ROBOT SPECIFIC
         }
     }
 
@@ -290,10 +298,16 @@ public final class Constants{
         }
     }
 
+    public static final class IntakeConstants {
+
+        public static final double INTAKE_SPEED = -0.75;
+        public static final double EJECT_SPEED = 0.5;
+    }
+
     public static final class VisionConstants {
         public static final int DETECTOR_PIPELINE = 0;
 
-        public static final double DETECTOR_TARGET_TY = -17.5;
+        public static final double DETECTOR_TARGET_TY = -10.0;
         public static final double DETECTOR_TARGET_TX = 0.0;
     }
 
@@ -336,4 +350,6 @@ public final class Constants{
         private static final Translation3d BLUE_SPEAKER_OPENING = new Translation3d(0.0, 5.54, 2.106);
         private static final Translation3d RED_SPEAKER_OPENING = AllianceFlippable.Translation3d(BLUE_SPEAKER_OPENING);
     }
+
+
 }

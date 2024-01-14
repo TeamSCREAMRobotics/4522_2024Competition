@@ -2,22 +2,24 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.pivot;
 
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
+
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Pivot;
 
-public class ElevatorManualCommand extends Command {
+public class PivotManualCommand extends Command {
   
-  Elevator elevator;
+  Pivot pivot;
   DoubleSupplier output;
-  
-  public ElevatorManualCommand(Elevator elevator, DoubleSupplier output) {
-    addRequirements(elevator);
 
-    this.elevator = elevator;
+  public PivotManualCommand(Pivot pivot, DoubleSupplier output) {
+    addRequirements(pivot);
+
+    this.pivot = pivot;
     this.output = output;
   }
 
@@ -28,7 +30,7 @@ public class ElevatorManualCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elevator.setElevator_Manual(output.getAsDouble());
+    pivot.setPivot(new DutyCycleOut(output.getAsDouble()));
   }
 
   // Called once the command ends or is interrupted.

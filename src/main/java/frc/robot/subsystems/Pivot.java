@@ -19,7 +19,7 @@ public class Pivot extends SubsystemBase{
     private Rotation2d m_targetAngle = Rotation2d.fromDegrees(0);
 
     public Pivot(){
-        m_pivotMotor = new TalonFX(Ports.PIVOTMOTOR_ID);
+        m_pivotMotor = new TalonFX(Ports.PIVOT_MOTOR_ID);
         
         configPivotMotor();
     }
@@ -28,8 +28,8 @@ public class Pivot extends SubsystemBase{
         DeviceConfig.configureTalonFX("pivotMotor", m_pivotMotor, null, Constants.LOOP_TIME_HZ); //TODO create pivot config
     }
     
-    public void setNeutralModes(NeutralModeValue pivotMode){
-        m_pivotMotor.setNeutralMode(pivotMode);
+    public void setNeutralModes(NeutralModeValue mode){
+        m_pivotMotor.setNeutralMode(mode);
     }
 
     public void zeroPivot(){
@@ -39,7 +39,7 @@ public class Pivot extends SubsystemBase{
     public void pivotToTargetAngle(Rotation2d angle){
         m_targetAngle = angle;
 
-        if(!isPivotAtTarget()) {
+        if(!pivotAtTarget()) {
             setPivot(new MotionMagicVoltage(m_targetAngle.getRotations()));
         } else {
             stopPivot();
@@ -48,10 +48,6 @@ public class Pivot extends SubsystemBase{
     
     public void setPivot(ControlRequest control){
         m_pivotMotor.setControl(control);
-    }
-
-    public void setPivot_Manual(double output){
-        m_pivotMotor.set(output);
     }
 
     public void stopPivot(){
@@ -66,7 +62,7 @@ public class Pivot extends SubsystemBase{
         return m_targetAngle.minus(getPivotAngle());
     }
 
-    public boolean isPivotAtTarget(){
+    public boolean pivotAtTarget(){
         return Math.abs(getPivotError().getDegrees()) < PivotConstants.TARGET_THRESHOLD;
     }
 

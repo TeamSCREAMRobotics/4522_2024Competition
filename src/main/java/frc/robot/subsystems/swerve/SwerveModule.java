@@ -5,6 +5,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -17,6 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.lib.config.DeviceConfig;
 import frc.lib.math.Conversions;
 import frc.lib.pid.ScreamPIDConstants;
+import frc.lib.util.OrchestraUtil;
 import frc.robot.Constants;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.SwerveConstants;
@@ -61,15 +63,15 @@ public class SwerveModule {
         m_angleOffset = constants.angleOffset();
 
         /* Angle Encoder Config */
-        m_angleEncoder = new CANcoder(constants.encoderID(), Ports.CAN_BUS_NAME);
+        m_angleEncoder = new CANcoder(constants.encoderID(), Ports.CANIVORE_NAME);
         configAngleEncoder();
 
         /* Steer Motor Config */
-        m_steerMotor = new TalonFX(constants.steerMotorID(), Ports.CAN_BUS_NAME);
+        m_steerMotor = new TalonFX(constants.steerMotorID(), Ports.CANIVORE_NAME);
         configSteerMotor();
 
         /* Drive Motor Config */
-        m_driveMotor = new TalonFX(constants.driveMotorID(), Ports.CAN_BUS_NAME);
+        m_driveMotor = new TalonFX(constants.driveMotorID(), Ports.CANIVORE_NAME);
         configDriveMotor();
 
         m_drivePosition = m_driveMotor.getPosition();
@@ -84,6 +86,8 @@ public class SwerveModule {
         m_signals[3] = m_steerVelocity;
 
         m_lastAngle = getState(true).angle;
+
+        OrchestraUtil.add(m_driveMotor, m_steerMotor);
     }
 
     /**
@@ -144,11 +148,11 @@ public class SwerveModule {
      */
     public void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
             if(isOpenLoop){
-                m_driveMotor.setControl(new DutyCycleOut(desiredState.speedMetersPerSecond/SwerveConstants.MAX_SPEED));//new VoltageOut((desiredState.speedMetersPerSecond / SwerveConstants.MAX_SPEED) * 12).withEnableFOC(true));
+                m_driveMotor.setControl(new DutyCycleOut(desiredState.speedMetersPerSecond/SwerveConstants.MAX_SPEED).withEnableFOC(true));//new VoltageOut((desiredState.speedMetersPerSecond / SwerveConstants.MAX_SPEED) * 12).withEnableFOC(true));
             } else {
                 double velocity = Conversions.mpsToFalconRPS(desiredState.speedMetersPerSecond, SwerveConstants.MODULE_TYPE.wheelCircumference, 1);
                 double feedforward = m_feedforward.calculate(desiredState.speedMetersPerSecond);
-                m_driveMotor.setControl(new VelocityTorqueCurrentFOC(velocity).withFeedForward(feedforward));
+                m_driveMotor.setControl(new VelocityVoltage(velocity).withFeedForward(feedforward).withEnableFOC(true));
             }
     }
 
@@ -268,9 +272,5 @@ public class SwerveModule {
 
     public BaseStatusSignal[] getSignals() {
         return m_signals;
-    }
-
-    public double getAcceleration(){
-        return m_driveMotor.getAcceleration().getValue();
     }
 }
