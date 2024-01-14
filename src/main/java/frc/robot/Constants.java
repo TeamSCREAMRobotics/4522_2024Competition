@@ -331,24 +331,15 @@ public final class Constants{
 
         public static final Translation2d ROBOT_OFFSET = new Translation2d(Units.inchesToMeters(38.0), 0);
 
-        private static final Translation2d[] BLUE_CENTER_TRANSLATIONS = new Translation2d[]{
-            CENTER_PIECE_1.minus(ROBOT_OFFSET),
-            CENTER_PIECE_2.minus(ROBOT_OFFSET),
-            CENTER_PIECE_3.minus(ROBOT_OFFSET),
-            CENTER_PIECE_4.minus(ROBOT_OFFSET),
-            CENTER_PIECE_5.minus(ROBOT_OFFSET),
+        public static final Translation2d[] CENTER_PIECE_TRANSLATIONS = new Translation2d[]{
+            CENTER_PIECE_1,
+            CENTER_PIECE_2,
+            CENTER_PIECE_3,
+            CENTER_PIECE_4,
+            CENTER_PIECE_5,
         };
-
-        private static final Translation2d[] RED_CENTER_TRANSLATIONS = new Translation2d[]{
-            CENTER_PIECE_1.plus(ROBOT_OFFSET),
-            CENTER_PIECE_2.plus(ROBOT_OFFSET),
-            CENTER_PIECE_3.plus(ROBOT_OFFSET),
-            CENTER_PIECE_4.plus(ROBOT_OFFSET),
-            CENTER_PIECE_5.plus(ROBOT_OFFSET),
-        };
-
-        private static final Translation3d BLUE_SPEAKER_OPENING = new Translation3d(0.0, 5.54, 2.106);
-        private static final Translation3d RED_SPEAKER_OPENING = AllianceFlippable.Translation3d(BLUE_SPEAKER_OPENING);
+        public static final Translation3d BLUE_SPEAKER_OPENING = new Translation3d(0.0, 5.54, 2.106);
+        public static final Translation3d RED_SPEAKER_OPENING = AllianceFlippable.Translation3d(BLUE_SPEAKER_OPENING);
     }
 
 
