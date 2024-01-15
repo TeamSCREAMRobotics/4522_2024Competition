@@ -75,71 +75,60 @@ public class Controlboard{
     public static Trigger getBTestButton(){
         return driverController.b();
     }
-    
 
+    //Changes how the angle/height of the pivot and elevator are input
     public static Trigger getManualMode(){
         return operatorController.back();
     }
 
-    /* Shooter */
-    // public static final Trigger getManualPrepFire(){
-    //     return operatorController.start(); //For subwoofer/amp/trap shots
-    // }
-
-    public static final Trigger getEjectShooter(){
-        return operatorController.leftTrigger(TRIGGER_DEADBAND);
+    /* Automation */
+    public static final Trigger getAutoPrepShot(){
+        return operatorController.start();
     }
 
-    public static final Trigger getAutoPrepShot(){
-        return operatorController.leftBumper();
+    /* Shooter */
+    public static final Trigger getManualShooter(){
+        return operatorController.povUp();
+    }
+    public static final Trigger getEjectShooter(){
+        return operatorController.povDown();
     }
 
     /* Pivot */
     public static final DoubleSupplier getManualPivot_Output(){
         return () -> operatorController.getRightY();
     }
-    
-    public static final Trigger setPivotPosition_Home(){
-        return operatorController.povDown();
-    }
-    
-    public static final Trigger setPivotPosition_Subwoofer(){
-        return operatorController.povRight();
-    }
-    
-    public static final Trigger setPivotPosition_Amp(){
-        return operatorController.povUp();
-    }
-
-    public static final Trigger setPivotPosition_Trap(){
-        return operatorController.povLeft();
-    }
 
     /* Elevator */
     public static final DoubleSupplier getManualElevator_Output(){
         return () -> operatorController.getLeftY();
     }
-    
-    public static final Trigger setElevatorPosition_Home(){
+
+    /* Elevator AND Pivot */    
+    public static final Trigger setPosition_Home(){
         return operatorController.a();
     }
     
-    public static final Trigger setElevatorPosition_Subwoofer(){
+    public static final Trigger setPosition_Subwoofer(){
         return operatorController.b();
     }
     
-    public static final Trigger setElevatorPosition_Amp(){
+    public static final Trigger setPosition_Amp(){
         return operatorController.y();
     }
 
-    public static final Trigger setElevatorPosition_Trap(){
+    public static final Trigger setPosition_Trap(){
         return operatorController.x();
     }
 
     /* Conveyor */
-    public static final Trigger getFire(){
-        return operatorController.start();
+    public static final Trigger getFire_Speaker(){
+        return operatorController.leftTrigger(TRIGGER_DEADBAND);
     }
+    public static final Trigger getFire_Amp_Trap(){
+        return new Trigger(() -> false);
+    }
+    //^^ Should they be split based on a button or be split based on the current position of pivot/elevator?
 
     /* Intake */
     public static final Trigger getManualIntake(){

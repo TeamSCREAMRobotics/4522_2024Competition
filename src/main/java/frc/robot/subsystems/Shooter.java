@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -8,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.config.DeviceConfig;
 import frc.robot.Constants;
 import frc.robot.Constants.Ports;
-import frc.robot.Constants.ShooterConstants;
 
 public class Shooter extends SubsystemBase{
     
@@ -25,8 +25,8 @@ public class Shooter extends SubsystemBase{
     }
     
     private void configShooterMotors() {
-        DeviceConfig.configureTalonFX("rightShooterMotor", m_rightShooterMotor, null, Constants.LOOP_TIME_HZ); //TODO create shooter config
-        DeviceConfig.configureTalonFX("leftShooterMotor", m_leftShooterMotor, null, Constants.LOOP_TIME_HZ); //TODO create shooter config
+        DeviceConfig.configureTalonFX("rightShooterMotor", m_rightShooterMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ); //TODO create shooter config
+        DeviceConfig.configureTalonFX("leftShooterMotor", m_leftShooterMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ); //TODO create shooter config
     }
     
     public void setNeutralModes(NeutralModeValue shooterMode){
@@ -40,10 +40,6 @@ public class Shooter extends SubsystemBase{
 
     public void stopMotor(){
         m_rightShooterMotor.stopMotor();
-    }
-    
-    public double getShooterOutput(double distance){
-        return ShooterConstants.shooterTreeMap.get(distance);
     }
 
     @Override

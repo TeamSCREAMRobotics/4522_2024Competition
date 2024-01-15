@@ -246,15 +246,8 @@ public final class Constants{
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
         public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(60, 0.0, 0.0);
 
-        public static final double shooterSubwooferOutput = 1.0;
-        public static final double shooterAmpOutput = 1.0;
-        public static final double shooterTrapOutput = 1.0;
-
-        public static final InterpolatingDoubleTreeMap shooterTreeMap = new InterpolatingDoubleTreeMap();
-        static{
-            //shooterTreeMap.put(distance, speed)
-            shooterTreeMap.put(null, null);
-        }
+        public static final double SHOOTERSHOT_SPEED = 1.0;
+        public static final double SHOOTEREJECT_SPEED = 0.5;
     }
     
     public static final class PivotConstants { //TODO all values
@@ -272,10 +265,10 @@ public final class Constants{
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
         public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(60, 0.0, 0.0);
 
-        public static final Rotation2d pivotHomeAngle = Rotation2d.fromDegrees(0.0);
-        public static final Rotation2d pivotSubwooferShotAngle = Rotation2d.fromDegrees(0.0);
-        public static final Rotation2d pivotAmpShotAngle = Rotation2d.fromDegrees(0.0);
-        public static final Rotation2d pivotTrapShotAngle = Rotation2d.fromDegrees(0.0);
+        public static final Rotation2d pivotHome_Angle = Rotation2d.fromDegrees(0.0);
+        public static final Rotation2d pivotSubwooferShot_Angle = Rotation2d.fromDegrees(0.0);
+        public static final Rotation2d pivotAmpShot_Angle = Rotation2d.fromDegrees(0.0);
+        public static final Rotation2d pivotTrapShot_Angle = Rotation2d.fromDegrees(0.0);
 
         public static final InterpolatingDoubleTreeMap pivotTreeMap = new InterpolatingDoubleTreeMap();
         static{
@@ -299,10 +292,10 @@ public final class Constants{
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
         public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(15, 0.0, 0.0);
 
-        public static final double elevatorHomePosition = 0.0;
-        public static final double elevatorSubwooferShotPosition = 0.0;
-        public static final double elevatorAmpShotPosition = 0.0;
-        public static final double elevatorTrapShotPosition = 0.0;
+        public static final double elevatorHome_Position = 0.0;
+        public static final double elevatorSubwooferShot_Position = 0.0;
+        public static final double elevatorAmpShot_Position = 0.0;
+        public static final double elevatorTrapShot_Position = 0.0;
 
         public static final InterpolatingDoubleTreeMap elevatorTreeMap = new InterpolatingDoubleTreeMap();
         static{
@@ -315,6 +308,13 @@ public final class Constants{
 
         public static final double INTAKE_SPEED = -0.75;
         public static final double EJECT_SPEED = 0.5;
+    }
+
+    public static final class ConveyorConstants {
+        
+        public static final double SPEAKER_SPEED = 1.00;
+        public static final double AMP_TRAP_SPEED = -1.00;
+        public static final double TRANSFER_SPEED = 0.75;
     }
 
     public static final class VisionConstants {
@@ -355,7 +355,7 @@ public final class Constants{
         public static final Translation2d BLUE_PODIUM = new Translation2d(2.737, 4.131913);
         public static final Translation2d RED_PODIUM = new Translation2d(13.816724, 4.131913);
 
-        public static final Translation3d BLUE_SPEAKER_OPENING = new Translation3d(0.0, 5.54, 2.106);
-        public static final Translation3d RED_SPEAKER_OPENING = AllianceFlippable.Translation3d(BLUE_SPEAKER_OPENING);
+        public static final Translation2d BLUE_SPEAKER_OPENING = new Translation2d(0.0, 5.54);
+        public static final Translation2d RED_SPEAKER_OPENING = AllianceFlippable.Translation2d(BLUE_SPEAKER_OPENING);
     }
 }

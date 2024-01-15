@@ -4,10 +4,8 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ElevatorConstants;
@@ -15,12 +13,13 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.swerve.Swerve;
 
 public class AutoPrepCommand extends Command {
   
   Pivot pivot;
   Elevator elevator;
-  Pose2d currentPose;
+  Swerve swerve;
   Alliance allianceColor;
 
   Rotation2d wantedPivotAngle;
@@ -29,14 +28,14 @@ public class AutoPrepCommand extends Command {
   double distanceFromSpeaker_Y;
   double distanceFromSpeaker;
 
-  Translation3d allianceSpeakerPose;
+  Translation2d allianceSpeakerPose;
 
-  public AutoPrepCommand(Alliance allianceColor, Pivot pivot, Elevator elevator, Pose2d currentPose) {
-    addRequirements(pivot, elevator);
+  public AutoPrepCommand(Pivot pivot, Elevator elevator, Swerve swerve, Alliance allianceColor) {
+    addRequirements(pivot, elevator, swerve);
 
     this.pivot = pivot;
     this.elevator = elevator;
-    this.currentPose = currentPose;
+    this.swerve = swerve;
     this.allianceColor = allianceColor;
   }
 
@@ -50,8 +49,8 @@ public class AutoPrepCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    distanceFromSpeaker_X = Math.abs(currentPose.getX() - allianceSpeakerPose.getX());
-    distanceFromSpeaker_Y = Math.abs(currentPose.getY() - allianceSpeakerPose.getY());
+    distanceFromSpeaker_X = Math.abs(swerve.getPose().getX() - allianceSpeakerPose.getX());
+    distanceFromSpeaker_Y = Math.abs(swerve.getPose().getY() - allianceSpeakerPose.getY());
     distanceFromSpeaker = new Translation2d(distanceFromSpeaker_X, distanceFromSpeaker_Y).getNorm();
   
     pivot.pivotToTargetAngle(Rotation2d.fromDegrees(PivotConstants.pivotTreeMap.get(distanceFromSpeaker)));
@@ -61,8 +60,8 @@ public class AutoPrepCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    pivot.pivotToTargetAngle(PivotConstants.pivotHomeAngle);
-    elevator.toTargetHeight(ElevatorConstants.elevatorHomePosition);
+    pivot.pivotToTargetAngle(PivotConstants.pivotHome_Angle);
+    elevator.toTargetHeight(ElevatorConstants.elevatorHome_Position);
   }
 
   // Returns true when the command should end.

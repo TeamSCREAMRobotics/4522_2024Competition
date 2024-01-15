@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,15 +12,23 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.lib.util.AllianceFlippable;
+import frc.robot.Constants.ConveyorConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.PivotConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.auto.Autonomous;
 import frc.robot.auto.Autonomous.PPEvent;
 import frc.robot.auto.Routines;
 import frc.robot.commands.AutoPrepCommand;
+import frc.robot.commands.conveyor.ConveyorManualCommand;
+import frc.robot.commands.elevator.ElevatorManualCommand;
 import frc.robot.commands.elevator.ElevatorTargetCommand;
 import frc.robot.commands.intake.IntakeCommand;
+import frc.robot.commands.pivot.PivotManualCommand;
+import frc.robot.commands.pivot.PivotTargetCommand;
+import frc.robot.commands.shooter.ShooterManualCommand;
 import frc.robot.commands.swerve.FaceSpeakerCommand;
 import frc.robot.commands.swerve.TeleopSwerve;
 import frc.robot.controlboard.Controlboard;
@@ -66,27 +73,26 @@ public class RobotContainer {
         Controlboard.getBTestButton().onTrue(new InstantCommand(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, Rotation2d.fromDegrees(0)))));
 
         /* Conveyor */
-        // Controlboard.getFire().toggleOnTrue(new InstantCommand(() -> m_conveyor.setConveyorSpeed(0.75)));
+        // Controlboard.getFire_Speaker().toggleOnTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.SPEAKER_SPEED)).onFalse(new ConveyorManualCommand(m_conveyor, 0.0));
 
         /* Elevator */
         // Controlboard.getManualMode().toggleOnTrue(new ElevatorManualCommand(m_elevator, Controlboard.getManualElevator_Output())).onFalse(new ElevatorManualCommand(m_elevator, () -> 0.0));
-        // Controlboard.setElevatorPosition_Home().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.elevatorSubwooferShotPosition));
-        // Controlboard.setElevatorPosition_Subwoofer().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.elevatorHomePosition));
-        // Controlboard.setElevatorPosition_Amp().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.elevatorAmpShotPosition));
-        // Controlboard.setElevatorPosition_Trap().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.elevatorTrapShotPosition));
 
         /* Pivot */
         // Controlboard.getManualMode().toggleOnTrue(new PivotManualCommand(m_pivot, Controlboard.getManualPivot_Output())).onFalse(new PivotManualCommand(m_pivot, () -> 0.0));
-        // Controlboard.setPivotPosition_Home().toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.pivotHomeAngle));
-        // Controlboard.setPivotPosition_Subwoofer().toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.pivotSubwooferShotAngle));
-        // Controlboard.setPivotPosition_Amp().toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.pivotAmpShotAngle));
-        // Controlboard.setPivotPosition_Trap().toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.pivotTrapShotAngle));
+
+        /* Pivot AND Elevator */
+        // Controlboard.setPosition_Home().toggleOnTrue(new ParallelCommandGroup(new ElevatorTargetCommand(m_elevator, ElevatorConstants.elevatorHome_Position), new PivotTargetCommand(m_pivot, PivotConstants.pivotHome_Angle)));
+        // Controlboard.setPosition_Subwoofer().toggleOnTrue(new ParallelCommandGroup(new ElevatorTargetCommand(m_elevator, ElevatorConstants.elevatorSubwooferShot_Position), new PivotTargetCommand(m_pivot, PivotConstants.pivotSubwooferShot_Angle)));
+        // Controlboard.setPosition_Amp().toggleOnTrue(new ParallelCommandGroup(new ElevatorTargetCommand(m_elevator, ElevatorConstants.elevatorAmpShot_Position), new PivotTargetCommand(m_pivot, PivotConstants.pivotAmpShot_Angle)));
+        // Controlboard.setPosition_Trap().toggleOnTrue(new ParallelCommandGroup(new ElevatorTargetCommand(m_elevator, ElevatorConstants.elevatorTrapShot_Position), new PivotTargetCommand(m_pivot, PivotConstants.pivotTrapShot_Angle)));
 
         /* Shooter */
-        // Controlboard.getManualPrepFire().whileTrue(new InstantCommand(() -> m_shooter.setShooterOutput(0.75))).onFalse(new InstantCommand(() -> m_shooter.setShooterOutput(0.0)));
+        // Controlboard.getManualShooter().toggleOnTrue(new ShooterManualCommand(m_shooter, ShooterConstants.SHOOTERSHOT_SPEED)).onFalse(new ShooterManualCommand(m_shooter, 0.0));
+        // Controlboard.getEjectShooter().toggleOnTrue(new ShooterManualCommand(m_shooter, ShooterConstants.SHOOTEREJECT_SPEED)).onFalse(new ShooterManualCommand(m_shooter, 0.0));
 
         /* Auto Shot */
-        // Controlboard.getAutoPrepShot().toggleOnTrue(new ParallelCommandGroup(new AutoPrepCommand(getAlliance(), m_pivot, m_elevator, m_swerve.getPose()), new FaceSpeakerCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING.toTranslation2d(), FieldConstants.RED_SPEAKER_OPENING.toTranslation2d()))));
+        // Controlboard.getAutoPrepShot().toggleOnTrue(new ParallelCommandGroup(new AutoPrepCommand(m_pivot, m_elevator, m_swerve, getAlliance()), new FaceSpeakerCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING))));
 
         Controlboard.getManualIntake().whileTrue(new IntakeCommand(m_intake, IntakeConstants.INTAKE_SPEED)).onFalse(new IntakeCommand(m_intake, 0));
         Controlboard.getEjectIntake().whileTrue(new IntakeCommand(m_intake, IntakeConstants.EJECT_SPEED)).onFalse(new IntakeCommand(m_intake, 0));
