@@ -53,7 +53,7 @@ public class RobotContainer {
     private static final Intake m_intake = new Intake();
 
 
-    private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager();
+    private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve);
     
     /**
      * Configures the basic robot systems, such as Shuffleboard, autonomous, default commands, and button bindings.
@@ -119,11 +119,13 @@ public class RobotContainer {
     private void configAuto() {
         Autonomous.configure(
             Commands.none().withName("Do Nothing"),
-            new PPEvent("ExampleEvent", new PrintCommand("This is an example event :)"))
+            new PPEvent("ExampleEvent", new PrintCommand("This is an example event :)")),
+            new PPEvent("StartIntake", new IntakeCommand(m_intake, IntakeConstants.INTAKE_SPEED)),
+            new PPEvent("StopIntake", new IntakeCommand(m_intake, 0))
         );
 
         Autonomous.addRoutines(
-            Routines.testAuto().withName("Test Auto")
+            Routines.testAuto(m_swerve).withName("Test Auto")
         );
     }
 
@@ -135,15 +137,6 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         System.out.println("[Auto] Selected auto routine: " + Autonomous.getSelected().getName());
         return Autonomous.getSelected();
-    }
-
-    /**
-     * Retrieves the Swerve subsystem.
-     *
-     * @return The Swerve subsystem.
-     */
-    public static Swerve getSwerve() {
-        return m_swerve;
     }
     
     /**
@@ -157,5 +150,34 @@ public class RobotContainer {
         } else {
             return Alliance.Blue;
         }
+    }
+
+     /**
+     * Retrieves the Swerve subsystem.
+     *
+     * @return The Swerve subsystem.
+     */
+    public static Swerve getSwerve() {
+        return m_swerve;
+    }
+
+    /* public static Shooter getShooter(){
+        return m_shooter;
+    }
+
+    public static Pivot getPivot(){
+        return m_pivot;
+    }
+
+    public static Elevator getElevator(){
+        return m_elevator;
+    }
+
+    public static Conveyor getConveyor(){
+        return m_conveyor;
+    } */
+
+    public static Intake getIntake(){
+        return m_intake;
     }
 }

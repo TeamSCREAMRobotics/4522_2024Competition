@@ -1,0 +1,70 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.325730468864645,
+        "y": 5.574358195791997
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.8175856037874687,
+        "y": 4.918551349228233
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.496814123442796,
+        "y": 4.286166175756032
+      },
+      "prevControl": {
+        "x": 2.1103565174320065,
+        "y": 4.66091294522104
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Close4_1End"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "StartIntake",
+      "waypointRelativePos": 0.6,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "StartIntake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.5,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 570.0,
+    "maxAngularAcceleration": 440.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -27.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Close4",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

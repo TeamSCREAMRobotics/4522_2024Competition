@@ -16,8 +16,8 @@ public class Shooter extends SubsystemBase{
     private TalonFX m_leftShooterMotor;
 
     public Shooter(){
-        m_rightShooterMotor = new TalonFX(Ports.RIGHT_SHOOTER_MOTOR_ID, Ports.CANIVORE_NAME);
-        m_leftShooterMotor = new TalonFX(Ports.LEFT_SHOOTER_MOTOR_ID, Ports.CANIVORE_NAME);
+        //m_rightShooterMotor = new TalonFX(Ports.RIGHT_SHOOTER_MOTOR_ID, Ports.CANIVORE_NAME);
+        //m_leftShooterMotor = new TalonFX(Ports.LEFT_SHOOTER_MOTOR_ID, Ports.CANIVORE_NAME);
 
         configShooterMotors();
 
@@ -25,8 +25,8 @@ public class Shooter extends SubsystemBase{
     }
     
     private void configShooterMotors() {
-        DeviceConfig.configureTalonFX("rightShooterMotor", m_rightShooterMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ); //TODO create shooter config
-        DeviceConfig.configureTalonFX("leftShooterMotor", m_leftShooterMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ); //TODO create shooter config
+        //DeviceConfig.configureTalonFX("rightShooterMotor", m_rightShooterMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ); //TODO create shooter config
+        //DeviceConfig.configureTalonFX("leftShooterMotor", m_leftShooterMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ); //TODO create shooter config
     }
     
     public void setNeutralModes(NeutralModeValue shooterMode){

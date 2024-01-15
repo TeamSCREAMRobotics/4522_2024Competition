@@ -21,8 +21,8 @@ public class Elevator extends SubsystemBase{
     private double m_targetHeight;
 
     public Elevator(){
-        m_rightElevatorMotor = new TalonFX(Ports.RIGHT_ELEVATOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
-        m_leftElevatorMotor = new TalonFX(Ports.LEFT_ELEVATOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        //m_rightElevatorMotor = new TalonFX(Ports.RIGHT_ELEVATOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        //m_leftElevatorMotor = new TalonFX(Ports.LEFT_ELEVATOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
 
         configShooterMotors();
 
@@ -30,8 +30,8 @@ public class Elevator extends SubsystemBase{
     }
     
     private void configShooterMotors() {
-        DeviceConfig.configureTalonFX("Right Elevator Motor", m_rightElevatorMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ); //TODO create elevator config
-        DeviceConfig.configureTalonFX("Left Elevator Motor", m_leftElevatorMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ); //TODO create elevator config
+        //DeviceConfig.configureTalonFX("Right Elevator Motor", m_rightElevatorMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ); //TODO create elevator config
+        //DeviceConfig.configureTalonFX("Left Elevator Motor", m_leftElevatorMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ); //TODO create elevator config
     }
 
     public void setNeutralModes(NeutralModeValue mode){

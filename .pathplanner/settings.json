@@ -4,8 +4,9 @@
   "holonomicMode": true,
   "pathFolders": [
     "BackTo",
-    "ClosePiecesRed",
-    "ClosePiecesBlue"
+    "Center5",
+    "Close4",
+    "CenterPiecePathfinding"
   ],
   "autoFolders": [],
   "defaultMaxVel": 5.0,

@@ -20,13 +20,13 @@ public class Pivot extends SubsystemBase{
     private Rotation2d m_targetAngle = Rotation2d.fromDegrees(0);
 
     public Pivot(){
-        m_pivotMotor = new TalonFX(Ports.PIVOT_MOTOR_ID);
+        //m_pivotMotor = new TalonFX(Ports.PIVOT_MOTOR_ID);
         
         configPivotMotor();
     }
 
     private void configPivotMotor() {
-        DeviceConfig.configureTalonFX("pivotMotor", m_pivotMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ); //TODO create pivot config
+        //DeviceConfig.configureTalonFX("pivotMotor", m_pivotMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ); //TODO create pivot config
     }
     
     public void setNeutralModes(NeutralModeValue mode){

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.path.PathPlannerPath;
 
@@ -11,6 +12,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.lib.util.AllianceFlippable;
+import frc.lib.util.OrchestraUtil;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -71,6 +74,9 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    if (autonomousCommand != null) {
+      autonomousCommand.cancel();
+    }
     coastTimer.reset();
     coastTimer.start();
   }

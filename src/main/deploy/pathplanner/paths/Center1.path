@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4389491636126137,
-        "y": 1.495264704815124
+        "x": 7.64958220358666,
+        "y": 7.448092043117039
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.106970499655286,
-        "y": 1.3046917522406485
+        "x": 7.69958220358666,
+        "y": 7.448092043117039
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.845132261693095,
-        "y": 0.7769512681882514
+        "x": 7.860377261410728,
+        "y": 7.448092043117039
       },
       "prevControl": {
-        "x": 7.024202619833812,
-        "y": 0.7916107260785952
+        "x": 7.8103772614107285,
+        "y": 7.448092043117039
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,21 +32,21 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 5.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 570.0,
     "maxAngularAcceleration": 440.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "ClosePiecesBlue",
+  "folder": "CenterPiecePathfinding",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

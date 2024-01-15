@@ -85,7 +85,7 @@ public class Swerve extends SubsystemBase {
             this::getRobotRelativeSpeeds,
             this::setChassisSpeeds,
             SwerveConstants.PATH_FOLLOWER_CONFIG,
-            () -> false,
+            () -> RobotContainer.getAlliance() == Alliance.Blue ? false : true,
             this
         );
     }

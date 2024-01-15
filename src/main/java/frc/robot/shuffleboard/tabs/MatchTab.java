@@ -9,12 +9,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.shuffleboard.ShuffleboardTabBase;
+import frc.robot.subsystems.swerve.Swerve;
 
 public class MatchTab extends ShuffleboardTabBase {
-
-    public MatchTab() {}
     
     private static SendableChooser<Command> m_autoChooser = new SendableChooser<Command>();
+    private Swerve swerve;
+
+    public MatchTab(Swerve swerve) {
+        this.swerve = swerve;
+    }
+
     private ComplexWidget m_autoChooserEntry;
 
     private ComplexWidget m_field;
@@ -30,7 +35,7 @@ public class MatchTab extends ShuffleboardTabBase {
 
     @Override
     public void periodic() {
-        m_field2d.setRobotPose(RobotContainer.getSwerve().getPose());
+        m_field2d.setRobotPose(swerve.getPose());
     }
 
     public static SendableChooser<Command> getAutoChooser(){

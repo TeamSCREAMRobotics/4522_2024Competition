@@ -8,6 +8,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.config.DeviceConfig;
+import frc.lib.util.OrchestraUtil;
 import frc.robot.Constants;
 import frc.robot.Constants.Ports;
 
@@ -21,11 +22,12 @@ public class Intake extends SubsystemBase{
         configIntakeMotors();
 
         m_rightIntakeMotor.setControl(new Follower(Ports.LEFT_INTAKE_MOTOR_ID, false));
+        OrchestraUtil.add(m_leftIntakeMotor, m_rightIntakeMotor);
     }
 
     public void configIntakeMotors(){
-        DeviceConfig.configureTalonFX("Left Intake Motor", m_leftIntakeMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ);
-        DeviceConfig.configureTalonFX("Right Intake Motor", m_rightIntakeMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ);
+        //DeviceConfig.configureTalonFX("Left Intake Motor", m_leftIntakeMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ);
+        //DeviceConfig.configureTalonFX("Right Intake Motor", m_rightIntakeMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ);
     }
 
     public void setNeutralMode(NeutralModeValue mode){
