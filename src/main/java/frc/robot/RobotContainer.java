@@ -46,10 +46,10 @@ public class RobotContainer {
     
     /* Subsystems */
     private static final Swerve m_swerve = new Swerve();
-    private static final Shooter m_shooter = new Shooter();
-    private static final Pivot m_pivot = new Pivot();
-    private static final Elevator m_elevator = new Elevator();
-    private static final Conveyor m_conveyor = new Conveyor();
+    //private static final Shooter m_shooter = new Shooter();
+    //private static final Pivot m_pivot = new Pivot();
+    //private static final Elevator m_elevator = new Elevator();
+    //private static final Conveyor m_conveyor = new Conveyor();
     private static final Intake m_intake = new Intake();
 
 
@@ -125,7 +125,7 @@ public class RobotContainer {
         );
 
         Autonomous.addRoutines(
-            Routines.testAuto(m_swerve).withName("Test Auto")
+            Routines.Close5(m_swerve).withName("Close5")
         );
     }
 

@@ -404,6 +404,7 @@ public final class Constants{
 
         public static final double DETECTOR_TARGET_TY = -10.0;
         public static final double DETECTOR_TARGET_TX = 0.0;
+        public static final double VALID_TARGET_THRESHOLD = 0;
     }
 
     public static final class FieldConstants{

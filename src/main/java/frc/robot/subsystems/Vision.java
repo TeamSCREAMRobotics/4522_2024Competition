@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import frc.lib.util.LimelightHelpers;
+import frc.robot.Constants.VisionConstants;
 
 public class Vision {
 
@@ -77,6 +78,10 @@ public class Vision {
 
     public static int getCurrentPipeline(Limelight limelight){
         return (int) LimelightHelpers.getCurrentPipelineIndex(limelight.getName());
+    }
+
+    public static boolean getValidTargetForCorrection(Limelight limelight){
+        return getTV(limelight) && getTX(limelight) > VisionConstants.VALID_TARGET_THRESHOLD;
     }
 
     public static void setLEDMode(Limelight limelight, LEDMode ledMode){

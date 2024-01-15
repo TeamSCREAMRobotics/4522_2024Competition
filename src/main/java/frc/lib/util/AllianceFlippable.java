@@ -44,7 +44,7 @@ public final class AllianceFlippable {
         return flip ? blueValue : redValue;
     }
 
-    public static Pose2d Pose2d(Pose2d blueValue){
+    public static Pose2d MapPose2d(Pose2d blueValue){
         return new Pose2d(MapTranslation2d(blueValue.getTranslation()), ForwardRotation());
     }
 

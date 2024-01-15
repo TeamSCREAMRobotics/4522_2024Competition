@@ -3,54 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.496814123442796,
-        "y": 4.286166175756032
+        "x": 2.649054998537956,
+        "y": 6.874261052373746
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9815373154284097,
-        "y": 4.555515416309007
+        "x": 5.026354817331601,
+        "y": 7.213875312201409
       },
       "isLocked": false,
-      "linkedName": "Close4_1End"
+      "linkedName": "Close4_3End"
     },
     {
       "anchor": {
-        "x": 2.4733924503512332,
-        "y": 5.562647359246215
+        "x": 7.930642280685416,
+        "y": 7.436381206571257
       },
       "prevControl": {
-        "x": 1.5833688728718387,
-        "y": 5.082503060869173
+        "x": 6.900088664656642,
+        "y": 7.366116187296568
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Close4_2End"
+      "linkedName": "Close5_1End"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "StartIntake",
-      "waypointRelativePos": 0.6,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "StartIntake"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0.0,
+      "name": "StopIntake",
+      "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
         "data": {
@@ -64,6 +47,16 @@
           ]
         }
       }
+    },
+    {
+      "name": "StartIntake",
+      "waypointRelativePos": 0.85,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -74,14 +67,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Close4",
+  "folder": "Close5",
   "previewStartingState": {
-    "rotation": -27.0,
+    "rotation": 27.0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
