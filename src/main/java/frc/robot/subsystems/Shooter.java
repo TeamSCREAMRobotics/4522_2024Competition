@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -25,8 +24,8 @@ public class Shooter extends SubsystemBase{
     }
     
     private void configShooterMotors() {
-        //DeviceConfig.configureTalonFX("rightShooterMotor", m_rightShooterMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ); //TODO create shooter config
-        //DeviceConfig.configureTalonFX("leftShooterMotor", m_leftShooterMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ); //TODO create shooter config
+        // DeviceConfig.configureTalonFX("rightShooterMotor", m_rightShooterMotor, DeviceConfig.shooterFXConfig(), Constants.LOOP_TIME_HZ);
+        // DeviceConfig.configureTalonFX("leftShooterMotor", m_leftShooterMotor, DeviceConfig.shooterFXConfig(), Constants.LOOP_TIME_HZ);
     }
     
     public void setNeutralModes(NeutralModeValue shooterMode){

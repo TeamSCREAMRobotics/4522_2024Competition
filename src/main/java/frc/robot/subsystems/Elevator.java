@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -30,8 +29,8 @@ public class Elevator extends SubsystemBase{
     }
     
     private void configShooterMotors() {
-        //DeviceConfig.configureTalonFX("Right Elevator Motor", m_rightElevatorMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ); //TODO create elevator config
-        //DeviceConfig.configureTalonFX("Left Elevator Motor", m_leftElevatorMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ); //TODO create elevator config
+        // DeviceConfig.configureTalonFX("Right Elevator Motor", m_rightElevatorMotor, DeviceConfig.elevatorFXConfig(), Constants.LOOP_TIME_HZ);
+        // DeviceConfig.configureTalonFX("Left Elevator Motor", m_leftElevatorMotor, DeviceConfig.elevatorFXConfig(), Constants.LOOP_TIME_HZ);
     }
 
     public void setNeutralModes(NeutralModeValue mode){

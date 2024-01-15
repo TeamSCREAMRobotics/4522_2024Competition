@@ -76,8 +76,8 @@ public class Controlboard{
         return driverController.b();
     }
 
-    //Changes how the angle/height of the pivot and elevator are input
     public static Trigger getManualMode(){
+    /* Changes how the angle/height of the pivot and elevator are input */
         return operatorController.back();
     }
 

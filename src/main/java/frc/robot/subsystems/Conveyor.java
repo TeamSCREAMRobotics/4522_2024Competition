@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -20,7 +19,7 @@ public class Conveyor extends SubsystemBase{
     }
     
     private void configShooterMotors() {
-        //DeviceConfig.configureTalonFX("Conveyor Motor", m_conveyorMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ); //TODO create conveyor config
+        // DeviceConfig.configureTalonFX("Conveyor Motor", m_conveyorMotor, DeviceConfig.conveyorFXConfig(), Constants.LOOP_TIME_HZ);
     }
     
     public void setNeutralModes(NeutralModeValue mode){

@@ -3,6 +3,7 @@ package frc.lib.config;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
@@ -22,6 +23,11 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.lib.config.ErrorChecker.DeviceConfiguration;
 import frc.lib.pid.ScreamPIDConstants;
+import frc.robot.Constants.ConveyorConstants;
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.PivotConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.SwerveConstants.SteerConstants;
 import frc.robot.Constants.SwerveConstants.DriveConstants;
@@ -77,6 +83,86 @@ public class DeviceConfig {
     public static Pigeon2Configuration swervePigeonConfig(){
         Pigeon2Configuration config = new Pigeon2Configuration();
         config.MountPose.MountPoseYaw = -90;
+        return config;
+    }
+    
+    public static TalonFXConfiguration conveyorFXConfig(){
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        config.Audio.BeepOnBoot = false;
+        config.Audio.BeepOnConfig = false;
+        config.Audio.AllowMusicDurDisable = true;
+        config.MotorOutput = FXMotorOutputConfig(ConveyorConstants.MOTOR_INVERT, ConveyorConstants.NEUTRAL_MODE);
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ConveyorConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
+        config.CurrentLimits = FXCurrentLimitsConfig(
+            ConveyorConstants.CURRENT_LIMIT_ENABLE, 
+            ConveyorConstants.SUPPLY_CURRENT_LIMIT, 
+            ConveyorConstants.SUPPLY_CURRENT_THRESHOLD, 
+            ConveyorConstants.SUPPLY_TIME_THRESHOLD);
+        return config;
+    }
+
+    public static TalonFXConfiguration elevatorFXConfig(){
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        config.Audio.BeepOnBoot = false;
+        config.Audio.BeepOnConfig = false;
+        config.Audio.AllowMusicDurDisable = true;
+        config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(ElevatorConstants.SOFTWARE_LIMIT_ENABLE, ElevatorConstants.FORWARD_SOFT_LIMIT, ElevatorConstants.REVERSE_SOFT_LIMIT);
+        config.MotorOutput = FXMotorOutputConfig(ElevatorConstants.MOTOR_INVERT, ElevatorConstants.NEUTRAL_MODE);
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ElevatorConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
+        config.CurrentLimits = FXCurrentLimitsConfig(
+            ElevatorConstants.CURRENT_LIMIT_ENABLE, 
+            ElevatorConstants.SUPPLY_CURRENT_LIMIT, 
+            ElevatorConstants.SUPPLY_CURRENT_THRESHOLD, 
+            ElevatorConstants.SUPPLY_TIME_THRESHOLD);
+        config.Slot0 = FXPIDConfig(ElevatorConstants.PID_CONSTANTS);
+        return config;
+    }
+
+    public static TalonFXConfiguration intakeFXConfig(){
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        config.Audio.BeepOnBoot = false;
+        config.Audio.BeepOnConfig = false;
+        config.Audio.AllowMusicDurDisable = true;
+        config.MotorOutput = FXMotorOutputConfig(IntakeConstants.MOTOR_INVERT, IntakeConstants.NEUTRAL_MODE);
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, IntakeConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
+        config.CurrentLimits = FXCurrentLimitsConfig(
+            IntakeConstants.CURRENT_LIMIT_ENABLE, 
+            IntakeConstants.SUPPLY_CURRENT_LIMIT, 
+            IntakeConstants.SUPPLY_CURRENT_THRESHOLD, 
+            IntakeConstants.SUPPLY_TIME_THRESHOLD);
+        return config;
+    }
+
+    public static TalonFXConfiguration pivotFXConfig(){
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        config.Audio.BeepOnBoot = false;
+        config.Audio.BeepOnConfig = false;
+        config.Audio.AllowMusicDurDisable = true;
+        config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(PivotConstants.SOFTWARE_LIMIT_ENABLE, PivotConstants.FORWARD_SOFT_LIMIT, PivotConstants.REVERSE_SOFT_LIMIT);
+        config.MotorOutput = FXMotorOutputConfig(PivotConstants.MOTOR_INVERT, PivotConstants.NEUTRAL_MODE);
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, PivotConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
+        config.CurrentLimits = FXCurrentLimitsConfig(
+            PivotConstants.CURRENT_LIMIT_ENABLE, 
+            PivotConstants.SUPPLY_CURRENT_LIMIT, 
+            PivotConstants.SUPPLY_CURRENT_THRESHOLD, 
+            PivotConstants.SUPPLY_TIME_THRESHOLD);
+        config.Slot0 = FXPIDConfig(PivotConstants.PID_CONSTANTS);
+        return config;
+    }
+    
+    public static TalonFXConfiguration shooterFXConfig(){
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        config.Audio.BeepOnBoot = false;
+        config.Audio.BeepOnConfig = false;
+        config.Audio.AllowMusicDurDisable = true;
+        config.MotorOutput = FXMotorOutputConfig(ShooterConstants.MOTOR_INVERT, ShooterConstants.NEUTRAL_MODE);
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ShooterConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
+        config.CurrentLimits = FXCurrentLimitsConfig(
+            ShooterConstants.CURRENT_LIMIT_ENABLE, 
+            ShooterConstants.SUPPLY_CURRENT_LIMIT, 
+            ShooterConstants.SUPPLY_CURRENT_THRESHOLD, 
+            ShooterConstants.SUPPLY_TIME_THRESHOLD);
+        config.Slot0 = FXPIDConfig(ShooterConstants.PID_CONSTANTS);
         return config;
     }
 
@@ -194,6 +280,15 @@ public class DeviceConfig {
         config.PeakForwardTorqueCurrent = peakForward;
         config.PeakReverseTorqueCurrent = peakReverse;
         config.TorqueNeutralDeadband = neutralDeadband;
+        return config;
+    }
+
+    public static SoftwareLimitSwitchConfigs FXSoftwareLimitSwitchConfig(boolean eneable, double forwardLimit, double reverseLimit){
+        SoftwareLimitSwitchConfigs config = new SoftwareLimitSwitchConfigs();
+        config.ForwardSoftLimitEnable = eneable;
+        config.ReverseSoftLimitEnable = eneable;
+        config.ForwardSoftLimitThreshold = forwardLimit;
+        config.ReverseSoftLimitThreshold = reverseLimit;
         return config;
     }
 }

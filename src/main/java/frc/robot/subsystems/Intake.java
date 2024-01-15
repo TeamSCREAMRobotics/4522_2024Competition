@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -26,8 +25,8 @@ public class Intake extends SubsystemBase{
     }
 
     public void configIntakeMotors(){
-        //DeviceConfig.configureTalonFX("Left Intake Motor", m_leftIntakeMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ);
-        //DeviceConfig.configureTalonFX("Right Intake Motor", m_rightIntakeMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Left Intake Motor", m_leftIntakeMotor, DeviceConfig.intakeFXConfig(), Constants.LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Right Intake Motor", m_rightIntakeMotor, DeviceConfig.intakeFXConfig(), Constants.LOOP_TIME_HZ);
     }
 
     public void setNeutralMode(NeutralModeValue mode){

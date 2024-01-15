@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -26,7 +25,7 @@ public class Pivot extends SubsystemBase{
     }
 
     private void configPivotMotor() {
-        //DeviceConfig.configureTalonFX("pivotMotor", m_pivotMotor, new TalonFXConfiguration(), Constants.LOOP_TIME_HZ); //TODO create pivot config
+        // DeviceConfig.configureTalonFX("pivotMotor", m_pivotMotor, DeviceConfig.pivotFXConfig(), Constants.LOOP_TIME_HZ);
     }
     
     public void setNeutralModes(NeutralModeValue mode){

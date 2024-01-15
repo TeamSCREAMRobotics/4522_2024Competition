@@ -243,31 +243,62 @@ public final class Constants{
     }
 
     public static final class ShooterConstants { //TODO all values
+        
+        /* Gear Ratio */
+        public static final double GEAR_RATIO = 1.0;
+
+        /* Motor Invert */
+        public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;;
+        
+        /* Neutral Modes */
+        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
+        
+        /* Current Limits */
+        public static final int SUPPLY_CURRENT_LIMIT = 25;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 40;
+        public static final double SUPPLY_TIME_THRESHOLD = 0.1;
+        public static final boolean CURRENT_LIMIT_ENABLE = true;
+
+        public static final double TARGET_THRESHOLD = 0.50;
 
         public static final double CRUISE_VELOCITY = 40;
         public static final double ACCELERATION = 10;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(60, 0.0, 0.0);
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(15, 0.0, 0.0);
 
         public static final double SHOOTERSHOT_SPEED = 1.0;
         public static final double SHOOTEREJECT_SPEED = 0.5;
     }
     
     public static final class PivotConstants { //TODO all values
-
-        public static final double GEAR_RATIO = 0;
         
-        public static final Rotation2d FORWARD_SOFT_LIMIT = Rotation2d.fromDegrees(180.0);
-        public static final Rotation2d REVERSE_SOFT_LIMIT = Rotation2d.fromDegrees(0.0);
+        /* Gear Ratio */
+        public static final double GEAR_RATIO = 1.0;
 
-        public static final double TARGET_THRESHOLD = 1.00; //Degrees
+        /* Motor Invert */
+        public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;;
+        
+        /* Neutral Modes */
+        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
+        
+        /* Current Limits */
+        public static final int SUPPLY_CURRENT_LIMIT = 25;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 40;
+        public static final double SUPPLY_TIME_THRESHOLD = 0.1;
+        public static final boolean CURRENT_LIMIT_ENABLE = true;
+        
+        public static final boolean SOFTWARE_LIMIT_ENABLE = true;
+        public static final double FORWARD_SOFT_LIMIT = 0.0;
+        public static final double REVERSE_SOFT_LIMIT = 0.0;
+
+        public static final double TARGET_THRESHOLD = 0.50;
 
         public static final double CRUISE_VELOCITY = 40;
         public static final double ACCELERATION = 10;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(60, 0.0, 0.0);
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(15, 0.0, 0.0);
 
         public static final Rotation2d pivotHome_Angle = Rotation2d.fromDegrees(0.0);
         public static final Rotation2d pivotSubwooferShot_Angle = Rotation2d.fromDegrees(0.0);
@@ -283,8 +314,22 @@ public final class Constants{
 
     public static final class ElevatorConstants { //TODO all values
 
-        public static final double GEAR_RATIO = 0;
+        /* Gear Ratio */
+        public static final double GEAR_RATIO = 1.0;
+
+        /* Motor Invert */
+        public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;;
         
+        /* Neutral Modes */
+        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
+        
+        /* Current Limits */
+        public static final int SUPPLY_CURRENT_LIMIT = 25;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 40;
+        public static final double SUPPLY_TIME_THRESHOLD = 0.1;
+        public static final boolean CURRENT_LIMIT_ENABLE = true;
+        
+        public static final boolean SOFTWARE_LIMIT_ENABLE = true;
         public static final double FORWARD_SOFT_LIMIT = 0.0;
         public static final double REVERSE_SOFT_LIMIT = 0.0;
 
@@ -308,13 +353,43 @@ public final class Constants{
         }
     }
 
-    public static final class IntakeConstants {
+    public static final class IntakeConstants { //TODO all values
 
         public static final double INTAKE_SPEED = -0.75;
         public static final double EJECT_SPEED = 0.5;
+
+        /* Gear Ratio */
+        public static final double GEAR_RATIO = 1.0;
+        
+        /* Motor Invert */
+        public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;;
+        
+        /* Neutral Modes */
+        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
+        
+        /* Current Limits */
+        public static final int SUPPLY_CURRENT_LIMIT = 25;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 40;
+        public static final double SUPPLY_TIME_THRESHOLD = 0.1;
+        public static final boolean CURRENT_LIMIT_ENABLE = true;
     }
 
-    public static final class ConveyorConstants {
+    public static final class ConveyorConstants {//TODO all values
+        
+        /* Gear Ratio */
+        public static final double GEAR_RATIO = 1.0;
+        
+        /* Motor Invert */
+        public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;;
+        
+        /* Neutral Modes */
+        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
+        
+        /* Current Limits */
+        public static final int SUPPLY_CURRENT_LIMIT = 25;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 40;
+        public static final double SUPPLY_TIME_THRESHOLD = 0.1;
+        public static final boolean CURRENT_LIMIT_ENABLE = true;
         
         public static final double SPEAKER_SPEED = 1.00;
         public static final double AMP_TRAP_SPEED = -1.00;
