@@ -72,7 +72,7 @@ public class Elevator extends SubsystemBase{
         return Math.abs(getElevatorError()) < ElevatorConstants.TARGET_THRESHOLD;
     }
     
-    public double getElevatorHeight(double distance){
+    public double getElevatorTargetHeight(double distance){
         return ElevatorConstants.elevatorTreeMap.get(distance);
     }
 

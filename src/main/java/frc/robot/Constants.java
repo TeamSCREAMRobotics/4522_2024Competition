@@ -7,7 +7,6 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -106,7 +105,7 @@ public final class Constants{
         /* Swerve Controllers */
         public static final ScreamPIDConstants VISION_TRANSLATION_X_CONSTANTS = new ScreamPIDConstants(1, 0, 0.0);
         public static final ScreamPIDConstants VISION_TRANSLATION_Y_CONSTANTS = new ScreamPIDConstants(4.5, 0, 0.0);
-        public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(1, 0, 0);
+        public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(0.2, 0, 0);
 
         /* PathPlanner Constants */
         public static final ScreamPIDConstants PATH_TRANSLATION_CONSTANTS = new ScreamPIDConstants(10.0, 0.0, 0.0);
@@ -247,6 +246,10 @@ public final class Constants{
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
         public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(60, 0.0, 0.0);
 
+        public static final double shooterSubwooferOutput = 1.0;
+        public static final double shooterAmpOutput = 1.0;
+        public static final double shooterTrapOutput = 1.0;
+
         public static final InterpolatingDoubleTreeMap shooterTreeMap = new InterpolatingDoubleTreeMap();
         static{
             //shooterTreeMap.put(distance, speed)
@@ -269,9 +272,14 @@ public final class Constants{
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
         public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(60, 0.0, 0.0);
 
+        public static final Rotation2d pivotHomeAngle = Rotation2d.fromDegrees(0.0);
+        public static final Rotation2d pivotSubwooferShotAngle = Rotation2d.fromDegrees(0.0);
+        public static final Rotation2d pivotAmpShotAngle = Rotation2d.fromDegrees(0.0);
+        public static final Rotation2d pivotTrapShotAngle = Rotation2d.fromDegrees(0.0);
+
         public static final InterpolatingDoubleTreeMap pivotTreeMap = new InterpolatingDoubleTreeMap();
         static{
-            //pivotTreeMap.put(distance, angle)
+            //pivotTreeMap.put(distance, angle (degrees))
             pivotTreeMap.put(null, null);
         }
     }
@@ -290,6 +298,11 @@ public final class Constants{
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
         public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(15, 0.0, 0.0);
+
+        public static final double elevatorHomePosition = 0.0;
+        public static final double elevatorSubwooferShotPosition = 0.0;
+        public static final double elevatorAmpShotPosition = 0.0;
+        public static final double elevatorTrapShotPosition = 0.0;
 
         public static final InterpolatingDoubleTreeMap elevatorTreeMap = new InterpolatingDoubleTreeMap();
         static{
@@ -338,9 +351,11 @@ public final class Constants{
             CENTER_PIECE_4,
             CENTER_PIECE_5,
         };
+
+        public static final Translation2d BLUE_PODIUM = new Translation2d(2.737, 4.131913);
+        public static final Translation2d RED_PODIUM = new Translation2d(13.816724, 4.131913);
+
         public static final Translation3d BLUE_SPEAKER_OPENING = new Translation3d(0.0, 5.54, 2.106);
         public static final Translation3d RED_SPEAKER_OPENING = AllianceFlippable.Translation3d(BLUE_SPEAKER_OPENING);
     }
-
-
 }

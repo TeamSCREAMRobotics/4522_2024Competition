@@ -20,5 +20,6 @@ public class PathCorrectionHandler {
     private static Iterator<Pose2d> iterator = list.iterator();
 
     public static Pose2d getTargetPose(){
+        return new Pose2d();
     }
 }

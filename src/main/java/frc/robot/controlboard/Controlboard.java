@@ -57,6 +57,10 @@ public class Controlboard{
         return driverController.povUp();
     }
 
+    public static Trigger snapToSpeaker(){
+        return driverController.a();
+    }
+
     /**
      * Retreives the current field-centric mode.
      *
@@ -71,41 +75,70 @@ public class Controlboard{
     public static Trigger getBTestButton(){
         return driverController.b();
     }
+    
+
+    public static Trigger getManualMode(){
+        return operatorController.back();
+    }
 
     /* Shooter */
-    public static final Trigger getManualFire(){
-        return operatorController.rightTrigger(TRIGGER_DEADBAND);
-    }
+    // public static final Trigger getManualPrepFire(){
+    //     return operatorController.start(); //For subwoofer/amp/trap shots
+    // }
 
-    public static Trigger getPrepShot(){
-        return operatorController.rightBumper();
-    }
-
-    public static Trigger getEject(){ //TODO should eject run an ejection through the shooter flywheel or the intake? Either?
+    public static final Trigger getEjectShooter(){
         return operatorController.leftTrigger(TRIGGER_DEADBAND);
     }
 
-    /* Pivot */
-    public static Trigger getManualPivot_Boolean(){
-        return operatorController.back();
+    public static final Trigger getAutoPrepShot(){
+        return operatorController.leftBumper();
     }
-    public static DoubleSupplier getManualPivot_Output(){
+
+    /* Pivot */
+    public static final DoubleSupplier getManualPivot_Output(){
         return () -> operatorController.getRightY();
     }
-    //TODO Create setpoint buttons
+    
+    public static final Trigger setPivotPosition_Home(){
+        return operatorController.povDown();
+    }
+    
+    public static final Trigger setPivotPosition_Subwoofer(){
+        return operatorController.povRight();
+    }
+    
+    public static final Trigger setPivotPosition_Amp(){
+        return operatorController.povUp();
+    }
+
+    public static final Trigger setPivotPosition_Trap(){
+        return operatorController.povLeft();
+    }
 
     /* Elevator */
-    public static Trigger getManualElevator_Boolean(){
-        return operatorController.start();
-    }
-    public static DoubleSupplier getManualElevator_Output(){
+    public static final DoubleSupplier getManualElevator_Output(){
         return () -> operatorController.getLeftY();
     }
-    //TODO Create setpoint buttons
+    
+    public static final Trigger setElevatorPosition_Home(){
+        return operatorController.a();
+    }
+    
+    public static final Trigger setElevatorPosition_Subwoofer(){
+        return operatorController.b();
+    }
+    
+    public static final Trigger setElevatorPosition_Amp(){
+        return operatorController.y();
+    }
+
+    public static final Trigger setElevatorPosition_Trap(){
+        return operatorController.x();
+    }
 
     /* Conveyor */
-    public static final Trigger getAutoFire(){
-        return operatorController.a();
+    public static final Trigger getFire(){
+        return operatorController.start();
     }
 
     /* Intake */
