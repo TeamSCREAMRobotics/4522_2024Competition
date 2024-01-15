@@ -16,8 +16,6 @@ import frc.lib.util.AllianceFlippable;
 import frc.robot.Constants.FieldConstants;
 
 public class PathCorrectionHandler {
-    
-    private PathPlannerPath[] paths = new PathPlannerPath[5];
 
     public enum CenterPiece{
         ONE(1), TWO(2), THREE(3), FOUR(4), FIVE(5);
@@ -33,6 +31,8 @@ public class PathCorrectionHandler {
         TO_AMP, TO_SOURCE, AUTO;
     }
 
+    private PathPlannerPath[] paths = new PathPlannerPath[5];
+    private Command[] commands;
     private CenterPiece targetPiece;
     private Direction direction;
     private int maxCorrections;
@@ -40,9 +40,14 @@ public class PathCorrectionHandler {
     public PathCorrectionHandler(CenterPiece targetPiece, Direction direction, int maxCorrections){
         this.targetPiece = targetPiece;
         this.direction = direction;
-        this.maxCorrections = maxCorrections;
-        for(int i = 1; i <= 5; i++){
+        commands = new Command[maxCorrections];
+        
+        for(int i = 0; i == 4; i++){
             paths[i] = PathPlannerPath.fromPathFile("Center" + String.valueOf(i));
         }
+    }
+
+    public Command[] getCommands(){
+        return commands;
     }
 }

@@ -3,11 +3,14 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import frc.lib.util.LimelightHelpers;
 
 public class Vision {
 
-    private static LinearFilter filter = LinearFilter.movingAverage(25);
+    private static LinearFilter numberFilter = LinearFilter.movingAverage(25);
+    private static LinearFilter poseFilter = LinearFilter.movingAverage(10);
 
     public record CropWindow(double cropXMin, double cropXMax, double cropYMin, double cropYMax){};
     
@@ -45,20 +48,31 @@ public class Vision {
         return LimelightHelpers.getTV(limelight.getName());
     }
 
+    public static double getLatency(Limelight limelight){
+        return LimelightHelpers.getLatency_Pipeline(limelight.getName());
+    }
+
     public static Pose2d getBotPose2d(Limelight limelight){
-        return LimelightHelpers.getBotPose2d_wpiBlue(limelight.getName());
+        return filterPose2d(LimelightHelpers.getBotPose2d_wpiBlue(limelight.getName()));
     }
 
     public static Pose3d getBotPose3d(Limelight limelight){
-        return LimelightHelpers.getBotPose3d_wpiBlue(limelight.getName());
+        return filterPose3d(LimelightHelpers.getBotPose3d_wpiBlue(limelight.getName()));
     }
 
     public static Pose2d getBosePose2d_TargetSpace(Limelight limelight){
-        return LimelightHelpers.getBotPose3d_TargetSpace(limelight.getName()).toPose2d();
+        return filterPose2d(LimelightHelpers.getBotPose3d_TargetSpace(limelight.getName()).toPose2d());
     }
 
     public static Pose3d getBosePose3d_TargetSpace(Limelight limelight){
-        return LimelightHelpers.getBotPose3d_TargetSpace(limelight.getName());
+        return filterPose3d(LimelightHelpers.getBotPose3d_TargetSpace(limelight.getName()));
+    }
+
+    public static Pose2d[] getBotPoses(){
+        return new Pose2d[] {
+            getBotPose2d(Limelight.BACK),
+            getBotPose2d(Limelight.FRONT),
+        };
     }
 
     public static int getCurrentPipeline(Limelight limelight){
@@ -88,6 +102,26 @@ public class Vision {
     }
 
     public static double filter(double value){
-        return filter.calculate(value);
+        return numberFilter.calculate(value);
+    }
+
+    public static Pose2d filterPose2d(Pose2d pose){
+        return new Pose2d(
+            poseFilter.calculate(pose.getX()),
+            poseFilter.calculate(pose.getY()),
+            Rotation2d.fromRadians(poseFilter.calculate(pose.getRotation().getRadians()))
+        );
+    }
+
+    public static Pose3d filterPose3d(Pose3d pose){
+        return new Pose3d(
+            poseFilter.calculate(pose.getX()),
+            poseFilter.calculate(pose.getY()),
+            poseFilter.calculate(pose.getZ()),
+            new Rotation3d(
+               poseFilter.calculate(pose.getRotation().getX()), 
+               poseFilter.calculate(pose.getRotation().getY()), 
+               poseFilter.calculate(pose.getRotation().getZ())
+            ));
     }
 }

@@ -35,7 +35,7 @@ public final class AllianceFlippable {
         return flip ? blueValue : redValue;
     }
 
-    public static Translation2d Translation2d(Translation2d blueValue){
+    public static Translation2d MapTranslation2d(Translation2d blueValue){
         double temp = Conversions.mapRange(blueValue.getX(), 0.0, FieldConstants.FIELD_DIMENSIONS.getX()/2, FieldConstants.FIELD_DIMENSIONS.getX(), FieldConstants.FIELD_DIMENSIONS.getX()/2);
         return new Translation2d(temp, blueValue.getY());
     }
@@ -45,11 +45,11 @@ public final class AllianceFlippable {
     }
 
     public static Pose2d Pose2d(Pose2d blueValue){
-        return new Pose2d(Translation2d(blueValue.getTranslation()), ForwardRotation());
+        return new Pose2d(MapTranslation2d(blueValue.getTranslation()), ForwardRotation());
     }
 
-    public static Translation3d Translation3d(Translation3d blueValue){
-        Translation2d temp = Translation2d(blueValue.toTranslation2d());
+    public static Translation3d MapTranslation3d(Translation3d blueValue){
+        Translation2d temp = MapTranslation2d(blueValue.toTranslation2d());
         return new Translation3d(temp.getX(), temp.getY(), blueValue.getZ());
     }
 }

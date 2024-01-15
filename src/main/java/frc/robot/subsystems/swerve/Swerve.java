@@ -7,13 +7,13 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.RotationTarget;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
@@ -28,8 +28,10 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.SwerveConstants.ModuleConstants;
 import frc.robot.Constants.SwerveConstants.ModuleConstants.ModuleLocation;
+import frc.robot.subsystems.Vision;
 
 /**
  * A swerve drive subsystem.
@@ -40,7 +42,7 @@ public class Swerve extends SubsystemBase {
     private Pigeon2 m_pigeon2;
     private SwerveModule[] m_swerveModules;
     private SwerveModulePosition[] m_modulePositions;
-    private SwerveDriveOdometry m_odometry;
+    private SwerveDrivePoseEstimator m_poseEstimator;
     private OdometryThread m_odometryThread;
     private ChassisSpeeds m_currentSpeeds = new ChassisSpeeds();
 
@@ -71,7 +73,14 @@ public class Swerve extends SubsystemBase {
          * Configures the odometry, which requires the kinematics, gyro reading, and module positions.
          * It uses these values to estimate the robot's position on the field.
          */
-        m_odometry = new SwerveDriveOdometry(SwerveConstants.KINEMATICS, getYaw(), getModulePositions(), new Pose2d(new Translation2d(), AllianceFlippable.ForwardRotation()));
+        m_poseEstimator = new SwerveDrivePoseEstimator(
+            SwerveConstants.KINEMATICS, 
+            getYaw(), 
+            getModulePositions(), 
+            new Pose2d(new Translation2d(), AllianceFlippable.ForwardRotation()), 
+            VisionConstants.STATE_STD_DEVS,
+            VisionConstants.VISION_STD_DEVS);
+        
         m_odometryThread = new OdometryThread();
         m_odometryThread.start();
 
@@ -178,7 +187,7 @@ public class Swerve extends SubsystemBase {
      * @param pose The new pose to set.
      */
     public void resetPose(Pose2d pose) {
-        m_odometry.resetPosition(getRotation(), getModulePositions(), pose);
+        m_poseEstimator.resetPosition(getRotation(), getModulePositions(), pose);
     }
 
     /**
@@ -187,7 +196,7 @@ public class Swerve extends SubsystemBase {
      * @return The current pose of the odometry.
      */
     public Pose2d getPose() {
-        return m_odometry.getPoseMeters();
+        return m_poseEstimator.getEstimatedPosition();
     }
 
     /**
@@ -241,7 +250,7 @@ public class Swerve extends SubsystemBase {
      * @return The odometry rotation as a Rotation2d.
      */
     public Rotation2d getRotation() {
-        return m_odometry.getPoseMeters().getRotation();
+        return m_poseEstimator.getEstimatedPosition().getRotation();
     }
 
     public Rotation2d getYaw(){
@@ -283,7 +292,11 @@ public class Swerve extends SubsystemBase {
      * Called periodically through SubsystemBase
      */
     @Override
-    public void periodic() {}
+    public void periodic() {
+        /* for(Pose2d pose : Vision.getBotPoses()){
+            m_poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp());
+        } */
+    }
 
     private class OdometryThread extends Thread {
         private BaseStatusSignal[] m_allSignals;
@@ -342,7 +355,7 @@ public class Swerve extends SubsystemBase {
                         BaseStatusSignal.getLatencyCompensatedValue(
                                 m_pigeon2.getYaw(), m_pigeon2.getAngularVelocityZDevice());
 
-                m_odometry.update(Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
+                m_poseEstimator.update(Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
             }
         }
         

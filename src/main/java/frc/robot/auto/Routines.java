@@ -13,9 +13,12 @@ import frc.lib.util.AllianceFlippable;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.intake.IntakeCommand;
+import frc.robot.shuffleboard.tabs.MatchTab;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class Routines {
+
+    private static PathCorrectionHandler correctionHandler;
 
     private static PathPlannerPath getPath(String pathName){
         return PathPlannerPath.fromPathFile(pathName);
@@ -26,13 +29,11 @@ public class Routines {
     }
 
     public static Command testAuto(Swerve swerve){
-        // Path to beginning piece + replanning check
-        // Vision targeting + replanning check
-        // Back to speaker
+        correctionHandler = new PathCorrectionHandler(MatchTab.getSelectedCenterPiece(), MatchTab.getSelectedDirection(), MatchTab.getSelectedMaxCorrections());
         return new SequentialCommandGroup(
             new InstantCommand(() -> swerve.resetPose(getPathStartingPose("Close4_1"))),
             new SequentialCommandGroup(
-                AutoBuilder.pathfindThenFollowPath(getPath("Center4"), SwerveConstants.PATH_CONSTRAINTS)
+                correctionHandler.getCommands()
             )
         );
     }

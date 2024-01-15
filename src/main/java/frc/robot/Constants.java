@@ -7,11 +7,15 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import frc.lib.pid.ScreamPIDConstants;
 import frc.lib.util.AllianceFlippable;
@@ -281,8 +285,8 @@ public final class Constants{
 
         public static final double GEAR_RATIO = 0;
         
-        public static final Rotation2d FORWARD_SOFT_LIMIT = Rotation2d.fromDegrees(180.0);
-        public static final Rotation2d REVERSE_SOFT_LIMIT = Rotation2d.fromDegrees(0.0);
+        public static final double FORWARD_SOFT_LIMIT = 0.0;
+        public static final double REVERSE_SOFT_LIMIT = 0.0;
 
         public static final double TARGET_THRESHOLD = 0.50;
 
@@ -318,6 +322,9 @@ public final class Constants{
     }
 
     public static final class VisionConstants {
+        public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
+        public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(0.5, 0.5, 0.5);
+
         public static final int DETECTOR_PIPELINE = 0;
 
         public static final double DETECTOR_TARGET_TY = -10.0;
@@ -356,6 +363,6 @@ public final class Constants{
         public static final Translation2d RED_PODIUM = new Translation2d(13.816724, 4.131913);
 
         public static final Translation2d BLUE_SPEAKER_OPENING = new Translation2d(0.0, 5.54);
-        public static final Translation2d RED_SPEAKER_OPENING = AllianceFlippable.Translation2d(BLUE_SPEAKER_OPENING);
+        public static final Translation2d RED_SPEAKER_OPENING = AllianceFlippable.MapTranslation2d(BLUE_SPEAKER_OPENING);
     }
 }
