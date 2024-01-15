@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.auto.PathCorrectionHandler.CenterPiece;
-import frc.robot.auto.PathCorrectionHandler.Direction;
+import frc.robot.auto.PathCorrectionHelper.CenterPiece;
+import frc.robot.auto.PathCorrectionHelper.Direction;
 import frc.robot.shuffleboard.ShuffleboardTabBase;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -39,13 +39,16 @@ public class MatchTab extends ShuffleboardTabBase {
     public void createEntries() {
         m_tab = Shuffleboard.getTab("Match");
 
+        m_centerPieceChooser.setDefaultOption("FIVE", CenterPiece.FIVE);
+        m_directionChooser.setDefaultOption("TO_AMP", Direction.TO_AMP);
+
         m_autoChooserEntry = createSendableEntry("Auto Chooser", m_autoChooser, new EntryProperties(0, 0, 2, 1));
         m_centerPieceChooserEntry = createSendableEntry("Center Piece Chooser", m_centerPieceChooser, new EntryProperties(0, 1));
         m_directionChooserEntry = createSendableEntry("Direction Chooser", m_directionChooser, new EntryProperties(1, 1));
 
-        m_maxCorrectionsEntry = createNumberEntry("Max Corrections", 0, new EntryProperties(2, 1));
+        m_maxCorrectionsEntry = createNumberEntry("Max Corrections", 0, new EntryProperties(0, 2));
 
-        m_field = createSendableEntry("Field", m_field2d, new EntryProperties(2, 0));
+        m_field = createSendableEntry("Field", m_field2d, new EntryProperties(2, 0, 6, 4));
     }
 
     @Override

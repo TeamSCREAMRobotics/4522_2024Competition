@@ -4,14 +4,15 @@
   "holonomicMode": true,
   "pathFolders": [
     "BackTo",
-    "ToCenter",
     "CenterPiecePathfinding",
-    "Close4"
+    "Close4",
+    "Close5",
+    "ToCenter"
   ],
   "autoFolders": [],
   "defaultMaxVel": 5.0,
   "defaultMaxAccel": 5.0,
   "defaultMaxAngVel": 570.0,
   "defaultMaxAngAccel": 440.0,
-  "maxModuleSpeed": 5.0
+  "maxModuleSpeed": 4.9
 }
