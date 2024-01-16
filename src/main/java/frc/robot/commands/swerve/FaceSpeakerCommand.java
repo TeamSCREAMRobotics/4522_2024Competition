@@ -26,8 +26,6 @@ public class FaceSpeakerCommand extends Command {
   PIDController targetController;
   Translation2d targetPose;
 
-  private int allianceCoeff = (int) AllianceFlippable.Number(1, -1);
-
   public FaceSpeakerCommand(Swerve swerve, Alliance allianceColor, DoubleSupplier[] drivingTranslation, Translation2d targetPose) {
     addRequirements(swerve);
 
@@ -46,7 +44,7 @@ public class FaceSpeakerCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Translation2d drivingTranslation = new Translation2d(drivingTranslationSupplier[0].getAsDouble(), drivingTranslationSupplier[1].getAsDouble()).times(allianceCoeff).times(SwerveConstants.MAX_SPEED);
+    Translation2d drivingTranslation = new Translation2d(drivingTranslationSupplier[0].getAsDouble(), drivingTranslationSupplier[1].getAsDouble()).times(AllianceFlippable.DirectionCoefficient()).times(SwerveConstants.MAX_SPEED);
 
     double targetX = allianceSpeakerPose.getX() - swerve.getPose().getX();
     double targetY = allianceSpeakerPose.getY() - swerve.getPose().getY();

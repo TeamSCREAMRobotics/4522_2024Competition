@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.lib.util.AllianceFlippable;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.PivotConstants;
@@ -28,7 +29,7 @@ public class AutoPrepCommand extends Command {
   double distanceFromSpeaker_Y;
   double distanceFromSpeaker;
 
-  Translation2d allianceSpeakerPose;
+  Translation2d allianceSpeakerPosition;
 
   public AutoPrepCommand(Pivot pivot, Elevator elevator, Swerve swerve, Alliance allianceColor) {
     addRequirements(pivot, elevator, swerve);
@@ -42,15 +43,14 @@ public class AutoPrepCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(allianceColor == Alliance.Blue) allianceSpeakerPose = FieldConstants.BLUE_SPEAKER_OPENING;
-    if(allianceColor == Alliance.Red) allianceSpeakerPose = FieldConstants.RED_SPEAKER_OPENING;
+    allianceSpeakerPosition = AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    distanceFromSpeaker_X = Math.abs(swerve.getPose().getX() - allianceSpeakerPose.getX());
-    distanceFromSpeaker_Y = Math.abs(swerve.getPose().getY() - allianceSpeakerPose.getY());
+    distanceFromSpeaker_X = Math.abs(swerve.getPose().getX() - allianceSpeakerPosition.getX());
+    distanceFromSpeaker_Y = Math.abs(swerve.getPose().getY() - allianceSpeakerPosition.getY());
     distanceFromSpeaker = new Translation2d(distanceFromSpeaker_X, distanceFromSpeaker_Y).getNorm();
   
     pivot.pivotToTargetAngle(Rotation2d.fromDegrees(PivotConstants.pivotTreeMap.get(distanceFromSpeaker)));
@@ -60,8 +60,8 @@ public class AutoPrepCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    pivot.pivotToTargetAngle(PivotConstants.pivotHome_Angle);
-    elevator.toTargetHeight(ElevatorConstants.elevatorHome_Position);
+    pivot.pivotToTargetAngle(PivotConstants.PIVOT_HOME_ANGLE);
+    elevator.toTargetHeight(ElevatorConstants.ELEVATOR_HOME_POSITION);
   }
 
   // Returns true when the command should end.

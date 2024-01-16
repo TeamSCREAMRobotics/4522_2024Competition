@@ -22,10 +22,12 @@ import frc.robot.auto.Autonomous;
 import frc.robot.auto.Autonomous.PPEvent;
 import frc.robot.auto.Routines;
 import frc.robot.commands.AutoPrepCommand;
+import frc.robot.commands.FeedForwardCharacterization;
+import frc.robot.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import frc.robot.commands.conveyor.ConveyorManualCommand;
 import frc.robot.commands.elevator.ElevatorManualCommand;
 import frc.robot.commands.elevator.ElevatorTargetCommand;
-import frc.robot.commands.intake.IntakeCommand;
+import frc.robot.commands.intake.IntakeManualCommand;
 import frc.robot.commands.pivot.PivotManualCommand;
 import frc.robot.commands.pivot.PivotTargetCommand;
 import frc.robot.commands.shooter.ShooterManualCommand;
@@ -48,10 +50,9 @@ public class RobotContainer {
     private static final Swerve m_swerve = new Swerve();
     //private static final Shooter m_shooter = new Shooter();
     //private static final Pivot m_pivot = new Pivot();
-    //private static final Elevator m_elevator = new Elevator();
+    private static final Elevator m_elevator = new Elevator();
     //private static final Conveyor m_conveyor = new Conveyor();
     private static final Intake m_intake = new Intake();
-
 
     private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve);
     
@@ -70,16 +71,16 @@ public class RobotContainer {
      */
     private void configButtonBindings() {
         Controlboard.getZeroGyro().onTrue(new InstantCommand(() -> m_swerve.resetGyro(AllianceFlippable.ForwardRotation())));
-        Controlboard.getBTestButton().onTrue(new InstantCommand(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, Rotation2d.fromDegrees(0)))));
+        Controlboard.getBTestButton().whileTrue(new FeedForwardCharacterization(m_elevator, true, new FeedForwardCharacterizationData("Elevator"), m_elevator::setElevatorVoltage, m_elevator::getElevatorVelocity, m_elevator::getElevatorAcceleration));
 
         /* Conveyor */
-        // Controlboard.getFire_Speaker().toggleOnTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.SPEAKER_SPEED)).onFalse(new ConveyorManualCommand(m_conveyor, 0.0));
+        // Controlboard.getFire_Speaker().toggleOnTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.SPEAKER_SPEED));
 
         /* Elevator */
-        // Controlboard.getManualMode().toggleOnTrue(new ElevatorManualCommand(m_elevator, Controlboard.getManualElevator_Output())).onFalse(new ElevatorManualCommand(m_elevator, () -> 0.0));
+        // Controlboard.getManualMode().toggleOnTrue(new ElevatorManualCommand(m_elevator, Controlboard.getManualElevator_Output()));
 
         /* Pivot */
-        // Controlboard.getManualMode().toggleOnTrue(new PivotManualCommand(m_pivot, Controlboard.getManualPivot_Output())).onFalse(new PivotManualCommand(m_pivot, () -> 0.0));
+        // Controlboard.getManualMode().toggleOnTrue(new PivotManualCommand(m_pivot, Controlboard.getManualPivot_Output()));
 
         /* Pivot AND Elevator */
         // Controlboard.setPosition_Home().toggleOnTrue(new ParallelCommandGroup(new ElevatorTargetCommand(m_elevator, ElevatorConstants.elevatorHome_Position), new PivotTargetCommand(m_pivot, PivotConstants.pivotHome_Angle)));
@@ -88,14 +89,15 @@ public class RobotContainer {
         // Controlboard.setPosition_Trap().toggleOnTrue(new ParallelCommandGroup(new ElevatorTargetCommand(m_elevator, ElevatorConstants.elevatorTrapShot_Position), new PivotTargetCommand(m_pivot, PivotConstants.pivotTrapShot_Angle)));
 
         /* Shooter */
-        // Controlboard.getManualShooter().toggleOnTrue(new ShooterManualCommand(m_shooter, ShooterConstants.SHOOTERSHOT_SPEED)).onFalse(new ShooterManualCommand(m_shooter, 0.0));
-        // Controlboard.getEjectShooter().toggleOnTrue(new ShooterManualCommand(m_shooter, ShooterConstants.SHOOTEREJECT_SPEED)).onFalse(new ShooterManualCommand(m_shooter, 0.0));
+        // Controlboard.getManualShooter().toggleOnTrue(new ShooterManualCommand(m_shooter, ShooterConstants.SHOOTER_SHOOT_SPEED));
+        // Controlboard.getEjectShooter().toggleOnTrue(new ShooterManualCommand(m_shooter, ShooterConstants.SHOOTER_EJECT_SPEED));
 
         /* Auto Shot */
-        // Controlboard.getAutoPrepShot().toggleOnTrue(new ParallelCommandGroup(new AutoPrepCommand(m_pivot, m_elevator, m_swerve, getAlliance()), new FaceSpeakerCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING))));
+        //Controlboard.getAutoPrepShot().toggleOnTrue(new AutoPrepCommand(m_pivot, m_elevator, m_swerve, getAlliance())).toggleOnTrue(new FaceSpeakerCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING)));
 
-        Controlboard.getManualIntake().whileTrue(new IntakeCommand(m_intake, IntakeConstants.INTAKE_SPEED)).onFalse(new IntakeCommand(m_intake, 0));
-        Controlboard.getEjectIntake().whileTrue(new IntakeCommand(m_intake, IntakeConstants.EJECT_SPEED)).onFalse(new IntakeCommand(m_intake, 0));
+        /* Intake */
+        Controlboard.getManualIntake().whileTrue(new IntakeManualCommand(m_intake, IntakeConstants.INTAKE_SPEED));
+        Controlboard.getEjectIntake().whileTrue(new IntakeManualCommand(m_intake, IntakeConstants.EJECT_SPEED));
     }
 
     private void configDefaultCommands() { 
@@ -107,6 +109,12 @@ public class RobotContainer {
                 Controlboard.getRotation(),
                 Controlboard.getFieldCentric()
             )
+        );
+
+        m_intake.setDefaultCommand(
+            new IntakeManualCommand(
+                m_intake, 
+                0)
         );
     }
 
@@ -120,8 +128,8 @@ public class RobotContainer {
         Autonomous.configure(
             Commands.none().withName("Do Nothing"),
             new PPEvent("ExampleEvent", new PrintCommand("This is an example event :)")),
-            new PPEvent("StartIntake", new IntakeCommand(m_intake, IntakeConstants.INTAKE_SPEED)),
-            new PPEvent("StopIntake", new IntakeCommand(m_intake, 0))
+            new PPEvent("StartIntake", new IntakeManualCommand(m_intake, IntakeConstants.INTAKE_SPEED)),
+            new PPEvent("StopIntake", new IntakeManualCommand(m_intake, 0))
         );
 
         Autonomous.addRoutines(

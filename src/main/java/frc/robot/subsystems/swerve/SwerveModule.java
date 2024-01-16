@@ -148,7 +148,7 @@ public class SwerveModule {
      */
     public void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
             if(isOpenLoop){
-                m_driveMotor.setControl(new DutyCycleOut(desiredState.speedMetersPerSecond/SwerveConstants.MAX_SPEED).withEnableFOC(true));//new VoltageOut((desiredState.speedMetersPerSecond / SwerveConstants.MAX_SPEED) * 12).withEnableFOC(true));
+                m_driveMotor.setControl(new DutyCycleOut(desiredState.speedMetersPerSecond/SwerveConstants.MAX_SPEED).withEnableFOC(true));
             } else {
                 double velocity = Conversions.mpsToFalconRPS(desiredState.speedMetersPerSecond, SwerveConstants.MODULE_TYPE.wheelCircumference, 1);
                 double feedforward = m_feedforward.calculate(desiredState.speedMetersPerSecond);

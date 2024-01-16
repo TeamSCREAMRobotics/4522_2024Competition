@@ -27,7 +27,7 @@ import frc.lib.util.ScreamUtil;
  */
 public final class Constants{
 
-    public record MotionMagicConstants(double cruiseVelocity, double acceleration, int sCurveStrength){}
+    public record MotionMagicConstants(double cruiseVelocity, double acceleration, int jerk){}
 
     /* Robot loop time */
     public static final double LOOP_TIME_SEC = 0.02;
@@ -53,6 +53,7 @@ public final class Constants{
 
         /* Pivot */
         public static final int PIVOT_MOTOR_ID = 0; //TODO
+        public static final int PIVOT_ENCODER_ID = 0; //TODO
 
         /* Elevator */
         public static final int LEFT_ELEVATOR_MOTOR_ID = 0; //TODO
@@ -267,8 +268,8 @@ public final class Constants{
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
         public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(15, 0.0, 0.0);
 
-        public static final double SHOOTERSHOT_SPEED = 1.0;
-        public static final double SHOOTEREJECT_SPEED = 0.5;
+        public static final double SHOOTER_SHOOT_SPEED = 1.0;
+        public static final double SHOOTER_EJECT_SPEED = 0.5;
     }
     
     public static final class PivotConstants { //TODO all values
@@ -300,10 +301,10 @@ public final class Constants{
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
         public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(15, 0.0, 0.0);
 
-        public static final Rotation2d pivotHome_Angle = Rotation2d.fromDegrees(0.0);
-        public static final Rotation2d pivotSubwooferShot_Angle = Rotation2d.fromDegrees(0.0);
-        public static final Rotation2d pivotAmpShot_Angle = Rotation2d.fromDegrees(0.0);
-        public static final Rotation2d pivotTrapShot_Angle = Rotation2d.fromDegrees(0.0);
+        public static final Rotation2d PIVOT_HOME_ANGLE = Rotation2d.fromDegrees(0.0);
+        public static final Rotation2d PIVOT_SUBWOOFER_ANGLE = Rotation2d.fromDegrees(0.0);
+        public static final Rotation2d PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(0.0);
+        public static final Rotation2d PIVOT_TRAP_ANGLE = Rotation2d.fromDegrees(0.0);
 
         public static final InterpolatingDoubleTreeMap pivotTreeMap = new InterpolatingDoubleTreeMap();
         static{
@@ -341,10 +342,10 @@ public final class Constants{
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
         public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(15, 0.0, 0.0);
 
-        public static final double elevatorHome_Position = 0.0;
-        public static final double elevatorSubwooferShot_Position = 0.0;
-        public static final double elevatorAmpShot_Position = 0.0;
-        public static final double elevatorTrapShot_Position = 0.0;
+        public static final double ELEVATOR_HOME_POSITION = 0.0;
+        public static final double ELEVATOR_SUBWOOFER_POSITION = 0.0;
+        public static final double ELEVATOR_AMP_POSITION = 0.0;
+        public static final double ELEVATOR_TRAP_POSITION = 0.0;
 
         public static final InterpolatingDoubleTreeMap elevatorTreeMap = new InterpolatingDoubleTreeMap();
         static{
@@ -355,14 +356,11 @@ public final class Constants{
 
     public static final class IntakeConstants { //TODO all values
 
-        public static final double INTAKE_SPEED = -0.75;
-        public static final double EJECT_SPEED = 0.5;
-
         /* Gear Ratio */
         public static final double GEAR_RATIO = 1.0;
         
         /* Motor Invert */
-        public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;;
+        public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;
         
         /* Neutral Modes */
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
@@ -372,6 +370,9 @@ public final class Constants{
         public static final int SUPPLY_CURRENT_THRESHOLD = 40;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
+
+        public static final double INTAKE_SPEED = -0.75;
+        public static final double EJECT_SPEED = 0.5;
     }
 
     public static final class ConveyorConstants {//TODO all values
@@ -440,5 +441,7 @@ public final class Constants{
 
         public static final Translation2d BLUE_SPEAKER_OPENING = new Translation2d(0.0, 5.54);
         public static final Translation2d RED_SPEAKER_OPENING = AllianceFlippable.MapTranslation2d(BLUE_SPEAKER_OPENING);
+
+        public static final double SPEAKER_TAGS_HEIGHT = 1.440488;
     }
 }

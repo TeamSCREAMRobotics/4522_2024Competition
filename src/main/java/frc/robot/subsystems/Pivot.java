@@ -4,10 +4,14 @@ import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.AbsoluteEncoder;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.config.DeviceConfig;
+import frc.lib.util.OrchestraUtil;
 import frc.robot.Constants;
 import frc.robot.Constants.PivotConstants;
 import frc.robot.Constants.Ports;
@@ -15,20 +19,24 @@ import frc.robot.Constants.Ports;
 public class Pivot extends SubsystemBase{
     
     private TalonFX m_pivotMotor;
+    private DutyCycleEncoder m_encoder;
 
     private Rotation2d m_targetAngle = Rotation2d.fromDegrees(0);
 
     public Pivot(){
-        //m_pivotMotor = new TalonFX(Ports.PIVOT_MOTOR_ID);
+        //m_pivotMotor = new TalonFX(Ports.PIVOT_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        //m_encoder = new DutyCycleEncoder(Ports.PIVOT_ENCODER_ID);
         
         configPivotMotor();
+        
+        //OrchestraUtil.add(m_pivotMotor);
     }
 
     private void configPivotMotor() {
         // DeviceConfig.configureTalonFX("pivotMotor", m_pivotMotor, DeviceConfig.pivotFXConfig(), Constants.LOOP_TIME_HZ);
     }
     
-    public void setNeutralModes(NeutralModeValue mode){
+    public void setNeutralMode(NeutralModeValue mode){
         m_pivotMotor.setNeutralMode(mode);
     }
 
@@ -38,20 +46,11 @@ public class Pivot extends SubsystemBase{
 
     public void pivotToTargetAngle(Rotation2d angle){
         m_targetAngle = angle;
-
-        if(!pivotAtTarget()) {
-            setPivot(new MotionMagicVoltage(m_targetAngle.getRotations()));
-        } else {
-            stopPivot();
-        }
+        setPivot(new MotionMagicVoltage(angle.getRotations()));
     }
     
     public void setPivot(ControlRequest control){
         m_pivotMotor.setControl(control);
-    }
-
-    public void stopPivot(){
-        m_pivotMotor.stopMotor();
     }
 
     public Rotation2d getPivotAngle(){
@@ -62,12 +61,16 @@ public class Pivot extends SubsystemBase{
         return m_targetAngle.minus(getPivotAngle());
     }
 
-    public boolean pivotAtTarget(){
+    public boolean getPivotAtTarget(){
         return Math.abs(getPivotError().getDegrees()) < PivotConstants.TARGET_THRESHOLD;
     }
 
     public double getPivotTargetAngle(double distance){
         return PivotConstants.pivotTreeMap.get(distance);
+    }
+
+    public void stop(){
+        m_pivotMotor.stopMotor();
     }
 
     @Override

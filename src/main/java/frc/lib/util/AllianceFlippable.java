@@ -19,6 +19,10 @@ public final class AllianceFlippable {
         return flip ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180);
     }
 
+    public static int DirectionCoefficient(){
+        return flip ? 1 : -1;
+    }
+
     public static double Number(double blueValue, double redValue){
         return flip ? blueValue : redValue;
     }

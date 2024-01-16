@@ -21,8 +21,6 @@ public class TeleopSwerve extends Command {
     private DoubleSupplier rotationSup;
     private BooleanSupplier fieldRelativeSup;
     private Rotation2d lastAngle;
-
-    private int allianceCoeff = (int) AllianceFlippable.Number(1, -1);
     private Timer correctionTimer = new Timer();
 
     /**
@@ -58,7 +56,7 @@ public class TeleopSwerve extends Command {
     @Override
     public void execute() {
         
-        Translation2d translationVal = new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble()).times(SwerveConstants.MAX_SPEED).times(allianceCoeff);
+        Translation2d translationVal = new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble()).times(SwerveConstants.MAX_SPEED).times(AllianceFlippable.DirectionCoefficient());
         double rotationVal = getRotation(rotationSup.getAsDouble());
         boolean fieldRelativeVal = fieldRelativeSup.getAsBoolean();
 

@@ -7,6 +7,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.RotationTarget;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -32,6 +33,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.SwerveConstants.ModuleConstants;
 import frc.robot.Constants.SwerveConstants.ModuleConstants.ModuleLocation;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.Vision.TimestampedVisionMeasurement;
 
 /**
  * A swerve drive subsystem.
@@ -45,6 +47,7 @@ public class Swerve extends SubsystemBase {
     private SwerveDrivePoseEstimator m_poseEstimator;
     private OdometryThread m_odometryThread;
     private ChassisSpeeds m_currentSpeeds = new ChassisSpeeds();
+    private PIDController m_headingController = SwerveConstants.HEADING_CONSTANTS.toPIDController();
 
     /**
      * Constructs a new instance of the Swerve class.
@@ -79,7 +82,8 @@ public class Swerve extends SubsystemBase {
             getModulePositions(), 
             new Pose2d(new Translation2d(), AllianceFlippable.ForwardRotation()), 
             VisionConstants.STATE_STD_DEVS,
-            VisionConstants.VISION_STD_DEVS);
+            VisionConstants.VISION_STD_DEVS
+        );
         
         m_odometryThread = new OdometryThread();
         m_odometryThread.start();
@@ -178,7 +182,7 @@ public class Swerve extends SubsystemBase {
      * @return The calculated value from the heading controller.
     */
     public double calculateHeadingCorrection(double currentAngle, double lastAngle){
-        return SwerveConstants.HEADING_CONSTANTS.toPIDController().calculate(currentAngle, lastAngle);
+        return m_headingController.calculate(currentAngle, lastAngle);
     }
     
     /**
@@ -293,8 +297,8 @@ public class Swerve extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        /* for(Pose2d pose : Vision.getBotPoses()){
-            m_poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp());
+        /* for(TimestampedVisionMeasurement botpose : Vision.getBotPoses()){
+            m_poseEstimator.addVisionMeasurement(botpose.pose(), botpose.timestamp());
         } */
     }
 
