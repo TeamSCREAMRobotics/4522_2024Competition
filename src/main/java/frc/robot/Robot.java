@@ -8,10 +8,12 @@ import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AllianceFlippable;
 import frc.lib.util.OrchestraUtil;
 
@@ -79,6 +81,7 @@ public class Robot extends TimedRobot {
     }
     coastTimer.reset();
     coastTimer.start();
+    RobotContainer.stopAll();
   }
 
     /** This function is called periodically when the robot is in Disabled mode. */
@@ -117,6 +120,7 @@ public class Robot extends TimedRobot {
       autonomousCommand.cancel();
     }
 
+    RobotContainer.stopAll();
     RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Brake, NeutralModeValue.Brake);
   }
 

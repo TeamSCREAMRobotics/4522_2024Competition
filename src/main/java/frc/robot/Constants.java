@@ -440,7 +440,7 @@ public final class Constants{
         public static final Translation2d RED_PODIUM = new Translation2d(13.816724, 4.131913);
 
         public static final Translation2d BLUE_SPEAKER_OPENING = new Translation2d(0.0, 5.54);
-        public static final Translation2d RED_SPEAKER_OPENING = AllianceFlippable.MapTranslation2d(BLUE_SPEAKER_OPENING);
+        public static final Translation2d RED_SPEAKER_OPENING = AllianceFlippable.MirroredTranslation2d(BLUE_SPEAKER_OPENING);
 
         public static final double SPEAKER_TAGS_HEIGHT = 1.440488;
     }

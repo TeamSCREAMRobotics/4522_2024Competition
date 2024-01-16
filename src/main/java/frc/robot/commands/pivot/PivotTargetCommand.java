@@ -27,7 +27,7 @@ public class PivotTargetCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pivot.pivotToTargetAngle(target);
+    pivot.setTargetAngle(target);
   }
 
   // Called once the command ends or is interrupted.

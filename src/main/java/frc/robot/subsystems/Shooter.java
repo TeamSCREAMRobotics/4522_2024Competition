@@ -26,7 +26,7 @@ public class Shooter extends SubsystemBase{
 
         configShooterMotors();
 
-        m_leftShooterMotor.setControl(new Follower(m_rightShooterMotor.getDeviceID(), true)); //leftShooterMotor follows rightShooterMotor in the opposing direction
+        m_leftShooterMotor.setControl(new Follower(m_rightShooterMotor.getDeviceID(), true)); //left motor follows right motor in the opposing direction
         
         //OrchestraUtil.add(m_rightShooterMotor, m_leftShooterMotor);
     }
@@ -41,7 +41,7 @@ public class Shooter extends SubsystemBase{
         m_leftShooterMotor.setNeutralMode(shooterMode);
     }
 
-    public void setShooterVelocity(double rpm){
+    public void setTargetVelocity(double rpm){
         m_rightShooterMotor.setControl(new VelocityVoltage(Conversions.rpmToFalconRPS(rpm, 1.0)));
     }
 

@@ -31,7 +31,7 @@ public class Elevator extends SubsystemBase{
 
         configShooterMotors();
 
-        m_leftElevatorMotor.setControl(new Follower(m_rightElevatorMotor.getDeviceID(), true)); //leftShooterMotor follows rightShooterMotor in the opposing direction
+        m_leftElevatorMotor.setControl(new Follower(m_rightElevatorMotor.getDeviceID(), true)); //left motor follows right motor in the opposing direction
         
         //OrchestraUtil.add(m_rightElevatorMotor, m_leftElevatorMotor);
     }
@@ -50,14 +50,9 @@ public class Elevator extends SubsystemBase{
         m_rightElevatorMotor.setPosition(0.0);
     }
 
-    public void toTargetHeight(double height){
+    public void setTargetHeight(double height){
         m_targetHeight = height;
-
-        if(!elevatorAtTarget()) {
-            setElevator(new MotionMagicVoltage(m_targetHeight));
-        } else {
-            stopElevator();
-        }
+        setElevator(new MotionMagicVoltage(m_targetHeight));
     }
     
     public void setElevator(ControlRequest control){

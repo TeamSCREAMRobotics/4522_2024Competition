@@ -5,8 +5,6 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.RotationTarget;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.LinearFilter;
@@ -17,14 +15,11 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.config.DeviceConfig;
-import frc.lib.math.Conversions;
 import frc.lib.pid.ScreamPIDConstants;
 import frc.lib.util.AllianceFlippable;
-import frc.lib.util.LimelightHelpers;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.Ports;
@@ -32,8 +27,6 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.SwerveConstants.ModuleConstants;
 import frc.robot.Constants.SwerveConstants.ModuleConstants.ModuleLocation;
-import frc.robot.subsystems.Vision;
-import frc.robot.subsystems.Vision.TimestampedVisionMeasurement;
 
 /**
  * A swerve drive subsystem.
@@ -80,7 +73,7 @@ public class Swerve extends SubsystemBase {
             SwerveConstants.KINEMATICS, 
             getYaw(), 
             getModulePositions(), 
-            new Pose2d(new Translation2d(), AllianceFlippable.ForwardRotation()), 
+            new Pose2d(new Translation2d(), AllianceFlippable.getForwardRotation()), 
             VisionConstants.STATE_STD_DEVS,
             VisionConstants.VISION_STD_DEVS
         );
@@ -278,7 +271,7 @@ public class Swerve extends SubsystemBase {
      */
     public void configGyro() {
         DeviceConfig.configurePigeon2("Swerve Pigeon", m_pigeon2, DeviceConfig.swervePigeonConfig(), Constants.LOOP_TIME_HZ);
-        resetGyro(AllianceFlippable.ForwardRotation());
+        resetGyro(AllianceFlippable.getForwardRotation());
     }
 
    /**

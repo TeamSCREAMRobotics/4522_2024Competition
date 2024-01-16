@@ -53,15 +53,15 @@ public class AutoPrepCommand extends Command {
     distanceFromSpeaker_Y = Math.abs(swerve.getPose().getY() - allianceSpeakerPosition.getY());
     distanceFromSpeaker = new Translation2d(distanceFromSpeaker_X, distanceFromSpeaker_Y).getNorm();
   
-    pivot.pivotToTargetAngle(Rotation2d.fromDegrees(PivotConstants.pivotTreeMap.get(distanceFromSpeaker)));
-    elevator.toTargetHeight(ElevatorConstants.elevatorTreeMap.get(distanceFromSpeaker));
+    pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.pivotTreeMap.get(distanceFromSpeaker)));
+    elevator.setTargetHeight(ElevatorConstants.elevatorTreeMap.get(distanceFromSpeaker));
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    pivot.pivotToTargetAngle(PivotConstants.PIVOT_HOME_ANGLE);
-    elevator.toTargetHeight(ElevatorConstants.ELEVATOR_HOME_POSITION);
+    pivot.setTargetAngle(PivotConstants.PIVOT_HOME_ANGLE);
+    elevator.setTargetHeight(ElevatorConstants.ELEVATOR_HOME_POSITION);
   }
 
   // Returns true when the command should end.

@@ -33,7 +33,7 @@ public class Routines {
     }
 
     private static Pose2d getPathStartingPose(String pathName){
-        return AllianceFlippable.MapPose2d(getPath(pathName).getPreviewStartingHolonomicPose());
+        return AllianceFlippable.MirroredPose2d(getPath(pathName).getPreviewStartingHolonomicPose());
     }
 
     private static Command resetPoseCommand(Swerve swerve, String pathName){

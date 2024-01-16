@@ -1,5 +1,6 @@
 package frc.robot;
 
+import java.sql.Driver;
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -11,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AllianceFlippable;
 import frc.robot.Constants.ConveyorConstants;
 import frc.robot.Constants.ElevatorConstants;
@@ -44,13 +46,13 @@ import frc.robot.subsystems.swerve.Swerve;
 
 public class RobotContainer {
 
-    private static final Optional<Alliance> m_alliance = DriverStation.getAlliance();
+    private static Optional<Alliance> m_alliance = DriverStation.getAlliance();
     
     /* Subsystems */
-    private static final Swerve m_swerve = new Swerve();
+    private static Swerve m_swerve = new Swerve();
     //private static final Shooter m_shooter = new Shooter();
     //private static final Pivot m_pivot = new Pivot();
-    private static final Elevator m_elevator = new Elevator();
+    //private static final Elevator m_elevator = new Elevator();
     //private static final Conveyor m_conveyor = new Conveyor();
     private static final Intake m_intake = new Intake();
 
@@ -70,8 +72,8 @@ public class RobotContainer {
      * Configures button bindings from Controlboard.
      */
     private void configButtonBindings() {
-        Controlboard.getZeroGyro().onTrue(new InstantCommand(() -> m_swerve.resetGyro(AllianceFlippable.ForwardRotation())));
-        Controlboard.getBTestButton().whileTrue(new FeedForwardCharacterization(m_elevator, true, new FeedForwardCharacterizationData("Elevator"), m_elevator::setElevatorVoltage, m_elevator::getElevatorVelocity, m_elevator::getElevatorAcceleration));
+        Controlboard.getZeroGyro().onTrue(new InstantCommand(() -> m_swerve.resetGyro(AllianceFlippable.getForwardRotation())));
+        //Controlboard.getBTestButton().whileTrue(new FeedForwardCharacterization(m_elevator, true, new FeedForwardCharacterizationData("Elevator"), m_elevator::setElevatorVoltage, m_elevator::getElevatorVelocity, m_elevator::getElevatorAcceleration));
 
         /* Conveyor */
         // Controlboard.getFire_Speaker().toggleOnTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.SPEAKER_SPEED));
@@ -127,7 +129,6 @@ public class RobotContainer {
     private void configAuto() {
         Autonomous.configure(
             Commands.none().withName("Do Nothing"),
-            new PPEvent("ExampleEvent", new PrintCommand("This is an example event :)")),
             new PPEvent("StartIntake", new IntakeManualCommand(m_intake, IntakeConstants.INTAKE_SPEED)),
             new PPEvent("StopIntake", new IntakeManualCommand(m_intake, 0))
         );
@@ -145,19 +146,6 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         System.out.println("[Auto] Selected auto routine: " + Autonomous.getSelected().getName());
         return Autonomous.getSelected();
-    }
-    
-    /**
-     * Retrieves the current Alliance as detected by the DriverStation. 
-     * Use this opposed to DriverStation.getAlliance().
-     * @return The current Alliance.
-     */
-    public static Alliance getAlliance(){
-        if(m_alliance.isPresent()){
-            return m_alliance.get();
-        } else {
-            return Alliance.Blue;
-        }
     }
 
      /**
@@ -187,5 +175,26 @@ public class RobotContainer {
 
     public static Intake getIntake(){
         return m_intake;
+    }
+
+    public static void stopAll(){
+        //m_shooter.stop();
+        //m_pivot.stop();
+        //m_elevator.stop();
+        //m_conveyor.stop();
+        m_intake.stop();
+    }
+
+    /**
+     * Retrieves the current Alliance as detected by the DriverStation. 
+     * Use this opposed to DriverStation.getAlliance().
+     * @return The current Alliance.
+     */
+    public static Alliance getAlliance(){
+        if(m_alliance.isPresent()){
+            return m_alliance.get();
+        } else {
+            return Alliance.Blue;
+        }
     }
 }

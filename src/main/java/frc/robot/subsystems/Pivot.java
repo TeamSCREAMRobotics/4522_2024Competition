@@ -44,7 +44,7 @@ public class Pivot extends SubsystemBase{
         m_pivotMotor.setPosition(0.0);
     }
 
-    public void pivotToTargetAngle(Rotation2d angle){
+    public void setTargetAngle(Rotation2d angle){
         m_targetAngle = angle;
         setPivot(new MotionMagicVoltage(angle.getRotations()));
     }

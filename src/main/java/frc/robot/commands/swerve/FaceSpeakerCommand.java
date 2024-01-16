@@ -44,7 +44,7 @@ public class FaceSpeakerCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Translation2d drivingTranslation = new Translation2d(drivingTranslationSupplier[0].getAsDouble(), drivingTranslationSupplier[1].getAsDouble()).times(AllianceFlippable.DirectionCoefficient()).times(SwerveConstants.MAX_SPEED);
+    Translation2d drivingTranslation = new Translation2d(drivingTranslationSupplier[0].getAsDouble(), drivingTranslationSupplier[1].getAsDouble()).times(AllianceFlippable.getDirectionCoefficient()).times(SwerveConstants.MAX_SPEED);
 
     double targetX = allianceSpeakerPose.getX() - swerve.getPose().getX();
     double targetY = allianceSpeakerPose.getY() - swerve.getPose().getY();

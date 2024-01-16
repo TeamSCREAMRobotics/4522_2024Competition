@@ -78,7 +78,7 @@ public class Vision {
     }
 
     public static double getDistanceFromSpeaker(Limelight limelight){
-        Rotation2d angleToGoal = Rotation2d.fromRadians(limelight.getMountPose().getRotation().getY() + Math.toRadians(getTY(limelight)));
+        Rotation2d angleToGoal = Rotation2d.fromRadians(limelight.getMountPose().getRotation().getY()).plus(Rotation2d.fromDegrees(getTY(limelight)));
         return (FieldConstants.SPEAKER_TAGS_HEIGHT - limelight.getMountPose().getZ()) / angleToGoal.getTan();
     }
 
