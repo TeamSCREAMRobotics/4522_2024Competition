@@ -260,16 +260,15 @@ public final class Constants{
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
 
-        public static final double TARGET_THRESHOLD = 0.50;
-
         public static final double CRUISE_VELOCITY = 40;
         public static final double ACCELERATION = 10;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
         public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(15, 0.0, 0.0);
 
-        public static final double SHOOTER_SHOOT_SPEED = 1.0;
-        public static final double SHOOTER_EJECT_SPEED = 0.5;
+        public static final double SHOOTER_MIN_VELOCITY = 6000; //RPM's
+        public static final double SHOOTER_SHOOT_OUTPUT = 1.0;
+        public static final double SHOOTER_EJECT_OUTPUT = 0.5;
     }
     
     public static final class PivotConstants { //TODO all values
@@ -311,6 +310,12 @@ public final class Constants{
             //pivotTreeMap.put(distance, angle (degrees))
             pivotTreeMap.put(null, null);
         }
+        
+        public static final InterpolatingDoubleTreeMap pivotTreeMap_Defense = new InterpolatingDoubleTreeMap();
+        static{
+            //pivotTreeMap.put(distance, angle (degrees))
+            pivotTreeMap.put(null, null);
+        }
     }
 
     public static final class ElevatorConstants { //TODO all values
@@ -348,6 +353,12 @@ public final class Constants{
         public static final double ELEVATOR_TRAP_POSITION = 0.0;
 
         public static final InterpolatingDoubleTreeMap elevatorTreeMap = new InterpolatingDoubleTreeMap();
+        static{
+            //elevatorTreeMap.put(distance, height)
+            elevatorTreeMap.put(null, null);
+        }
+        
+        public static final InterpolatingDoubleTreeMap elevatorTreeMap_Defense = new InterpolatingDoubleTreeMap();
         static{
             //elevatorTreeMap.put(distance, height)
             elevatorTreeMap.put(null, null);

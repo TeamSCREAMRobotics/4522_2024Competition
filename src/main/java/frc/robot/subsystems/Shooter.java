@@ -25,8 +25,6 @@ public class Shooter extends SubsystemBase{
         //m_leftShooterMotor = new TalonFX(Ports.LEFT_SHOOTER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
 
         configShooterMotors();
-
-        m_leftShooterMotor.setControl(new Follower(m_rightShooterMotor.getDeviceID(), true)); //left motor follows right motor in the opposing direction
         
         //OrchestraUtil.add(m_rightShooterMotor, m_leftShooterMotor);
     }
@@ -45,12 +43,17 @@ public class Shooter extends SubsystemBase{
         m_rightShooterMotor.setControl(new VelocityVoltage(Conversions.rpmToFalconRPS(rpm, 1.0)));
     }
 
+    public double getVelocity_RPM(){
+        return Conversions.rpsToFalconRPM(m_rightShooterMotor.getVelocity().getValueAsDouble(), 1.0);
+    }
+
     public void setShooterPercentOutput(double output){
         m_rightShooterMotor.setControl(new DutyCycleOut(output));
     }
 
     public void setShooter(ControlRequest control){
         m_rightShooterMotor.setControl(control);
+        m_leftShooterMotor.setControl(new Follower(m_rightShooterMotor.getDeviceID(), true)); //left motor follows right motor in the opposing direction
     }
 
     public void stop(){

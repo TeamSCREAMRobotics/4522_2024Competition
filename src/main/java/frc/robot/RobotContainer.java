@@ -50,10 +50,10 @@ public class RobotContainer {
     
     /* Subsystems */
     private static Swerve m_swerve = new Swerve();
-    //private static final Shooter m_shooter = new Shooter();
-    //private static final Pivot m_pivot = new Pivot();
-    //private static final Elevator m_elevator = new Elevator();
-    //private static final Conveyor m_conveyor = new Conveyor();
+    private static final Shooter m_shooter = new Shooter();
+    private static final Pivot m_pivot = new Pivot();
+    private static final Elevator m_elevator = new Elevator();
+    private static final Conveyor m_conveyor = new Conveyor();
     private static final Intake m_intake = new Intake();
 
     private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve);
@@ -85,17 +85,17 @@ public class RobotContainer {
         // Controlboard.getManualMode().toggleOnTrue(new PivotManualCommand(m_pivot, Controlboard.getManualPivot_Output()));
 
         /* Pivot AND Elevator */
-        // Controlboard.setPosition_Home().toggleOnTrue(new ParallelCommandGroup(new ElevatorTargetCommand(m_elevator, ElevatorConstants.elevatorHome_Position), new PivotTargetCommand(m_pivot, PivotConstants.pivotHome_Angle)));
-        // Controlboard.setPosition_Subwoofer().toggleOnTrue(new ParallelCommandGroup(new ElevatorTargetCommand(m_elevator, ElevatorConstants.elevatorSubwooferShot_Position), new PivotTargetCommand(m_pivot, PivotConstants.pivotSubwooferShot_Angle)));
-        // Controlboard.setPosition_Amp().toggleOnTrue(new ParallelCommandGroup(new ElevatorTargetCommand(m_elevator, ElevatorConstants.elevatorAmpShot_Position), new PivotTargetCommand(m_pivot, PivotConstants.pivotAmpShot_Angle)));
-        // Controlboard.setPosition_Trap().toggleOnTrue(new ParallelCommandGroup(new ElevatorTargetCommand(m_elevator, ElevatorConstants.elevatorTrapShot_Position), new PivotTargetCommand(m_pivot, PivotConstants.pivotTrapShot_Angle)));
+        // Controlboard.setPosition_Home().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_HOME_POSITION)).toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_HOME_ANGLE));
+        // Controlboard.setPosition_Subwoofer().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_SUBWOOFER_POSITION)).toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_SUBWOOFER_ANGLE));
+        // Controlboard.setPosition_Amp().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_AMP_POSITION)).toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_AMP_ANGLE));
+        // Controlboard.setPosition_Trap().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_TRAP_POSITION)).toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_TRAP_ANGLE));
 
         /* Shooter */
-        // Controlboard.getManualShooter().toggleOnTrue(new ShooterManualCommand(m_shooter, ShooterConstants.SHOOTER_SHOOT_SPEED));
-        // Controlboard.getEjectShooter().toggleOnTrue(new ShooterManualCommand(m_shooter, ShooterConstants.SHOOTER_EJECT_SPEED));
+        // Controlboard.getManualShooter().toggleOnTrue(new ShooterManualCommand(m_shooter, ShooterConstants.SHOOTER_SHOOT_OUTPUT));
+        // Controlboard.getEjectShooter().toggleOnTrue(new ShooterManualCommand(m_shooter, ShooterConstants.SHOOTER_EJECT_OUTPUT));
 
         /* Auto Shot */
-        //Controlboard.getAutoPrepShot().toggleOnTrue(new AutoPrepCommand(m_pivot, m_elevator, m_swerve, getAlliance())).toggleOnTrue(new FaceSpeakerCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING)));
+        // Controlboard.getAutoPrepShot().toggleOnTrue(new AutoPrepCommand(m_pivot, m_elevator, m_shooter, m_swerve, Controlboard.getDefense().getAsBoolean(), getAlliance())).toggleOnTrue(new FaceSpeakerCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING)));
 
         /* Intake */
         Controlboard.getManualIntake().whileTrue(new IntakeManualCommand(m_intake, IntakeConstants.INTAKE_SPEED));
@@ -112,11 +112,35 @@ public class RobotContainer {
                 Controlboard.getFieldCentric()
             )
         );
+        
+        m_conveyor.setDefaultCommand(
+            new ConveyorManualCommand(
+                m_conveyor, 
+                0.0)
+        );
+        
+        m_elevator.setDefaultCommand(
+            new ElevatorTargetCommand(
+                m_elevator, 
+                ElevatorConstants.ELEVATOR_HOME_POSITION)
+        );
 
         m_intake.setDefaultCommand(
             new IntakeManualCommand(
                 m_intake, 
-                0)
+                0.0)
+        );
+
+        m_pivot.setDefaultCommand(
+            new PivotTargetCommand(
+                m_pivot, 
+                PivotConstants.PIVOT_HOME_ANGLE)
+        );
+        
+        m_shooter.setDefaultCommand(
+            new ShooterManualCommand(
+                m_shooter, 
+                0.0)
         );
     }
 

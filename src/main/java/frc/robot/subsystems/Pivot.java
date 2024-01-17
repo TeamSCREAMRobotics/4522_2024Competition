@@ -28,6 +28,7 @@ public class Pivot extends SubsystemBase{
         //m_encoder = new DutyCycleEncoder(Ports.PIVOT_ENCODER_ID);
         
         configPivotMotor();
+        resetPivotToAbsoulute();
         
         //OrchestraUtil.add(m_pivotMotor);
     }
@@ -38,6 +39,10 @@ public class Pivot extends SubsystemBase{
     
     public void setNeutralMode(NeutralModeValue mode){
         m_pivotMotor.setNeutralMode(mode);
+    }
+
+    public void resetPivotToAbsoulute(){
+        m_pivotMotor.setPosition(m_encoder.getAbsolutePosition());
     }
 
     public void zeroPivot(){
@@ -75,6 +80,6 @@ public class Pivot extends SubsystemBase{
 
     @Override
     public void periodic() {
-
+        // resetPivotToAbsoulute(); //Do we want the motor's position to be constantly reset during the match?
     }
 }

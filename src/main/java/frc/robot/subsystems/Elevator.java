@@ -16,6 +16,7 @@ import frc.lib.config.DeviceConfig;
 import frc.lib.util.OrchestraUtil;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.PivotConstants;
 import frc.robot.Constants.Ports;
 
 public class Elevator extends SubsystemBase{
@@ -30,8 +31,6 @@ public class Elevator extends SubsystemBase{
         //m_leftElevatorMotor = new TalonFX(Ports.LEFT_ELEVATOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
 
         configShooterMotors();
-
-        m_leftElevatorMotor.setControl(new Follower(m_rightElevatorMotor.getDeviceID(), true)); //left motor follows right motor in the opposing direction
         
         //OrchestraUtil.add(m_rightElevatorMotor, m_leftElevatorMotor);
     }
@@ -57,6 +56,7 @@ public class Elevator extends SubsystemBase{
     
     public void setElevator(ControlRequest control){
         m_rightElevatorMotor.setControl(control);
+        m_leftElevatorMotor.setControl(new Follower(m_rightElevatorMotor.getDeviceID(), true)); //left motor follows right motor in the opposing direction
     }
 
     public void setElevatorVoltage(double voltage){
@@ -74,6 +74,10 @@ public class Elevator extends SubsystemBase{
     public double getElevatorError(){
         return m_targetHeight - getElevatorHeight();
     }
+    
+    public boolean getElevatorAtTarget(){
+        return Math.abs(getElevatorError()) < ElevatorConstants.TARGET_THRESHOLD;
+    }
 
     public double getElevatorVelocity(){
         return m_rightElevatorMotor.getVelocity().getValue();
@@ -81,10 +85,6 @@ public class Elevator extends SubsystemBase{
 
     public double getElevatorAcceleration(){
         return m_rightElevatorMotor.getAcceleration().getValue();
-    }
-
-    public boolean elevatorAtTarget(){
-        return Math.abs(getElevatorError()) < ElevatorConstants.TARGET_THRESHOLD;
     }
     
     public double getElevatorTargetHeight(double distance){

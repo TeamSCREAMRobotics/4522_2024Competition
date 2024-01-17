@@ -12,15 +12,19 @@ import frc.lib.util.AllianceFlippable;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.PivotConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class AutoPrepCommand extends Command {
   
   Pivot pivot;
   Elevator elevator;
+  Shooter shooter;
   Swerve swerve;
+  boolean defense;
   Alliance allianceColor;
 
   Rotation2d wantedPivotAngle;
@@ -31,12 +35,14 @@ public class AutoPrepCommand extends Command {
 
   Translation2d allianceSpeakerPosition;
 
-  public AutoPrepCommand(Pivot pivot, Elevator elevator, Swerve swerve, Alliance allianceColor) {
-    addRequirements(pivot, elevator, swerve);
+  public AutoPrepCommand(Pivot pivot, Elevator elevator, Shooter shooter, Swerve swerve, boolean defense, Alliance allianceColor) {
+    addRequirements(pivot, elevator, shooter, swerve);
 
     this.pivot = pivot;
     this.elevator = elevator;
+    this.shooter = shooter;
     this.swerve = swerve;
+    this.defense = defense;
     this.allianceColor = allianceColor;
   }
 
@@ -53,16 +59,20 @@ public class AutoPrepCommand extends Command {
     distanceFromSpeaker_Y = Math.abs(swerve.getPose().getY() - allianceSpeakerPosition.getY());
     distanceFromSpeaker = new Translation2d(distanceFromSpeaker_X, distanceFromSpeaker_Y).getNorm();
   
-    pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.pivotTreeMap.get(distanceFromSpeaker)));
-    elevator.setTargetHeight(ElevatorConstants.elevatorTreeMap.get(distanceFromSpeaker));
+    shooter.setTargetVelocity(ShooterConstants.SHOOTER_MIN_VELOCITY);
+    if(!defense){
+      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.pivotTreeMap.get(distanceFromSpeaker)));
+      elevator.setTargetHeight(ElevatorConstants.elevatorTreeMap.get(distanceFromSpeaker));
+    }
+    else{
+      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.pivotTreeMap_Defense.get(distanceFromSpeaker)));
+      elevator.setTargetHeight(ElevatorConstants.elevatorTreeMap_Defense.get(distanceFromSpeaker));
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    pivot.setTargetAngle(PivotConstants.PIVOT_HOME_ANGLE);
-    elevator.setTargetHeight(ElevatorConstants.ELEVATOR_HOME_POSITION);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

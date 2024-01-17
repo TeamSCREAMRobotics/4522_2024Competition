@@ -83,7 +83,15 @@ public class Controlboard{
 
     /* Automation */
     public static final Trigger getAutoPrepShot(){
+        /* Uses a toggle switch to enable or disable automatic prep shooting */
         return operatorController.start();
+    }
+    public static final Trigger getAutoFire(){
+        return new Trigger(() -> false);
+    }
+    public static final BooleanSupplier getDefense(){
+        /* Uses a toggle switch to enable or disable wether we are being defended. This allows us to raise our elevator with auto shots */
+        return new Trigger(() -> false);
     }
 
     /* Shooter */
@@ -122,13 +130,9 @@ public class Controlboard{
     }
 
     /* Conveyor */
-    public static final Trigger getFire_Speaker(){
-        return operatorController.leftTrigger(TRIGGER_DEADBAND);
+    public static final Trigger getFire(){
+        return operatorController.rightTrigger(TRIGGER_DEADBAND);
     }
-    public static final Trigger getFire_Amp_Trap(){
-        return new Trigger(() -> false);
-    }
-    //^^ Should they be split based on a button or be split based on the current position of pivot/elevator?
 
     /* Intake */
     public static final Trigger getManualIntake(){
