@@ -9,24 +9,22 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.util.AllianceFlippable;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.swerve.Swerve;
 
-public class FaceSpeakerCommand extends Command {
+public class FacePointCommand extends Command {
 
   Swerve swerve;
   Alliance allianceColor;
   DoubleSupplier[] drivingTranslationSupplier;
   Rotation2d targetAngle;
-  Translation3d allianceSpeakerPose;
   PIDController targetController;
   Translation2d targetPose;
 
-  public FaceSpeakerCommand(Swerve swerve, Alliance allianceColor, DoubleSupplier[] drivingTranslation, Translation2d targetPose) {
+  public FacePointCommand(Swerve swerve, Alliance allianceColor, DoubleSupplier[] drivingTranslation, Translation2d targetPose) {
     addRequirements(swerve);
 
     this.swerve = swerve;
@@ -46,12 +44,12 @@ public class FaceSpeakerCommand extends Command {
   public void execute() {
     Translation2d drivingTranslation = new Translation2d(drivingTranslationSupplier[0].getAsDouble(), drivingTranslationSupplier[1].getAsDouble()).times(AllianceFlippable.getDirectionCoefficient()).times(SwerveConstants.MAX_SPEED);
 
-    double targetX = allianceSpeakerPose.getX() - swerve.getPose().getX();
-    double targetY = allianceSpeakerPose.getY() - swerve.getPose().getY();
+    double targetX = targetPose.getX() - swerve.getPose().getX();
+    double targetY = targetPose.getY() - swerve.getPose().getY();
     targetAngle = Rotation2d.fromRadians(Math.atan2(targetY, targetX));
 
     swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(drivingTranslation, targetController.calculate(swerve.getRotation().getDegrees(), targetAngle.getDegrees())));
-    System.out.println("Target Angle: " + targetAngle.getDegrees() + "\n" + "Target Output: " + targetController.calculate(targetAngle.getDegrees()));
+    System.out.println("Target Angle: " + targetAngle.getDegrees() + "\n" + "Pose: " + swerve.getPose() + " \n" + "X: " + targetX + " Y: " + targetY);
   }
 
   // Called once the command ends or is interrupted.

@@ -30,12 +30,12 @@ public class Elevator extends SubsystemBase{
         //m_rightElevatorMotor = new TalonFX(Ports.RIGHT_ELEVATOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         //m_leftElevatorMotor = new TalonFX(Ports.LEFT_ELEVATOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
 
-        configShooterMotors();
+        configElevatorMotors();
         
         //OrchestraUtil.add(m_rightElevatorMotor, m_leftElevatorMotor);
     }
     
-    private void configShooterMotors() {
+    private void configElevatorMotors() {
         // DeviceConfig.configureTalonFX("Right Elevator Motor", m_rightElevatorMotor, DeviceConfig.elevatorFXConfig(), Constants.LOOP_TIME_HZ);
         // DeviceConfig.configureTalonFX("Left Elevator Motor", m_leftElevatorMotor, DeviceConfig.elevatorFXConfig(), Constants.LOOP_TIME_HZ);
     }

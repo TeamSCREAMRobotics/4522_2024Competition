@@ -28,7 +28,7 @@ public class Pivot extends SubsystemBase{
         //m_encoder = new DutyCycleEncoder(Ports.PIVOT_ENCODER_ID);
         
         configPivotMotor();
-        resetPivotToAbsoulute();
+        // resetPivotToAbsoulute();
         
         //OrchestraUtil.add(m_pivotMotor);
     }
