@@ -68,6 +68,7 @@ public class DeviceConfig {
             SteerConstants.SUPPLY_CURRENT_LIMIT, 
             SteerConstants.SUPPLY_CURRENT_THRESHOLD, 
             SteerConstants.SUPPLY_TIME_THRESHOLD);
+        config.MotionMagic = FXMotionMagicConfigs(SteerConstants.MOTION_MAGIC_CONSTANTS);
         config.Slot0 = FXPIDConfig(SteerConstants.PID_CONSTANTS);
         return config;
     }

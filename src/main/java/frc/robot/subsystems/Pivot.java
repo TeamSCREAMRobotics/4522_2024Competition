@@ -26,7 +26,7 @@ public class Pivot extends SubsystemBase{
     public Pivot(){
         //m_pivotMotor = new TalonFX(Ports.PIVOT_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         //m_encoder = new DutyCycleEncoder(Ports.PIVOT_ENCODER_ID);
-        
+         
         configPivotMotor();
         resetPivotToAbsoulute();
         

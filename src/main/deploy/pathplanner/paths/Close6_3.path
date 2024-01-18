@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.3425474040677035,
-        "y": 6.382405917450922
+        "x": 5.857824212082089,
+        "y": 6.45267093672561
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.630739424103669,
-        "y": 6.5463576290918635
+        "x": 7.813533915227601,
+        "y": 6.640044321458115
       },
       "isLocked": false,
       "linkedName": "Close5_2End"
     },
     {
       "anchor": {
-        "x": 7.9891964634143235,
-        "y": 5.831996599799192
+        "x": 8.305389050150424,
+        "y": 5.8788399459823175
       },
       "prevControl": {
-        "x": 7.028875993896309,
-        "y": 6.394062301150608
+        "x": 7.204570414846961,
+        "y": 6.335562571267795
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "StartIntake",
-      "waypointRelativePos": 0.8,
+      "waypointRelativePos": 0.6,
       "command": {
         "type": "parallel",
         "data": {
@@ -56,12 +56,12 @@
     "maxAngularAcceleration": 440.0
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": -10.0,
+    "velocity": 2.0,
+    "rotation": -26.565051177078068,
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "Close5",
+  "folder": "Close6",
   "previewStartingState": {
     "rotation": 10.0,
     "velocity": 0

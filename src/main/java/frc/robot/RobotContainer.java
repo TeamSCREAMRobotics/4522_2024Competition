@@ -29,6 +29,7 @@ import frc.robot.commands.FeedForwardCharacterization.FeedForwardCharacterizatio
 import frc.robot.commands.conveyor.ConveyorManualCommand;
 import frc.robot.commands.elevator.ElevatorManualCommand;
 import frc.robot.commands.elevator.ElevatorTargetCommand;
+import frc.robot.commands.intake.IntakeAutoCommand;
 import frc.robot.commands.intake.IntakeManualCommand;
 import frc.robot.commands.pivot.PivotManualCommand;
 import frc.robot.commands.pivot.PivotTargetCommand;
@@ -50,6 +51,11 @@ public class RobotContainer {
     
     /* Subsystems */
     private static Swerve m_swerve = new Swerve();
+    //private static final Shooter m_shooter = new Shooter();
+    //private static final Pivot m_pivot = new Pivot();
+    //private static final Elevator m_elevator = new Elevator();
+    //private static final Conveyor m_conveyor = new Conveyor();
+    //private static final Intake m_intake = new Intake();
     private static final Shooter m_shooter = new Shooter();
     private static final Pivot m_pivot = new Pivot();
     private static final Elevator m_elevator = new Elevator();
@@ -98,8 +104,8 @@ public class RobotContainer {
         // Controlboard.getAutoPrepShot().toggleOnTrue(new AutoPrepCommand(m_pivot, m_elevator, m_shooter, m_swerve, Controlboard.getDefense().getAsBoolean(), getAlliance())).toggleOnTrue(new FaceSpeakerCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING)));
 
         /* Intake */
-        Controlboard.getManualIntake().whileTrue(new IntakeManualCommand(m_intake, IntakeConstants.INTAKE_SPEED));
-        Controlboard.getEjectIntake().whileTrue(new IntakeManualCommand(m_intake, IntakeConstants.EJECT_SPEED));
+        //Controlboard.getManualIntake().whileTrue(new IntakeManualCommand(m_intake, IntakeConstants.INTAKE_SPEED));
+        //Controlboard.getEjectIntake().whileTrue(new IntakeManualCommand(m_intake, IntakeConstants.EJECT_SPEED));
     }
 
     private void configDefaultCommands() { 
@@ -113,7 +119,7 @@ public class RobotContainer {
             )
         );
         
-        m_conveyor.setDefaultCommand(
+        /*m_conveyor.setDefaultCommand(
             new ConveyorManualCommand(
                 m_conveyor, 
                 0.0)
@@ -123,25 +129,13 @@ public class RobotContainer {
             new ElevatorTargetCommand(
                 m_elevator, 
                 ElevatorConstants.ELEVATOR_HOME_POSITION)
-        );
+        );*/
 
-        m_intake.setDefaultCommand(
+        /* m_intake.setDefaultCommand(
             new IntakeManualCommand(
                 m_intake, 
-                0.0)
-        );
-
-        m_pivot.setDefaultCommand(
-            new PivotTargetCommand(
-                m_pivot, 
-                PivotConstants.PIVOT_HOME_ANGLE)
-        );
-        
-        m_shooter.setDefaultCommand(
-            new ShooterManualCommand(
-                m_shooter, 
-                0.0)
-        );
+                0)
+        ); */
     }
 
     /**
@@ -153,8 +147,8 @@ public class RobotContainer {
     private void configAuto() {
         Autonomous.configure(
             Commands.none().withName("Do Nothing"),
-            new PPEvent("StartIntake", new IntakeManualCommand(m_intake, IntakeConstants.INTAKE_SPEED)),
-            new PPEvent("StopIntake", new IntakeManualCommand(m_intake, 0))
+            new PPEvent("StartIntake", new InstantCommand()),//new IntakeAutoCommand(m_intake, IntakeConstants.INTAKE_SPEED)),
+            new PPEvent("StopIntake", new InstantCommand())
         );
 
         Autonomous.addRoutines(
@@ -197,16 +191,16 @@ public class RobotContainer {
         return m_conveyor;
     } */
 
-    public static Intake getIntake(){
+    /* public static Intake getIntake(){
         return m_intake;
-    }
+    } */
 
     public static void stopAll(){
         //m_shooter.stop();
         //m_pivot.stop();
         //m_elevator.stop();
         //m_conveyor.stop();
-        m_intake.stop();
+        //m_intake.stop();
     }
 
     /**

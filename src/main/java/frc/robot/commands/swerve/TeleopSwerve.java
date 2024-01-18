@@ -76,7 +76,7 @@ public class TeleopSwerve extends Command {
      * @return The determined rotation value.
      */
     private double getRotation(double current){
-        boolean rotating = Math.abs(current) > 0;
+        boolean rotating = Math.abs(current) > 0.1;
 
         if(rotating){
             correctionTimer.reset();

@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.mechanisms.DifferentialMechanism;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,8 +21,6 @@ public class Intake extends SubsystemBase{
         m_rightIntakeMotor = new TalonFX(Ports.RIGHT_INTAKE_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         configIntakeMotors();
 
-        m_leftIntakeMotor.setControl(new Follower(m_rightIntakeMotor.getDeviceID(), false));
-        
         OrchestraUtil.add(m_leftIntakeMotor, m_rightIntakeMotor);
     }
 
@@ -36,10 +35,12 @@ public class Intake extends SubsystemBase{
     }
 
     public void setIntake(ControlRequest control){
-        m_leftIntakeMotor.setControl(control);
+        m_rightIntakeMotor.setControl(control);
+        m_leftIntakeMotor.setControl(new Follower(m_rightIntakeMotor.getDeviceID(), false));
     }
 
     public void stop(){
+        m_rightIntakeMotor.stopMotor();
         m_leftIntakeMotor.stopMotor();
     }
 }

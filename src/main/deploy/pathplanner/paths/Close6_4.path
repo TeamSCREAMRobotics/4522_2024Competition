@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.930642280685416,
-        "y": 7.436381206571257
+        "x": 8.305389050150424,
+        "y": 5.8788399459823175
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.473919655399938,
-        "y": 7.412959533479694
+        "x": 7.778401405590256,
+        "y": 6.476092609817174
       },
       "isLocked": false,
-      "linkedName": "Close5_1End"
+      "linkedName": "Close5_3End"
     },
     {
       "anchor": {
-        "x": 5.3425474040677035,
-        "y": 6.382405917450922
+        "x": 5.857824212082089,
+        "y": 6.45267093672561
       },
       "prevControl": {
-        "x": 6.490209385554292,
-        "y": 7.401248696933913
+        "x": 7.42707630921681,
+        "y": 6.768863523461711
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,8 +32,8 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0,
+      "name": "StopIntake",
+      "waypointRelativePos": 0.35,
       "command": {
         "type": "parallel",
         "data": {
@@ -45,16 +45,6 @@
               }
             }
           ]
-        }
-      }
-    },
-    {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": []
         }
       }
     }
@@ -71,10 +61,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Close5",
-  "previewStartingState": {
-    "rotation": 0,
-    "velocity": 0
-  },
+  "folder": "Close6",
+  "previewStartingState": null,
   "useDefaultConstraints": false
 }

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.9891964634143235,
-        "y": 5.831996599799192
+        "x": 7.95406395377698,
+        "y": 7.436381206571257
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.4622088188541555,
-        "y": 6.429249263634048
+        "x": 7.497341328491502,
+        "y": 7.412959533479694
       },
       "isLocked": false,
-      "linkedName": "Close5_3End"
+      "linkedName": "Close5_1End"
     },
     {
       "anchor": {
-        "x": 5.3425474040677035,
-        "y": 6.382405917450922
+        "x": 5.857824212082089,
+        "y": 6.45267093672561
       },
       "prevControl": {
-        "x": 6.911799501202425,
-        "y": 6.698598504187022
+        "x": 7.005486193568677,
+        "y": 7.471513716208602
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "StopIntake",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.7,
       "command": {
         "type": "parallel",
         "data": {
@@ -61,7 +61,10 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Close5",
-  "previewStartingState": null,
+  "folder": "Close6",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
   "useDefaultConstraints": false
 }

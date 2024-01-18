@@ -113,7 +113,7 @@ public final class Constants{
         public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(0.2, 0, 0);
 
         /* PathPlanner Constants */
-        public static final ScreamPIDConstants PATH_TRANSLATION_CONSTANTS = new ScreamPIDConstants(10.0, 0.0, 0.0);
+        public static final ScreamPIDConstants PATH_TRANSLATION_CONSTANTS = new ScreamPIDConstants(15.0, 0.0, 0.0);
         public static final ScreamPIDConstants PATH_ROTATION_CONSTANTS = new ScreamPIDConstants(10.0, 0.0, 0.0);
 
         public static final HolonomicPathFollowerConfig PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(
@@ -189,6 +189,10 @@ public final class Constants{
             public static final double KD = MODULE_TYPE.steerKD;
             public static final double KF = MODULE_TYPE.steerKF;
             public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(KP, KI, KD, KF);
+
+            public static final double CRUISE_VELOCITY = 40.0;
+            public static final double ACCELERATION = 40.0;
+            public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
         }
 
 
@@ -371,7 +375,7 @@ public final class Constants{
         public static final double GEAR_RATIO = 1.0;
         
         /* Motor Invert */
-        public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;
+        public static final InvertedValue MOTOR_INVERT = InvertedValue.Clockwise_Positive;
         
         /* Neutral Modes */
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
@@ -382,8 +386,8 @@ public final class Constants{
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
 
-        public static final double INTAKE_SPEED = -0.75;
-        public static final double EJECT_SPEED = 0.5;
+        public static final double INTAKE_SPEED = 0.75;
+        public static final double EJECT_SPEED = -0.5;
     }
 
     public static final class ConveyorConstants {//TODO all values
