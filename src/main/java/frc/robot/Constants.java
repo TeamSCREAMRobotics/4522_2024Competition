@@ -47,6 +47,10 @@ public final class Constants{
         /* Pigeon2 */
         public static final int PIGEON_ID = 0; // TODO ROBOT SPECIFIC
         
+        /* Elevator */
+        public static final int LEFT_CLIMBER_MOTOR_ID = 0; //TODO
+        public static final int RIGHT_CLIMBER_MOTOR_ID = 0; //TODO
+
         /* Shooter */
         public static final int RIGHT_SHOOTER_MOTOR_ID = 0; //TODO
         public static final int LEFT_SHOOTER_MOTOR_ID = 0; //TODO
@@ -247,6 +251,40 @@ public final class Constants{
         }
     }
 
+    public static final class ClimberConstants { //TODO all values
+        
+        /* Gear Ratio */
+        public static final double GEAR_RATIO = 1.0;
+
+        /* Motor Invert */
+        public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;;
+        
+        /* Neutral Modes */
+        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
+        
+        /* Current Limits */
+        public static final int SUPPLY_CURRENT_LIMIT = 25;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 40;
+        public static final double SUPPLY_TIME_THRESHOLD = 0.1;
+        public static final boolean CURRENT_LIMIT_ENABLE = true;
+        
+        public static final boolean SOFTWARE_LIMIT_ENABLE = true;
+        public static final double FORWARD_SOFT_LIMIT = 0.0;
+        public static final double REVERSE_SOFT_LIMIT = 0.0;
+
+        public static final double TARGET_THRESHOLD = 0.50;
+
+        public static final double CRUISE_VELOCITY = 40;
+        public static final double ACCELERATION = 10;
+
+        public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(15, 0.0, 0.0);
+
+        public static final double CLIMBER_TOP = 0.0;
+        public static final double CLIMBER_BOTTOM = 0.0;
+        public static final double AUTO_CLIMB_THRESHOLD = 0.0;
+    }
+
     public static final class ShooterConstants { //TODO all values
         
         /* Gear Ratio */
@@ -312,13 +350,13 @@ public final class Constants{
         public static final InterpolatingDoubleTreeMap pivotTreeMap = new InterpolatingDoubleTreeMap();
         static{
             //pivotTreeMap.put(distance, angle (degrees))
-            pivotTreeMap.put(null, null);
+            pivotTreeMap.put(0.0, 0.0);
         }
         
         public static final InterpolatingDoubleTreeMap pivotTreeMap_Defense = new InterpolatingDoubleTreeMap();
         static{
             //pivotTreeMap.put(distance, angle (degrees))
-            pivotTreeMap.put(null, null);
+            pivotTreeMap.put(0.0, 0.0);
         }
     }
 
@@ -359,13 +397,13 @@ public final class Constants{
         public static final InterpolatingDoubleTreeMap elevatorTreeMap = new InterpolatingDoubleTreeMap();
         static{
             //elevatorTreeMap.put(distance, height)
-            elevatorTreeMap.put(null, null);
+            elevatorTreeMap.put(0.0, 0.0);
         }
         
         public static final InterpolatingDoubleTreeMap elevatorTreeMap_Defense = new InterpolatingDoubleTreeMap();
         static{
             //elevatorTreeMap.put(distance, height)
-            elevatorTreeMap.put(null, null);
+            elevatorTreeMap.put(0.0, 0.0);
         }
     }
 
@@ -453,6 +491,14 @@ public final class Constants{
 
         public static final Translation2d BLUE_PODIUM = new Translation2d(2.737, 4.131913);
         public static final Translation2d RED_PODIUM = new Translation2d(13.816724, 4.131913);
+        
+        //TODO does Alliance.Flippable work on these? Or would it flip BLUE_RIGHT to RED_LEFT
+        public static final Translation2d RED_STAGE_RIGHT = new Translation2d(11.93, 4.51);
+        public static final Translation2d RED_STAGE_MID = new Translation2d(11.23, 4.19);
+        public static final Translation2d RED_STAGE_LEFT = new Translation2d(11.93, 3.73);
+        public static final Translation2d BLUE_STAGE_LEFT = new Translation2d(4.65, 3.73);
+        public static final Translation2d BLUE_STAGE_MID = new Translation2d(5.33, 4.19);
+        public static final Translation2d BLUE_STAGE_RIGHT = new Translation2d(4.65, 4.51);
 
         public static final Translation2d BLUE_SPEAKER_OPENING = new Translation2d(0.0, 5.54);
         public static final Translation2d RED_SPEAKER_OPENING = AllianceFlippable.MirroredTranslation2d(BLUE_SPEAKER_OPENING);

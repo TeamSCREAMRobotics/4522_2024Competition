@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AllianceFlippable;
 import frc.robot.Constants.ConveyorConstants;
@@ -26,6 +27,7 @@ import frc.robot.auto.Routines;
 import frc.robot.commands.AutoPrepCommand;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
+import frc.robot.commands.climber.AutoClimbCommand;
 import frc.robot.commands.conveyor.ConveyorManualCommand;
 import frc.robot.commands.elevator.ElevatorManualCommand;
 import frc.robot.commands.elevator.ElevatorTargetCommand;
@@ -34,10 +36,11 @@ import frc.robot.commands.intake.IntakeManualCommand;
 import frc.robot.commands.pivot.PivotManualCommand;
 import frc.robot.commands.pivot.PivotTargetCommand;
 import frc.robot.commands.shooter.ShooterManualCommand;
-import frc.robot.commands.swerve.FaceSpeakerCommand;
+import frc.robot.commands.swerve.FacePointCommand;
 import frc.robot.commands.swerve.TeleopSwerve;
 import frc.robot.controlboard.Controlboard;
 import frc.robot.shuffleboard.ShuffleboardTabManager;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
@@ -51,16 +54,12 @@ public class RobotContainer {
     
     /* Subsystems */
     private static Swerve m_swerve = new Swerve();
-    //private static final Shooter m_shooter = new Shooter();
-    //private static final Pivot m_pivot = new Pivot();
-    //private static final Elevator m_elevator = new Elevator();
-    //private static final Conveyor m_conveyor = new Conveyor();
-    //private static final Intake m_intake = new Intake();
+/*     private static final Climber m_climber = new Climber();
     private static final Shooter m_shooter = new Shooter();
     private static final Pivot m_pivot = new Pivot();
     private static final Elevator m_elevator = new Elevator();
     private static final Conveyor m_conveyor = new Conveyor();
-    private static final Intake m_intake = new Intake();
+    private static final Intake m_intake = new Intake(); */
 
     private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve);
     
@@ -79,6 +78,7 @@ public class RobotContainer {
      */
     private void configButtonBindings() {
         Controlboard.getZeroGyro().onTrue(new InstantCommand(() -> m_swerve.resetGyro(AllianceFlippable.getForwardRotation())));
+        Controlboard.getResetPose().onTrue(new InstantCommand(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, AllianceFlippable.getForwardRotation()))));
         //Controlboard.getBTestButton().whileTrue(new FeedForwardCharacterization(m_elevator, true, new FeedForwardCharacterizationData("Elevator"), m_elevator::setElevatorVoltage, m_elevator::getElevatorVelocity, m_elevator::getElevatorAcceleration));
 
         /* Conveyor */
@@ -100,8 +100,20 @@ public class RobotContainer {
         // Controlboard.getManualShooter().toggleOnTrue(new ShooterManualCommand(m_shooter, ShooterConstants.SHOOTER_SHOOT_OUTPUT));
         // Controlboard.getEjectShooter().toggleOnTrue(new ShooterManualCommand(m_shooter, ShooterConstants.SHOOTER_EJECT_OUTPUT));
 
-        /* Auto Shot */
-        // Controlboard.getAutoPrepShot().toggleOnTrue(new AutoPrepCommand(m_pivot, m_elevator, m_shooter, m_swerve, Controlboard.getDefense().getAsBoolean(), getAlliance())).toggleOnTrue(new FaceSpeakerCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING)));
+        /* Automation */
+        // Controlboard.getAutoPrepShot().toggleOnTrue(new AutoPrepCommand(m_pivot, m_elevator, m_shooter, m_swerve, Controlboard.getDefense().getAsBoolean(), getAlliance())).toggleOnTrue(new FacePointCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING)));
+        /*Controlboard.getAutoclimb().toggleOnTrue(
+            new SequentialCommandGroup(
+            new FacePointCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_STAGE_RIGHT, FieldConstants.RED_STAGE_RIGHT)), //how to select which stage we are going to, if we just faced the direct center of the stage would it function the same?
+                // new AutoAllignCommand(), //TODO
+                new AutoClimbCommand(m_climber), //Will we be able to climb and move the elevator/pivot at the same time/
+                new ParallelCommandGroup(
+                    new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_TRAP_POSITION),
+                    new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_TRAP_ANGLE)
+                ),
+                new ConveyorManualCommand(m_conveyor, ConveyorConstants.AMP_TRAP_SPEED)
+            )
+        );*/
 
         /* Intake */
         //Controlboard.getManualIntake().whileTrue(new IntakeManualCommand(m_intake, IntakeConstants.INTAKE_SPEED));
@@ -118,6 +130,13 @@ public class RobotContainer {
                 Controlboard.getFieldCentric()
             )
         );
+
+        /*m_climber.setDefaultCommand(
+            new ClimberManualCommand(
+                m_climber,
+                0.0
+            )
+        );*/
         
         /*m_conveyor.setDefaultCommand(
             new ConveyorManualCommand(
@@ -134,8 +153,20 @@ public class RobotContainer {
         /* m_intake.setDefaultCommand(
             new IntakeManualCommand(
                 m_intake, 
-                0)
-        ); */
+                0.0)
+        );
+
+        m_pivot.setDefaultCommand(
+            new PivotTargetCommand(
+                m_pivot, 
+                PivotConstants.PIVOT_HOME_ANGLE)
+        );
+        
+        m_shooter.setDefaultCommand(
+            new ShooterManualCommand(
+                m_shooter, 
+                0.0)
+        );*/
     }
 
     /**

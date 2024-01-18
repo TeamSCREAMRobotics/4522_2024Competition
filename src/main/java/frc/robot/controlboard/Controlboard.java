@@ -89,8 +89,11 @@ public class Controlboard{
     public static final Trigger getAutoFire(){
         return new Trigger(() -> false);
     }
-    public static final BooleanSupplier getDefense(){
+    public static final Trigger getDefense(){
         /* Uses a toggle switch to enable or disable wether we are being defended. This allows us to raise our elevator with auto shots */
+        return new Trigger(() -> false);
+    }
+    public static final Trigger getAutoclimb(){
         return new Trigger(() -> false);
     }
 
