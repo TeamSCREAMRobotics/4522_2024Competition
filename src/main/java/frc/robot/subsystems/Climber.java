@@ -31,8 +31,8 @@ public class Climber extends SubsystemBase{
     }
     
     private void configClimberMotors() {
-        // DeviceConfig.configureTalonFX("Right Climber Motor", m_rightClimberMotor, DeviceConfig.elevatorFXConfig(), Constants.LOOP_TIME_HZ);
-        // DeviceConfig.configureTalonFX("Left Climber Motor", m_leftClimberMotor, DeviceConfig.elevatorFXConfig(), Constants.LOOP_TIME_HZ);
+        // DeviceConfig.configureTalonFX("Right Climber Motor", m_rightClimberMotor, DeviceConfig.climberFXConfig(), Constants.LOOP_TIME_HZ);
+        // DeviceConfig.configureTalonFX("Left Climber Motor", m_leftClimberMotor, DeviceConfig.climberFXConfig(), Constants.LOOP_TIME_HZ);
     }
     
     public void setNeutralMode(NeutralModeValue mode){

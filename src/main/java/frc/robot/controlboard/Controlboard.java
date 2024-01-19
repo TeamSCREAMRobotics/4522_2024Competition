@@ -7,6 +7,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.SwerveConstants;
 
 /**
  * A utility class that contains button bindings.
@@ -29,6 +30,12 @@ public class Controlboard{
      * @return A DoubleSupplier array representing the x and y values from the controller.
      */
     public static DoubleSupplier[] getTranslation(){
+        if(getAutoFire().getAsBoolean()){
+            return new DoubleSupplier[] {
+                () -> -MathUtil.applyDeadband(driverController.getLeftY(), STICK_DEADBAND)*SwerveConstants.SHOOT_WHILE_MOVING_SCALAR,
+                () -> -MathUtil.applyDeadband(driverController.getLeftX(), STICK_DEADBAND)*SwerveConstants.SHOOT_WHILE_MOVING_SCALAR
+            };
+        }
         return new DoubleSupplier[] {
             () -> -MathUtil.applyDeadband(driverController.getLeftY(), STICK_DEADBAND),
             () -> -MathUtil.applyDeadband(driverController.getLeftX(), STICK_DEADBAND)
@@ -97,6 +104,14 @@ public class Controlboard{
         return new Trigger(() -> false);
     }
 
+    /* Climber */
+    public static final Trigger getManualClimber_Up(){
+        return new Trigger(() -> false); //Up POV on the button board
+    }
+    public static final Trigger getManualClimber_Down(){
+        return new Trigger(() -> false); //Down POV on the button board
+    }
+
     /* Shooter */
     public static final Trigger getManualShooter(){
         return operatorController.povUp();
@@ -128,7 +143,7 @@ public class Controlboard{
         return operatorController.y();
     }
 
-    public static final Trigger setPosition_Trap(){
+    public static final Trigger setPosition_Trap_Floor(){
         return operatorController.x();
     }
 

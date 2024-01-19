@@ -26,6 +26,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.lib.config.ErrorChecker.DeviceConfiguration;
 import frc.lib.pid.ScreamPIDConstants;
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.ConveyorConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -155,6 +156,22 @@ public class DeviceConfig {
             ShooterConstants.SUPPLY_CURRENT_THRESHOLD, 
             ShooterConstants.SUPPLY_TIME_THRESHOLD);
         config.Slot0 = FXPIDConfig(ShooterConstants.PID_CONSTANTS);
+        return config;
+    }
+
+    public static TalonFXConfiguration climberFXConfig(){
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        config.Audio = FXAudioConfigs(false, false, true);
+        config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(ClimberConstants.SOFTWARE_LIMIT_ENABLE, ClimberConstants.FORWARD_SOFT_LIMIT, ClimberConstants.REVERSE_SOFT_LIMIT);
+        config.MotorOutput = FXMotorOutputConfig(ClimberConstants.MOTOR_INVERT, ClimberConstants.NEUTRAL_MODE);
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ClimberConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
+        config.CurrentLimits = FXCurrentLimitsConfig(
+            ClimberConstants.CURRENT_LIMIT_ENABLE, 
+            ClimberConstants.SUPPLY_CURRENT_LIMIT, 
+            ClimberConstants.SUPPLY_CURRENT_THRESHOLD, 
+            ClimberConstants.SUPPLY_TIME_THRESHOLD);
+        config.MotionMagic = FXMotionMagicConfigs(ClimberConstants.MOTION_MAGIC_CONSTANTS);
+        config.Slot0 = FXPIDConfig(ClimberConstants.PID_CONSTANTS);
         return config;
     }
 

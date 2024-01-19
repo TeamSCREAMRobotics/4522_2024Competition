@@ -90,6 +90,7 @@ public final class Constants{
         public static final boolean GYRO_INVERT = false;
 
         /* Swerve Kinematics */
+        public static final double SHOOT_WHILE_MOVING_SCALAR = 0.5;
         public static final double MAX_SPEED = 5.0; // m/s theoretical = 5.7
         public static final double MAX_ACCELERATION = 3.0; // m/s^2 theoretical
         public static final double MAX_ANGULAR_VELOCITY = 8.0; // rad/s
@@ -272,7 +273,7 @@ public final class Constants{
         public static final double FORWARD_SOFT_LIMIT = 0.0;
         public static final double REVERSE_SOFT_LIMIT = 0.0;
 
-        public static final double TARGET_THRESHOLD = 0.50;
+        public static final double TARGET_THRESHOLD = 0.50; //m
 
         public static final double CRUISE_VELOCITY = 40;
         public static final double ACCELERATION = 10;
@@ -280,9 +281,12 @@ public final class Constants{
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
         public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(15, 0.0, 0.0);
 
+        public static final double CLIMBER_UP_OUTPUT = 0.75;
+        public static final double CLIMBER_DOWN_OUTPUT = -CLIMBER_UP_OUTPUT;
+
         public static final double CLIMBER_TOP = 0.0;
         public static final double CLIMBER_BOTTOM = 0.0;
-        public static final double AUTO_CLIMB_THRESHOLD = 0.0;
+        public static final double AUTO_CLIMB_DISTANCE_THRESHOLD = 0.0; //
     }
 
     public static final class ShooterConstants { //TODO all values
@@ -334,7 +338,7 @@ public final class Constants{
         public static final double FORWARD_SOFT_LIMIT = 0.0;
         public static final double REVERSE_SOFT_LIMIT = 0.0;
 
-        public static final double TARGET_THRESHOLD = 0.50;
+        public static final double TARGET_THRESHOLD = 0.50; //Degrees
 
         public static final double CRUISE_VELOCITY = 40;
         public static final double ACCELERATION = 10;
@@ -345,7 +349,8 @@ public final class Constants{
         public static final Rotation2d PIVOT_HOME_ANGLE = Rotation2d.fromDegrees(0.0);
         public static final Rotation2d PIVOT_SUBWOOFER_ANGLE = Rotation2d.fromDegrees(0.0);
         public static final Rotation2d PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(0.0);
-        public static final Rotation2d PIVOT_TRAP_ANGLE = Rotation2d.fromDegrees(0.0);
+        public static final Rotation2d PIVOT_TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(0.0);
+        public static final Rotation2d PIVOT_TRAP_FLOOR_ANGLE = Rotation2d.fromDegrees(0.0);
 
         public static final InterpolatingDoubleTreeMap pivotTreeMap = new InterpolatingDoubleTreeMap();
         static{
@@ -381,7 +386,7 @@ public final class Constants{
         public static final double FORWARD_SOFT_LIMIT = 0.0;
         public static final double REVERSE_SOFT_LIMIT = 0.0;
 
-        public static final double TARGET_THRESHOLD = 0.50;
+        public static final double TARGET_THRESHOLD = 0.50; //m
 
         public static final double CRUISE_VELOCITY = 40;
         public static final double ACCELERATION = 10;
@@ -392,7 +397,8 @@ public final class Constants{
         public static final double ELEVATOR_HOME_POSITION = 0.0;
         public static final double ELEVATOR_SUBWOOFER_POSITION = 0.0;
         public static final double ELEVATOR_AMP_POSITION = 0.0;
-        public static final double ELEVATOR_TRAP_POSITION = 0.0;
+        public static final double ELEVATOR_TRAP_CHAIN_POSITION = 0.0;
+        public static final double ELEVATOR_TRAP_FLOOR_POSITION = 0.0;
 
         public static final InterpolatingDoubleTreeMap elevatorTreeMap = new InterpolatingDoubleTreeMap();
         static{
@@ -504,5 +510,6 @@ public final class Constants{
         public static final Translation2d RED_SPEAKER_OPENING = AllianceFlippable.MirroredTranslation2d(BLUE_SPEAKER_OPENING);
 
         public static final double SPEAKER_TAGS_HEIGHT = 1.440488;
+        public static final double STAGE_TAGS_HEIGHT = 1.320884;
     }
 }
