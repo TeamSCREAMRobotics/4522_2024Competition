@@ -287,6 +287,12 @@ public class Swerve extends SubsystemBase {
         }
     }
 
+    public void stopAll(){
+        for(SwerveModule mod : m_swerveModules){
+            mod.stopAll();
+        }
+    }
+
     /**
      * Called periodically through SubsystemBase
      */

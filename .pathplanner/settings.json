@@ -1,13 +1,14 @@
 {
-  "robotWidth": 0.86,
-  "robotLength": 0.95,
+  "robotWidth": 0.95,
+  "robotLength": 0.86,
   "holonomicMode": true,
   "pathFolders": [
     "BackTo",
-    "Center4",
+    "Far_Center4",
     "CenterPiecePathfinding",
     "Close4",
     "Close6",
+    "Close7",
     "ToCenter"
   ],
   "autoFolders": [],

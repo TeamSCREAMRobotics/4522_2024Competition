@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.108330673152073,
+        "y": 1.8971555204166035
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.349679347004912,
+        "y": 1.8034688280503517
+      },
+      "isLocked": false,
+      "linkedName": "Far_Center4_2End"
+    },
+    {
+      "anchor": {
+        "x": 8.02,
+        "y": 2.4241431649767726
+      },
+      "prevControl": {
+        "x": 6.583896077920542,
+        "y": 1.8034688280503517
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Far_Center4_3End"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.98,
+    "maxAcceleration": 4.9,
+    "maxAngularVelocity": 570.0,
+    "maxAngularAcceleration": 440.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0,
+    "rotateFast": true
+  },
+  "reversed": false,
+  "folder": "Far_Center4",
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}

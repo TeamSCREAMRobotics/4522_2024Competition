@@ -94,19 +94,20 @@ public class Routines {
         return new SequentialCommandGroup(
             new ParallelCommandGroup(
                 resetTimerCommand(),
-                resetPoseCommand(swerve, "Close4_1"),
-                new WaitCommand(0.5)
+                resetPoseCommand(swerve, "Close4_1")
+                // new WaitCommand(0.5)
             ),
             getPathCommand("Close4_1"),
-            new WaitCommand(0.75),
+            // new WaitCommand(0.75),
             getPathCommand("Close4_2"),
-            new WaitCommand(0.75),
+            // new WaitCommand(0.75),
             getPathCommand("Close4_3"),
-            new WaitCommand(0.75),
+            // new WaitCommand(0.75),
             getPathCommand("Close6_1"),
             getPathCommand("Close6_2"),
-            new WaitCommand(0.75),
+            // new WaitCommand(0.75),
             getPathCommand("Close6_3"),
+            getPathCommand("Close6_4"),
             printTimerCommand()
         );
     }

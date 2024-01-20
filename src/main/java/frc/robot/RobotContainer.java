@@ -84,7 +84,7 @@ public class RobotContainer {
         //Controlboard.getBTestButton().whileTrue(new FeedForwardCharacterization(m_elevator, true, new FeedForwardCharacterizationData("Elevator"), m_elevator::setElevatorVoltage, m_elevator::getElevatorVelocity, m_elevator::getElevatorAcceleration));
 
         /* Conveyor */
-        // Controlboard.getFire().toggleOnTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.SPEAKER_SPEED));
+        // Controlboard.getFire().toggleOnTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.SPEAKER_SPEED)); //TODO second button for amp/trap or automatic switch between based on setpoint positions
 
         /* Elevator */
         // Controlboard.getManualMode().toggleOnTrue(new ElevatorManualCommand(m_elevator, Controlboard.getManualElevator_Output()));
@@ -239,6 +239,7 @@ public class RobotContainer {
         //m_elevator.stop();
         //m_conveyor.stop();
         //m_intake.stop();
+        m_swerve.stopAll();
     }
 
     /**

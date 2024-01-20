@@ -272,4 +272,9 @@ public class SwerveModule {
     public BaseStatusSignal[] getSignals() {
         return m_signals;
     }
+
+    public void stopAll(){
+        m_driveMotor.stopMotor();
+        m_steerMotor.stopMotor();
+    }
 }
