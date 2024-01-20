@@ -18,19 +18,17 @@ import frc.robot.subsystems.swerve.Swerve;
 public class FacePointCommand extends Command {
 
   Swerve swerve;
-  Alliance allianceColor;
   DoubleSupplier[] drivingTranslationSupplier;
   Rotation2d targetAngle;
   PIDController targetController;
-  Translation2d targetPose;
+  Translation2d target;
 
-  public FacePointCommand(Swerve swerve, Alliance allianceColor, DoubleSupplier[] drivingTranslation, Translation2d targetPose) {
+  public FacePointCommand(Swerve swerve, DoubleSupplier[] drivingTranslation, Translation2d target) {
     addRequirements(swerve);
 
     this.swerve = swerve;
-    this.allianceColor = allianceColor;
     this.drivingTranslationSupplier = drivingTranslation;
-    this.targetPose = targetPose;
+    this.target = target;
     targetController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
     targetController.enableContinuousInput(-180.0, 180.0);
   }
@@ -43,13 +41,10 @@ public class FacePointCommand extends Command {
   @Override
   public void execute() {
     Translation2d drivingTranslation = new Translation2d(drivingTranslationSupplier[0].getAsDouble(), drivingTranslationSupplier[1].getAsDouble()).times(AllianceFlippable.getDirectionCoefficient()).times(SwerveConstants.MAX_SPEED);
-
-    double targetX = targetPose.getX() - swerve.getPose().getX();
-    double targetY = targetPose.getY() - swerve.getPose().getY();
-    targetAngle = Rotation2d.fromRadians(Math.atan2(targetY, targetX));
+    targetAngle = calculateAngleToPoint(swerve.getPose().getTranslation(), target);
 
     swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(drivingTranslation, targetController.calculate(swerve.getRotation().getDegrees(), targetAngle.getDegrees())));
-    System.out.println("Target Angle: " + targetAngle.getDegrees() + "\n" + "Pose: " + swerve.getPose() + " \n" + "X: " + targetX + " Y: " + targetY);
+    System.out.println("Target Angle: " + targetAngle.getDegrees() + "\n" + "Pose: " + swerve.getPose());
   }
 
   // Called once the command ends or is interrupted.
@@ -60,5 +55,11 @@ public class FacePointCommand extends Command {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  public static Rotation2d calculateAngleToPoint(Translation2d current, Translation2d target){
+    double targetX = target.getX() - current.getX();
+    double targetY = target.getY() - current.getY();
+    return Rotation2d.fromRadians(Math.atan2(targetY, targetX)).plus(Rotation2d.fromRadians(Math.PI));
   }
 }

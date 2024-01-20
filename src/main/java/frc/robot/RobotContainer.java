@@ -1,7 +1,10 @@
 package frc.robot;
 
+import java.lang.reflect.Field;
 import java.sql.Driver;
 import java.util.Optional;
+
+import javax.swing.text.html.Option;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,10 +15,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AllianceFlippable;
-import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.ConveyorConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.FieldConstants;
@@ -29,7 +32,6 @@ import frc.robot.commands.AutoPrepCommand;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import frc.robot.commands.climber.AutoClimbCommand;
-import frc.robot.commands.climber.ClimberManualCommand;
 import frc.robot.commands.conveyor.ConveyorManualCommand;
 import frc.robot.commands.elevator.ElevatorManualCommand;
 import frc.robot.commands.elevator.ElevatorTargetCommand;
@@ -84,7 +86,7 @@ public class RobotContainer {
         //Controlboard.getBTestButton().whileTrue(new FeedForwardCharacterization(m_elevator, true, new FeedForwardCharacterizationData("Elevator"), m_elevator::setElevatorVoltage, m_elevator::getElevatorVelocity, m_elevator::getElevatorAcceleration));
 
         /* Conveyor */
-        // Controlboard.getFire().toggleOnTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.SPEAKER_SPEED)); //TODO second button for amp/trap or automatic switch between based on setpoint positions
+        // Controlboard.getFire_Speaker().toggleOnTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.SPEAKER_SPEED));
 
         /* Elevator */
         // Controlboard.getManualMode().toggleOnTrue(new ElevatorManualCommand(m_elevator, Controlboard.getManualElevator_Output()));
@@ -96,31 +98,26 @@ public class RobotContainer {
         // Controlboard.setPosition_Home().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_HOME_POSITION)).toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_HOME_ANGLE));
         // Controlboard.setPosition_Subwoofer().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_SUBWOOFER_POSITION)).toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_SUBWOOFER_ANGLE));
         // Controlboard.setPosition_Amp().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_AMP_POSITION)).toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_AMP_ANGLE));
-        // Controlboard.setPosition_Trap_Floor().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_TRAP_FLOOR_POSITION)).toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_TRAP_FLOOR_ANGLE));
+        // Controlboard.setPosition_Trap().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_TRAP_POSITION)).toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_TRAP_ANGLE));
 
         /* Shooter */
         // Controlboard.getManualShooter().toggleOnTrue(new ShooterManualCommand(m_shooter, ShooterConstants.SHOOTER_SHOOT_OUTPUT));
         // Controlboard.getEjectShooter().toggleOnTrue(new ShooterManualCommand(m_shooter, ShooterConstants.SHOOTER_EJECT_OUTPUT));
 
-        /* Climber */
-        // Controlboard.getManualClimber_Up().onTrue(new ClimberManualCommand(m_climber, ClimberConstants.CLIMBER_UP_OUTPUT));
-        // Controlboard.getManualClimber_Down().onTrue(new ClimberManualCommand(m_climber, ClimberConstants.CLIMBER_DOWN_OUTPUT));
-
         /* Automation */
         // Controlboard.getAutoPrepShot().toggleOnTrue(new AutoPrepCommand(m_pivot, m_elevator, m_shooter, m_swerve, Controlboard.getDefense().getAsBoolean(), getAlliance())).toggleOnTrue(new FacePointCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING)));
-        /* Controlboard.getAutoclimb().toggleOnTrue(
+        /*Controlboard.getAutoclimb().toggleOnTrue(
             new SequentialCommandGroup(
+            new FacePointCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_STAGE_RIGHT, FieldConstants.RED_STAGE_RIGHT)), //how to select which stage we are going to, if we just faced the direct center of the stage would it function the same?
+                // new AutoAllignCommand(), //TODO
+                new AutoClimbCommand(m_climber), //Will we be able to climb and move the elevator/pivot at the same time/
                 new ParallelCommandGroup(
-                    new AutoClimbCommand(m_climber, m_elevator, m_pivot, true)
-                    // new AutoAllignCommand(), //TODO
+                    new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_TRAP_POSITION),
+                    new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_TRAP_ANGLE)
                 ),
-            new ConveyorManualCommand(m_conveyor, ConveyorConstants.AMP_TRAP_SPEED)
-                // new ParallelCommandGroup( //Use if we want to return the elevator and pivot to home position after trap is scored
-                //     new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_HOME_POSITION),
-                //     new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_HOME_ANGLE)
-                // )
+                new ConveyorManualCommand(m_conveyor, ConveyorConstants.AMP_TRAP_SPEED)
             )
-        ); */
+        );*/
 
         /* Intake */
         //Controlboard.getManualIntake().whileTrue(new IntakeManualCommand(m_intake, IntakeConstants.INTAKE_SPEED));
@@ -186,11 +183,13 @@ public class RobotContainer {
         Autonomous.configure(
             Commands.none().withName("Do Nothing"),
             new PPEvent("StartIntake", new InstantCommand()),//new IntakeAutoCommand(m_intake, IntakeConstants.INTAKE_SPEED)),
-            new PPEvent("StopIntake", new InstantCommand())
+            new PPEvent("StopIntake", new InstantCommand()),
+            new PPEvent("StartAimAtSpeaker", new InstantCommand(() -> Routines.overrideRotationTarget(Optional.of(FacePointCommand.calculateAngleToPoint(m_swerve.getPose().getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING)))))),
+            new PPEvent("StopAimAtSpeaker", new InstantCommand(() -> Routines.overrideRotationTarget(Optional.empty())))
         );
 
         Autonomous.addRoutines(
-            Routines.Close5(m_swerve).withName("Close5")
+            Routines.Close6(m_swerve).withName("Close6")
         );
     }
 

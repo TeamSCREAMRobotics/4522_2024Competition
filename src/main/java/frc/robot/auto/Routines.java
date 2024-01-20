@@ -45,17 +45,8 @@ public class Routines {
         return new InstantCommand(() -> swerve.resetPose(getPathStartingPose(pathName)));
     }
 
-    private static void overrideRotationTarget(Rotation2d rotation, double seconds){
-        rotationOverrideTimer.start();
-        Optional<Rotation2d> target;
-        if(rotationOverrideTimer.get() <= seconds){
-            target = Optional.of(rotation);
-        } else{
-            target = Optional.empty();
-            rotationOverrideTimer.reset();
-        }
-        
-        PPHolonomicDriveController.setRotationTargetOverride(() -> target);
+    public static void overrideRotationTarget(Optional<Rotation2d> rotation){
+        PPHolonomicDriveController.setRotationTargetOverride(() -> rotation);
     }
 
     private static Command resetTimerCommand(){
@@ -90,7 +81,7 @@ public class Routines {
         );
     }
 
-    public static Command Close5(Swerve swerve){
+    public static Command Close6(Swerve swerve){
         return new SequentialCommandGroup(
             new ParallelCommandGroup(
                 resetTimerCommand(),
