@@ -30,7 +30,7 @@ public class ElevatorManualCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elevator.setElevator(new DutyCycleOut(output.getAsDouble()));
+    elevator.setElevatorOutput(output.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

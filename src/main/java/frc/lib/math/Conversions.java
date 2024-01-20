@@ -43,16 +43,6 @@ public class Conversions {
     double motorRPM = rpm * gearRatio;
     return motorRPM / 60.0;
   }
-  
-  /**
-   * @param RPS RPM of mechanism
-   * @param gearRatio Gear ratio between Falcon and mechanism (set to 1 for Falcon RPS)
-   * @return Falcon rotations per second
-   */
-  public static double rpsToFalconRPM(double rps, double gearRatio) {
-    double motorRPS = rps * gearRatio;
-    return motorRPS * 60.0;
-  }
 
   /**
    * @param falconRotations Falcon rotations

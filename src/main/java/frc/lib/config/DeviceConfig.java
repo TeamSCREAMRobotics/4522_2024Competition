@@ -45,7 +45,7 @@ public class DeviceConfig {
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Audio = FXAudioConfigs(false, false, true);
         config.MotorOutput = FXMotorOutputConfig(DriveConstants.MOTOR_INVERT, DriveConstants.NEUTRAL_MODE);
-        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, DriveConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, DriveConstants.GEAR_RATIO, 1.0, Rotation2d.fromRotations(0));
         config.CurrentLimits = FXCurrentLimitsConfig(
             DriveConstants.CURRENT_LIMIT_ENABLE, 
             DriveConstants.SUPPLY_CURRENT_LIMIT, 
@@ -62,7 +62,7 @@ public class DeviceConfig {
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Audio = FXAudioConfigs(false, false, true);
         config.MotorOutput = FXMotorOutputConfig(SteerConstants.MOTOR_INVERT, SteerConstants.NEUTRAL_MODE);
-        config.Feedback = FXSteerFeedbackConfig(FeedbackSensorSourceValue.FusedCANcoder, remoteSensorID, SteerConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.FusedCANcoder, remoteSensorID, 1.0, SteerConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
         config.ClosedLoopGeneral = FXClosedLoopGeneralConfig(true);
         config.CurrentLimits = FXCurrentLimitsConfig(
             SteerConstants.CURRENT_LIMIT_ENABLE, 
@@ -91,7 +91,7 @@ public class DeviceConfig {
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Audio = FXAudioConfigs(false, false, true);
         config.MotorOutput = FXMotorOutputConfig(ConveyorConstants.MOTOR_INVERT, ConveyorConstants.NEUTRAL_MODE);
-        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ConveyorConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ConveyorConstants.GEAR_RATIO, 1.0, Rotation2d.fromRotations(0));
         config.CurrentLimits = FXCurrentLimitsConfig(
             ConveyorConstants.CURRENT_LIMIT_ENABLE, 
             ConveyorConstants.SUPPLY_CURRENT_LIMIT, 
@@ -105,7 +105,7 @@ public class DeviceConfig {
         config.Audio = FXAudioConfigs(false, false, true);
         config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(ElevatorConstants.SOFTWARE_LIMIT_ENABLE, ElevatorConstants.FORWARD_SOFT_LIMIT, ElevatorConstants.REVERSE_SOFT_LIMIT);
         config.MotorOutput = FXMotorOutputConfig(ElevatorConstants.MOTOR_INVERT, ElevatorConstants.NEUTRAL_MODE);
-        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ElevatorConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ElevatorConstants.GEAR_RATIO, 1.0, Rotation2d.fromRotations(0));
         config.CurrentLimits = FXCurrentLimitsConfig(
             ElevatorConstants.CURRENT_LIMIT_ENABLE, 
             ElevatorConstants.SUPPLY_CURRENT_LIMIT, 
@@ -120,7 +120,7 @@ public class DeviceConfig {
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Audio = FXAudioConfigs(false, false, true);
         config.MotorOutput = FXMotorOutputConfig(IntakeConstants.MOTOR_INVERT, IntakeConstants.NEUTRAL_MODE);
-        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, IntakeConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, IntakeConstants.GEAR_RATIO, 1.0, Rotation2d.fromRotations(0));
         config.CurrentLimits = FXCurrentLimitsConfig(
             IntakeConstants.CURRENT_LIMIT_ENABLE, 
             IntakeConstants.SUPPLY_CURRENT_LIMIT, 
@@ -134,7 +134,7 @@ public class DeviceConfig {
         config.Audio = FXAudioConfigs(false, false, true);
         config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(PivotConstants.SOFTWARE_LIMIT_ENABLE, PivotConstants.FORWARD_SOFT_LIMIT, PivotConstants.REVERSE_SOFT_LIMIT);
         config.MotorOutput = FXMotorOutputConfig(PivotConstants.MOTOR_INVERT, PivotConstants.NEUTRAL_MODE);
-        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, PivotConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, PivotConstants.GEAR_RATIO, 1.0, Rotation2d.fromRotations(0));
         config.CurrentLimits = FXCurrentLimitsConfig(
             PivotConstants.CURRENT_LIMIT_ENABLE, 
             PivotConstants.SUPPLY_CURRENT_LIMIT, 
@@ -149,7 +149,7 @@ public class DeviceConfig {
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Audio = FXAudioConfigs(false, false, true);
         config.MotorOutput = FXMotorOutputConfig(ShooterConstants.MOTOR_INVERT, ShooterConstants.NEUTRAL_MODE);
-        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ShooterConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ShooterConstants.GEAR_RATIO, 1.0, Rotation2d.fromRotations(0));
         config.CurrentLimits = FXCurrentLimitsConfig(
             ShooterConstants.CURRENT_LIMIT_ENABLE, 
             ShooterConstants.SUPPLY_CURRENT_LIMIT, 
@@ -164,7 +164,7 @@ public class DeviceConfig {
         config.Audio = FXAudioConfigs(false, false, true);
         config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(ClimberConstants.SOFTWARE_LIMIT_ENABLE, ClimberConstants.FORWARD_SOFT_LIMIT, ClimberConstants.REVERSE_SOFT_LIMIT);
         config.MotorOutput = FXMotorOutputConfig(ClimberConstants.MOTOR_INVERT, ClimberConstants.NEUTRAL_MODE);
-        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ClimberConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ClimberConstants.GEAR_RATIO, 1.0, Rotation2d.fromRotations(0));
         config.CurrentLimits = FXCurrentLimitsConfig(
             ClimberConstants.CURRENT_LIMIT_ENABLE, 
             ClimberConstants.SUPPLY_CURRENT_LIMIT, 
@@ -243,19 +243,11 @@ public class DeviceConfig {
         return config;
     }
 
-    public static FeedbackConfigs FXFeedbackConfig(FeedbackSensorSourceValue sensor, int remoteSensorID, double sensorToMechGR, Rotation2d sensorOffset){
+    public static FeedbackConfigs FXFeedbackConfig(FeedbackSensorSourceValue sensor, int remoteSensorID, double sensorToMechGR, double rotorToSensorGR, Rotation2d sensorOffset){
         FeedbackConfigs config = new FeedbackConfigs();
         config.FeedbackSensorSource = sensor;
         config.FeedbackRemoteSensorID = remoteSensorID;
         config.SensorToMechanismRatio = sensorToMechGR;
-        config.FeedbackRotorOffset = sensorOffset.getRotations();
-        return config;
-    }
-
-    public static FeedbackConfigs FXSteerFeedbackConfig(FeedbackSensorSourceValue sensor, int remoteSensorID, double rotorToSensorGR, Rotation2d sensorOffset){
-        FeedbackConfigs config = new FeedbackConfigs();
-        config.FeedbackSensorSource = sensor;
-        config.FeedbackRemoteSensorID = remoteSensorID;
         config.RotorToSensorRatio = rotorToSensorGR;
         config.FeedbackRotorOffset = sensorOffset.getRotations();
         return config;

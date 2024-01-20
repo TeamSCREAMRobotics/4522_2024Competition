@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.305389050150424,
-        "y": 5.8788399459823175
+        "x": 8.131115923248796,
+        "y": 5.855500976538676
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.778401405590256,
-        "y": 6.476092609817174
+        "x": 7.400280327290026,
+        "y": 6.122038293062296
       },
       "isLocked": false,
       "linkedName": "Close6_3End"
@@ -20,8 +20,8 @@
         "y": 6.45267093672561
       },
       "prevControl": {
-        "x": 7.42707630921681,
-        "y": 6.768863523461711
+        "x": 6.786089956360704,
+        "y": 6.284517879770223
       },
       "nextControl": null,
       "isLocked": false,
@@ -58,10 +58,10 @@
   "goalEndState": {
     "velocity": 0,
     "rotation": 10.0,
-    "rotateFast": false
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": "Close6",
+  "folder": "AmpSide6",
   "previewStartingState": null,
   "useDefaultConstraints": false
 }

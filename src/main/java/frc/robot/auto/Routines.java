@@ -26,30 +26,23 @@ public class Routines {
 
     //private static PathCorrectionHelper correctionHelper;
 
-    private static Timer autoTimer = new Timer();
-    private static Timer rotationOverrideTimer = new Timer();
+    private static final Timer autoTimer = new Timer();
+    private static final PathSequence Close4 = new PathSequence("Close4_1", "Close4_2", "Close4_3");
+    private static final PathSequence AmpSide6 = new PathSequence("Close4_1", "Close4_2", "Amp6_0", "Amp6_1", "Amp6_2", "Amp6_3", "Amp6_4");
 
-    private static PathPlannerPath getPath(String pathName){
-        return PathPlannerPath.fromPathFile(pathName);
+    public static Command overrideRotationTarget(Rotation2d rotation){
+        return new InstantCommand(() -> PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.of(rotation)));
     }
 
-    private static Command getPathCommand(String pathName){
-        return AutoBuilder.followPath(getPath(pathName));
+    public static Command stopOverridingRotationTarget(){
+        return new InstantCommand(() -> PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.empty()));
     }
 
-    private static Pose2d getPathStartingPose(String pathName){
-        return AllianceFlippable.MirroredPose2d(getPath(pathName).getPreviewStartingHolonomicPose());
+    private static Command resetPoseCommand(Swerve swerve, Pose2d pose){
+        return new InstantCommand(() -> swerve.resetPose(pose));
     }
 
-    private static Command resetPoseCommand(Swerve swerve, String pathName){
-        return new InstantCommand(() -> swerve.resetPose(getPathStartingPose(pathName)));
-    }
-
-    public static void overrideRotationTarget(Optional<Rotation2d> rotation){
-        PPHolonomicDriveController.setRotationTargetOverride(() -> rotation);
-    }
-
-    private static Command resetTimerCommand(){
+    private static Command startTimerCommand(){
         return new ParallelCommandGroup(
             new InstantCommand(() -> autoTimer.reset()),
             new InstantCommand(() -> autoTimer.start())
@@ -57,7 +50,7 @@ public class Routines {
     }
 
     private static Command printTimerCommand(){
-        return new InstantCommand(() -> System.out.println("[Auto] Time taken:  " + autoTimer.get()));
+        return new InstantCommand(() -> System.out.println("[Auto] Time elapsed:  " + autoTimer.get()));
     }
 
     /* public static Command testAuto(Swerve swerve){
@@ -72,33 +65,29 @@ public class Routines {
  
     public static Command Close4(Swerve swerve){
         return new SequentialCommandGroup(
-            resetPoseCommand(swerve, "Close4_1"),
-            getPathCommand("Close4_1"),
-            new WaitCommand(1),
-            getPathCommand("Close4_2"),
-            new WaitCommand(1),
-            getPathCommand("Close4_3")
+            startTimerCommand(),
+            resetPoseCommand(swerve, Close4.getStartingPose()),
+            Close4.getAll(),
+            printTimerCommand()
         );
     }
 
-    public static Command Close6(Swerve swerve){
+    public static Command AmpSide6(Swerve swerve){
         return new SequentialCommandGroup(
-            new ParallelCommandGroup(
-                resetTimerCommand(),
-                resetPoseCommand(swerve, "Close4_1")
-                // new WaitCommand(0.5)
-            ),
-            getPathCommand("Close4_1"),
+            startTimerCommand(),
+            resetPoseCommand(swerve, AmpSide6.getStartingPose()),
+            AmpSide6.getStart(),
             // new WaitCommand(0.75),
-            getPathCommand("Close4_2"),
+            AmpSide6.getNext(),
             // new WaitCommand(0.75),
-            getPathCommand("Close4_3"),
+            AmpSide6.getNext(),
             // new WaitCommand(0.75),
-            getPathCommand("Close6_1"),
-            getPathCommand("Close6_2"),
+            AmpSide6.getNext(),
+            AmpSide6.getNext(),
             // new WaitCommand(0.75),
-            getPathCommand("Close6_3"),
-            getPathCommand("Close6_4"),
+            AmpSide6.getNext(),
+            AmpSide6.getNext(),
+            AmpSide6.getNext(),
             printTimerCommand()
         );
     }

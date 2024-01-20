@@ -13,11 +13,13 @@ public class IntakeManualCommand extends Command {
 
   Intake intake;
   double speed;
+  boolean stop;
 
-  public IntakeManualCommand(Intake intake, double speed) {
+  public IntakeManualCommand(Intake intake, double speed, boolean stop) {
     addRequirements(intake);
     this.intake = intake;
     this.speed = speed;
+    this.stop = stop;
   }
 
   // Called when the command is initially scheduled.
@@ -27,13 +29,15 @@ public class IntakeManualCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.setIntake(new DutyCycleOut(speed));
+    intake.setIntakeOutput(speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.stop();
+    if(stop){
+      intake.stop();
+    }
   }
 
   // Returns true when the command should end.

@@ -3,37 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.857824212082089,
-        "y": 6.45267093672561
+        "x": 7.95406395377698,
+        "y": 7.436381206571257
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.813533915227601,
-        "y": 6.640044321458115
+        "x": 7.497341328491502,
+        "y": 7.412959533479694
       },
       "isLocked": false,
-      "linkedName": "Close6_2End"
+      "linkedName": "Close6_1End"
     },
     {
       "anchor": {
-        "x": 8.305389050150424,
-        "y": 5.8788399459823175
+        "x": 5.857824212082089,
+        "y": 6.45267093672561
       },
       "prevControl": {
-        "x": 7.204570414846961,
-        "y": 6.335562571267795
+        "x": 7.005486193568677,
+        "y": 7.471513716208602
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Close6_3End"
+      "linkedName": "Close6_2End"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "StartIntake",
-      "waypointRelativePos": 0.6,
+      "name": "StopIntake",
+      "waypointRelativePos": 0.7,
       "command": {
         "type": "parallel",
         "data": {
@@ -41,7 +41,7 @@
             {
               "type": "named",
               "data": {
-                "name": "StartIntake"
+                "name": "StopIntake"
               }
             }
           ]
@@ -56,14 +56,14 @@
     "maxAngularAcceleration": 440.0
   },
   "goalEndState": {
-    "velocity": 2.0,
-    "rotation": -26.565051177078068,
-    "rotateFast": true
+    "velocity": 0,
+    "rotation": 10.0,
+    "rotateFast": false
   },
   "reversed": false,
-  "folder": "Close6",
+  "folder": "AmpSide6",
   "previewStartingState": {
-    "rotation": 10.0,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": false

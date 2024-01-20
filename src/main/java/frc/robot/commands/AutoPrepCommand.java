@@ -61,12 +61,12 @@ public class AutoPrepCommand extends Command {
   
     shooter.setTargetVelocity(ShooterConstants.SHOOTER_MIN_VELOCITY);
     if(!defense){
-      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.pivotTreeMap.get(distanceFromSpeaker)));
-      elevator.setTargetHeight(ElevatorConstants.elevatorTreeMap.get(distanceFromSpeaker));
+      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.pivotAngleMap.get(distanceFromSpeaker)));
+      elevator.setTargetHeight(ElevatorConstants.elevatorHeightMap.get(distanceFromSpeaker));
     }
     else{
-      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.pivotTreeMap_Defense.get(distanceFromSpeaker)));
-      elevator.setTargetHeight(ElevatorConstants.elevatorTreeMap_Defense.get(distanceFromSpeaker));
+      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.pivotAngleMap_Defense.get(distanceFromSpeaker)));
+      elevator.setTargetHeight(ElevatorConstants.elevatorHeightMap_Defense.get(distanceFromSpeaker));
     }
   }
 

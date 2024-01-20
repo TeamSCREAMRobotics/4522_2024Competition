@@ -3,13 +3,11 @@
   "robotLength": 0.86,
   "holonomicMode": true,
   "pathFolders": [
-    "BackTo",
-    "Far_Center4",
+    "AmpSide6",
+    "AmpSide7",
     "CenterPiecePathfinding",
     "Close4",
-    "Close6",
-    "Close7",
-    "ToCenter"
+    "SourceSide4"
   ],
   "autoFolders": [],
   "defaultMaxVel": 4.98,

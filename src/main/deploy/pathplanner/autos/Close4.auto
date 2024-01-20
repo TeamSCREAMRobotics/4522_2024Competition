@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 2,
-      "y": 2
+      "x": 1.325730468864645,
+      "y": 5.574358195791997
     },
     "rotation": 0
   },
@@ -30,31 +30,31 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close4_3"
+                  "pathName": "Amp6_0"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close6_1"
+                  "pathName": "Amp6_1"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close6_2"
+                  "pathName": "Amp6_2"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close6_3"
+                  "pathName": "Amp6_3"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close6_4"
+                  "pathName": "Amp6_4"
                 }
               }
             ]

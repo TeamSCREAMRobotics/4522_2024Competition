@@ -160,4 +160,8 @@ public class Controlboard{
     public static final Trigger getEjectIntake(){
         return driverController.rightBumper();
     }
+
+    public static final Trigger getAutoPickup(){
+        return driverController.leftBumper();
+    }
 }

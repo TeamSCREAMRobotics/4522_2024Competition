@@ -37,7 +37,7 @@ public class ConveyorAutoFireCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    boolean shooterAtSpeed = shooter.getVelocity_RPM() > ShooterConstants.SHOOTER_MIN_VELOCITY;
+    boolean shooterAtSpeed = shooter.getWheelRPM() > ShooterConstants.SHOOTER_MIN_VELOCITY;
     boolean pivotAtAngle = pivot.getPivotAtTarget();
     boolean elevatorAtPosition = elevator.getElevatorAtTarget();
 

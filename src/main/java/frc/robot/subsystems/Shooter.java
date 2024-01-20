@@ -43,12 +43,16 @@ public class Shooter extends SubsystemBase{
         m_rightShooterMotor.setControl(new VelocityVoltage(Conversions.rpmToFalconRPS(rpm, 1.0)));
     }
 
-    public double getVelocity_RPM(){
-        return Conversions.rpsToFalconRPM(m_rightShooterMotor.getVelocity().getValueAsDouble(), 1.0);
+    public double getWheelRPM(){
+        return Conversions.falconRPSToMechanismRPM((m_rightShooterMotor.getVelocity().getValueAsDouble() + m_leftShooterMotor.getVelocity().getValueAsDouble())/2, 1.0);
     }
 
-    public void setShooterPercentOutput(double output){
-        m_rightShooterMotor.setControl(new DutyCycleOut(output));
+    public double getMotorRPM(){
+        return Conversions.rpmToFalconRPS(getWheelRPM(), ShooterConstants.GEAR_RATIO);
+    }
+
+    public void setShooterOutput(double po){
+        setShooter(new DutyCycleOut(po));
     }
 
     public void setShooter(ControlRequest control){

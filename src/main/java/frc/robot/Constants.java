@@ -352,16 +352,16 @@ public final class Constants{
         public static final Rotation2d PIVOT_TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(0.0);
         public static final Rotation2d PIVOT_TRAP_FLOOR_ANGLE = Rotation2d.fromDegrees(0.0);
 
-        public static final InterpolatingDoubleTreeMap pivotTreeMap = new InterpolatingDoubleTreeMap();
+        public static final InterpolatingDoubleTreeMap pivotAngleMap = new InterpolatingDoubleTreeMap();
         static{
-            //pivotTreeMap.put(distance, angle (degrees))
-            pivotTreeMap.put(0.0, 0.0);
+            // (distance, angle (degrees))
+            pivotAngleMap.put(0.0, 0.0);
         }
         
-        public static final InterpolatingDoubleTreeMap pivotTreeMap_Defense = new InterpolatingDoubleTreeMap();
+        public static final InterpolatingDoubleTreeMap pivotAngleMap_Defense = new InterpolatingDoubleTreeMap();
         static{
-            //pivotTreeMap.put(distance, angle (degrees))
-            pivotTreeMap.put(0.0, 0.0);
+            // (distance, angle (degrees))
+            pivotAngleMap.put(0.0, 0.0);
         }
     }
 
@@ -400,16 +400,16 @@ public final class Constants{
         public static final double ELEVATOR_TRAP_CHAIN_POSITION = 0.0;
         public static final double ELEVATOR_TRAP_FLOOR_POSITION = 0.0;
 
-        public static final InterpolatingDoubleTreeMap elevatorTreeMap = new InterpolatingDoubleTreeMap();
+        public static final InterpolatingDoubleTreeMap elevatorHeightMap = new InterpolatingDoubleTreeMap();
         static{
-            //elevatorTreeMap.put(distance, height)
-            elevatorTreeMap.put(0.0, 0.0);
+            // (distance, height)
+            elevatorHeightMap.put(0.0, 0.0);
         }
         
-        public static final InterpolatingDoubleTreeMap elevatorTreeMap_Defense = new InterpolatingDoubleTreeMap();
+        public static final InterpolatingDoubleTreeMap elevatorHeightMap_Defense = new InterpolatingDoubleTreeMap();
         static{
-            //elevatorTreeMap.put(distance, height)
-            elevatorTreeMap.put(0.0, 0.0);
+            // (distance, height)
+            elevatorHeightMap.put(0.0, 0.0);
         }
     }
 
@@ -469,7 +469,7 @@ public final class Constants{
 
     public static final class FieldConstants{
 
-        public static final Translation2d FIELD_DIMENSIONS = new Translation2d(16.54175, 8.21055);
+        public static final Translation2d FIELD_DIMENSIONS = new Translation2d(Units.inchesToMeters(648.2708), Units.inchesToMeters(312.9375));
         // Numbered from amp station wall
         public static final Translation2d CENTER_PIECE_1 = new Translation2d(8.256, 7.456);
         public static final Translation2d CENTER_PIECE_2 = new Translation2d(8.256, 5.788);
@@ -498,7 +498,7 @@ public final class Constants{
         public static final Translation2d BLUE_PODIUM = new Translation2d(2.737, 4.131913);
         public static final Translation2d RED_PODIUM = new Translation2d(13.816724, 4.131913);
         
-        //TODO does Alliance.Flippable work on these? Or would it flip BLUE_RIGHT to RED_LEFT
+        //TODO does AllianceFlippable work on these? Or would it flip BLUE_RIGHT to RED_LEFT
         public static final Translation2d RED_STAGE_RIGHT = new Translation2d(11.93, 4.51);
         public static final Translation2d RED_STAGE_MID = new Translation2d(11.23, 4.19);
         public static final Translation2d RED_STAGE_LEFT = new Translation2d(11.93, 3.73);

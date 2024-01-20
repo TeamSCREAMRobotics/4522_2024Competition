@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8175856037874687,
-        "y": 4.918551349228233
+        "x": 1.881383197794644,
+        "y": 4.893111707127369
       },
       "isLocked": false,
       "linkedName": null
@@ -28,23 +28,22 @@
       "linkedName": "Close4_1End"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.05,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {
       "name": "StartIntake",
-      "waypointRelativePos": 0.6,
+      "waypointRelativePos": 0.55,
       "command": {
         "type": "parallel",
         "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "StartIntake"
-              }
-            }
-          ]
+          "commands": []
         }
       }
     }
@@ -58,7 +57,7 @@
   "goalEndState": {
     "velocity": 0,
     "rotation": -27.0,
-    "rotateFast": false
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "Close4",

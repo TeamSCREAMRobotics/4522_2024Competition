@@ -3,37 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.95406395377698,
-        "y": 7.436381206571257
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 7.497341328491502,
-        "y": 7.412959533479694
-      },
-      "isLocked": false,
-      "linkedName": "Close6_1End"
-    },
-    {
-      "anchor": {
         "x": 5.857824212082089,
         "y": 6.45267093672561
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.68173449341249,
+        "y": 6.446848599911889
+      },
+      "isLocked": false,
+      "linkedName": "Close6_2End"
+    },
+    {
+      "anchor": {
+        "x": 8.131115923248796,
+        "y": 5.855500976538676
+      },
       "prevControl": {
-        "x": 7.005486193568677,
-        "y": 7.471513716208602
+        "x": 7.783264380088082,
+        "y": 6.0062366452416525
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Close6_2End"
+      "linkedName": "Close6_3End"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "StopIntake",
-      "waypointRelativePos": 0.7,
+      "name": "StartIntake",
+      "waypointRelativePos": 0.6,
       "command": {
         "type": "parallel",
         "data": {
@@ -41,7 +41,7 @@
             {
               "type": "named",
               "data": {
-                "name": "StopIntake"
+                "name": "StartIntake"
               }
             }
           ]
@@ -56,14 +56,14 @@
     "maxAngularAcceleration": 440.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 10.0,
-    "rotateFast": false
+    "velocity": 2.0,
+    "rotation": -26.565051177078068,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": "Close6",
+  "folder": "AmpSide6",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 10.0,
     "velocity": 0
   },
   "useDefaultConstraints": false

@@ -1,9 +1,12 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
@@ -20,6 +23,8 @@ public class Pivot extends SubsystemBase{
     private DutyCycleEncoder m_encoder;
 
     private Rotation2d m_targetAngle = Rotation2d.fromDegrees(0);
+
+    private ArmFeedforward m_feedforward = new ArmFeedforward(0, 0, 0);
 
     public Pivot(){
         //m_pivotMotor = new TalonFX(Ports.PIVOT_MOTOR_ID, Ports.RIO_CANBUS_NAME);
@@ -51,6 +56,10 @@ public class Pivot extends SubsystemBase{
         m_targetAngle = angle;
         setPivot(new MotionMagicVoltage(angle.getRotations()));
     }
+
+    public void setPivotOutput(double po){
+        setPivot(new DutyCycleOut(po));
+    }
     
     public void setPivot(ControlRequest control){
         m_pivotMotor.setControl(control);
@@ -69,7 +78,7 @@ public class Pivot extends SubsystemBase{
     }
 
     public double getPivotTargetAngle(double distance){
-        return PivotConstants.pivotTreeMap.get(distance);
+        return PivotConstants.pivotAngleMap.get(distance);
     }
 
     public void stop(){

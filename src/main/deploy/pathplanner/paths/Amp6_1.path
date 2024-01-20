@@ -32,10 +32,10 @@
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.2,
-      "maxWaypointRelativePos": 0.5,
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 0.2,
       "constraints": {
-        "maxVelocity": 2.0,
+        "maxVelocity": 2.5,
         "maxAcceleration": 4.9,
         "maxAngularVelocity": 570.0,
         "maxAngularAcceleration": 440.0
@@ -45,7 +45,7 @@
   "eventMarkers": [
     {
       "name": "StopIntake",
-      "waypointRelativePos": 0.0,
+      "waypointRelativePos": 0.05,
       "command": {
         "type": "parallel",
         "data": {
@@ -79,7 +79,7 @@
     },
     {
       "name": "AutoShoot",
-      "waypointRelativePos": 0.2,
+      "waypointRelativePos": 0.0,
       "command": {
         "type": "parallel",
         "data": {
@@ -124,7 +124,7 @@
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "Close6",
+  "folder": "AmpSide6",
   "previewStartingState": {
     "rotation": 27.0,
     "velocity": 0

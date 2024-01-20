@@ -26,6 +26,10 @@ public final class AllianceFlippable {
         return flip ? 1 : -1;
     }
 
+    public static Translation2d getTargetSpeaker(){
+        return Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING);
+    }
+
     public static Object Object(Object blueValue, Object redValue){
         return flip ? blueValue : redValue;
     }

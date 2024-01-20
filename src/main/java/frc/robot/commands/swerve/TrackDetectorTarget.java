@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.pid.ScreamPIDConstants;
+import frc.lib.util.AllianceFlippable;
 import frc.lib.util.LimelightHelpers;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.VisionConstants;
@@ -20,8 +21,6 @@ public class TrackDetectorTarget extends Command {
   PIDController xController;
   PIDController yController;
   PIDController rotController;
-
-  Rotation2d rotTarget;//AllianceFlippable.Rotation2d(Rotation2d.fromDegrees(0.0));
 
   double xError;
   double yError;
@@ -49,9 +48,9 @@ public class TrackDetectorTarget extends Command {
   public void execute() {
     double xValue = LimelightHelpers.getTV(Ports.LIMELIGHT_FRONT) ? -yController.calculate(LimelightHelpers.getTY(Ports.LIMELIGHT_FRONT), VisionConstants.DETECTOR_TARGET_TY) : 0;
     double yValue = LimelightHelpers.getTV(Ports.LIMELIGHT_FRONT) ? xController.calculate(LimelightHelpers.getTX(Ports.LIMELIGHT_FRONT), VisionConstants.DETECTOR_TARGET_TX) : 0;
-    //double rotValue = rotController.calculate(swerve.getYaw().getDegrees(), rotTarget.getDegrees());
+    double rotValue = rotController.calculate(swerve.getYaw().getDegrees(), AllianceFlippable.getForwardRotation().getDegrees());
     swerve.setChassisSpeeds(
-      swerve.robotRelativeSpeeds(new Translation2d(xValue, yValue), 0)
+      swerve.robotRelativeSpeeds(new Translation2d(xValue, yValue), rotValue)
     );
   }
 

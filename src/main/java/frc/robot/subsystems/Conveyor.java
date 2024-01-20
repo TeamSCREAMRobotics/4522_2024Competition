@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -31,6 +32,10 @@ public class Conveyor extends SubsystemBase{
 
     public void setConveyor(ControlRequest control){
         m_conveyorMotor.setControl(control);
+    }
+
+    public void setConveyorOutput(double po){
+        setConveyor(new DutyCycleOut(po));
     }
 
     public void stop(){

@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import javax.swing.text.html.Option;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -25,6 +27,7 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.PivotConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.auto.Autonomous;
 import frc.robot.auto.Autonomous.PPEvent;
 import frc.robot.auto.Routines;
@@ -35,13 +38,13 @@ import frc.robot.commands.climber.AutoClimbCommand;
 import frc.robot.commands.conveyor.ConveyorManualCommand;
 import frc.robot.commands.elevator.ElevatorManualCommand;
 import frc.robot.commands.elevator.ElevatorTargetCommand;
-import frc.robot.commands.intake.IntakeAutoCommand;
 import frc.robot.commands.intake.IntakeManualCommand;
 import frc.robot.commands.pivot.PivotManualCommand;
 import frc.robot.commands.pivot.PivotTargetCommand;
 import frc.robot.commands.shooter.ShooterManualCommand;
 import frc.robot.commands.swerve.FacePointCommand;
 import frc.robot.commands.swerve.TeleopSwerve;
+import frc.robot.commands.swerve.TrackDetectorTarget;
 import frc.robot.controlboard.Controlboard;
 import frc.robot.shuffleboard.ShuffleboardTabManager;
 import frc.robot.subsystems.Climber;
@@ -50,6 +53,8 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.Vision.Limelight;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class RobotContainer {
@@ -62,8 +67,8 @@ public class RobotContainer {
     private static final Shooter m_shooter = new Shooter();
     private static final Pivot m_pivot = new Pivot();
     private static final Elevator m_elevator = new Elevator();
-    private static final Conveyor m_conveyor = new Conveyor();
-    private static final Intake m_intake = new Intake(); */
+    private static final Conveyor m_conveyor = new Conveyor(); */
+    private static final Intake m_intake = new Intake();
 
     private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve);
     
@@ -120,8 +125,9 @@ public class RobotContainer {
         );*/
 
         /* Intake */
-        //Controlboard.getManualIntake().whileTrue(new IntakeManualCommand(m_intake, IntakeConstants.INTAKE_SPEED));
-        //Controlboard.getEjectIntake().whileTrue(new IntakeManualCommand(m_intake, IntakeConstants.EJECT_SPEED));
+        //Controlboard.getManualIntake().whileTrue(new IntakeManualCommand(m_intake, IntakeConstants.INTAKE_SPEED, true));
+        //Controlboard.getEjectIntake().whileTrue(new IntakeManualCommand(m_intake, IntakeConstants.EJECT_SPEED, true));
+        Controlboard.getAutoPickup().whileTrue(new TrackDetectorTarget(m_swerve, SwerveConstants.VISION_TRANSLATION_X_CONSTANTS, SwerveConstants.VISION_TRANSLATION_Y_CONSTANTS, SwerveConstants.SNAP_CONSTANTS));
     }
 
     private void configDefaultCommands() { 
@@ -182,14 +188,14 @@ public class RobotContainer {
     private void configAuto() {
         Autonomous.configure(
             Commands.none().withName("Do Nothing"),
-            new PPEvent("StartIntake", new InstantCommand()),//new IntakeAutoCommand(m_intake, IntakeConstants.INTAKE_SPEED)),
+            new PPEvent("StartIntake", new InstantCommand()),//new IntakeAutoCommand(m_intake, IntakeConstants.INTAKE_SPEED, false)),
             new PPEvent("StopIntake", new InstantCommand()),
-            new PPEvent("StartAimAtSpeaker", new InstantCommand(() -> Routines.overrideRotationTarget(Optional.of(FacePointCommand.calculateAngleToPoint(m_swerve.getPose().getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING)))))),
-            new PPEvent("StopAimAtSpeaker", new InstantCommand(() -> Routines.overrideRotationTarget(Optional.empty())))
+            new PPEvent("StartAimAtSpeaker", Routines.overrideRotationTarget(FacePointCommand.calculateAngleToPoint(m_swerve.getPose().getTranslation(), AllianceFlippable.getTargetSpeaker()))),
+            new PPEvent("StopAimAtSpeaker", Routines.stopOverridingRotationTarget())
         );
 
         Autonomous.addRoutines(
-            Routines.Close6(m_swerve).withName("Close6")
+            Routines.AmpSide6(m_swerve).withName("AmpSide6")
         );
     }
 
@@ -232,15 +238,6 @@ public class RobotContainer {
         return m_intake;
     } */
 
-    public static void stopAll(){
-        //m_shooter.stop();
-        //m_pivot.stop();
-        //m_elevator.stop();
-        //m_conveyor.stop();
-        //m_intake.stop();
-        m_swerve.stopAll();
-    }
-
     /**
      * Retrieves the current Alliance as detected by the DriverStation. 
      * Use this opposed to DriverStation.getAlliance().
@@ -252,5 +249,23 @@ public class RobotContainer {
         } else {
             return Alliance.Blue;
         }
+    }
+
+    public static void stopAll(){
+        //m_shooter.stop();
+        //m_pivot.stop();
+        //m_elevator.stop();
+        //m_conveyor.stop();
+        //m_intake.stop();
+        m_swerve.stopAll();
+    }
+    
+    public static void setAllNeutralModes(NeutralModeValue mode){
+        //m_shooter.setNeutralMode(mode);
+        //m_pivot.setNeutralMode(mode);
+        //m_elevator.setNeutralMode(mode);
+        //m_conveyor.setNeutralMode(mode);
+        //m_intake.setNeutralMode(mode);
+        m_swerve.setNeutralModes(mode, mode);
     }
 }

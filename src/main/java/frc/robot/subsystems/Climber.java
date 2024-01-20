@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -54,8 +55,8 @@ public class Climber extends SubsystemBase{
         m_leftClimberMotor.setControl(new Follower(m_rightClimberMotor.getDeviceID(), true)); //left motor follows right motor in the opposing direction
     }
 
-    public void setClimberVoltage(double voltage){
-        m_rightClimberMotor.setControl(new VoltageOut(voltage));
+    public void setClimberOutput(double po){
+        setClimber(new DutyCycleOut(po));
     }
 
     public void stopClimber(){
@@ -72,14 +73,6 @@ public class Climber extends SubsystemBase{
     
     public boolean getClimberAtTarget(){
         return Math.abs(getClimberError()) < ClimberConstants.TARGET_THRESHOLD;
-    }
-
-    public double getClimberVelocity(){
-        return m_rightClimberMotor.getVelocity().getValue();
-    }
-
-    public double getClimberAcceleration(){
-        return m_rightClimberMotor.getAcceleration().getValue();
     }
 
     public void stop(){

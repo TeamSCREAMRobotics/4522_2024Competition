@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.mechanisms.DifferentialMechanism;
@@ -32,6 +33,10 @@ public class Intake extends SubsystemBase{
     public void setNeutralMode(NeutralModeValue mode){
         m_leftIntakeMotor.setNeutralMode(mode);
         m_rightIntakeMotor.setNeutralMode(mode);
+    }
+
+    public void setIntakeOutput(double po){
+        setIntake(new DutyCycleOut(po));
     }
 
     public void setIntake(ControlRequest control){

@@ -79,6 +79,7 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+
     coastTimer.reset();
     coastTimer.start();
     RobotContainer.stopAll();
@@ -87,7 +88,7 @@ public class Robot extends TimedRobot {
     /** This function is called periodically when the robot is in Disabled mode. */
   @Override
   public void disabledPeriodic() {
-    if(((int)coastTimer.get()) == 5){
+    if(((int) coastTimer.get()) == 5){
       RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Coast, NeutralModeValue.Coast);
     }
   }

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -59,6 +60,10 @@ public class Elevator extends SubsystemBase{
         m_leftElevatorMotor.setControl(new Follower(m_rightElevatorMotor.getDeviceID(), true)); //left motor follows right motor in the opposing direction
     }
 
+    public void setElevatorOutput(double po){
+        setElevator(new DutyCycleOut(po));
+    }
+
     public void setElevatorVoltage(double voltage){
         m_rightElevatorMotor.setControl(new VoltageOut(voltage));
     }
@@ -88,7 +93,7 @@ public class Elevator extends SubsystemBase{
     }
     
     public double getElevatorTargetHeight(double distance){
-        return ElevatorConstants.elevatorTreeMap.get(distance);
+        return ElevatorConstants.elevatorHeightMap.get(distance);
     }
 
     public void stop(){
