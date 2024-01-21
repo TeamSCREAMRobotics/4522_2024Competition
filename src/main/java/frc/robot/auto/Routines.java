@@ -30,6 +30,7 @@ public class Routines {
     private static final Timer autoTimer = new Timer();
     private static final PathSequence Close4 = new PathSequence("Close4_1", "Close4_2", "Close4_3");
     private static final PathSequence AmpSide6 = new PathSequence("Close4_1", "Close4_2", "Amp6_0", "Amp6_1", "Amp6_2", "Amp6_3", "Amp6_4");
+    private static final PathSequence SourceSide4 = new PathSequence("SourceSide4_1", "SourceSide4_2", "SourceSide4_3", "SourceSide4_4", "SourceSide4_5", "SourceSide4_6");
 
     public static Command overrideRotationTarget(Rotation2d rotation){
         return new InstantCommand(() -> PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.of(rotation)));
@@ -90,6 +91,23 @@ public class Routines {
             AmpSide6.getNext(),
             new DriveToAndPickup(swerve),
             AmpSide6.getNext(),
+            printTimerCommand()
+        );
+    }
+
+    public static Command SourceSide4(Swerve swerve){
+        return new SequentialCommandGroup(
+            startTimerCommand(),
+            resetPoseCommand(swerve, SourceSide4.getStartingPose()),
+            SourceSide4.getStart(),
+            // new WaitCommand(0.75),
+            SourceSide4.getNext(),
+            SourceSide4.getNext(),
+            // new WaitCommand(0.75),
+            SourceSide4.getNext(),
+            SourceSide4.getNext(),
+            // new WaitCommand(0.75),
+            SourceSide4.getNext(),
             printTimerCommand()
         );
     }

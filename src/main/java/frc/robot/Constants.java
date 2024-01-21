@@ -17,6 +17,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.lib.pid.ScreamPIDConstants;
 import frc.lib.util.AllianceFlippable;
 import frc.lib.util.COTSFalconSwerveConstants;
@@ -352,16 +353,16 @@ public final class Constants{
         public static final Rotation2d PIVOT_TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(0.0);
         public static final Rotation2d PIVOT_TRAP_FLOOR_ANGLE = Rotation2d.fromDegrees(0.0);
 
-        public static final InterpolatingDoubleTreeMap pivotAngleMap = new InterpolatingDoubleTreeMap();
+        public static final InterpolatingDoubleTreeMap pivotAngleMap_Localization = new InterpolatingDoubleTreeMap();
         static{
             // (distance, angle (degrees))
-            pivotAngleMap.put(0.0, 0.0);
+            pivotAngleMap_Localization.put(0.0, 0.0);
         }
         
         public static final InterpolatingDoubleTreeMap pivotAngleMap_Defense = new InterpolatingDoubleTreeMap();
         static{
             // (distance, angle (degrees))
-            pivotAngleMap.put(0.0, 0.0);
+            pivotAngleMap_Defense.put(0.0, 0.0);
         }
     }
 
@@ -400,16 +401,16 @@ public final class Constants{
         public static final double ELEVATOR_TRAP_CHAIN_POSITION = 0.0;
         public static final double ELEVATOR_TRAP_FLOOR_POSITION = 0.0;
 
-        public static final InterpolatingDoubleTreeMap elevatorHeightMap = new InterpolatingDoubleTreeMap();
+        public static final InterpolatingDoubleTreeMap elevatorHeightMap_Localization = new InterpolatingDoubleTreeMap();
         static{
             // (distance, height)
-            elevatorHeightMap.put(0.0, 0.0);
+            elevatorHeightMap_Localization.put(0.0, 0.0);
         }
         
         public static final InterpolatingDoubleTreeMap elevatorHeightMap_Defense = new InterpolatingDoubleTreeMap();
         static{
             // (distance, height)
-            elevatorHeightMap.put(0.0, 0.0);
+            elevatorHeightMap_Localization.put(0.0, 0.0);
         }
     }
 
@@ -498,15 +499,14 @@ public final class Constants{
         };
 
         public static final Translation2d BLUE_PODIUM = new Translation2d(2.737, 4.131913);
-        public static final Translation2d RED_PODIUM = new Translation2d(13.816724, 4.131913);
+        public static final Translation2d RED_PODIUM = AllianceFlippable.MirroredTranslation2d(BLUE_PODIUM);
         
-        //TODO does AllianceFlippable work on these? Or would it flip BLUE_RIGHT to RED_LEFT
-        public static final Translation2d RED_STAGE_RIGHT = new Translation2d(11.93, 4.51);
-        public static final Translation2d RED_STAGE_MID = new Translation2d(11.23, 4.19);
-        public static final Translation2d RED_STAGE_LEFT = new Translation2d(11.93, 3.73);
-        public static final Translation2d BLUE_STAGE_LEFT = new Translation2d(4.65, 3.73);
-        public static final Translation2d BLUE_STAGE_MID = new Translation2d(5.33, 4.19);
-        public static final Translation2d BLUE_STAGE_RIGHT = new Translation2d(4.65, 4.51);
+        public static final Translation3d BLUE_STAGE_LEFT = new Translation3d(4.65, 3.73, 0); //TODO left/right stage rotations
+        public static final Translation3d BLUE_STAGE_MID = new Translation3d(5.33, 4.19, 0);
+        public static final Translation3d BLUE_STAGE_RIGHT = new Translation3d(4.65, 4.51, 0);
+        public static final Translation3d RED_STAGE_LEFT = AllianceFlippable.MirroredTranslation3d(BLUE_STAGE_LEFT);
+        public static final Translation3d RED_STAGE_MID = AllianceFlippable.MirroredTranslation3d(BLUE_STAGE_MID);
+        public static final Translation3d RED_STAGE_RIGHT = AllianceFlippable.MirroredTranslation3d(BLUE_STAGE_RIGHT);
 
         public static final Translation2d BLUE_SPEAKER_OPENING = new Translation2d(0.0, 5.54);
         public static final Translation2d RED_SPEAKER_OPENING = AllianceFlippable.MirroredTranslation2d(BLUE_SPEAKER_OPENING);

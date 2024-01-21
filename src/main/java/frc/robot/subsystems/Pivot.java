@@ -76,9 +76,9 @@ public class Pivot extends SubsystemBase{
     public boolean getPivotAtTarget(){
         return Math.abs(getPivotError().getDegrees()) < PivotConstants.TARGET_THRESHOLD;
     }
-
-    public double getPivotTargetAngle(double distance){
-        return PivotConstants.pivotAngleMap.get(distance);
+    
+    public double getPivotTargetAngle_Localization(double distance){
+        return PivotConstants.pivotAngleMap_Localization.get(distance);
     }
 
     public void stop(){

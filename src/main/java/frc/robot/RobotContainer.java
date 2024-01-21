@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,6 +36,7 @@ import frc.robot.commands.AutoPrepCommand;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import frc.robot.commands.climber.AutoClimbCommand;
+import frc.robot.commands.conveyor.ConveyorAutoFireCommand;
 import frc.robot.commands.conveyor.ConveyorManualCommand;
 import frc.robot.commands.elevator.ElevatorManualCommand;
 import frc.robot.commands.elevator.ElevatorTargetCommand;
@@ -42,6 +44,7 @@ import frc.robot.commands.intake.IntakeCommand;
 import frc.robot.commands.pivot.PivotManualCommand;
 import frc.robot.commands.pivot.PivotTargetCommand;
 import frc.robot.commands.shooter.ShooterManualCommand;
+import frc.robot.commands.swerve.DriveToPositionCommand;
 import frc.robot.commands.swerve.FacePointCommand;
 import frc.robot.commands.swerve.TeleopSwerve;
 import frc.robot.commands.swerve.FaceGamePieceCommand;
@@ -111,6 +114,7 @@ public class RobotContainer {
 
         /* Automation */
         // Controlboard.getAutoPrepShot().toggleOnTrue(new AutoPrepCommand(m_pivot, m_elevator, m_shooter, m_swerve, Controlboard.getDefense().getAsBoolean(), getAlliance())).toggleOnTrue(new FacePointCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING)));
+        // Controlboard.getAutoFire().onTrue(new ConveyorAutoFireCommand(m_conveyor, m_shooter, m_pivot, m_elevator));
         /*Controlboard.getAutoclimb().toggleOnTrue(
             new SequentialCommandGroup(
             new FacePointCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_STAGE_RIGHT, FieldConstants.RED_STAGE_RIGHT)), //how to select which stage we are going to, if we just faced the direct center of the stage would it function the same?
@@ -195,7 +199,8 @@ public class RobotContainer {
         );
 
         Autonomous.addRoutines(
-            Routines.AmpSide6(m_swerve).withName("AmpSide6")
+            Routines.AmpSide6(m_swerve).withName("AmpSide6"),
+            Routines.SourceSide4(m_swerve).withName("SourceSide4")
         );
     }
 
