@@ -65,6 +65,7 @@ public final class Constants{
 
         /* Conveyor */
         public static final int CONVEYOR_MOTOR_ID = 0; //TODO
+        public static final int CONVEYOR_BEAM_ID = 0; // TODO
 
         /* Intake */
         public static final int LEFT_INTAKE_MOTOR_ID = 8;
@@ -91,8 +92,8 @@ public final class Constants{
 
         /* Swerve Kinematics */
         public static final double SHOOT_WHILE_MOVING_SCALAR = 0.5;
-        public static final double MAX_SPEED = 5.0; // m/s theoretical = 5.7
-        public static final double MAX_ACCELERATION = 3.0; // m/s^2 theoretical
+        public static final double MAX_SPEED = 4.98; // m/s theoretical = 5.7
+        public static final double MAX_ACCELERATION = 4.9; // m/s^2 theoretical
         public static final double MAX_ANGULAR_VELOCITY = 8.0; // rad/s
         public static final double MAX_ANGULAR_ACCELERATION = 7.679;
 
@@ -113,9 +114,8 @@ public final class Constants{
         public static final double CORRECTION_TIME_THRESHOLD = 0.2;
 
         /* Swerve Controllers */
-        public static final ScreamPIDConstants VISION_TRANSLATION_X_CONSTANTS = new ScreamPIDConstants(1, 0, 0.0);
-        public static final ScreamPIDConstants VISION_TRANSLATION_Y_CONSTANTS = new ScreamPIDConstants(4.5, 0, 0.0);
-        public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(0.2, 0, 0);
+        public static final ScreamPIDConstants VISION_ROTATION_CONSTANTS = new ScreamPIDConstants(0.16, 0.0, 0.0);
+        public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(0.2, 0.0, 0.0);
 
         /* PathPlanner Constants */
         public static final ScreamPIDConstants PATH_TRANSLATION_CONSTANTS = new ScreamPIDConstants(15.0, 0.0, 0.0);
@@ -156,7 +156,7 @@ public final class Constants{
 
             /* Ramps */
             public static final double OPEN_LOOP_RAMP = 0.25;
-            public static final double CLOSED_LOOP_RAMP = 0.0;
+            public static final double CLOSED_LOOP_RAMP = 0.25;
 
             /* PID Constants */
             public static final double KP = 0.12; // TODO ROBOT SPECIFIC
@@ -432,6 +432,8 @@ public final class Constants{
 
         public static final double INTAKE_SPEED = 0.75;
         public static final double EJECT_SPEED = -0.5;
+
+        public static final double AUTO_INTAKE_TY_THRESHOLD = -3.0;
     }
 
     public static final class ConveyorConstants {//TODO all values
@@ -462,7 +464,7 @@ public final class Constants{
 
         public static final int DETECTOR_PIPELINE = 0;
 
-        public static final double DETECTOR_TARGET_TY = -10.0;
+        public static final double DETECTOR_TARGET_TY = 0.0;
         public static final double DETECTOR_TARGET_TX = 0.0;
         public static final double VALID_TARGET_THRESHOLD = 0;
     }

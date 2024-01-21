@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.68173449341249,
-        "y": 6.446848599911889
+        "x": 6.17401679881819,
+        "y": 6.37069508090514
       },
       "isLocked": false,
       "linkedName": "Close6_2End"
     },
     {
       "anchor": {
-        "x": 8.131115923248796,
-        "y": 5.855500976538676
+        "x": 7.286546270667433,
+        "y": 5.925683292165444
       },
       "prevControl": {
-        "x": 7.783264380088082,
-        "y": 6.0062366452416525
+        "x": 6.970353683931332,
+        "y": 6.019369984531696
       },
       "nextControl": null,
       "isLocked": false,
@@ -57,13 +57,13 @@
   },
   "goalEndState": {
     "velocity": 2.0,
-    "rotation": -26.565051177078068,
+    "rotation": -18.034285567129842,
     "rotateFast": true
   },
   "reversed": false,
   "folder": "AmpSide6",
   "previewStartingState": {
-    "rotation": 10.0,
+    "rotation": -17.65012421993007,
     "velocity": 0
   },
   "useDefaultConstraints": false

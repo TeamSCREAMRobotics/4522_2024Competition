@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.config.DeviceConfig;
 import frc.robot.Constants;
@@ -13,9 +14,11 @@ import frc.robot.Constants.Ports;
 public class Conveyor extends SubsystemBase{
         
     private TalonFX m_conveyorMotor;
+    private static DigitalInput m_beam;
 
     public Conveyor(){
         //m_conveyorMotor = new TalonFX(Ports.CONVEYOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        m_beam = new DigitalInput(Ports.CONVEYOR_BEAM_ID);
 
         configShooterMotors();
         
@@ -36,6 +39,10 @@ public class Conveyor extends SubsystemBase{
 
     public void setConveyorOutput(double po){
         setConveyor(new DutyCycleOut(po));
+    }
+
+    public static boolean hasPiece(){
+        return m_beam.get();
     }
 
     public void stop(){

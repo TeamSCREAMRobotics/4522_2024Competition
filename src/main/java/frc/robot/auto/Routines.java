@@ -18,7 +18,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.util.AllianceFlippable;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.commands.intake.IntakeManualCommand;
+import frc.robot.commands.intake.DriveToAndPickup;
+import frc.robot.commands.intake.IntakeCommand;
 import frc.robot.shuffleboard.tabs.MatchTab;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -83,10 +84,11 @@ public class Routines {
             AmpSide6.getNext(),
             // new WaitCommand(0.75),
             AmpSide6.getNext(),
+            new DriveToAndPickup(swerve),
             AmpSide6.getNext(),
             // new WaitCommand(0.75),
             AmpSide6.getNext(),
-            AmpSide6.getNext(),
+            new DriveToAndPickup(swerve),
             AmpSide6.getNext(),
             printTimerCommand()
         );

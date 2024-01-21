@@ -38,13 +38,13 @@ import frc.robot.commands.climber.AutoClimbCommand;
 import frc.robot.commands.conveyor.ConveyorManualCommand;
 import frc.robot.commands.elevator.ElevatorManualCommand;
 import frc.robot.commands.elevator.ElevatorTargetCommand;
-import frc.robot.commands.intake.IntakeManualCommand;
+import frc.robot.commands.intake.IntakeCommand;
 import frc.robot.commands.pivot.PivotManualCommand;
 import frc.robot.commands.pivot.PivotTargetCommand;
 import frc.robot.commands.shooter.ShooterManualCommand;
 import frc.robot.commands.swerve.FacePointCommand;
 import frc.robot.commands.swerve.TeleopSwerve;
-import frc.robot.commands.swerve.TrackDetectorTarget;
+import frc.robot.commands.swerve.FaceGamePieceCommand;
 import frc.robot.controlboard.Controlboard;
 import frc.robot.shuffleboard.ShuffleboardTabManager;
 import frc.robot.subsystems.Climber;
@@ -127,7 +127,7 @@ public class RobotContainer {
         /* Intake */
         //Controlboard.getManualIntake().whileTrue(new IntakeManualCommand(m_intake, IntakeConstants.INTAKE_SPEED, true));
         //Controlboard.getEjectIntake().whileTrue(new IntakeManualCommand(m_intake, IntakeConstants.EJECT_SPEED, true));
-        Controlboard.getAutoPickup().whileTrue(new TrackDetectorTarget(m_swerve, SwerveConstants.VISION_TRANSLATION_X_CONSTANTS, SwerveConstants.VISION_TRANSLATION_Y_CONSTANTS, SwerveConstants.SNAP_CONSTANTS));
+        //Controlboard.getAutoPickup().whileTrue(new FaceGamePieceCommand(m_swerve, Controlboard.getTranslation(), SwerveConstants.VISION_ROTATION_CONSTANTS));
     }
 
     private void configDefaultCommands() { 
@@ -138,7 +138,7 @@ public class RobotContainer {
                 Controlboard.getTranslation(),
                 Controlboard.getRotation(),
                 Controlboard.getFieldCentric()
-            )
+            ) 
         );
 
         /*m_climber.setDefaultCommand(

@@ -23,7 +23,7 @@ public final class AllianceFlippable {
     }
 
     public static int getDirectionCoefficient(){
-        return flip ? 1 : -1;
+        return (int) Number(1, -1);
     }
 
     public static Translation2d getTargetSpeaker(){

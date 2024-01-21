@@ -6,13 +6,15 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.lib.util.LimelightHelpers;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.VisionConstants;
 
 public class Vision {
 
-    private static LinearFilter numberFilter = LinearFilter.movingAverage(25);
+    private static LinearFilter numberFilter = LinearFilter.movingAverage(5);
     private static LinearFilter poseFilter = LinearFilter.movingAverage(10);
     
     public enum Limelight{
@@ -25,13 +27,15 @@ public class Vision {
             this.name = name;
             this.mountPose = mountPose;
         }
+    }
 
-        public String getName() {
-            return name;
-        }
+    public enum IntakePipeline{
+        DETECTOR_LARGEST(0), DETECTOR_LEFTMOST(1), DETECTOR_RIGHTMOST(2);
 
-        public Pose3d getMountPose() {
-            return mountPose;
+        int index;
+
+        private IntakePipeline(int index){
+            this.index = index;
         }
     }
 
@@ -42,48 +46,48 @@ public class Vision {
     }
 
     public static double getTX(Limelight limelight){
-        return filter(LimelightHelpers.getTX(limelight.getName()));
+        return filter(LimelightHelpers.getTX(limelight.name));
     }
 
     public static double getTY(Limelight limelight){
-        return filter(LimelightHelpers.getTY(limelight.getName()));
+        return filter(LimelightHelpers.getTY(limelight.name));
     }
 
     public static double getTA(Limelight limelight){
-        return filter(LimelightHelpers.getTA(limelight.getName()));
+        return filter(LimelightHelpers.getTA(limelight.name));
     }
 
     public static boolean getTV(Limelight limelight){
-        return LimelightHelpers.getTV(limelight.getName());
+        return LimelightHelpers.getTV(limelight.name);
     }
 
     public static double getLatency(Limelight limelight){
-        return LimelightHelpers.getLatency_Pipeline(limelight.getName());
+        return LimelightHelpers.getLatency_Pipeline(limelight.name);
     }
 
     public static Pose2d getBotPose2d(Limelight limelight){
-        return filterPose2d(LimelightHelpers.getBotPose2d_wpiBlue(limelight.getName()));
+        return filterPose2d(LimelightHelpers.getBotPose2d_wpiBlue(limelight.name));
     }
 
     public static Pose3d getBotPose3d(Limelight limelight){
-        return filterPose3d(LimelightHelpers.getBotPose3d_wpiBlue(limelight.getName()));
+        return filterPose3d(LimelightHelpers.getBotPose3d_wpiBlue(limelight.name));
     }
 
     public static Pose2d getBotPose2d_TargetSpace(Limelight limelight){
-        return filterPose2d(LimelightHelpers.getBotPose3d_TargetSpace(limelight.getName()).toPose2d());
+        return filterPose2d(LimelightHelpers.getBotPose3d_TargetSpace(limelight.name).toPose2d());
     }
 
     public static Pose3d getBotPose3d_TargetSpace(Limelight limelight){
-        return filterPose3d(LimelightHelpers.getBotPose3d_TargetSpace(limelight.getName()));
+        return filterPose3d(LimelightHelpers.getBotPose3d_TargetSpace(limelight.name));
     }
 
     public static double getDistanceFromSpeaker(Limelight limelight){
-        Rotation2d angleToGoal = Rotation2d.fromRadians(limelight.getMountPose().getRotation().getY()).plus(Rotation2d.fromDegrees(getTY(limelight)));
-        return (FieldConstants.SPEAKER_TAGS_HEIGHT - limelight.getMountPose().getZ()) / angleToGoal.getTan();
+        Rotation2d angleToGoal = Rotation2d.fromRadians(limelight.mountPose.getRotation().getY()).plus(Rotation2d.fromDegrees(getTY(limelight)));
+        return (FieldConstants.SPEAKER_TAGS_HEIGHT - limelight.mountPose.getZ()) / angleToGoal.getTan();
     }
 
     public static TimestampedVisionMeasurement getTimestampedVisionMeasurement(Limelight limelight){
-        return new TimestampedVisionMeasurement(getBotPose2d(limelight), Timer.getFPGATimestamp() - LimelightHelpers.getBotPose(limelight.getName())[6]/1000.0);
+        return new TimestampedVisionMeasurement(getBotPose2d(limelight), Timer.getFPGATimestamp() - LimelightHelpers.getBotPose(limelight.name)[6]/1000.0);
     }
 
     public static TimestampedVisionMeasurement[] getBotPoses(){
@@ -94,25 +98,29 @@ public class Vision {
     }
 
     public static int getCurrentPipeline(Limelight limelight){
-        return (int) LimelightHelpers.getCurrentPipelineIndex(limelight.getName());
+        return (int) LimelightHelpers.getCurrentPipelineIndex(limelight.name);
     }
 
     public static void setLEDMode(Limelight limelight, LEDMode ledMode){
         switch (ledMode) {
             case OFF:
-            LimelightHelpers.setLEDMode_ForceOff(limelight.getName());
+            LimelightHelpers.setLEDMode_ForceOff(limelight.name);
             break;
             case ON:
-            LimelightHelpers.setLEDMode_ForceOn(limelight.getName());
+            LimelightHelpers.setLEDMode_ForceOn(limelight.name);
             break;
             case BLINK:
-            LimelightHelpers.setLEDMode_ForceBlink(limelight.getName());
+            LimelightHelpers.setLEDMode_ForceBlink(limelight.name);
             break;
         }
     }
 
     public static void setPipeline(Limelight limelight, int index){
-        LimelightHelpers.setPipelineIndex(limelight.getName(), index);
+        LimelightHelpers.setPipelineIndex(limelight.name, index);
+    }
+
+    public static void setPipeline(IntakePipeline pipeline){
+        setPipeline(Limelight.INTAKE, pipeline.index);
     }
 
     public static double filter(double value){

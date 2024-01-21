@@ -7,19 +7,20 @@ package frc.robot.commands.intake;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Intake;
 
-public class IntakeManualCommand extends Command {
+public class IntakeCommand extends Command {
 
   Intake intake;
   double speed;
-  boolean stop;
+  boolean autoDetect;
 
-  public IntakeManualCommand(Intake intake, double speed, boolean stop) {
+  public IntakeCommand(Intake intake, double speed, boolean autoDetect) {
     addRequirements(intake);
     this.intake = intake;
     this.speed = speed;
-    this.stop = stop;
+    this.autoDetect = autoDetect;
   }
 
   // Called when the command is initially scheduled.
@@ -35,7 +36,7 @@ public class IntakeManualCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if(stop){
+    if(autoDetect){
       intake.stop();
     }
   }
@@ -43,6 +44,6 @@ public class IntakeManualCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return autoDetect && Conveyor.hasPiece();
   }
 }

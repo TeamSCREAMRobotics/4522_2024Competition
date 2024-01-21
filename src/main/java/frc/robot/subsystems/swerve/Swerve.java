@@ -113,7 +113,7 @@ public class Swerve extends SubsystemBase {
      * @return The calculated ChassisSpeeds.
      */
     public ChassisSpeeds robotRelativeSpeeds(Translation2d translation, double angularVel){
-        return ChassisSpeeds.discretize(translation.getX(), translation.getY(), angularVel, Constants.LOOP_TIME_SEC);
+        return new ChassisSpeeds(translation.getX(), translation.getY(), angularVel);
     }
 
     /**
