@@ -116,7 +116,10 @@ public final class Constants{
 
         /* Swerve Controllers */
         public static final ScreamPIDConstants VISION_ROTATION_CONSTANTS = new ScreamPIDConstants(0.16, 0.0, 0.0);
+        public static final ScreamPIDConstants VISION_TRANSLATION_X_CONSTANTS = new ScreamPIDConstants(1.0, 0.0, 0.0);
+        public static final ScreamPIDConstants VISION_TRANSLATION_Y_CONSTANTS = new ScreamPIDConstants(4.5, 0.0, 0.0);
         public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(0.2, 0.0, 0.0);
+        public static final ScreamPIDConstants DRIVE_TO_TARGET_CONSTANTS = new ScreamPIDConstants(1.5, 0.0, 0.0);
 
         /* PathPlanner Constants */
         public static final ScreamPIDConstants PATH_TRANSLATION_CONSTANTS = new ScreamPIDConstants(15.0, 0.0, 0.0);

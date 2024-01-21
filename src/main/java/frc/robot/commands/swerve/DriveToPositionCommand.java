@@ -24,7 +24,7 @@ public class DriveToPositionCommand extends Command {
 
     this.swerve = swerve;
     this.targetPosition = targetPosition;
-    this.targetController_Drive = SwerveConstants.DRIVETOTARGET_CONSTANTS.toPIDController();
+    this.targetController_Drive = SwerveConstants.DRIVE_TO_TARGET_CONSTANTS.toPIDController();
     this.targetController_Rotate = SwerveConstants.SNAP_CONSTANTS.toPIDController();
     targetController_Rotate.enableContinuousInput(-180.0, 180.0);
   }
