@@ -94,6 +94,7 @@ public class Controlboard{
         return operatorController.start();
     }
     public static final Trigger getAutoFire(){
+        /* Uses a toggle switch to enable or disable automatic firing when requirements are met */
         return new Trigger(() -> false);
     }
     public static final Trigger getDefense(){

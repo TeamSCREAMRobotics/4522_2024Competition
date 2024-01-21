@@ -4,8 +4,6 @@
 
 package frc.robot.commands.intake;
 
-import com.ctre.phoenix6.controls.DutyCycleOut;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 
