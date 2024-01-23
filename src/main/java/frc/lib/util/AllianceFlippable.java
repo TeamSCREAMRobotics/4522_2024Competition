@@ -1,18 +1,17 @@
 package frc.lib.util;
 
-import java.util.ArrayList;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.lib.math.Conversions;
+import frc.lib.util.PathSequence.Side;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.subsystems.Vision.IntakePipeline;
 
 public final class AllianceFlippable {
 
@@ -28,6 +27,22 @@ public final class AllianceFlippable {
 
     public static Translation2d getTargetSpeaker(){
         return Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING);
+    }
+
+    public static IntakePipeline getIntakePipeline(Side side){
+        IntakePipeline pipeline;
+        switch (side) {
+            case AMP:
+            pipeline = (IntakePipeline) Object(IntakePipeline.DETECTOR_LEFTMOST, IntakePipeline.DETECTOR_RIGHTMOST);
+            break;
+            case SOURCE:
+            pipeline = (IntakePipeline) Object(IntakePipeline.DETECTOR_RIGHTMOST, IntakePipeline.DETECTOR_LEFTMOST);
+            break;
+            default:
+            pipeline = IntakePipeline.DETECTOR_LARGEST;
+            break;
+        }
+        return pipeline;
     }
 
     public static Object Object(Object blueValue, Object redValue){

@@ -7,8 +7,8 @@ public class OrchestraUtil {
     
     private static Orchestra orchestra = new Orchestra();
 
-    public static void add(TalonFX...talonFXs){
-        for(TalonFX fx : talonFXs){
+    public static void add(TalonFX...FXs){
+        for(TalonFX fx : FXs){
             orchestra.addInstrument(fx);
         }
     }
@@ -20,6 +20,10 @@ public class OrchestraUtil {
 
     public static boolean isPlaying(){
         return orchestra.isPlaying();
+    }
+
+    public static void pause(){
+        orchestra.pause();
     }
 
     public static void stop(){

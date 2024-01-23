@@ -39,6 +39,26 @@ public class Vision {
         }
     }
 
+    public enum FrontPipeline{
+        FIDUCIAL(0);
+
+        int index;
+
+        private FrontPipeline(int index){
+            this.index = index;
+        }
+    }
+
+    public enum BackPipeline{
+        FIDUCIAL(0);
+
+        int index;
+
+        private BackPipeline(int index){
+            this.index = index;
+        }
+    }
+
     public record TimestampedVisionMeasurement(Pose2d pose, double timestamp){}
 
     public enum LEDMode{
@@ -121,6 +141,14 @@ public class Vision {
 
     public static void setPipeline(IntakePipeline pipeline){
         setPipeline(Limelight.INTAKE, pipeline.index);
+    }
+
+    public static void setPipeline(FrontPipeline pipeline){
+        setPipeline(Limelight.FRONT, pipeline.index);
+    }
+
+    public static void setPipeline(BackPipeline pipeline){
+        setPipeline(Limelight.BACK, pipeline.index);
     }
 
     public static double filter(double value){

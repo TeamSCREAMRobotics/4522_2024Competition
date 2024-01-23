@@ -67,11 +67,7 @@ public class Elevator extends SubsystemBase{
     public void setElevatorVoltage(double voltage){
         m_rightElevatorMotor.setControl(new VoltageOut(voltage));
     }
-
-    public void stopElevator(){
-        m_rightElevatorMotor.stopMotor();
-    }
-
+    
     public double getElevatorHeight(){
         return m_rightElevatorMotor.getPosition().refresh().getValue();
     }

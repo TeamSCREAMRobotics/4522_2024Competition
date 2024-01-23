@@ -16,17 +16,17 @@ public class DriveToPositionCommand extends Command {
   
   Swerve swerve;
   Translation3d targetPosition;
-  PIDController targetController_Drive;
-  PIDController targetController_Rotate;
+  PIDController driveController;
+  PIDController rotationController;
 
   public DriveToPositionCommand(Swerve swerve, Translation3d targetPosition) {
     addRequirements(swerve);
 
     this.swerve = swerve;
     this.targetPosition = targetPosition;
-    this.targetController_Drive = SwerveConstants.DRIVE_TO_TARGET_CONSTANTS.toPIDController();
-    this.targetController_Rotate = SwerveConstants.SNAP_CONSTANTS.toPIDController();
-    targetController_Rotate.enableContinuousInput(-180.0, 180.0);
+    this.driveController = SwerveConstants.DRIVE_TO_TARGET_CONSTANTS.toPIDController();
+    this.rotationController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
+    rotationController.enableContinuousInput(-180.0, 180.0);
   }
 
   // Called when the command is initially scheduled.
@@ -36,12 +36,10 @@ public class DriveToPositionCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(
-        new Translation2d(
-            targetController_Drive.calculate(swerve.getPose().getX(), targetPosition.getX()), targetController_Drive.calculate(swerve.getPose().getY(), targetPosition.getY())),
-            targetController_Rotate.calculate(swerve.getRotation().getDegrees(), new Rotation2d(targetPosition.getZ()).getDegrees()
-        )
-    ));
+    Translation2d translationValue = new Translation2d(driveController.calculate(swerve.getPose().getX(), targetPosition.getX()), driveController.calculate(swerve.getPose().getY(), targetPosition.getY()));
+    double rotationValue = rotationController.calculate(swerve.getRotation().getDegrees(), new Rotation2d(targetPosition.getZ()).getDegrees());
+
+    swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(translationValue, rotationValue));
   }
 
   // Called once the command ends or is interrupted.

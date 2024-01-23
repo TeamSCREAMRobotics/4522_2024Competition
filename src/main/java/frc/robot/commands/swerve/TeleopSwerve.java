@@ -2,6 +2,7 @@ package frc.robot.commands.swerve;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -17,7 +18,7 @@ import frc.robot.subsystems.swerve.Swerve;
  */
 public class TeleopSwerve extends Command {
     private Swerve swerve;
-    private DoubleSupplier[] translation;
+    private Supplier<Translation2d> translationSup;
     private DoubleSupplier rotationSup;
     private BooleanSupplier fieldRelativeSup;
     private Rotation2d lastAngle;
@@ -32,11 +33,11 @@ public class TeleopSwerve extends Command {
      * @param rotationSup A supplier for the rotation value.
      * @param fieldCentricSup A supplier for the drive mode. Robot centric = false; Field centric = true
      */
-    public TeleopSwerve(Swerve swerve, DoubleSupplier[] translation, DoubleSupplier rotationSup, BooleanSupplier fieldCentricSup) {
+    public TeleopSwerve(Swerve swerve, Supplier<Translation2d> translationSup, DoubleSupplier rotationSup, BooleanSupplier fieldCentricSup) {
         this.swerve = swerve;
         addRequirements(swerve);
 
-        this.translation = translation;
+        this.translationSup = translationSup;
         this.rotationSup = rotationSup;
         this.fieldRelativeSup = fieldCentricSup;
     }
@@ -56,14 +57,14 @@ public class TeleopSwerve extends Command {
     @Override
     public void execute() {
         
-        Translation2d translationVal = new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble()).times(SwerveConstants.MAX_SPEED).times(AllianceFlippable.getDirectionCoefficient());
-        double rotationVal = getRotation(rotationSup.getAsDouble());
-        boolean fieldRelativeVal = fieldRelativeSup.getAsBoolean();
+        Translation2d translationValue = translationSup.get().times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
+        double rotationValue = getRotation(rotationSup.getAsDouble());
+        boolean fieldRelative = fieldRelativeSup.getAsBoolean();
 
         if(Controlboard.getZeroGyro().getAsBoolean()) lastAngle = AllianceFlippable.getForwardRotation();
 
         swerve.setChassisSpeeds(
-            fieldRelativeVal ? swerve.fieldRelativeSpeeds(translationVal, rotationVal) : swerve.robotRelativeSpeeds(translationVal, rotationVal),
+            fieldRelative ? swerve.fieldRelativeSpeeds(translationValue, rotationValue) : swerve.robotRelativeSpeeds(translationValue, rotationValue),
             true
         );
     }

@@ -1,15 +1,11 @@
 package frc.robot.auto;
 
 import java.util.ArrayList;
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.SwerveConstants;
 import frc.robot.shuffleboard.tabs.MatchTab;
-import frc.robot.subsystems.Vision;
-import frc.robot.subsystems.Vision.Limelight;
 
 public class PathCorrectionHelper extends SubsystemBase{
 

@@ -71,6 +71,7 @@ public final class Constants{
         /* Intake */
         public static final int LEFT_INTAKE_MOTOR_ID = 8;
         public static final int RIGHT_INTAKE_MOTOR_ID = 9;
+        public static final int INTAKE_BEAM_ID = 0;
     }
 
     
@@ -184,7 +185,7 @@ public final class Constants{
             public static final InvertedValue MOTOR_INVERT = MODULE_TYPE.steerMotorInvert;
 
             /* Neutral Modes */
-            public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake; // TODO CHANGE TO BRAKE AFTER MEASURING OFFSETS
+            public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
 
             /* Current Limits */
             public static final int SUPPLY_CURRENT_LIMIT = 25;
@@ -231,28 +232,28 @@ public final class Constants{
                 1, 
                 0, 
                 0, 
-                Rotation2d.fromRotations(-0.76416015625+0.5)); // TODO ROBOT SPECIFIC
+                Rotation2d.fromRotations(-0.76416015625+0.5));
 //-0.19970703125
             /* Front Right */
             public static final SwerveModuleConstants MODULE_1 = new SwerveModuleConstants(
                 3, 
                 2, 
                 1, 
-                Rotation2d.fromRotations(-0.074462890625+0.5)); // TODO ROBOT SPECIFIC
+                Rotation2d.fromRotations(-0.074462890625+0.5));
 //0.48583984375
             /* Back Left */
             public static final SwerveModuleConstants MODULE_2 = new SwerveModuleConstants(
                 5, 
                 4, 
                 2, 
-                Rotation2d.fromRotations(-0.45458984375+0.5)); // TODO ROBOT SPECIFIC
+                Rotation2d.fromRotations(-0.45458984375+0.5));
 // -0.0849609375
             /* Back Right */
             public static final SwerveModuleConstants MODULE_3 = new SwerveModuleConstants(
                 7, 
                 6, 
                 3, 
-                Rotation2d.fromRotations(-0.330078125+0.5)); // TODO ROBOT SPECIFIC
+                Rotation2d.fromRotations(-0.330078125+0.5));
         }//0.17333984375
     }
 
@@ -476,6 +477,7 @@ public final class Constants{
     public static final class FieldConstants{
 
         public static final Translation2d FIELD_DIMENSIONS = new Translation2d(Units.inchesToMeters(648.2708), Units.inchesToMeters(312.9375));
+        
         // Numbered from amp station wall
         public static final Translation2d CENTER_PIECE_1 = new Translation2d(8.256, 7.456);
         public static final Translation2d CENTER_PIECE_2 = new Translation2d(8.256, 5.788);

@@ -6,16 +6,14 @@ package frc.robot.commands.intake;
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.IntakeConstants;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.Constants.VisionConstants;
-import frc.robot.commands.swerve.FaceGamePieceCommand;
-import frc.robot.subsystems.Intake;
+import frc.robot.commands.swerve.FaceVisionTargetCommand;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Vision.IntakePipeline;
 import frc.robot.subsystems.Vision.LEDMode;
@@ -25,26 +23,24 @@ import frc.robot.subsystems.swerve.Swerve;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class DriveToAndPickup extends SequentialCommandGroup {
+public class AutoPickupCommand extends SequentialCommandGroup {
   /** Creates a new DriveToAndPickup. */
-  public DriveToAndPickup(Swerve swerve) {
+  public AutoPickupCommand(Swerve swerve) {
     addRequirements(swerve);
 
     addCommands(
-      new ParallelCommandGroup(
-        new FaceGamePieceCommand(
+      new ParallelRaceGroup(
+        new FaceVisionTargetCommand(
           swerve, 
-          new DoubleSupplier[]{
-            () -> 1,
-            () -> 0
-          }, 
+          () -> new Translation2d(0, 0),
           SwerveConstants.VISION_ROTATION_CONSTANTS,
           IntakePipeline.DETECTOR_RIGHTMOST
         ),
-        new ConditionalCommand(
-          new InstantCommand(() -> Vision.setLEDMode(Limelight.INTAKE, LEDMode.ON)), 
-          new InstantCommand(() -> Vision.setLEDMode(Limelight.INTAKE, LEDMode.OFF)), 
-          () -> Vision.getTV(Limelight.INTAKE) && Vision.getTY(Limelight.INTAKE) < IntakeConstants.AUTO_INTAKE_TY_THRESHOLD)
+        new ParallelDeadlineGroup(
+          new WaitCommand(1), 
+          new InstantCommand(() -> Vision.setLEDMode(Limelight.INTAKE, LEDMode.ON)))
+          .andThen(new InstantCommand(() -> Vision.setLEDMode(Limelight.INTAKE, LEDMode.OFF))
+        )
       )
     );
   }

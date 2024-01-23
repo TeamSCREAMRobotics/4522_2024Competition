@@ -7,6 +7,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.mechanisms.DifferentialMechanism;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.config.DeviceConfig;
 import frc.lib.util.OrchestraUtil;
@@ -14,12 +15,15 @@ import frc.robot.Constants;
 import frc.robot.Constants.Ports;
 
 public class Intake extends SubsystemBase{
-    TalonFX m_leftIntakeMotor;
-    TalonFX m_rightIntakeMotor;
+    private TalonFX m_leftIntakeMotor;
+    private TalonFX m_rightIntakeMotor;
+
+    private static DigitalInput m_beam;
 
     public Intake(){
         // m_leftIntakeMotor = new TalonFX(Ports.LEFT_INTAKE_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         // m_rightIntakeMotor = new TalonFX(Ports.RIGHT_INTAKE_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        //m_beam = new DigitalInput(Ports.INTAKE_BEAM_ID);
         //configIntakeMotors();
 
         //OrchestraUtil.add(m_leftIntakeMotor, m_rightIntakeMotor);
@@ -47,5 +51,9 @@ public class Intake extends SubsystemBase{
     public void stop(){
         m_rightIntakeMotor.stopMotor();
         m_leftIntakeMotor.stopMotor();
+    }
+
+    public static boolean hasPiece(){
+        return m_beam.get();
     }
 }

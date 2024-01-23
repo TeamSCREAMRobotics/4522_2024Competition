@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AllianceFlippable;
+import frc.lib.util.OrchestraUtil;
 import frc.robot.Constants.ConveyorConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.FieldConstants;
@@ -47,7 +48,7 @@ import frc.robot.commands.shooter.ShooterManualCommand;
 import frc.robot.commands.swerve.DriveToPositionCommand;
 import frc.robot.commands.swerve.FacePointCommand;
 import frc.robot.commands.swerve.TeleopSwerve;
-import frc.robot.commands.swerve.FaceGamePieceCommand;
+import frc.robot.commands.swerve.FaceVisionTargetCommand;
 import frc.robot.controlboard.Controlboard;
 import frc.robot.shuffleboard.ShuffleboardTabManager;
 import frc.robot.subsystems.Climber;
@@ -186,7 +187,6 @@ public class RobotContainer {
     /**
      * Configures auto. 
      * Configure default auto and named commands with configure(Command defaultAuto, NamedCommand... namedCommands)<p>
-     *  ^^ THE ABOVE STEP MUST BE DONE FIRST ^^ <p>
      * Add auto routines with addCommands(Command... commands)
      */
     private void configAuto() {
@@ -195,10 +195,11 @@ public class RobotContainer {
             new PPEvent("StartIntake", new InstantCommand()),//new IntakeAutoCommand(m_intake, IntakeConstants.INTAKE_SPEED, false)),
             new PPEvent("StopIntake", new InstantCommand()),
             new PPEvent("StartAimAtSpeaker", Routines.overrideRotationTarget(FacePointCommand.calculateAngleToPoint(m_swerve.getPose().getTranslation(), AllianceFlippable.getTargetSpeaker()))),
-            new PPEvent("StopAimAtSpeaker", Routines.stopOverridingRotationTarget())
+            new PPEvent("StopAimAtSpeaker", Routines.overrideRotationTarget(null))
         );
 
         Autonomous.addRoutines(
+            Routines.Close4(m_swerve).withName("Close4"),
             Routines.AmpSide6(m_swerve).withName("AmpSide6"),
             Routines.SourceSide4(m_swerve).withName("SourceSide4")
         );
@@ -263,6 +264,7 @@ public class RobotContainer {
         //m_conveyor.stop();
         //m_intake.stop();
         m_swerve.stopAll();
+        OrchestraUtil.stop();
     }
     
     public static void setAllNeutralModes(NeutralModeValue mode){
