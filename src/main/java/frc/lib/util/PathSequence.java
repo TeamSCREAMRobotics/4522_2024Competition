@@ -1,4 +1,4 @@
-package frc.robot.auto;
+package frc.lib.util;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,19 +12,24 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.lib.util.AllianceFlippable;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class PathSequence {
     ArrayList<PathPlannerPath> list = new ArrayList<PathPlannerPath>();
     String[] pathNames;
     int index = 0;
+    Side side;
     
-    public PathSequence(String... pathNames){
+    public PathSequence(Side side, String... pathNames){
         this.pathNames = pathNames;
+        this.side = side;
         for(String pathName : pathNames){
             list.add(getPath(pathName));
         }
+    }
+
+    public enum Side{
+        AMP, CENTER, SOURCE;
     }
 
     private static PathPlannerPath getPath(String pathName){
@@ -45,6 +50,10 @@ public class PathSequence {
 
     public Command getStart(){
         return getPathCommand(list.get(0));
+    }
+
+    public Side getSide(){
+        return side;
     }
 
     public Command getNext(){

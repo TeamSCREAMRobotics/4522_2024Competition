@@ -56,14 +56,14 @@ public class TeleopSwerve extends Command {
     @Override
     public void execute() {
         
-        Translation2d translationVal = new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble()).times(SwerveConstants.MAX_SPEED).times(AllianceFlippable.getDirectionCoefficient());
-        double rotationVal = getRotation(rotationSup.getAsDouble());
-        boolean fieldRelativeVal = fieldRelativeSup.getAsBoolean();
+        Translation2d translationValue = new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble()).times(SwerveConstants.MAX_SPEED).times(AllianceFlippable.getDirectionCoefficient());
+        double rotationValue = getRotation(rotationSup.getAsDouble());
+        boolean fieldRelative = fieldRelativeSup.getAsBoolean();
 
         if(Controlboard.getZeroGyro().getAsBoolean()) lastAngle = AllianceFlippable.getForwardRotation();
 
         swerve.setChassisSpeeds(
-            fieldRelativeVal ? swerve.fieldRelativeSpeeds(translationVal, rotationVal) : swerve.robotRelativeSpeeds(translationVal, rotationVal),
+            fieldRelative ? swerve.fieldRelativeSpeeds(translationValue, rotationValue) : swerve.robotRelativeSpeeds(translationValue, rotationValue),
             true
         );
     }

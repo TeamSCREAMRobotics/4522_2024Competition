@@ -41,12 +41,12 @@ public class Conveyor extends SubsystemBase{
         setConveyor(new DutyCycleOut(po));
     }
 
-    public static boolean hasPiece(){
-        return m_beam.get();
-    }
-
     public void stop(){
         m_conveyorMotor.stopMotor();
+    }
+    
+    public static boolean hasPiece(){
+        return m_beam.get();
     }
 
     @Override

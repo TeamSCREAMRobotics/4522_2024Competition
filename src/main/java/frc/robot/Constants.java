@@ -71,6 +71,7 @@ public final class Constants{
         /* Intake */
         public static final int LEFT_INTAKE_MOTOR_ID = 8;
         public static final int RIGHT_INTAKE_MOTOR_ID = 9;
+        public static final int INTAKE_BEAM_ID = 0;
     }
 
     

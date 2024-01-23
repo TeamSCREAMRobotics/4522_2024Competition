@@ -25,13 +25,13 @@ import frc.robot.subsystems.Vision.IntakePipeline;
 import frc.robot.subsystems.Vision.Limelight;
 import frc.robot.subsystems.swerve.Swerve;
 
-public class FaceGamePieceCommand extends Command {
+public class FaceVisionTargetCommand extends Command {
   Swerve swerve;
   PIDController rotController;
   DoubleSupplier[] translation;
   IntakePipeline pipeline;
   
-  public FaceGamePieceCommand(Swerve swerve, DoubleSupplier[] translation, ScreamPIDConstants rotationConstants, IntakePipeline pipeline) {
+  public FaceVisionTargetCommand(Swerve swerve, DoubleSupplier[] translation, ScreamPIDConstants rotationConstants, IntakePipeline pipeline) {
     addRequirements(swerve);
     this.swerve = swerve;
     this.translation = translation;
@@ -48,12 +48,10 @@ public class FaceGamePieceCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() { 
-    Translation2d translationVal = new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble());
-    double rotVal = Math.abs(Vision.getTX(Limelight.INTAKE)) < 2.0 ? 0 : rotController.calculate(Vision.getTX(Limelight.INTAKE), 0.0);
+    Translation2d translationValue = new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble());
+    double rotationValue = Math.abs(Vision.getTX(Limelight.INTAKE)) < 2.0 ? 0 : rotController.calculate(Vision.getTX(Limelight.INTAKE), 0.0);
 
-    swerve.setChassisSpeeds( 
-      swerve.robotRelativeSpeeds(translationVal, rotVal)
-    );
+    swerve.setChassisSpeeds(swerve.robotRelativeSpeeds(translationValue, rotationValue));
   }
 
   // Called once the command ends or is interrupted.

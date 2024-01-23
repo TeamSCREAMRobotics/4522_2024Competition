@@ -25,7 +25,6 @@ public class AutoPrepCommand extends Command {
   Shooter shooter;
   Swerve swerve;
   boolean defense;
-  Alliance allianceColor;
 
   Rotation2d wantedPivotAngle;
   double wantedElevatorHeight;
@@ -35,7 +34,7 @@ public class AutoPrepCommand extends Command {
 
   Translation2d allianceSpeakerPosition;
 
-  public AutoPrepCommand(Pivot pivot, Elevator elevator, Shooter shooter, Swerve swerve, boolean defense, Alliance allianceColor) {
+  public AutoPrepCommand(Pivot pivot, Elevator elevator, Shooter shooter, Swerve swerve, boolean defense) {
     addRequirements(pivot, elevator, shooter, swerve);
 
     this.pivot = pivot;
@@ -43,7 +42,6 @@ public class AutoPrepCommand extends Command {
     this.shooter = shooter;
     this.swerve = swerve;
     this.defense = defense;
-    this.allianceColor = allianceColor;
   }
 
   // Called when the command is initially scheduled.

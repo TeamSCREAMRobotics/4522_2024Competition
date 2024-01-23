@@ -47,7 +47,7 @@ import frc.robot.commands.shooter.ShooterManualCommand;
 import frc.robot.commands.swerve.DriveToPositionCommand;
 import frc.robot.commands.swerve.FacePointCommand;
 import frc.robot.commands.swerve.TeleopSwerve;
-import frc.robot.commands.swerve.FaceGamePieceCommand;
+import frc.robot.commands.swerve.FaceVisionTargetCommand;
 import frc.robot.controlboard.Controlboard;
 import frc.robot.shuffleboard.ShuffleboardTabManager;
 import frc.robot.subsystems.Climber;
@@ -195,10 +195,11 @@ public class RobotContainer {
             new PPEvent("StartIntake", new InstantCommand()),//new IntakeAutoCommand(m_intake, IntakeConstants.INTAKE_SPEED, false)),
             new PPEvent("StopIntake", new InstantCommand()),
             new PPEvent("StartAimAtSpeaker", Routines.overrideRotationTarget(FacePointCommand.calculateAngleToPoint(m_swerve.getPose().getTranslation(), AllianceFlippable.getTargetSpeaker()))),
-            new PPEvent("StopAimAtSpeaker", Routines.stopOverridingRotationTarget())
+            new PPEvent("StopAimAtSpeaker", Routines.overrideRotationTarget(null))
         );
 
         Autonomous.addRoutines(
+            Routines.Close4(m_swerve).withName("Close4"),
             Routines.AmpSide6(m_swerve).withName("AmpSide6"),
             Routines.SourceSide4(m_swerve).withName("SourceSide4")
         );
