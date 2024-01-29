@@ -1,8 +1,6 @@
 package frc.lib.util;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 
@@ -10,9 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.swerve.Swerve;
 
 public class PathSequence {
     ArrayList<PathPlannerPath> list = new ArrayList<PathPlannerPath>();

@@ -6,18 +6,14 @@ package frc.robot.commands.intake;
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.swerve.FaceVisionTargetCommand;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Vision.IntakePipeline;
 import frc.robot.subsystems.Vision.LEDMode;
@@ -36,10 +32,7 @@ public class AutoPickupCommand extends SequentialCommandGroup {
       new ParallelRaceGroup(
         new FaceVisionTargetCommand(
           swerve, 
-          new DoubleSupplier[]{
-            () -> 1,
-            () -> 0
-          }, 
+          () -> new Translation2d(0, 0),
           SwerveConstants.VISION_ROTATION_CONSTANTS,
           IntakePipeline.DETECTOR_RIGHTMOST
         ),

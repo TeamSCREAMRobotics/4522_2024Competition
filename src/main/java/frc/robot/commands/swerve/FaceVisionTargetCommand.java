@@ -5,21 +5,15 @@
 package frc.robot.commands.swerve;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.lib.pid.ScreamPIDConstants;
 import frc.lib.util.AllianceFlippable;
-import frc.lib.util.LimelightHelpers;
-import frc.robot.Constants.Ports;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Vision.IntakePipeline;
 import frc.robot.subsystems.Vision.Limelight;
@@ -28,13 +22,13 @@ import frc.robot.subsystems.swerve.Swerve;
 public class FaceVisionTargetCommand extends Command {
   Swerve swerve;
   PIDController rotController;
-  DoubleSupplier[] translation;
+  Supplier<Translation2d> translationSup;
   IntakePipeline pipeline;
   
-  public FaceVisionTargetCommand(Swerve swerve, DoubleSupplier[] translation, ScreamPIDConstants rotationConstants, IntakePipeline pipeline) {
+  public FaceVisionTargetCommand(Swerve swerve, Supplier<Translation2d> translationSup, ScreamPIDConstants rotationConstants, IntakePipeline pipeline) {
     addRequirements(swerve);
     this.swerve = swerve;
-    this.translation = translation;
+    this.translationSup = translationSup;
     this.pipeline = pipeline;
     rotController = rotationConstants.toPIDController();
   }
@@ -48,7 +42,7 @@ public class FaceVisionTargetCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() { 
-    Translation2d translationValue = new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble());
+    Translation2d translationValue = translationSup.get().times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
     double rotationValue = Math.abs(Vision.getTX(Limelight.INTAKE)) < 2.0 ? 0 : rotController.calculate(Vision.getTX(Limelight.INTAKE), 0.0);
 
     swerve.setChassisSpeeds(swerve.robotRelativeSpeeds(translationValue, rotationValue));

@@ -5,6 +5,7 @@
 package frc.robot.commands.swerve;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,16 +18,16 @@ import frc.robot.subsystems.swerve.Swerve;
 public class FacePointCommand extends Command {
 
   Swerve swerve;
-  DoubleSupplier[] drivingTranslationSupplier;
+  Supplier<Translation2d> translationSup;
   Rotation2d targetAngle;
   PIDController targetController;
   Translation2d target;
 
-  public FacePointCommand(Swerve swerve, DoubleSupplier[] drivingTranslation, Translation2d target) {
+  public FacePointCommand(Swerve swerve, Supplier<Translation2d> translationSup, Translation2d target) {
     addRequirements(swerve);
 
     this.swerve = swerve;
-    this.drivingTranslationSupplier = drivingTranslation;
+    this.translationSup = translationSup;
     this.target = target;
     targetController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
     targetController.enableContinuousInput(-180.0, 180.0);
@@ -39,7 +40,7 @@ public class FacePointCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Translation2d drivingTranslation = new Translation2d(drivingTranslationSupplier[0].getAsDouble(), drivingTranslationSupplier[1].getAsDouble()).times(AllianceFlippable.getDirectionCoefficient()).times(SwerveConstants.MAX_SPEED);
+    Translation2d drivingTranslation = translationSup.get().times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
     targetAngle = calculateAngleToPoint(swerve.getPose().getTranslation(), target);
 
     swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(drivingTranslation, targetController.calculate(swerve.getRotation().getDegrees(), targetAngle.getDegrees())));

@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AllianceFlippable;
+import frc.lib.util.OrchestraUtil;
 import frc.robot.Constants.ConveyorConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.FieldConstants;
@@ -186,7 +187,6 @@ public class RobotContainer {
     /**
      * Configures auto. 
      * Configure default auto and named commands with configure(Command defaultAuto, NamedCommand... namedCommands)<p>
-     *  ^^ THE ABOVE STEP MUST BE DONE FIRST ^^ <p>
      * Add auto routines with addCommands(Command... commands)
      */
     private void configAuto() {
@@ -264,6 +264,7 @@ public class RobotContainer {
         //m_conveyor.stop();
         //m_intake.stop();
         m_swerve.stopAll();
+        OrchestraUtil.stop();
     }
     
     public static void setAllNeutralModes(NeutralModeValue mode){

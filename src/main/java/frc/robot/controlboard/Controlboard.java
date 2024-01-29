@@ -2,8 +2,11 @@ package frc.robot.controlboard;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -18,6 +21,7 @@ public class Controlboard{
 
     public static final double STICK_DEADBAND = 0.05;
     public static final double TRIGGER_DEADBAND = 0.10;
+    public static final Rotation2d SNAP_TO_POLE_THRESHOLD = Rotation2d.fromDegrees(7.0);
 
     private static final CommandXboxController driverController = new CommandXboxController(0);
     private static final CommandXboxController operatorController = new CommandXboxController(1);
@@ -29,18 +33,27 @@ public class Controlboard{
      * 
      * @return A DoubleSupplier array representing the x and y values from the controller.
      */
-    public static DoubleSupplier[] getTranslation(){
-        if(getAutoFire().getAsBoolean()){
+    public static Supplier<Translation2d> getTranslation(){
+        double x = -MathUtil.applyDeadband(driverController.getLeftY(), STICK_DEADBAND);
+        double y = -MathUtil.applyDeadband(driverController.getLeftX(), STICK_DEADBAND);
+        /* if(getAutoFire().getAsBoolean()){
             return new DoubleSupplier[] {
                 () -> -MathUtil.applyDeadband(driverController.getLeftY(), STICK_DEADBAND)*SwerveConstants.SHOOT_WHILE_MOVING_SCALAR,
                 () -> -MathUtil.applyDeadband(driverController.getLeftX(), STICK_DEADBAND)*SwerveConstants.SHOOT_WHILE_MOVING_SCALAR
             };
-        }
-        return new DoubleSupplier[] {
-            () -> -MathUtil.applyDeadband(driverController.getLeftY(), STICK_DEADBAND),
-            () -> -MathUtil.applyDeadband(driverController.getLeftX(), STICK_DEADBAND)
-        };
+        } */ // TODO Find a better way to do this
+
+        return () -> snapTranslationToPole(new Translation2d(x, y));
     }
+
+    private static Translation2d snapTranslationToPole(Translation2d translation){
+		for(int i = 0; i < 360; i+=90){
+			if(Math.abs(translation.getAngle().minus(Rotation2d.fromDegrees(i)).getDegrees()) < SNAP_TO_POLE_THRESHOLD.getDegrees()){
+                return new Translation2d(translation.getNorm(), Rotation2d.fromDegrees(i));
+            }
+		}
+        return translation;
+	}
 
     /**
      * Retrieves the rotation value from the driver controller.
