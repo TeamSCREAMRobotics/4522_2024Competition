@@ -17,8 +17,8 @@ public class Conveyor extends SubsystemBase{
     private static DigitalInput m_beam;
 
     public Conveyor(){
-        //m_conveyorMotor = new TalonFX(Ports.CONVEYOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
-        m_beam = new DigitalInput(Ports.CONVEYOR_BEAM_ID);
+        m_conveyorMotor = new TalonFX(Ports.CONVEYOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        //m_beam = new DigitalInput(Ports.CONVEYOR_BEAM_ID);
 
         configShooterMotors();
         
@@ -26,7 +26,7 @@ public class Conveyor extends SubsystemBase{
     }
     
     private void configShooterMotors() {
-        // DeviceConfig.configureTalonFX("Conveyor Motor", m_conveyorMotor, DeviceConfig.conveyorFXConfig(), Constants.LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Conveyor Motor", m_conveyorMotor, DeviceConfig.conveyorFXConfig(), Constants.LOOP_TIME_HZ);
     }
     
     public void setNeutralMode(NeutralModeValue mode){

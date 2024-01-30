@@ -46,7 +46,7 @@ public class TeleopSwerve extends Command {
     public void initialize() {
         correctionTimer.stop();
         correctionTimer.reset();
-        lastAngle = swerve.getYaw();
+        lastAngle = swerve.getRotation();
     } 
 
     /**
@@ -58,6 +58,7 @@ public class TeleopSwerve extends Command {
     public void execute() {
         
         Translation2d translationValue = translationSup.get().times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
+        System.out.println(translationValue);
         double rotationValue = getRotation(rotationSup.getAsDouble());
         boolean fieldRelative = fieldRelativeSup.getAsBoolean();
 
@@ -77,9 +78,7 @@ public class TeleopSwerve extends Command {
      * @return The determined rotation value.
      */
     private double getRotation(double current){
-        boolean rotating = Math.abs(current) > 0.1;
-
-        if(rotating){
+        if(Math.abs(current) > 0.1){
             correctionTimer.reset();
             return current * SwerveConstants.MAX_ANGULAR_VELOCITY;
         }
@@ -87,11 +86,11 @@ public class TeleopSwerve extends Command {
         correctionTimer.start();
 
         if(correctionTimer.get() <= SwerveConstants.CORRECTION_TIME_THRESHOLD){
-            lastAngle = swerve.getYaw();
+            lastAngle = swerve.getRotation();
         }
 
         if(correctionTimer.hasElapsed(SwerveConstants.CORRECTION_TIME_THRESHOLD)){
-            return swerve.calculateHeadingCorrection(swerve.getYaw().getDegrees(), lastAngle.getDegrees());
+            return swerve.calculateHeadingCorrection(swerve.getRotation().getDegrees(), lastAngle.getDegrees());
         }
 
         return current * SwerveConstants.MAX_ANGULAR_VELOCITY;

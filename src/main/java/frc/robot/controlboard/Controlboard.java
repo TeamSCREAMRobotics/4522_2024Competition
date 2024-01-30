@@ -43,7 +43,8 @@ public class Controlboard{
             };
         } */ // TODO Find a better way to do this
 
-        return () -> snapTranslationToPole(new Translation2d(x, y));
+        //return () -> snapTranslationToPole(new Translation2d(x, y));
+        return () -> new Translation2d(x, y);
     }
 
     private static Translation2d snapTranslationToPole(Translation2d translation){
@@ -128,10 +129,10 @@ public class Controlboard{
 
     /* Shooter */
     public static final Trigger getManualShooter(){
-        return operatorController.povUp();
+        return driverController.povUp();
     }
     public static final Trigger getEjectShooter(){
-        return operatorController.povDown();
+        return driverController.povDown();
     }
 
     /* Pivot */

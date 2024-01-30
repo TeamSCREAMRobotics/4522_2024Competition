@@ -96,6 +96,8 @@ public class Swerve extends SubsystemBase {
             () -> RobotContainer.getAlliance() == Alliance.Blue ? false : true,
             this
         );
+
+        m_headingController.enableContinuousInput(-180, 180);
     }
 
     /**

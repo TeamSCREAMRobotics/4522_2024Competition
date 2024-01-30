@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.112909566760645,
-        "y": 6.827417706190619
+        "x": 4.38225880731362,
+        "y": 7.401248696933913
       },
       "isLocked": false,
       "linkedName": "Close4_3End"
     },
     {
       "anchor": {
-        "x": 5.846113375536308,
-        "y": 6.874261052373746
+        "x": 7.907220607593853,
+        "y": 7.506646225845947
       },
       "prevControl": {
-        "x": 4.85069226914488,
-        "y": 6.850839379282182
+        "x": 6.911799501202426,
+        "y": 7.4832245527543835
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,9 +33,9 @@
     {
       "name": "New Constraints Zone",
       "minWaypointRelativePos": 0.0,
-      "maxWaypointRelativePos": 0.2,
+      "maxWaypointRelativePos": 0.3,
       "constraints": {
-        "maxVelocity": 2.5,
+        "maxVelocity": 2.0,
         "maxAcceleration": 4.9,
         "maxAngularVelocity": 570.0,
         "maxAngularAcceleration": 440.0
@@ -95,8 +95,8 @@
       }
     },
     {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0.5,
+      "name": "StopAutoShoot",
+      "waypointRelativePos": 0.3,
       "command": {
         "type": "parallel",
         "data": {
@@ -116,7 +116,7 @@
     "maxVelocity": 4.98,
     "maxAcceleration": 4.9,
     "maxAngularVelocity": 570.0,
-    "maxAngularAcceleration": 440.0
+    "maxAngularAcceleration": 480.0
   },
   "goalEndState": {
     "velocity": 2.0,
@@ -127,7 +127,7 @@
   "folder": "AmpSide6",
   "previewStartingState": {
     "rotation": 27.0,
-    "velocity": 0
+    "velocity": 2.0
   },
   "useDefaultConstraints": true
 }

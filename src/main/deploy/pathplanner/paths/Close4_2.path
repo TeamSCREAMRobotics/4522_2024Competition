@@ -35,7 +35,7 @@
     "maxVelocity": 4.98,
     "maxAcceleration": 4.9,
     "maxAngularVelocity": 570.0,
-    "maxAngularAcceleration": 440.0
+    "maxAngularAcceleration": 480.0
   },
   "goalEndState": {
     "velocity": 0,

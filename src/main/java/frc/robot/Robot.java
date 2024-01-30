@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.ResourceBundle.Control;
+
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -16,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AllianceFlippable;
 import frc.lib.util.OrchestraUtil;
+import frc.robot.controlboard.Controlboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -83,7 +86,7 @@ public class Robot extends TimedRobot {
     coastTimer.reset();
     coastTimer.start();
     RobotContainer.stopAll();
-    OrchestraUtil.play("EnterSandman");
+    //OrchestraUtil.play("EnterSandman");
   }
 
     /** This function is called periodically when the robot is in Disabled mode. */
@@ -128,8 +131,7 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {

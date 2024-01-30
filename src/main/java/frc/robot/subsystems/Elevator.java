@@ -96,9 +96,4 @@ public class Elevator extends SubsystemBase{
         m_rightElevatorMotor.stopMotor();
         m_leftElevatorMotor.stopMotor();
     }
-
-    @Override
-    public void periodic() {
-
-    }
 }

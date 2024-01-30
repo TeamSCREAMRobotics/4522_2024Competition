@@ -188,8 +188,7 @@ public class DeviceConfig {
                     motor.getDutyCycle().setUpdateFrequency(updateFrequencyHz),
                     motor.getPosition().setUpdateFrequency(updateFrequencyHz),
                     motor.getVelocity().setUpdateFrequency(updateFrequencyHz),
-                    motor.optimizeBusUtilization()
-                    );
+                    motor.optimizeBusUtilization());
             }
         };
         ErrorChecker.configureDevice(deviceConfig, name + " " + motor.getDeviceID() + " version " + motor.getVersion(), true);

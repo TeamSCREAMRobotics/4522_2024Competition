@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.util.PathSequence;
 import frc.lib.util.PathSequence.Side;
 import frc.robot.commands.intake.AutoPickupCommand;
@@ -74,15 +75,15 @@ public class Routines {
             startTimerCommand(),
             resetPoseCommand(swerve, AmpSide6.getStartingPose()),
             AmpSide6.getStart(),
-            // new WaitCommand(0.75),
+            new WaitCommand(0.5),
             AmpSide6.getNext(),
-            // new WaitCommand(0.75),
+            new WaitCommand(0.5),
             AmpSide6.getNext(),
-            // new WaitCommand(0.75),
+            new WaitCommand(0.5),
             AmpSide6.getNext(),
             new AutoPickupCommand(swerve),
             AmpSide6.getNext(),
-            // new WaitCommand(0.75),
+            new WaitCommand(0.5),
             AmpSide6.getNext(),
             new AutoPickupCommand(swerve),
             AmpSide6.getNext(),
@@ -105,6 +106,24 @@ public class Routines {
             // new WaitCommand(0.75),
             SourceSide4.getNext(),
             printTimerCommand()
+        );
+    }
+
+    public static Command AmpSide5(Swerve swerve){
+        return new SequentialCommandGroup(
+        startTimerCommand(),
+        resetPoseCommand(swerve, AmpSide6.getStartingPose()),
+        AmpSide6.getStart(),
+        new WaitCommand(0.5),
+        AmpSide6.getNext(),
+        new WaitCommand(0.5),
+        AmpSide6.getNext(),
+        new WaitCommand(0.5),
+        AmpSide6.getNext(),
+        AmpSide6.getNext(),
+        new WaitCommand(0.5),
+        printTimerCommand()
+
         );
     }
 }

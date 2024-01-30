@@ -57,7 +57,7 @@ public class AutoPrepCommand extends Command {
     distanceFromSpeaker_Y = Math.abs(swerve.getPose().getY() - allianceSpeakerPosition.getY());
     distanceFromSpeaker = new Translation2d(distanceFromSpeaker_X, distanceFromSpeaker_Y).getNorm();
   
-    shooter.setTargetVelocity(ShooterConstants.SHOOTER_MIN_VELOCITY);
+    shooter.setTargetVelocity(ShooterConstants.SHOOTER_TARGET_VELOCITY);
     if(!defense){
       pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.pivotAngleMap_Localization.get(distanceFromSpeaker)));
       elevator.setTargetHeight(ElevatorConstants.elevatorHeightMap_Localization.get(distanceFromSpeaker));

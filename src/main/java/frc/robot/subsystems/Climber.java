@@ -79,9 +79,4 @@ public class Climber extends SubsystemBase{
         m_rightClimberMotor.stopMotor();
         m_leftClimberMotor.stopMotor();
     }
-
-    @Override
-    public void periodic() {
-
-    }
 }

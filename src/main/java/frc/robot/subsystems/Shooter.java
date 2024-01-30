@@ -14,6 +14,7 @@ import frc.lib.util.OrchestraUtil;
 import frc.robot.Constants;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.shuffleboard.tabs.ShooterTab;
 
 public class Shooter extends SubsystemBase{
     
@@ -21,8 +22,8 @@ public class Shooter extends SubsystemBase{
     private TalonFX m_leftShooterMotor;
 
     public Shooter(){
-        //m_rightShooterMotor = new TalonFX(Ports.RIGHT_SHOOTER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
-        //m_leftShooterMotor = new TalonFX(Ports.LEFT_SHOOTER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        m_rightShooterMotor = new TalonFX(Ports.RIGHT_SHOOTER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        m_leftShooterMotor = new TalonFX(Ports.LEFT_SHOOTER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
 
         configShooterMotors();
         
@@ -30,9 +31,9 @@ public class Shooter extends SubsystemBase{
     }
     
     private void configShooterMotors() {
-        // DeviceConfig.configureTalonFX("rightShooterMotor", m_rightShooterMotor, DeviceConfig.shooterFXConfig(), Constants.LOOP_TIME_HZ);
-        // DeviceConfig.configureTalonFX("leftShooterMotor", m_leftShooterMotor, DeviceConfig.shooterFXConfig(), Constants.LOOP_TIME_HZ);
-    }
+        DeviceConfig.configureTalonFX("rightShooterMotor", m_rightShooterMotor, DeviceConfig.shooterFXConfig(), Constants.LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("leftShooterMotor", m_leftShooterMotor, DeviceConfig.shooterFXConfig(), Constants.LOOP_TIME_HZ);
+     }
     
     public void setNeutralMode(NeutralModeValue shooterMode){
         m_rightShooterMotor.setNeutralMode(shooterMode);
@@ -57,7 +58,8 @@ public class Shooter extends SubsystemBase{
 
     public void setShooter(ControlRequest control){
         m_rightShooterMotor.setControl(control);
-        m_leftShooterMotor.setControl(new Follower(m_rightShooterMotor.getDeviceID(), true)); //left motor follows right motor in the opposing direction
+        m_leftShooterMotor.setControl(control);
+        //m_leftShooterMotor.setControl(new Follower(m_rightShooterMotor.getDeviceID(), false)); //left motor follows right motor in the opposing direction
     }
 
     public void stop(){
@@ -66,7 +68,5 @@ public class Shooter extends SubsystemBase{
     }
 
     @Override
-    public void periodic(){
-
-    }
+    public void periodic() {}
 }

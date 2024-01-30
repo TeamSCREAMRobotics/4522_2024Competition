@@ -3,6 +3,7 @@
   "robotLength": 0.86,
   "holonomicMode": true,
   "pathFolders": [
+    "2Amp",
     "AmpSide6",
     "AmpSide7",
     "CenterPiecePathfinding",
@@ -13,6 +14,6 @@
   "defaultMaxVel": 4.98,
   "defaultMaxAccel": 4.9,
   "defaultMaxAngVel": 570.0,
-  "defaultMaxAngAccel": 440.0,
+  "defaultMaxAngAccel": 480.0,
   "maxModuleSpeed": 3.0
 }

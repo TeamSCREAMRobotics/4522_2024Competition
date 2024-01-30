@@ -5,17 +5,20 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ShuffleboardConstants;
+import frc.robot.shuffleboard.tabs.ShooterTab;
 import frc.robot.subsystems.Shooter;
 
-public class ShooterManualCommand extends Command {
+public class ShooterVelocityCommand extends Command {
   
   Shooter shooter;
-  double speed;
+  double velocityRPM;
 
-  public ShooterManualCommand(Shooter shooter, double speed) {
+  public ShooterVelocityCommand(Shooter shooter, double velocityRPM) {
     addRequirements(shooter);
 
-    this.speed = speed;
+    this.shooter = shooter;
+    this.velocityRPM = velocityRPM;
   }
 
   // Called when the command is initially scheduled.
@@ -25,7 +28,8 @@ public class ShooterManualCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setShooterOutput(speed);
+    velocityRPM = ShuffleboardConstants.UPDATE_SHOOTER ? ShooterTab.getShooterVelocity() : velocityRPM;
+    shooter.setTargetVelocity(velocityRPM);
   }
 
   // Called once the command ends or is interrupted.

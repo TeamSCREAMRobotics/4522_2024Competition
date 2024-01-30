@@ -43,18 +43,17 @@ public final class Constants{
         public static final String CANIVORE_NAME = "canivore"; // TODO ROBOT SPECIFIC
         public static final String RIO_CANBUS_NAME = "rio";
 
-        public static final String LIMELIGHT_FRONT = "limelight-front";
-
-        /* Pigeon2 */
+        /* Misc */
         public static final int PIGEON_ID = 0; // TODO ROBOT SPECIFIC
+        public static final int CANDLE_ID = 0;
         
         /* Elevator */
         public static final int LEFT_CLIMBER_MOTOR_ID = 0; //TODO
         public static final int RIGHT_CLIMBER_MOTOR_ID = 0; //TODO
 
         /* Shooter */
-        public static final int RIGHT_SHOOTER_MOTOR_ID = 0; //TODO
-        public static final int LEFT_SHOOTER_MOTOR_ID = 0; //TODO
+        public static final int RIGHT_SHOOTER_MOTOR_ID = 11; //TODO
+        public static final int LEFT_SHOOTER_MOTOR_ID = 12; //TODO
 
         /* Pivot */
         public static final int PIVOT_MOTOR_ID = 0; //TODO
@@ -65,7 +64,7 @@ public final class Constants{
         public static final int RIGHT_ELEVATOR_MOTOR_ID = 0; //TODO
 
         /* Conveyor */
-        public static final int CONVEYOR_MOTOR_ID = 0; //TODO
+        public static final int CONVEYOR_MOTOR_ID = 10; //TODO
         public static final int CONVEYOR_BEAM_ID = 0; // TODO
 
         /* Intake */
@@ -79,6 +78,12 @@ public final class Constants{
 
         /* For updating values like PID from Shuffleboard */
         public static final boolean UPDATE_SWERVE = false;
+        public static final boolean UPDATE_INTAKE = false;
+        public static final boolean UPDATE_SHOOTER = true;
+        public static final boolean UPDATE_ELEVATOR = false;
+        public static final boolean UPDATE_CONVEYOR = false;
+        public static final boolean UPDATE_CLIMBER = false;
+        public static final boolean UPDATE_PIVOT = false;
     }
 
 
@@ -269,8 +274,8 @@ public final class Constants{
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
         
         /* Current Limits */
-        public static final int SUPPLY_CURRENT_LIMIT = 25;
-        public static final int SUPPLY_CURRENT_THRESHOLD = 40;
+        public static final int SUPPLY_CURRENT_LIMIT = 35;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 60;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
@@ -306,8 +311,8 @@ public final class Constants{
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
         
         /* Current Limits */
-        public static final int SUPPLY_CURRENT_LIMIT = 25;
-        public static final int SUPPLY_CURRENT_THRESHOLD = 40;
+        public static final int SUPPLY_CURRENT_LIMIT = 35;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 60;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
 
@@ -317,8 +322,10 @@ public final class Constants{
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
         public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(15, 0.0, 0.0);
 
-        public static final double SHOOTER_MIN_VELOCITY = 6000; //RPM's
-        public static final double SHOOTER_SHOOT_OUTPUT = 1.0;
+        public static final double AUTO_SHOOT_VELOCITY_THRESHOLD = 4800; //RPM's
+        public static final double SHOOTER_MAX_VELOCITY = 6000;
+        public static final double SHOOTER_TARGET_VELOCITY = 5000;
+        public static final double SHOOTER_SHOOT_OUTPUT = 0.8;
         public static final double SHOOTER_EJECT_OUTPUT = 0.5;
     }
     
@@ -334,8 +341,8 @@ public final class Constants{
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
         
         /* Current Limits */
-        public static final int SUPPLY_CURRENT_LIMIT = 25;
-        public static final int SUPPLY_CURRENT_THRESHOLD = 40;
+        public static final int SUPPLY_CURRENT_LIMIT = 35;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 60;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
@@ -382,8 +389,8 @@ public final class Constants{
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
         
         /* Current Limits */
-        public static final int SUPPLY_CURRENT_LIMIT = 25;
-        public static final int SUPPLY_CURRENT_THRESHOLD = 40;
+        public static final int SUPPLY_CURRENT_LIMIT = 35;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 60;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
@@ -430,12 +437,12 @@ public final class Constants{
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
         
         /* Current Limits */
-        public static final int SUPPLY_CURRENT_LIMIT = 25;
-        public static final int SUPPLY_CURRENT_THRESHOLD = 40;
+        public static final int SUPPLY_CURRENT_LIMIT = 35;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 60;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
 
-        public static final double INTAKE_SPEED = 0.75;
+        public static final double INTAKE_SPEED = 0.65;
         public static final double EJECT_SPEED = -0.5;
 
         public static final double AUTO_INTAKE_TY_THRESHOLD = -3.0;
@@ -453,8 +460,8 @@ public final class Constants{
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
         
         /* Current Limits */
-        public static final int SUPPLY_CURRENT_LIMIT = 25;
-        public static final int SUPPLY_CURRENT_THRESHOLD = 40;
+        public static final int SUPPLY_CURRENT_LIMIT = 35;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 60;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         

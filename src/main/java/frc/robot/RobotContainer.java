@@ -44,7 +44,8 @@ import frc.robot.commands.elevator.ElevatorTargetCommand;
 import frc.robot.commands.intake.IntakeCommand;
 import frc.robot.commands.pivot.PivotManualCommand;
 import frc.robot.commands.pivot.PivotTargetCommand;
-import frc.robot.commands.shooter.ShooterManualCommand;
+import frc.robot.commands.shooter.ShooterDutyCycleCommand;
+import frc.robot.commands.shooter.ShooterVelocityCommand;
 import frc.robot.commands.swerve.DriveToPositionCommand;
 import frc.robot.commands.swerve.FacePointCommand;
 import frc.robot.commands.swerve.TeleopSwerve;
@@ -66,15 +67,15 @@ public class RobotContainer {
     private static Optional<Alliance> m_alliance = DriverStation.getAlliance();
     
     /* Subsystems */
-    private static Swerve m_swerve = new Swerve();
-/*     private static final Climber m_climber = new Climber();
+    private static final Swerve m_swerve = new Swerve();
+    //private static final Climber m_climber = new Climber();
     private static final Shooter m_shooter = new Shooter();
-    private static final Pivot m_pivot = new Pivot();
-    private static final Elevator m_elevator = new Elevator();
-    private static final Conveyor m_conveyor = new Conveyor(); */
-    private static final Intake m_intake = new Intake();
+    //private static final Pivot m_pivot = new Pivot();
+    //private static final Elevator m_elevator = new Elevator();
+    //private static final Conveyor m_conveyor = new Conveyor();
+    //private static final Intake m_intake = new Intake();
 
-    private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve);
+    private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve, m_shooter);
     
     /**
      * Configures the basic robot systems, such as Shuffleboard, autonomous, default commands, and button bindings.
@@ -110,8 +111,8 @@ public class RobotContainer {
         // Controlboard.setPosition_Trap().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_TRAP_POSITION)).toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_TRAP_ANGLE));
 
         /* Shooter */
-        // Controlboard.getManualShooter().toggleOnTrue(new ShooterManualCommand(m_shooter, ShooterConstants.SHOOTER_SHOOT_OUTPUT));
-        // Controlboard.getEjectShooter().toggleOnTrue(new ShooterManualCommand(m_shooter, ShooterConstants.SHOOTER_EJECT_OUTPUT));
+        Controlboard.getManualShooter().whileTrue(new ShooterVelocityCommand(m_shooter, ShooterConstants.SHOOTER_TARGET_VELOCITY/4));
+        Controlboard.getEjectShooter().whileTrue(new ShooterDutyCycleCommand(m_shooter, ShooterConstants.SHOOTER_EJECT_OUTPUT));
 
         /* Automation */
         // Controlboard.getAutoPrepShot().toggleOnTrue(new AutoPrepCommand(m_pivot, m_elevator, m_shooter, m_swerve, Controlboard.getDefense().getAsBoolean(), getAlliance())).toggleOnTrue(new FacePointCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING)));
@@ -130,8 +131,8 @@ public class RobotContainer {
         );*/
 
         /* Intake */
-        //Controlboard.getManualIntake().whileTrue(new IntakeManualCommand(m_intake, IntakeConstants.INTAKE_SPEED, true));
-        //Controlboard.getEjectIntake().whileTrue(new IntakeManualCommand(m_intake, IntakeConstants.EJECT_SPEED, true));
+        //Controlboard.getManualIntake().whileTrue(new IntakeCommand(m_intake, IntakeConstants.INTAKE_SPEED, true));//.whileTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.TRANSFER_SPEED));
+        //Controlboard.getEjectIntake().whileTrue(new IntakeCommand(m_intake, IntakeConstants.EJECT_SPEED, true));//.whileTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.AMP_TRAP_SPEED));
         //Controlboard.getAutoPickup().whileTrue(new FaceGamePieceCommand(m_swerve, Controlboard.getTranslation(), SwerveConstants.VISION_ROTATION_CONSTANTS));
     }
 
@@ -153,23 +154,26 @@ public class RobotContainer {
             )
         );*/
         
-        /*m_conveyor.setDefaultCommand(
+        /* m_conveyor.setDefaultCommand(
             new ConveyorManualCommand(
                 m_conveyor, 
                 0.0)
-        );
+        ); */
         
+        /*
         m_elevator.setDefaultCommand(
             new ElevatorTargetCommand(
                 m_elevator, 
                 ElevatorConstants.ELEVATOR_HOME_POSITION)
         );*/
 
-        /* m_intake.setDefaultCommand(
-            new IntakeManualCommand(
+        /*  m_intake.setDefaultCommand(
+            new IntakeCommand(
                 m_intake, 
-                0.0)
-        );
+                0.0,
+                true)
+        ); */
+        /*
 
         m_pivot.setDefaultCommand(
             new PivotTargetCommand(
@@ -177,11 +181,12 @@ public class RobotContainer {
                 PivotConstants.PIVOT_HOME_ANGLE)
         );
         
+        */
         m_shooter.setDefaultCommand(
-            new ShooterManualCommand(
+            new ShooterDutyCycleCommand(
                 m_shooter, 
                 0.0)
-        );*/
+        );
     }
 
     /**
@@ -199,7 +204,7 @@ public class RobotContainer {
         );
 
         Autonomous.addRoutines(
-            Routines.Close4(m_swerve).withName("Close4"),
+            //Routines.Close4(m_swerve).withName("Close4"),
             Routines.AmpSide6(m_swerve).withName("AmpSide6"),
             Routines.SourceSide4(m_swerve).withName("SourceSide4")
         );

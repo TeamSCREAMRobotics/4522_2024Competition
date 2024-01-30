@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.shuffleboard.tabs.MatchTab;
+import frc.robot.shuffleboard.tabs.ShooterTab;
 import frc.robot.shuffleboard.tabs.SwerveTab;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.swerve.Swerve;
 
 /**
@@ -16,9 +18,11 @@ public class ShuffleboardTabManager extends SubsystemBase {
     private static final ArrayList<ShuffleboardTabBase> m_tabs = new ArrayList<ShuffleboardTabBase>();
 
     private Swerve swerve;
+    private Shooter shooter;
 
-    public ShuffleboardTabManager(Swerve swerve){
+    public ShuffleboardTabManager(Swerve swerve, Shooter shooter){
         this.swerve = swerve;
+        this.shooter = shooter;
     }
 
     /**
@@ -29,6 +33,7 @@ public class ShuffleboardTabManager extends SubsystemBase {
         m_tabs.add(new MatchTab(swerve));
         if (includeDebug) {
             m_tabs.add(new SwerveTab(swerve));
+            m_tabs.add(new ShooterTab(shooter));
         }
 
         for (ShuffleboardTabBase tab : m_tabs) {
