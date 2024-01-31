@@ -61,7 +61,7 @@ public final class Constants{
 
         /* Elevator */
         public static final int LEFT_ELEVATOR_MOTOR_ID = 0; //TODO
-        public static final int RIGHT_ELEVATOR_MOTOR_ID = 0; //TODO
+        public static final int RIGHT_ELEVATOR_MOTOR_ID = 1; //TODO
 
         /* Conveyor */
         public static final int CONVEYOR_MOTOR_ID = 10; //TODO
@@ -327,6 +327,15 @@ public final class Constants{
         public static final double SHOOTER_TARGET_VELOCITY = 5000;
         public static final double SHOOTER_SHOOT_OUTPUT = 0.8;
         public static final double SHOOTER_EJECT_OUTPUT = 0.5;
+
+        //I believe it is actually the time it takes for it to leave the shooter,
+            //not the time it takes for the note to reach the speaker, from 1706
+                //1706 values ranged from .78 - .83 and was changing based on the angle they shot at
+        public static final InterpolatingDoubleTreeMap timeToGoalMap = new InterpolatingDoubleTreeMap();
+        static{
+            // (angle to target, time (seconds))
+            timeToGoalMap.put(0.0, 0.0);
+        }
     }
     
     public static final class PivotConstants { //TODO all values
@@ -513,12 +522,12 @@ public final class Constants{
         public static final Translation2d BLUE_PODIUM = new Translation2d(2.737, 4.131913);
         public static final Translation2d RED_PODIUM = AllianceFlippable.MirroredTranslation2d(BLUE_PODIUM);
         
-        public static final Translation3d BLUE_STAGE_LEFT = new Translation3d(4.65, 3.73, 0); //TODO left/right stage rotations
-        public static final Translation3d BLUE_STAGE_MID = new Translation3d(5.33, 4.19, 0);
-        public static final Translation3d BLUE_STAGE_RIGHT = new Translation3d(4.65, 4.51, 0);
-        public static final Translation3d RED_STAGE_LEFT = AllianceFlippable.MirroredTranslation3d(BLUE_STAGE_LEFT);
-        public static final Translation3d RED_STAGE_MID = AllianceFlippable.MirroredTranslation3d(BLUE_STAGE_MID);
-        public static final Translation3d RED_STAGE_RIGHT = AllianceFlippable.MirroredTranslation3d(BLUE_STAGE_RIGHT);
+        public static final Translation2d BLUE_STAGE_LEFT = new Translation2d(4.65, 3.73);
+        public static final Translation2d BLUE_STAGE_MID = new Translation2d(5.33, 4.19);
+        public static final Translation2d BLUE_STAGE_RIGHT = new Translation2d(4.65, 4.51);
+        public static final Translation2d RED_STAGE_LEFT = AllianceFlippable.MirroredTranslation2d(BLUE_STAGE_LEFT);
+        public static final Translation2d RED_STAGE_MID = AllianceFlippable.MirroredTranslation2d(BLUE_STAGE_MID);
+        public static final Translation2d RED_STAGE_RIGHT = AllianceFlippable.MirroredTranslation2d(BLUE_STAGE_RIGHT);
 
         public static final Translation2d BLUE_SPEAKER_OPENING = new Translation2d(0.0, 5.54);
         public static final Translation2d RED_SPEAKER_OPENING = AllianceFlippable.MirroredTranslation2d(BLUE_SPEAKER_OPENING);

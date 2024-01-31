@@ -33,7 +33,7 @@ public class Controlboard{
      * 
      * @return A DoubleSupplier array representing the x and y values from the controller.
      */
-    public static Supplier<Translation2d> getTranslation(){
+    public static DoubleSupplier[] getTranslation(){
         double x = -MathUtil.applyDeadband(driverController.getLeftY(), STICK_DEADBAND);
         double y = -MathUtil.applyDeadband(driverController.getLeftX(), STICK_DEADBAND);
         /* if(getAutoFire().getAsBoolean()){
@@ -42,9 +42,11 @@ public class Controlboard{
                 () -> -MathUtil.applyDeadband(driverController.getLeftX(), STICK_DEADBAND)*SwerveConstants.SHOOT_WHILE_MOVING_SCALAR
             };
         } */ // TODO Find a better way to do this
-
-        //return () -> snapTranslationToPole(new Translation2d(x, y));
-        return () -> new Translation2d(x, y);
+        
+        return new DoubleSupplier[] {
+            () -> -MathUtil.applyDeadband(driverController.getLeftY(), STICK_DEADBAND),
+            () -> -MathUtil.applyDeadband(driverController.getLeftX(), STICK_DEADBAND)
+        };
     }
 
     private static Translation2d snapTranslationToPole(Translation2d translation){

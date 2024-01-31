@@ -1,11 +1,17 @@
 
 package frc.robot.shuffleboard.tabs;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import frc.lib.util.AllianceFlippable;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ShuffleboardConstants;
 import frc.robot.Constants.SwerveConstants.DriveConstants;
+import frc.robot.commands.swerve.FacePointCommand;
 import frc.robot.shuffleboard.ShuffleboardTabBase;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -41,6 +47,10 @@ public class SwerveTab extends ShuffleboardTabBase {
     private GenericEntry m_gyroYaw;
 
     private GenericEntry m_driveP;
+    
+    private ComplexWidget m_field;
+    private Field2d m_field2d = new Field2d();
+    private GenericEntry m_TargetAngle;
 
     /**
      * This method creates number entries for various sensors related to the Swerve subsystem.
@@ -72,6 +82,9 @@ public class SwerveTab extends ShuffleboardTabBase {
         if (ShuffleboardConstants.UPDATE_SWERVE) {
             m_driveP = createNumberEntry("Drive P Gain", DriveConstants.PID_CONSTANTS.kP(), new EntryProperties(9, 0));
         }
+        
+        m_field = createSendableEntry("Field", m_field2d, new EntryProperties(2, 0, 3, 2));
+        m_TargetAngle = createNumberEntry("Target Angle", 0, new EntryProperties());
     }
 
     /**
@@ -97,6 +110,9 @@ public class SwerveTab extends ShuffleboardTabBase {
         m_odometryRotation.setDouble(m_swerve.getRotation().getDegrees());
         
         m_gyroYaw.setDouble(m_swerve.getYaw().getDegrees());
+        
+        m_field2d.setRobotPose(new Pose2d(FacePointCommand.calculateVirtualTarget(m_swerve, AllianceFlippable.getTargetSpeaker()), new Rotation2d()));
+        m_TargetAngle.setDouble(FacePointCommand.calculateAngleToPoint(m_swerve.getPose().getTranslation(), FacePointCommand.calculateVirtualTarget(m_swerve, AllianceFlippable.getTargetSpeaker())).getDegrees());
 
         if (ShuffleboardConstants.UPDATE_SWERVE) {
             m_swerve.configDrivePID(DriveConstants.PID_CONSTANTS.withP(m_driveP.get().getDouble()));

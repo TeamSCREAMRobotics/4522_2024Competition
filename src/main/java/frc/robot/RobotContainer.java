@@ -94,6 +94,7 @@ public class RobotContainer {
         Controlboard.getZeroGyro().onTrue(new InstantCommand(() -> m_swerve.resetGyro(AllianceFlippable.getForwardRotation())));
         Controlboard.getResetPose().onTrue(new InstantCommand(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, AllianceFlippable.getForwardRotation()))));
         //Controlboard.getBTestButton().whileTrue(new FeedForwardCharacterization(m_elevator, true, new FeedForwardCharacterizationData("Elevator"), m_elevator::setElevatorVoltage, m_elevator::getElevatorVelocity, m_elevator::getElevatorAcceleration));
+        Controlboard.getBTestButton().toggleOnTrue(new FacePointCommand(m_swerve, Controlboard.getTranslation(), AllianceFlippable.getTargetSpeaker(), false, true));
 
         /* Conveyor */
         // Controlboard.getFire_Speaker().toggleOnTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.SPEAKER_SPEED));
@@ -115,11 +116,11 @@ public class RobotContainer {
         Controlboard.getEjectShooter().whileTrue(new ShooterDutyCycleCommand(m_shooter, ShooterConstants.SHOOTER_EJECT_OUTPUT));
 
         /* Automation */
-        // Controlboard.getAutoPrepShot().toggleOnTrue(new AutoPrepCommand(m_pivot, m_elevator, m_shooter, m_swerve, Controlboard.getDefense().getAsBoolean(), getAlliance())).toggleOnTrue(new FacePointCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING)));
+        /* Controlboard.getAutoPrepShot().toggleOnTrue(new AutoPrepCommand(m_pivot, m_elevator, m_shooter, m_swerve, Controlboard.getDefense().getAsBoolean(), getAlliance())).toggleOnTrue(new FacePointCommand(m_swerve, Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING), true)); */
         // Controlboard.getAutoFire().onTrue(new ConveyorAutoFireCommand(m_conveyor, m_shooter, m_pivot, m_elevator));
         /*Controlboard.getAutoclimb().toggleOnTrue(
             new SequentialCommandGroup(
-            new FacePointCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_STAGE_RIGHT, FieldConstants.RED_STAGE_RIGHT)), //how to select which stage we are going to, if we just faced the direct center of the stage would it function the same?
+            new FacePointCommand(m_swerve, Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_STAGE_RIGHT, FieldConstants.RED_STAGE_RIGHT), false), //how to select which stage we are going to, if we just faced the direct center of the stage would it function the same?
                 // new AutoAllignCommand(), //TODO
                 new AutoClimbCommand(m_climber), //Will we be able to climb and move the elevator/pivot at the same time/
                 new ParallelCommandGroup(
@@ -144,7 +145,7 @@ public class RobotContainer {
                 Controlboard.getTranslation(),
                 Controlboard.getRotation(),
                 Controlboard.getFieldCentric()
-            ) 
+            )
         );
 
         /*m_climber.setDefaultCommand(
@@ -158,14 +159,13 @@ public class RobotContainer {
             new ConveyorManualCommand(
                 m_conveyor, 
                 0.0)
-        ); */
+        );
         
-        /*
         m_elevator.setDefaultCommand(
             new ElevatorTargetCommand(
                 m_elevator, 
                 ElevatorConstants.ELEVATOR_HOME_POSITION)
-        );*/
+        ); */
 
         /*  m_intake.setDefaultCommand(
             new IntakeCommand(

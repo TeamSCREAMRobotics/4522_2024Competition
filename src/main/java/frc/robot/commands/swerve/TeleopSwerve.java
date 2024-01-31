@@ -18,7 +18,7 @@ import frc.robot.subsystems.swerve.Swerve;
  */
 public class TeleopSwerve extends Command {
     private Swerve swerve;
-    private Supplier<Translation2d> translationSup;
+    private DoubleSupplier[] translationSup;
     private DoubleSupplier rotationSup;
     private BooleanSupplier fieldRelativeSup;
     private Rotation2d lastAngle;
@@ -33,10 +33,10 @@ public class TeleopSwerve extends Command {
      * @param rotationSup A supplier for the rotation value.
      * @param fieldCentricSup A supplier for the drive mode. Robot centric = false; Field centric = true
      */
-    public TeleopSwerve(Swerve swerve, Supplier<Translation2d> translationSup, DoubleSupplier rotationSup, BooleanSupplier fieldCentricSup) {
-        this.swerve = swerve;
+    public TeleopSwerve(Swerve swerve, DoubleSupplier[] translationSup, DoubleSupplier rotationSup, BooleanSupplier fieldCentricSup) {
         addRequirements(swerve);
 
+        this.swerve = swerve;
         this.translationSup = translationSup;
         this.rotationSup = rotationSup;
         this.fieldRelativeSup = fieldCentricSup;
@@ -56,10 +56,9 @@ public class TeleopSwerve extends Command {
      */
     @Override
     public void execute() {
-        
-        Translation2d translationValue = translationSup.get().times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
-        System.out.println(translationValue);
-        double rotationValue = getRotation(rotationSup.getAsDouble());
+
+        Translation2d translationValue = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED).times(AllianceFlippable.getDirectionCoefficient());
+        double rotationValue = rotationSup.getAsDouble();//getRotation(rotationSup.getAsDouble());
         boolean fieldRelative = fieldRelativeSup.getAsBoolean();
 
         if(Controlboard.getZeroGyro().getAsBoolean()) lastAngle = AllianceFlippable.getForwardRotation();
