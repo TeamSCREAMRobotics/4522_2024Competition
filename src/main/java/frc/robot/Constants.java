@@ -52,8 +52,8 @@ public final class Constants{
         public static final int RIGHT_CLIMBER_MOTOR_ID = 0; //TODO
 
         /* Shooter */
-        public static final int RIGHT_SHOOTER_MOTOR_ID = 11; //TODO
-        public static final int LEFT_SHOOTER_MOTOR_ID = 12; //TODO
+        public static final int RIGHT_SHOOTER_MOTOR_ID = 12; //TODO
+        public static final int LEFT_SHOOTER_MOTOR_ID = 11; //TODO
 
         /* Pivot */
         public static final int PIVOT_MOTOR_ID = 0; //TODO
@@ -305,7 +305,7 @@ public final class Constants{
         public static final double GEAR_RATIO = 1.0;
 
         /* Motor Invert */
-        public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;;
+        public static final InvertedValue MOTOR_INVERT = InvertedValue.Clockwise_Positive;;
         
         /* Neutral Modes */
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
@@ -326,7 +326,7 @@ public final class Constants{
         public static final double SHOOTER_MAX_VELOCITY = 6000;
         public static final double SHOOTER_TARGET_VELOCITY = 5000;
         public static final double SHOOTER_SHOOT_OUTPUT = 0.8;
-        public static final double SHOOTER_EJECT_OUTPUT = 0.5;
+        public static final double SHOOTER_EJECT_OUTPUT = 0.35;//0.5;
 
         //I believe it is actually the time it takes for it to leave the shooter,
             //not the time it takes for the note to reach the speaker, from 1706
@@ -475,7 +475,7 @@ public final class Constants{
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
         public static final double SPEAKER_SPEED = 1.00;
-        public static final double AMP_TRAP_SPEED = -1.00;
+        public static final double AMP_TRAP_SPEED = -0.3;
         public static final double TRANSFER_SPEED = 0.75;
     }
 

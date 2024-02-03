@@ -28,7 +28,6 @@ public class ShooterDutyCycleCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    dutyCycle = ShuffleboardConstants.UPDATE_SHOOTER && dutyCycle != 0.0 ? ShooterTab.getShooterDutyCycle() : dutyCycle;
     shooter.setShooterOutput(dutyCycle);
   }
 

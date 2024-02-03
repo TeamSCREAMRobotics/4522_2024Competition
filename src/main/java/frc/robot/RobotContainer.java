@@ -72,7 +72,7 @@ public class RobotContainer {
     private static final Shooter m_shooter = new Shooter();
     //private static final Pivot m_pivot = new Pivot();
     //private static final Elevator m_elevator = new Elevator();
-    //private static final Conveyor m_conveyor = new Conveyor();
+    private static final Conveyor m_conveyor = new Conveyor();
     //private static final Intake m_intake = new Intake();
 
     private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve, m_shooter);
@@ -94,10 +94,10 @@ public class RobotContainer {
         Controlboard.getZeroGyro().onTrue(new InstantCommand(() -> m_swerve.resetGyro(AllianceFlippable.getForwardRotation())));
         Controlboard.getResetPose().onTrue(new InstantCommand(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, AllianceFlippable.getForwardRotation()))));
         //Controlboard.getBTestButton().whileTrue(new FeedForwardCharacterization(m_elevator, true, new FeedForwardCharacterizationData("Elevator"), m_elevator::setElevatorVoltage, m_elevator::getElevatorVelocity, m_elevator::getElevatorAcceleration));
-        Controlboard.getBTestButton().toggleOnTrue(new FacePointCommand(m_swerve, Controlboard.getTranslation(), AllianceFlippable.getTargetSpeaker(), false, true));
 
         /* Conveyor */
-        // Controlboard.getFire_Speaker().toggleOnTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.SPEAKER_SPEED));
+        Controlboard.getEjectShooter().whileTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.AMP_TRAP_SPEED));
+        Controlboard.getManualShooter().whileTrue(new ConveyorManualCommand(m_conveyor, -ConveyorConstants.AMP_TRAP_SPEED));
 
         /* Elevator */
         // Controlboard.getManualMode().toggleOnTrue(new ElevatorManualCommand(m_elevator, Controlboard.getManualElevator_Output()));
@@ -112,15 +112,15 @@ public class RobotContainer {
         // Controlboard.setPosition_Trap().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_TRAP_POSITION)).toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_TRAP_ANGLE));
 
         /* Shooter */
-        Controlboard.getManualShooter().whileTrue(new ShooterVelocityCommand(m_shooter, ShooterConstants.SHOOTER_TARGET_VELOCITY/4));
-        Controlboard.getEjectShooter().whileTrue(new ShooterDutyCycleCommand(m_shooter, ShooterConstants.SHOOTER_EJECT_OUTPUT));
+        //Controlboard.getManualShooter().whileTrue(new ShooterDutyCycleCommand(m_shooter, ShooterConstants.SHOOTER_SHOOT_OUTPUT));
+        //Controlboard.getEjectShooter().whileTrue(new ShooterDutyCycleCommand(m_shooter, ShooterConstants.SHOOTER_EJECT_OUTPUT));
 
         /* Automation */
-        /* Controlboard.getAutoPrepShot().toggleOnTrue(new AutoPrepCommand(m_pivot, m_elevator, m_shooter, m_swerve, Controlboard.getDefense().getAsBoolean(), getAlliance())).toggleOnTrue(new FacePointCommand(m_swerve, Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING), true)); */
+        // Controlboard.getAutoPrepShot().toggleOnTrue(new AutoPrepCommand(m_pivot, m_elevator, m_shooter, m_swerve, Controlboard.getDefense().getAsBoolean(), getAlliance())).toggleOnTrue(new FacePointCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING)));
         // Controlboard.getAutoFire().onTrue(new ConveyorAutoFireCommand(m_conveyor, m_shooter, m_pivot, m_elevator));
         /*Controlboard.getAutoclimb().toggleOnTrue(
             new SequentialCommandGroup(
-            new FacePointCommand(m_swerve, Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_STAGE_RIGHT, FieldConstants.RED_STAGE_RIGHT), false), //how to select which stage we are going to, if we just faced the direct center of the stage would it function the same?
+            new FacePointCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_STAGE_RIGHT, FieldConstants.RED_STAGE_RIGHT)), //how to select which stage we are going to, if we just faced the direct center of the stage would it function the same?
                 // new AutoAllignCommand(), //TODO
                 new AutoClimbCommand(m_climber), //Will we be able to climb and move the elevator/pivot at the same time/
                 new ParallelCommandGroup(
@@ -132,21 +132,21 @@ public class RobotContainer {
         );*/
 
         /* Intake */
-        //Controlboard.getManualIntake().whileTrue(new IntakeCommand(m_intake, IntakeConstants.INTAKE_SPEED, true));//.whileTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.TRANSFER_SPEED));
-        //Controlboard.getEjectIntake().whileTrue(new IntakeCommand(m_intake, IntakeConstants.EJECT_SPEED, true));//.whileTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.AMP_TRAP_SPEED));
+        //Controlboard.getManualIntake().whileTrue(new IntakeCommand(m_intake, IntakeConstants.INTAKE_SPEED, true)).whileTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.TRANSFER_SPEED));
+        //Controlboard.getEjectIntake().whileTrue(new IntakeCommand(m_intake, IntakeConstants.EJECT_SPEED, true)).whileTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.AMP_TRAP_SPEED));
         //Controlboard.getAutoPickup().whileTrue(new FaceGamePieceCommand(m_swerve, Controlboard.getTranslation(), SwerveConstants.VISION_ROTATION_CONSTANTS));
     }
 
     private void configDefaultCommands() { 
         /* Sets the default command for the swerve subsystem */
-        m_swerve.setDefaultCommand(
+        /* m_swerve.setDefaultCommand(
             new TeleopSwerve(
                 m_swerve,
                 Controlboard.getTranslation(),
                 Controlboard.getRotation(),
                 Controlboard.getFieldCentric()
-            )
-        );
+            ) 
+        ); */
 
         /*m_climber.setDefaultCommand(
             new ClimberManualCommand(
@@ -155,19 +155,20 @@ public class RobotContainer {
             )
         );*/
         
-        /* m_conveyor.setDefaultCommand(
+        m_conveyor.setDefaultCommand(
             new ConveyorManualCommand(
                 m_conveyor, 
                 0.0)
         );
         
+        /*
         m_elevator.setDefaultCommand(
             new ElevatorTargetCommand(
                 m_elevator, 
                 ElevatorConstants.ELEVATOR_HOME_POSITION)
-        ); */
+        );*/
 
-        /*  m_intake.setDefaultCommand(
+        /* m_intake.setDefaultCommand(
             new IntakeCommand(
                 m_intake, 
                 0.0,
