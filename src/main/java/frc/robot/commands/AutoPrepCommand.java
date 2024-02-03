@@ -46,7 +46,7 @@ public class AutoPrepCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    allianceSpeakerPosition = AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING);
+    allianceSpeakerPosition = AllianceFlippable.getTargetSpeaker();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

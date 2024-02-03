@@ -52,9 +52,9 @@ public class AutoAlignCommand extends Command {
   public void execute() {
     double xValue = Vision.getTV(limelight) ? -yController.calculate(Vision.getTY(limelight), targetY) : 0;
     double yValue = Vision.getTV(limelight) ? xController.calculate(Vision.getTX(limelight), 0.0) : 0;
-    double rotValue = rotationController.calculate(swerve.getYaw().getDegrees(), targetAngle.getDegrees());
+    double rotationValue = rotationController.calculate(swerve.getYaw().getDegrees(), targetAngle.getDegrees());
 
-    swerve.setChassisSpeeds(swerve.robotRelativeSpeeds(new Translation2d(xValue, yValue), rotValue));
+    swerve.setChassisSpeeds(swerve.robotRelativeSpeeds(new Translation2d(xValue, yValue), rotationValue));
   }
 
   // Called once the command ends or is interrupted.

@@ -7,12 +7,12 @@ package frc.robot.commands.elevator;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator;
 
-public class ElevatorTargetCommand extends Command {
+public class ElevatorPositionCommand extends Command {
   
   Elevator elevator;
   double height;
 
-  public ElevatorTargetCommand(Elevator elevator, double height) {
+  public ElevatorPositionCommand(Elevator elevator, double height) {
     addRequirements(elevator);
 
     this.elevator = elevator;

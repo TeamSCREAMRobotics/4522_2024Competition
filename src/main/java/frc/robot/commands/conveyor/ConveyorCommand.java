@@ -7,12 +7,12 @@ package frc.robot.commands.conveyor;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Conveyor;
 
-public class ConveyorManualCommand extends Command {
+public class ConveyorCommand extends Command {
   
   Conveyor conveyor;
   double speed;
 
-  public ConveyorManualCommand(Conveyor conveyor, double speed) {
+  public ConveyorCommand(Conveyor conveyor, double speed) {
     addRequirements(conveyor);
 
     this.conveyor = conveyor;

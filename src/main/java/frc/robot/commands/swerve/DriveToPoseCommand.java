@@ -5,6 +5,7 @@
 package frc.robot.commands.swerve;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -12,18 +13,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.swerve.Swerve;
 
-public class DriveToPositionCommand extends Command {
+public class DriveToPoseCommand extends Command {
   
   Swerve swerve;
-  Translation3d targetPosition;
+  Pose2d targetPose;
   PIDController driveController;
   PIDController rotationController;
 
-  public DriveToPositionCommand(Swerve swerve, Translation3d targetPosition) {
+  public DriveToPoseCommand(Swerve swerve, Pose2d targetPose) {
     addRequirements(swerve);
 
     this.swerve = swerve;
-    this.targetPosition = targetPosition;
+    this.targetPose = targetPose;
     this.driveController = SwerveConstants.DRIVE_TO_TARGET_CONSTANTS.toPIDController();
     this.rotationController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
     rotationController.enableContinuousInput(-180.0, 180.0);
@@ -36,8 +37,8 @@ public class DriveToPositionCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Translation2d translationValue = new Translation2d(driveController.calculate(swerve.getPose().getX(), targetPosition.getX()), driveController.calculate(swerve.getPose().getY(), targetPosition.getY()));
-    double rotationValue = rotationController.calculate(swerve.getRotation().getDegrees(), new Rotation2d(targetPosition.getZ()).getDegrees());
+    Translation2d translationValue = new Translation2d(driveController.calculate(swerve.getPose().getX(), targetPose.getX()), driveController.calculate(swerve.getPose().getY(), targetPose.getY()));
+    double rotationValue = rotationController.calculate(swerve.getRotation().getDegrees(), targetPose.getRotation().getDegrees());
 
     swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(translationValue, rotationValue));
   }

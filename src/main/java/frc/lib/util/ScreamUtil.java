@@ -94,4 +94,14 @@ public class ScreamUtil {
     public static PPHolonomicDriveController createHolonomicDriveController(HolonomicPathFollowerConfig config){
         return new PPHolonomicDriveController(config.translationConstants, config.rotationConstants, config.period, config.maxModuleSpeed, config.driveBaseRadius);
     }
+
+    public static double average(double... nums){
+        if(nums.length == 0) return 0.0;
+        
+        double sum = 0.0;
+        for(double num : nums){
+            sum += num;
+        }
+        return sum / nums.length;
+    }
 }

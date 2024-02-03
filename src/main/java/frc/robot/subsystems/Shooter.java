@@ -11,10 +11,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.config.DeviceConfig;
 import frc.lib.math.Conversions;
 import frc.lib.util.OrchestraUtil;
+import frc.lib.util.ScreamUtil;
 import frc.robot.Constants;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.shuffleboard.tabs.ShooterTab;
+import frc.robot.dashboard.tabs.ShooterTab;
 
 public class Shooter extends SubsystemBase{
     
@@ -27,6 +28,7 @@ public class Shooter extends SubsystemBase{
 
         configShooterMotors();
         
+        m_leftShooterMotor.setControl(new Follower(m_rightShooterMotor.getDeviceID(), false)); //left motor follows right motor in the opposing direction
         //OrchestraUtil.add(m_rightShooterMotor, m_leftShooterMotor);
     }
     
@@ -45,11 +47,11 @@ public class Shooter extends SubsystemBase{
     }
 
     public double getWheelRPM(){
-        return Conversions.falconRPSToMechanismRPM((m_rightShooterMotor.getVelocity().getValueAsDouble() + m_leftShooterMotor.getVelocity().getValueAsDouble())/2, 1.0);
+        return Conversions.falconRPSToMechanismRPM(ScreamUtil.average(m_rightShooterMotor.getVelocity().getValueAsDouble(), m_leftShooterMotor.getVelocity().getValueAsDouble()), 1.0);
     }
 
     public double getMotorRPM(){
-        return Conversions.rpmToFalconRPS(getWheelRPM(), ShooterConstants.GEAR_RATIO);
+        return ScreamUtil.average(m_rightShooterMotor.getVelocity().getValueAsDouble(), m_leftShooterMotor.getVelocity().getValueAsDouble())*60;
     }
 
     public void setShooterOutput(double po){
@@ -58,8 +60,6 @@ public class Shooter extends SubsystemBase{
 
     public void setShooter(ControlRequest control){
         m_rightShooterMotor.setControl(control);
-        m_leftShooterMotor.setControl(control);
-        //m_leftShooterMotor.setControl(new Follower(m_rightShooterMotor.getDeviceID(), false)); //left motor follows right motor in the opposing direction
     }
 
     public void stop(){

@@ -86,7 +86,5 @@ public class Pivot extends SubsystemBase{
     }
 
     @Override
-    public void periodic() {
-        // resetPivotToAbsoulute(); //Do we want the motor's position to be constantly reset during the match?
-    }
+    public void periodic() {}
 }

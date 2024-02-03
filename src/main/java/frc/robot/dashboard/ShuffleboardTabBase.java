@@ -1,4 +1,4 @@
-package frc.robot.shuffleboard;
+package frc.robot.dashboard;
 
 import java.util.Map;
 

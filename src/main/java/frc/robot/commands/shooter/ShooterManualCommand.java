@@ -2,22 +2,23 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.pivot;
+package frc.robot.commands.shooter;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Pivot;
+import frc.robot.Constants.ShuffleboardConstants;
+import frc.robot.dashboard.tabs.ShooterTab;
+import frc.robot.subsystems.Shooter;
 
-public class PivotTargetCommand extends Command {
+public class ShooterManualCommand extends Command {
   
-  Pivot pivot;
-  Rotation2d target;
+  Shooter shooter;
+  double dutyCycle;
 
-  public PivotTargetCommand(Pivot pivot, Rotation2d target) {
-    addRequirements(pivot);
+  public ShooterManualCommand(Shooter shooter, double dutyCycle) {
+    addRequirements(shooter);
 
-    this.pivot = pivot;
-    this.target = target;
+    this.shooter = shooter;
+    this.dutyCycle = dutyCycle;
   }
 
   // Called when the command is initially scheduled.
@@ -27,12 +28,15 @@ public class PivotTargetCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pivot.setTargetAngle(target);
+    dutyCycle = ShuffleboardConstants.UPDATE_SHOOTER ? ShooterTab.getShooterDutyCycle() : dutyCycle;
+    shooter.setShooterOutput(dutyCycle);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    shooter.stop();
+  }
 
   // Returns true when the command should end.
   @Override

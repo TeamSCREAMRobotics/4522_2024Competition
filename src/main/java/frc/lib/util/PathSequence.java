@@ -54,7 +54,7 @@ public class PathSequence {
 
     public Command getNext(){
         index ++;
-        if(index > list.size()-1){
+        if(index > list.size()){
             DriverStation.reportWarning("[Auto] No additional paths | Last supplied path: " + pathNames[pathNames.length-1], true);
             return new InstantCommand();
         }
@@ -63,8 +63,10 @@ public class PathSequence {
     }
 
     public Command getAll(){
-        Command[] commands = new Command[0];
-        commands = list.toArray(commands);
+        Command[] commands = new Command[list.size()];
+        for(int i = 0; i < list.size(); i++){
+            commands[i] = getPathCommand(list.get(i));
+        }
         return new SequentialCommandGroup(commands);
     }
 

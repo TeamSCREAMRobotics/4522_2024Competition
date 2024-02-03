@@ -12,13 +12,11 @@ public class IntakeCommand extends Command {
 
   Intake intake;
   double speed;
-  boolean autoDetect;
 
-  public IntakeCommand(Intake intake, double speed, boolean autoDetect) {
+  public IntakeCommand(Intake intake, double speed) {
     addRequirements(intake);
     this.intake = intake;
     this.speed = speed;
-    this.autoDetect = autoDetect;
   }
 
   // Called when the command is initially scheduled.
@@ -38,6 +36,6 @@ public class IntakeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;//Conveyor.hasPiece();
+    return false;
   }
 }

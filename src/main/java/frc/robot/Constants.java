@@ -181,7 +181,6 @@ public final class Constants{
             public static final double KA = 0.27;
         }
 
-
         public static final class SteerConstants {
             /* Gear Ratio */
             public static final double GEAR_RATIO = MODULE_TYPE.steerGearRatio;
@@ -237,29 +236,33 @@ public final class Constants{
                 1, 
                 0, 
                 0, 
-                Rotation2d.fromRotations(-0.76416015625+0.5));
-//-0.19970703125
+                Rotation2d.fromRotations(-0.76416015625+0.5)
+            );
+
             /* Front Right */
             public static final SwerveModuleConstants MODULE_1 = new SwerveModuleConstants(
                 3, 
                 2, 
                 1, 
-                Rotation2d.fromRotations(-0.074462890625+0.5));
-//0.48583984375
+                Rotation2d.fromRotations(-0.074462890625+0.5)
+            );
+
             /* Back Left */
             public static final SwerveModuleConstants MODULE_2 = new SwerveModuleConstants(
                 5, 
                 4, 
                 2, 
-                Rotation2d.fromRotations(-0.45458984375+0.5));
-// -0.0849609375
+                Rotation2d.fromRotations(-0.45458984375+0.5)
+            );
+
             /* Back Right */
             public static final SwerveModuleConstants MODULE_3 = new SwerveModuleConstants(
                 7, 
                 6, 
                 3, 
-                Rotation2d.fromRotations(-0.330078125+0.5));
-        }//0.17333984375
+                Rotation2d.fromRotations(-0.330078125+0.5)
+            );
+        }
     }
 
     public static final class ClimberConstants { //TODO all values
@@ -279,7 +282,7 @@ public final class Constants{
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
-        public static final boolean SOFTWARE_LIMIT_ENABLE = true;
+        public static final boolean SOFTWARE_LIMIT_ENABLE = false;
         public static final double FORWARD_SOFT_LIMIT = 0.0;
         public static final double REVERSE_SOFT_LIMIT = 0.0;
 
@@ -322,7 +325,7 @@ public final class Constants{
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
         public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(15, 0.0, 0.0);
 
-        public static final double AUTO_SHOOT_VELOCITY_THRESHOLD = 4800; //RPM's
+        public static final double AUTO_SHOOT_VELOCITY_THRESHOLD = 4800; //RPMs
         public static final double SHOOTER_MAX_VELOCITY = 6000;
         public static final double SHOOTER_TARGET_VELOCITY = 5000;
         public static final double SHOOTER_SHOOT_OUTPUT = 0.8;
@@ -355,7 +358,7 @@ public final class Constants{
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
-        public static final boolean SOFTWARE_LIMIT_ENABLE = true;
+        public static final boolean SOFTWARE_LIMIT_ENABLE = false;
         public static final double FORWARD_SOFT_LIMIT = 0.0;
         public static final double REVERSE_SOFT_LIMIT = 0.0;
 
@@ -403,7 +406,7 @@ public final class Constants{
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
-        public static final boolean SOFTWARE_LIMIT_ENABLE = true;
+        public static final boolean SOFTWARE_LIMIT_ENABLE = false;
         public static final double FORWARD_SOFT_LIMIT = 0.0;
         public static final double REVERSE_SOFT_LIMIT = 0.0;
 

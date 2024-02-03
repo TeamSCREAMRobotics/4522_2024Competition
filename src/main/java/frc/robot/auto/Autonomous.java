@@ -5,7 +5,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.shuffleboard.tabs.MatchTab;
+import frc.robot.dashboard.tabs.MatchTab;
 
 /**
  * A utility class that contains predefined auto routines for use during the autonomous period.

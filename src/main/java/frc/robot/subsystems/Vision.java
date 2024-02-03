@@ -15,7 +15,7 @@ import frc.robot.Constants.VisionConstants;
 public class Vision {
 
     private static LinearFilter numberFilter = LinearFilter.movingAverage(5);
-    private static LinearFilter poseFilter = LinearFilter.movingAverage(10);
+    private static LinearFilter poseFilter = LinearFilter.movingAverage(5);
     
     public enum Limelight{
         BACK("limelight-back", new Pose3d()), FRONT("limelight-front", new Pose3d()), INTAKE("limelight-intake", new Pose3d());

@@ -16,7 +16,7 @@ import frc.robot.subsystems.swerve.Swerve;
 /**
  * A command that controls the swerve drive system.
  */
-public class TeleopSwerve extends Command {
+public class DriveCommand extends Command {
     private Swerve swerve;
     private DoubleSupplier[] translationSup;
     private DoubleSupplier rotationSup;
@@ -33,7 +33,7 @@ public class TeleopSwerve extends Command {
      * @param rotationSup A supplier for the rotation value.
      * @param fieldCentricSup A supplier for the drive mode. Robot centric = false; Field centric = true
      */
-    public TeleopSwerve(Swerve swerve, DoubleSupplier[] translationSup, DoubleSupplier rotationSup, BooleanSupplier fieldCentricSup) {
+    public DriveCommand(Swerve swerve, DoubleSupplier[] translationSup, DoubleSupplier rotationSup, BooleanSupplier fieldCentricSup) {
         addRequirements(swerve);
 
         this.swerve = swerve;
@@ -57,7 +57,7 @@ public class TeleopSwerve extends Command {
     @Override
     public void execute() {
 
-        Translation2d translationValue = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED).times(AllianceFlippable.getDirectionCoefficient());
+        Translation2d translationValue = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
         double rotationValue = rotationSup.getAsDouble();//getRotation(rotationSup.getAsDouble());
         boolean fieldRelative = fieldRelativeSup.getAsBoolean();
 

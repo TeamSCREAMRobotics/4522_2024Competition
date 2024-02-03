@@ -59,12 +59,6 @@ public class AutoClimbCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    boolean atClimberHeight = Math.abs(climber.getClimberError()) < ClimberConstants.TARGET_THRESHOLD;
-    boolean atElevatorHeight = Math.abs(elevator.getElevatorError()) < ElevatorConstants.TARGET_THRESHOLD;
-    boolean atPivotAngle = Math.abs(pivot.getPivotError().getDegrees()) < PivotConstants.TARGET_THRESHOLD;
-    
-    boolean readyToClimb = atClimberHeight && atElevatorHeight && atPivotAngle;
-
-    return readyToClimb;
+    return elevator.getElevatorAtTarget() && pivot.getPivotAtTarget() && climber.getClimberAtTarget();
   }
 }

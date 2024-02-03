@@ -38,20 +38,20 @@ import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import frc.robot.commands.climber.AutoClimbCommand;
 import frc.robot.commands.conveyor.ConveyorAutoFireCommand;
-import frc.robot.commands.conveyor.ConveyorManualCommand;
+import frc.robot.commands.conveyor.ConveyorCommand;
 import frc.robot.commands.elevator.ElevatorManualCommand;
-import frc.robot.commands.elevator.ElevatorTargetCommand;
+import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.commands.intake.IntakeCommand;
 import frc.robot.commands.pivot.PivotManualCommand;
-import frc.robot.commands.pivot.PivotTargetCommand;
-import frc.robot.commands.shooter.ShooterDutyCycleCommand;
+import frc.robot.commands.pivot.PivotPositionCommand;
+import frc.robot.commands.shooter.ShooterManualCommand;
 import frc.robot.commands.shooter.ShooterVelocityCommand;
-import frc.robot.commands.swerve.DriveToPositionCommand;
+import frc.robot.commands.swerve.DriveToPoseCommand;
 import frc.robot.commands.swerve.FacePointCommand;
-import frc.robot.commands.swerve.TeleopSwerve;
+import frc.robot.commands.swerve.DriveCommand;
 import frc.robot.commands.swerve.FaceVisionTargetCommand;
 import frc.robot.controlboard.Controlboard;
-import frc.robot.shuffleboard.ShuffleboardTabManager;
+import frc.robot.dashboard.ShuffleboardTabManager;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Elevator;
@@ -96,8 +96,8 @@ public class RobotContainer {
         //Controlboard.getBTestButton().whileTrue(new FeedForwardCharacterization(m_elevator, true, new FeedForwardCharacterizationData("Elevator"), m_elevator::setElevatorVoltage, m_elevator::getElevatorVelocity, m_elevator::getElevatorAcceleration));
 
         /* Conveyor */
-        Controlboard.getEjectShooter().whileTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.AMP_TRAP_SPEED));
-        Controlboard.getManualShooter().whileTrue(new ConveyorManualCommand(m_conveyor, -ConveyorConstants.AMP_TRAP_SPEED));
+        Controlboard.getEjectShooter().whileTrue(new ConveyorCommand(m_conveyor, ConveyorConstants.AMP_TRAP_SPEED)).onFalse(new InstantCommand(() -> m_conveyor.stop()));
+        Controlboard.getManualShooter().whileTrue(new ConveyorCommand(m_conveyor, -ConveyorConstants.AMP_TRAP_SPEED)).onFalse(new InstantCommand(() -> m_conveyor.stop()));;
 
         /* Elevator */
         // Controlboard.getManualMode().toggleOnTrue(new ElevatorManualCommand(m_elevator, Controlboard.getManualElevator_Output()));
@@ -112,8 +112,8 @@ public class RobotContainer {
         // Controlboard.setPosition_Trap().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_TRAP_POSITION)).toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_TRAP_ANGLE));
 
         /* Shooter */
-        //Controlboard.getManualShooter().whileTrue(new ShooterDutyCycleCommand(m_shooter, ShooterConstants.SHOOTER_SHOOT_OUTPUT));
-        //Controlboard.getEjectShooter().whileTrue(new ShooterDutyCycleCommand(m_shooter, ShooterConstants.SHOOTER_EJECT_OUTPUT));
+        //Controlboard.getManualShooter().whileTrue(new ShooterManualCommand(m_shooter, ShooterConstants.SHOOTER_SHOOT_OUTPUT)).onFalse(new InstantCommand(() -> m_shooter.stop()));
+        //Controlboard.getEjectShooter().whileTrue(new ShooterManualCommand(m_shooter, ShooterConstants.SHOOTER_EJECT_OUTPUT)).onFalse(new InstantCommand(() -> m_shooter.stop()));
 
         /* Automation */
         // Controlboard.getAutoPrepShot().toggleOnTrue(new AutoPrepCommand(m_pivot, m_elevator, m_shooter, m_swerve, Controlboard.getDefense().getAsBoolean(), getAlliance())).toggleOnTrue(new FacePointCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING)));
@@ -132,61 +132,20 @@ public class RobotContainer {
         );*/
 
         /* Intake */
-        //Controlboard.getManualIntake().whileTrue(new IntakeCommand(m_intake, IntakeConstants.INTAKE_SPEED, true)).whileTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.TRANSFER_SPEED));
-        //Controlboard.getEjectIntake().whileTrue(new IntakeCommand(m_intake, IntakeConstants.EJECT_SPEED, true)).whileTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.AMP_TRAP_SPEED));
-        //Controlboard.getAutoPickup().whileTrue(new FaceGamePieceCommand(m_swerve, Controlboard.getTranslation(), SwerveConstants.VISION_ROTATION_CONSTANTS));
+        //Controlboard.getManualIntake().whileTrue(new IntakeCommand(m_intake, IntakeConstants.INTAKE_SPEED)).whileTrue(new ConveyorCommand(m_conveyor, ConveyorConstants.TRANSFER_SPEED)).onFalse(new InstantCommand(() -> m_intake.stop()));
+        //Controlboard.getEjectIntake().whileTrue(new IntakeCommand(m_intake, IntakeConstants.EJECT_SPEED, true)).whileTrue(new ConveyorManualCommand(m_conveyor, ConveyorConstants.AMP_TRAP_SPEED)).onFalse(new InstantCommand(() -> m_intake.stop()));
+        //Controlboard.getAutoPickup().whileTrue(new FaceGamePieceCommand(m_swerve, Controlboard.getTranslation(), SwerveConstants.VISION_ROTATION_CONSTANTS)).onFalse(new InstantCommand(() -> m_intake.stop()));
     }
 
     private void configDefaultCommands() { 
         /* Sets the default command for the swerve subsystem */
-        /* m_swerve.setDefaultCommand(
-            new TeleopSwerve(
+        m_swerve.setDefaultCommand(
+            new DriveCommand(
                 m_swerve,
                 Controlboard.getTranslation(),
                 Controlboard.getRotation(),
                 Controlboard.getFieldCentric()
             ) 
-        ); */
-
-        /*m_climber.setDefaultCommand(
-            new ClimberManualCommand(
-                m_climber,
-                0.0
-            )
-        );*/
-        
-        m_conveyor.setDefaultCommand(
-            new ConveyorManualCommand(
-                m_conveyor, 
-                0.0)
-        );
-        
-        /*
-        m_elevator.setDefaultCommand(
-            new ElevatorTargetCommand(
-                m_elevator, 
-                ElevatorConstants.ELEVATOR_HOME_POSITION)
-        );*/
-
-        /* m_intake.setDefaultCommand(
-            new IntakeCommand(
-                m_intake, 
-                0.0,
-                true)
-        ); */
-        /*
-
-        m_pivot.setDefaultCommand(
-            new PivotTargetCommand(
-                m_pivot, 
-                PivotConstants.PIVOT_HOME_ANGLE)
-        );
-        
-        */
-        m_shooter.setDefaultCommand(
-            new ShooterDutyCycleCommand(
-                m_shooter, 
-                0.0)
         );
     }
 
@@ -205,7 +164,7 @@ public class RobotContainer {
         );
 
         Autonomous.addRoutines(
-            //Routines.Close4(m_swerve).withName("Close4"),
+            Routines.Close4(m_swerve).withName("Close4"),
             Routines.AmpSide6(m_swerve).withName("AmpSide6"),
             Routines.SourceSide4(m_swerve).withName("SourceSide4")
         );

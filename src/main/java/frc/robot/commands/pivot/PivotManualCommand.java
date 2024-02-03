@@ -30,7 +30,7 @@ public class PivotManualCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pivot.setPivot(new DutyCycleOut(output.getAsDouble()));
+    pivot.setPivotOutput(output.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

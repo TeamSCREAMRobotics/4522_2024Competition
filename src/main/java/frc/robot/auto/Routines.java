@@ -18,8 +18,6 @@ import frc.robot.subsystems.swerve.Swerve;
 
 public class Routines {
 
-    //private static PathCorrectionHelper correctionHelper;
-
     private static final Timer autoTimer = new Timer();
     private static PathSequence currentSequence;
     private static final PathSequence Close4 = new PathSequence(Side.AMP, "Close4_1", "Close4_2", "Close4_3");
@@ -123,7 +121,6 @@ public class Routines {
         AmpSide6.getNext(),
         new WaitCommand(0.5),
         printTimerCommand()
-
         );
     }
 }

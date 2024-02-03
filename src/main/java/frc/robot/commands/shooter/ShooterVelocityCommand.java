@@ -6,7 +6,7 @@ package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ShuffleboardConstants;
-import frc.robot.shuffleboard.tabs.ShooterTab;
+import frc.robot.dashboard.tabs.ShooterTab;
 import frc.robot.subsystems.Shooter;
 
 public class ShooterVelocityCommand extends Command {

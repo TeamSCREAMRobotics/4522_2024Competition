@@ -24,7 +24,7 @@ public class FacePointCommand extends Command {
   Rotation2d targetAngle;
   PIDController targetController;
   Translation2d target;
-  Translation2d refrenceTarget;
+  Translation2d referenceTarget;
   boolean front;
   boolean virtualCalculation;
 
@@ -34,7 +34,7 @@ public class FacePointCommand extends Command {
     this.swerve = swerve;
     this.drivingTranslationSupplier = drivingTranslationSupplier;
     this.target = target;
-    this.refrenceTarget = target;
+    this.referenceTarget = target;
     this.virtualCalculation = virtualCalculation;
     targetController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
     targetController.enableContinuousInput(-180.0, 180.0);
@@ -49,10 +49,10 @@ public class FacePointCommand extends Command {
   public void execute() {
 
     if(virtualCalculation){
-      target = calculateVirtualTarget(swerve, refrenceTarget);
+      target = calculateVirtualTarget(swerve, referenceTarget);
     }
 
-    Translation2d drivingTranslation = new Translation2d(drivingTranslationSupplier[0].getAsDouble(), drivingTranslationSupplier[1].getAsDouble()).times(AllianceFlippable.getDirectionCoefficient()).times(SwerveConstants.MAX_SPEED);
+    Translation2d drivingTranslation = new Translation2d(drivingTranslationSupplier[0].getAsDouble(), drivingTranslationSupplier[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
 
     targetAngle = calculateAngleToPoint(swerve.getPose().getTranslation(), target);
     /* Substract PI if the robot should face the point with the front of the robot */
