@@ -145,7 +145,7 @@ public class Controlboard{
 
     /* Elevator */
     public static final DoubleSupplier getManualElevator_Output(){
-        return () -> operatorController.getLeftY();
+        return () -> operatorController.getLeftY()/2;
     }
 
     /* Elevator AND Pivot */    

@@ -350,6 +350,12 @@ public final class Constants{
         public static final double SHOOTER_SHOOT_OUTPUT = 0.8;
         public static final double SHOOTER_EJECT_OUTPUT = 0.35;//0.5;
 
+        public static final InterpolatingDoubleTreeMap minumumShooterOutput = new InterpolatingDoubleTreeMap();
+        static{
+            // (distance, rpm output)
+            minumumShooterOutput.put(0.0, 0.0);
+        }
+
         //I believe it is actually the time it takes for it to leave the shooter,
             //not the time it takes for the note to reach the speaker, from 1706
                 //1706 values ranged from .78 - .83 and was changing based on the angle they shot at

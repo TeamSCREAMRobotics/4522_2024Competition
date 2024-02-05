@@ -6,6 +6,7 @@ package frc2024.commands;
 
 import org.photonvision.PhotonUtils;
 
+import com.team1706.SmartShooting;
 import com.team4522.lib.util.AllianceFlippable;
 import com.team4522.lib.util.ScreamUtil;
 
@@ -30,7 +31,10 @@ public class AutoPrepCommand extends Command {
   Swerve swerve;
   boolean defense;
 
-  double distanceFromSpeaker;
+  Rotation2d wantedPivotAngle;
+  double wantedElevatorHeight;
+  double distanceFromSpeaker_Physical;
+  double distanceFromSpeaker_Virtual;
 
   public AutoPrepCommand(Pivot pivot, Elevator elevator, Shooter shooter, Swerve swerve, boolean defense) {
     addRequirements(pivot, elevator, shooter, swerve);
@@ -49,16 +53,20 @@ public class AutoPrepCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    distanceFromSpeaker = ScreamUtil.calculateDistanceToPose(swerve.getPose(), AllianceFlippable.getTargetSpeaker());
-  
-    shooter.setTargetVelocity(ShooterConstants.SHOOTER_TARGET_VELOCITY);
+    distanceFromSpeaker_Physical = ScreamUtil.calculateDistanceToPose(swerve.getPose(), AllianceFlippable.getTargetSpeaker());
+    distanceFromSpeaker_Virtual = ScreamUtil.calculateDistanceToPose(swerve.getPose(), new Pose2d(SmartShooting.calculateVirtualTarget(swerve, AllianceFlippable.getTargetSpeaker().getTranslation()), new Rotation2d()));
+
+    double shooterTarget_RPM = ShooterConstants.minumumShooterOutput.get(distanceFromSpeaker_Virtual);
+    if(shooterTarget_RPM < ShooterConstants.SHOOTER_TARGET_VELOCITY) shooterTarget_RPM = ShooterConstants.SHOOTER_TARGET_VELOCITY;
+
+    shooter.setTargetVelocity(shooterTarget_RPM);
     if(!defense){
-      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.pivotAngleMap_Localization.get(distanceFromSpeaker)));
-      elevator.setTargetHeight(ElevatorConstants.elevatorHeightMap_Localization.get(distanceFromSpeaker));
+      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.pivotAngleMap_Localization.get(distanceFromSpeaker_Physical)));
+      elevator.setTargetHeight(ElevatorConstants.elevatorHeightMap_Localization.get(distanceFromSpeaker_Physical));
     }
     else{
-      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.pivotAngleMap_Defense.get(distanceFromSpeaker)));
-      elevator.setTargetHeight(ElevatorConstants.elevatorHeightMap_Defense.get(distanceFromSpeaker));
+      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.pivotAngleMap_Defense.get(distanceFromSpeaker_Physical)));
+      elevator.setTargetHeight(ElevatorConstants.elevatorHeightMap_Defense.get(distanceFromSpeaker_Physical));
     }
   }
 

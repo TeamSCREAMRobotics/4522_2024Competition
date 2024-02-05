@@ -119,8 +119,8 @@ public class RobotContainer {
         //Controlboard.getEjectShooter().whileTrue(new ShooterManualCommand(m_shooter, ShooterConstants.SHOOTER_EJECT_OUTPUT)).onFalse(Commands.runOnce(() -> m_shooter.stop()));
 
         /* Automation */
-        // Controlboard.getAutoPrepShot().toggleOnTrue(new AutoPrepCommand(m_pivot, m_elevator, m_shooter, m_swerve, Controlboard.getDefense().getAsBoolean(), getAlliance())).toggleOnTrue(new FacePointCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING)));
-        // Controlboard.getAutoFire().onTrue(new ConveyorAutoFireCommand(m_conveyor, m_shooter, m_pivot, m_elevator));
+        // Controlboard.getAutoPrepShot().toggleOnTrue(new AutoPrepCommand(m_pivot, m_elevator, m_shooter, m_swerve, Controlboard.getDefense().getAsBoolean(), getAlliance())).toggleOnTrue(new FacePointCommand(m_swerve, Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_SPEAKER_OPENING, FieldConstants.RED_SPEAKER_OPENING), true));
+        // Controlboard.getAutoFire().onTrue(new ConveyorAutoFireCommand(m_swerve, m_conveyor, m_shooter, m_pivot, m_elevator));
         /*Controlboard.getAutoclimb().toggleOnTrue(
             new SequentialCommandGroup(
             new FacePointCommand(m_swerve, getAlliance(), Controlboard.getTranslation(), AllianceFlippable.Translation2d(FieldConstants.BLUE_STAGE_RIGHT, FieldConstants.RED_STAGE_RIGHT)), //how to select which stage we are going to, if we just faced the direct center of the stage would it function the same?
