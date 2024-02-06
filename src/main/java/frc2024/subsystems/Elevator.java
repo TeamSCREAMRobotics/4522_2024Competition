@@ -1,5 +1,7 @@
 package frc2024.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -13,6 +15,7 @@ import com.team4522.lib.util.OrchestraUtil;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc2024.Constants;
@@ -51,7 +54,7 @@ public class Elevator extends SubsystemBase{
         m_rightElevatorMotor.setPosition(0.0);
     }
 
-    public void setTargetHeight(double height){
+    public void setTargetPosition(double height){
         m_targetHeight = height;
         setElevator(new MotionMagicVoltage(m_targetHeight));
     }
@@ -95,5 +98,17 @@ public class Elevator extends SubsystemBase{
     public void stop(){
         m_rightElevatorMotor.stopMotor();
         m_leftElevatorMotor.stopMotor();
+    }
+
+    public Command outputCommand(DoubleSupplier output){
+        return run(() -> setElevatorOutput(output.getAsDouble()));
+    }
+
+    public Command outputCommand(double output){
+        return run(() -> setElevatorOutput(output));
+    }
+
+    public Command positionCommand(double position){
+        return run(() -> setTargetPosition(position));
     }
 }

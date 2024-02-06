@@ -10,6 +10,8 @@ import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.util.OrchestraUtil;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.Constants.Ports;
@@ -54,5 +56,9 @@ public class Intake extends SubsystemBase{
 
     public static boolean hasPiece(){
         return m_beam.get();
+    }
+
+    public Command outputCommand(double output){
+        return run(() -> setIntakeOutput(output));
     }
 }

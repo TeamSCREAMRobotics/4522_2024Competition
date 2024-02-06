@@ -1,5 +1,7 @@
 package frc2024.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -12,6 +14,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.Constants.PivotConstants;
@@ -85,6 +88,15 @@ public class Pivot extends SubsystemBase{
         m_pivotMotor.stopMotor();
     }
 
-    @Override
-    public void periodic() {}
+    public Command outputCommand(DoubleSupplier output){
+        return run(() -> setPivotOutput(output.getAsDouble()));
+    }
+
+    public Command outputCommand(double output){
+        return run(() -> setPivotOutput(output));
+    }
+
+    public Command angleCommand(Rotation2d angle){
+        return run(() -> setTargetAngle(angle));
+    }
 }

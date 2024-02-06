@@ -26,7 +26,7 @@ public class ElevatorPositionCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elevator.setTargetHeight(height);
+    elevator.setTargetPosition(height);
   }
 
   // Called once the command ends or is interrupted.

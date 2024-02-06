@@ -46,7 +46,9 @@ public class Swerve extends SubsystemBase {
     private SwerveDrivePoseEstimator m_poseEstimator;
     private OdometryThread m_odometryThread;
     private ChassisSpeeds m_currentSpeeds = new ChassisSpeeds();
+
     private PIDController m_headingController = SwerveConstants.HEADING_CONSTANTS.toPIDController();
+    private PIDController m_snapController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
 
     /**
      * Constructs a new instance of the Swerve class.
@@ -132,6 +134,10 @@ public class Swerve extends SubsystemBase {
     public ChassisSpeeds fieldRelativeSpeeds(Translation2d translation, double angularVel){
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(translation.getX(), translation.getY(), angularVel, getRotation());
         return ChassisSpeeds.discretize(speeds, Constants.LOOP_TIME_SEC);
+    }
+
+    public ChassisSpeeds snappedFieldRelativeSpeeds(Translation2d translation, Rotation2d angle){
+        return fieldRelativeSpeeds(translation, m_snapController.calculate(getRotation().getDegrees(), angle.getDegrees()));
     }
 
     /**
@@ -321,6 +327,10 @@ public class Swerve extends SubsystemBase {
             command = Commands.runOnce(() -> PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.of(rotation)));
         }
         return command;
+    }
+
+    public Command driveCommand(ChassisSpeeds speeds, boolean fieldRelative){
+        return run(() -> setChassisSpeeds(speeds, fieldRelative));
     }
 
     private class OdometryThread extends Thread {

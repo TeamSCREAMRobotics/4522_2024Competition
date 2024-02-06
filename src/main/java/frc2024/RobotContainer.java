@@ -44,15 +44,15 @@ import frc2024.commands.conveyor.ConveyorAutoFireCommand;
 import frc2024.commands.conveyor.ConveyorCommand;
 import frc2024.commands.elevator.ElevatorManualCommand;
 import frc2024.commands.elevator.ElevatorPositionCommand;
-import frc2024.commands.intake.IntakeCommand;
+import frc2024.commands.intake.IntakeFloor;
 import frc2024.commands.pivot.PivotManualCommand;
 import frc2024.commands.pivot.PivotPositionCommand;
 import frc2024.commands.shooter.ShooterManualCommand;
 import frc2024.commands.shooter.ShooterVelocityCommand;
-import frc2024.commands.swerve.DriveCommand;
+import frc2024.commands.swerve.TeleopDriveCommand;
 import frc2024.commands.swerve.DriveToPoseCommand;
 import frc2024.commands.swerve.FacePointCommand;
-import frc2024.commands.swerve.FaceVisionTargetCommand;
+import frc2024.commands.swerve.FaceVisionTarget;
 import frc2024.controlboard.Controlboard;
 import frc2024.dashboard.ShuffleboardTabManager;
 import frc2024.subsystems.Climber;
@@ -143,7 +143,7 @@ public class RobotContainer {
     private void configDefaultCommands() { 
         /* Sets the default command for the swerve subsystem */
         m_swerve.setDefaultCommand(
-            new DriveCommand(
+            new TeleopDriveCommand(
                 m_swerve,
                 Controlboard.getTranslation(),
                 Controlboard.getRotation(),

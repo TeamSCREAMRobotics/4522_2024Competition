@@ -7,6 +7,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.Constants.Ports;
@@ -49,8 +50,7 @@ public class Conveyor extends SubsystemBase{
         return false;//m_beam.get();
     }
 
-    @Override
-    public void periodic(){
-        
+    public Command outputCommand(double output){
+        return run(() -> setConveyorOutput(output));
     }
 }

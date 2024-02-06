@@ -1,5 +1,7 @@
 package frc2024.subsystems;
 
+import java.nio.channels.Pipe;
+
 import org.photonvision.PhotonUtils;
 
 import com.team4522.lib.util.LimelightHelpers;
@@ -12,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc2024.Constants.FieldConstants;
 import frc2024.Constants.VisionConstants;
@@ -176,5 +179,17 @@ public class Vision {
                poseFilter.calculate(pose.getRotation().getY()), 
                poseFilter.calculate(pose.getRotation().getZ())
             ));
+    }
+
+    public Command intakePipelineCommand(IntakePipeline pipeline){
+        return Commands.runOnce(() -> setPipeline(pipeline));
+    }
+    
+    public Command frontPipelineCommand(FrontPipeline pipeline){
+        return Commands.runOnce(() -> setPipeline(pipeline));
+    }
+
+    public Command backPipelineCommand(BackPipeline pipeline){
+        return Commands.runOnce(() -> setPipeline(pipeline));
     }
 }

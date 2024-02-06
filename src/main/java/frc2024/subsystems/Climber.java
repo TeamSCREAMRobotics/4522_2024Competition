@@ -1,5 +1,7 @@
 package frc2024.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
@@ -10,6 +12,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.util.OrchestraUtil;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.Constants.ClimberConstants;
@@ -45,7 +48,7 @@ public class Climber extends SubsystemBase{
         m_rightClimberMotor.setPosition(0.0);
     }
 
-    public void setTargetHeight(double height){
+    public void setTargetPosition(double height){
         m_targetHeight = height;
         setClimber(new MotionMagicVoltage(m_targetHeight));
     }
@@ -78,5 +81,17 @@ public class Climber extends SubsystemBase{
     public void stop(){
         m_rightClimberMotor.stopMotor();
         m_leftClimberMotor.stopMotor();
+    }
+
+    public Command outputCommand(DoubleSupplier output){
+        return run(() -> setClimberOutput(output.getAsDouble()));
+    }
+
+    public Command outputCommand(double output){
+        return run(() -> setClimberOutput(output));
+    }
+
+    public Command positionCommand(double position){
+        return run(() -> setTargetPosition(position));
     }
 }

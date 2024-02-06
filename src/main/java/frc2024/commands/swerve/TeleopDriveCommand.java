@@ -17,7 +17,7 @@ import frc2024.subsystems.swerve.Swerve;
 /**
  * A command that controls the swerve drive system.
  */
-public class DriveCommand extends Command {
+public class TeleopDriveCommand extends Command {
     private Swerve swerve;
     private DoubleSupplier[] translationSup;
     private DoubleSupplier rotationSup;
@@ -34,7 +34,7 @@ public class DriveCommand extends Command {
      * @param rotationSup A supplier for the rotation value.
      * @param fieldCentricSup A supplier for the drive mode. Robot centric = false; Field centric = true
      */
-    public DriveCommand(Swerve swerve, DoubleSupplier[] translationSup, DoubleSupplier rotationSup, BooleanSupplier fieldCentricSup) {
+    public TeleopDriveCommand(Swerve swerve, DoubleSupplier[] translationSup, DoubleSupplier rotationSup, BooleanSupplier fieldCentricSup) {
         addRequirements(swerve);
 
         this.swerve = swerve;

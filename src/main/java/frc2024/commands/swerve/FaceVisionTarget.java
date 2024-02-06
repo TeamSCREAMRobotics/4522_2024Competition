@@ -20,31 +20,30 @@ import frc2024.subsystems.Vision.IntakePipeline;
 import frc2024.subsystems.Vision.Limelight;
 import frc2024.subsystems.swerve.Swerve;
 
-public class FaceVisionTargetCommand extends Command {
+public class FaceVisionTarget extends Command {
   Swerve swerve;
   PIDController rotController;
-  Supplier<Translation2d> translationSup;
+  DoubleSupplier[] translationSup;
   IntakePipeline pipeline;
+  Limelight limelight;
   
-  public FaceVisionTargetCommand(Swerve swerve, Supplier<Translation2d> translationSup, ScreamPIDConstants rotationConstants, IntakePipeline pipeline) {
+  public FaceVisionTarget(Swerve swerve, DoubleSupplier[] translationSup, ScreamPIDConstants rotationConstants, Limelight limelight) {
     addRequirements(swerve);
     this.swerve = swerve;
     this.translationSup = translationSup;
-    this.pipeline = pipeline;
     rotController = rotationConstants.toPIDController();
+    this.limelight = limelight;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    Vision.setPipeline(pipeline);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() { 
-    Translation2d translationValue = translationSup.get().times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
-    double rotationValue = Math.abs(Vision.getTX(Limelight.INTAKE)) < 2.0 ? 0 : rotController.calculate(Vision.getTX(Limelight.INTAKE), 0.0);
+    Translation2d translationValue = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
+    double rotationValue = Math.abs(Vision.getTX(limelight)) < 2.0 ? 0 : rotController.calculate(Vision.getTX(limelight), 0.0);
 
     swerve.setChassisSpeeds(swerve.robotRelativeSpeeds(translationValue, rotationValue));
   }
