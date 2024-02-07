@@ -81,7 +81,7 @@ public class Pivot extends SubsystemBase{
     }
     
     public double getPivotTargetAngle_Localization(double distance){
-        return PivotConstants.pivotAngleMap_Localization.get(distance);
+        return PivotConstants.ANGLE_MAP_UNDEFENDED.get(distance);
     }
 
     public void stop(){

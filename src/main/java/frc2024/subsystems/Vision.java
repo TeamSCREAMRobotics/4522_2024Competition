@@ -25,7 +25,7 @@ public class Vision {
     private static LinearFilter poseFilter = LinearFilter.movingAverage(5);
     
     public enum Limelight{
-        BACK("limelight-back", new Pose3d()), FRONT("limelight-front", new Pose3d()), INTAKE("limelight-intake", new Pose3d());
+        TRAP("limelight-back", new Pose3d()), SHOOTER("limelight-front", new Pose3d()), INTAKE("limelight-intake", new Pose3d());
 
         String name;
         Pose3d mountPose;
@@ -118,8 +118,8 @@ public class Vision {
 
     public static TimestampedVisionMeasurement[] getBotPoses(){
         return new TimestampedVisionMeasurement[] {
-            getTimestampedVisionMeasurement(Limelight.FRONT),
-            getTimestampedVisionMeasurement(Limelight.BACK)
+            getTimestampedVisionMeasurement(Limelight.SHOOTER),
+            getTimestampedVisionMeasurement(Limelight.TRAP)
         };
     }
 
@@ -150,11 +150,11 @@ public class Vision {
     }
 
     public static void setPipeline(FrontPipeline pipeline){
-        setPipeline(Limelight.FRONT, pipeline.index);
+        setPipeline(Limelight.SHOOTER, pipeline.index);
     }
 
     public static void setPipeline(BackPipeline pipeline){
-        setPipeline(Limelight.BACK, pipeline.index);
+        setPipeline(Limelight.TRAP, pipeline.index);
     }
 
     public static double filter(double value){

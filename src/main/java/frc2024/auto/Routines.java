@@ -17,11 +17,11 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc2024.commands.intake.AutoIntakeFloor;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Intake;
 import frc2024.subsystems.Pivot;
-import frc2024.subsystems.Intake.IntakeCommands;
 import frc2024.subsystems.swerve.Swerve;
 
 public class Routines {
@@ -33,15 +33,19 @@ public class Routines {
     private static final PathSequence AmpSide6 = new PathSequence(Side.AMP, "Close4_1", "Close4_2", "Amp6_0", "Amp6_1", "Amp6_2", "Amp6_3", "Amp6_4");
     private static final PathSequence SourceSide4 = new PathSequence(Side.SOURCE, "SourceSide4_1", "SourceSide4_2", "SourceSide4_3", "SourceSide4_4", "SourceSide4_5", "SourceSide4_6");
 
-    private static Command startTimerCommand(){
-        return new ParallelCommandGroup(
-            Commands.runOnce(() -> autoTimer.reset()),
-            Commands.runOnce(() -> autoTimer.start())
-        );
+    private static Command startTimer(){
+        return Commands.runOnce(
+            () -> {
+                autoTimer.reset();
+                autoTimer.start();
+            });
     }
 
-    private static Command printTimerCommand(){
-        return Commands.runOnce(() -> System.out.println("[Auto] Time elapsed:  " + autoTimer.get()));
+    private static Command printTimer(){
+        return Commands.runOnce(() -> {
+                autoTimer.stop();
+                System.out.println("[Auto] Time elapsed:  " + autoTimer.get());
+            });
     }
 
     private static PathSequence getCurrentSequence(){
@@ -61,40 +65,39 @@ public class Routines {
     public static Command Close4(Swerve swerve){
         currentSequence = Close4;
         return new SequentialCommandGroup(
-            startTimerCommand(),
+            startTimer(),
             swerve.resetPoseCommand(Close4.getStartingPose()),
             Close4.getAll(),
-            printTimerCommand()
+            printTimer()
         );
     }
 
     public static Command AmpSide6(Swerve swerve, Elevator elevator, Pivot pivot, Intake intake, Conveyor conveyor){
         currentSequence = AmpSide6;
         return new SequentialCommandGroup(
-            startTimerCommand(),
+            startTimer(),
             swerve.resetPoseCommand(AmpSide6.getStartingPose()),
             AmpSide6.getStart(),
-            
             new WaitCommand(0.5),
             AmpSide6.getNext(),
             new WaitCommand(0.5),
             AmpSide6.getNext(),
             new WaitCommand(0.5),
             AmpSide6.getNext(),
-            IntakeCommands.autoIntakeFloor(swerve, elevator, pivot, intake, conveyor),
+            new AutoIntakeFloor(swerve, elevator, pivot, intake, conveyor),
             AmpSide6.getNext(),
             new WaitCommand(0.5),
             AmpSide6.getNext(),
-            IntakeCommands.autoIntakeFloor(swerve, elevator, pivot, intake, conveyor),
+            new AutoIntakeFloor(swerve, elevator, pivot, intake, conveyor),
             AmpSide6.getEnd(),
-            printTimerCommand()
+            printTimer()
         );
     }
 
     public static Command SourceSide4(Swerve swerve){
         currentSequence = SourceSide4;
         return new SequentialCommandGroup(
-            startTimerCommand(),
+            startTimer(),
             swerve.resetPoseCommand(SourceSide4.getStartingPose()),
             SourceSide4.getStart(),
             // new WaitCommand(0.75),
@@ -105,13 +108,13 @@ public class Routines {
             SourceSide4.getNext(),
             // new WaitCommand(0.75),
             SourceSide4.getEnd(),
-            printTimerCommand()
+            printTimer()
         );
     }
 
     public static Command AmpSide5(Swerve swerve){
         return new SequentialCommandGroup(
-        startTimerCommand(),
+        startTimer(),
         swerve.resetPoseCommand(AmpSide6.getStartingPose()),
         AmpSide6.getStart(),
         new WaitCommand(0.5),
@@ -122,7 +125,7 @@ public class Routines {
         AmpSide6.getNext(),
         AmpSide6.getEnd(),
         new WaitCommand(0.5),
-        printTimerCommand()
+        printTimer()
         );
     }
 }

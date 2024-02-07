@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc2024.Constants.SwerveConstants;
 import frc2024.subsystems.swerve.Swerve;
 
-public class FacePointCommand extends Command {
+public class FacePoint extends Command {
 
   Swerve swerve;
   DoubleSupplier[] translationSup;
@@ -33,7 +33,7 @@ public class FacePointCommand extends Command {
   boolean front;
   boolean virtualCalculation;
 
-  public FacePointCommand(Swerve swerve, DoubleSupplier[] translationSup, Translation2d target, boolean front, boolean virtualCalculation) {
+  public FacePoint(Swerve swerve, DoubleSupplier[] translationSup, Translation2d target, boolean intakeSide, boolean virtualCalculation) {
     addRequirements(swerve);
 
     this.swerve = swerve;

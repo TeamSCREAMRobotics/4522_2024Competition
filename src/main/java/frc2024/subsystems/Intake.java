@@ -72,45 +72,7 @@ public class Intake extends SubsystemBase{
         return run(() -> setIntakeOutput(output));
     }
 
-    public static class IntakeCommands {
-
-        public static Command intakeFloor(Elevator elevator, Pivot pivot, Intake intake, Conveyor conveyor){
-            return elevator.positionCommand(ElevatorConstants.ELEVATOR_HOME_POSITION)
-                    .alongWith(
-                        pivot.angleCommand(PivotConstants.PIVOT_HOME_ANGLE))
-                    .andThen(
-                        intake.outputCommand(IntakeConstants.INTAKE_SPEED)
-                            .alongWith(
-                                conveyor.outputCommand(ConveyorConstants.TRANSFER_SPEED)))
-                            .onlyIf(() -> !conveyor.hasPiece());
-        }
-
-        public static Command autoIntakeFloor(DoubleSupplier[] translation, Swerve swerve, Elevator elevator, Pivot pivot, Intake intake, Conveyor conveyor){
-            return new FaceVisionTarget(
-                swerve,
-                Vision.getTV(Limelight.INTAKE) 
-                    ? new DoubleSupplier[]{() -> 0, () -> 3} 
-                    : translation, 
-                SwerveConstants.VISION_ROTATION_CONSTANTS, 
-                Limelight.INTAKE)
-                    .alongWith(
-                        intakeFloor(elevator, pivot, intake, conveyor)
-                            .onlyIf(() -> Vision.getTY(Limelight.INTAKE) < IntakeConstants.AUTO_INTAKE_TY_THRESHOLD)
-            );
-        }
-
-        public static Command autoIntakeFloor(Swerve swerve, Elevator elevator, Pivot pivot, Intake intake, Conveyor conveyor){
-            return new FaceVisionTarget(
-                swerve,
-                Vision.getTV(Limelight.INTAKE) 
-                    ? new DoubleSupplier[]{() -> 0, () -> 3} 
-                    : new DoubleSupplier[]{() -> 0, () -> 0},
-                SwerveConstants.VISION_ROTATION_CONSTANTS, 
-                Limelight.INTAKE)
-                    .alongWith(
-                        intakeFloor(elevator, pivot, intake, conveyor)
-                            .onlyIf(() -> Vision.getTY(Limelight.INTAKE) < IntakeConstants.AUTO_INTAKE_TY_THRESHOLD)
-            );
-        }
+    public Command stopCommand(){
+        return run(() -> stop());
     }
 }

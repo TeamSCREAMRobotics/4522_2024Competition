@@ -73,16 +73,12 @@ public class Controlboard{
      *
      * @return A Trigger representing the state of the start button.
      */
-    public static Trigger getZeroGyro() {
+    public static Trigger zeroGyro() {
         return driverController.back();
     }
 
-    public static Trigger getResetPose() {
+    public static Trigger resetPose() {
         return driverController.povUp();
-    }
-
-    public static Trigger snapToSpeaker(){
-        return driverController.a();
     }
 
     /**
@@ -96,87 +92,85 @@ public class Controlboard{
         return () -> fieldCentric;
     }
 
-    public static Trigger getBTestButton(){
+    public static Trigger test(){
         return driverController.b();
     }
 
-    public static Trigger getManualMode(){
+    public static Trigger manualMode(){
     /* Changes how the angle/height of the pivot and elevator are input */
         return driverController.povRight();
     }
 
     /* Automation */
-    public static final Trigger getAutoPrepShot(){
+    public static final Trigger prepShot(){
         /* Uses a toggle switch to enable or disable automatic prep shooting */
         return operatorController.start();
     }
-    public static final Trigger getAutoFire(){
+
+    public static final Trigger autoFire(){
         /* Uses a toggle switch to enable or disable automatic firing when requirements are met */
         return new Trigger(() -> false);
     }
-    public static final Trigger getDefense(){
+
+    public static final BooleanSupplier defendedMode(){
         /* Uses a toggle switch to enable or disable wether we are being defended. This allows us to raise our elevator with auto shots */
-        return new Trigger(() -> false);
+        return () -> false;
     }
-    public static final Trigger getAutoclimb(){
+
+    public static final Trigger autoClimb(){
         return new Trigger(() -> false);
     }
 
+    public static Trigger snapToSpeaker(){
+        return driverController.a();
+    }
+
     /* Climber */
-    public static final DoubleSupplier getManualClimber(){
+    public static final DoubleSupplier getManualClimberOutput(){
         return () -> (driverController.getLeftTriggerAxis() - driverController.getRightTriggerAxis())/5; //Up POV on the button board
     }
 
     /* Shooter */
-    public static final Trigger getManualShooter(){
+    public static final Trigger manuallyShoot(){
         return driverController.povUp();
     }
-    public static final Trigger getEjectShooter(){
+    public static final Trigger ejectThroughShooter(){
         return driverController.povDown();
     }
 
     /* Pivot */
-    public static final DoubleSupplier getManualPivot_Output(){
+    public static final DoubleSupplier getManualPivotOutput(){
         return () -> operatorController.getRightY();
     }
 
     /* Elevator */
-    public static final DoubleSupplier getManualElevator_Output(){
+    public static final DoubleSupplier getManualElevatorOutput(){
         return () -> driverController.getLeftY()/2;
     }
 
     /* Elevator AND Pivot */    
-    public static final Trigger setPosition_Home(){
+    public static final Trigger goToHomePosition(){
         return operatorController.a();
     }
     
-    public static final Trigger setPosition_Subwoofer(){
+    public static final Trigger goToSubwooferPosition(){
         return operatorController.b();
     }
     
-    public static final Trigger setPosition_Amp(){
+    public static final Trigger goToAmpPosition(){
         return operatorController.y();
     }
 
-    public static final Trigger setPosition_Trap_Floor(){
-        return operatorController.x();
-    }
-
-    /* Conveyor */
-    public static final Trigger getFire(){
-        return operatorController.rightTrigger(TRIGGER_DEADBAND);
-    }
-
     /* Intake */
-    public static final Trigger getManualIntake(){
+    public static final Trigger intakeFromFloor(){
         return driverController.rightTrigger(TRIGGER_DEADBAND);
     }
 
-    public static final Trigger getEjectIntake(){
+    public static final Trigger ejectThroughIntake(){
         return driverController.rightBumper();
     }
 
-    public static final Trigger getAutoPickup(){
+    public static final Trigger autoPickupFromFloor(){
         return driverController.leftBumper();
     }
 }

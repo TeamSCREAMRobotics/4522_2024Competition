@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc2024.Constants.FieldConstants;
 import frc2024.Constants.ShuffleboardConstants;
 import frc2024.Constants.SwerveConstants.DriveConstants;
-import frc2024.commands.swerve.FacePointCommand;
+import frc2024.commands.swerve.FacePoint;
 import frc2024.dashboard.ShuffleboardTabBase;
 import frc2024.subsystems.swerve.Swerve;
 

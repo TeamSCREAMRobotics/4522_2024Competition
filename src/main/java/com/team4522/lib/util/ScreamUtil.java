@@ -1,5 +1,7 @@
 package com.team4522.lib.util;
 
+import javax.swing.TransferHandler.TransferSupport;
+
 import org.photonvision.PhotonUtils;
 
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -101,8 +103,8 @@ public class ScreamUtil {
         return new Rotation2d(temp.getX(), temp.getY());
     }
 
-    public static double calculateDistanceToPose(Pose2d current, Pose2d target){
-        return current.getTranslation().getDistance(target.getTranslation());
+    public static double calculateDistanceToPose(Translation2d current, Translation2d target){
+        return current.getDistance(target);
     }
 
     public static double average(double... nums){

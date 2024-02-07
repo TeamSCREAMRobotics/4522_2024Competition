@@ -53,4 +53,8 @@ public class Conveyor extends SubsystemBase{
     public Command outputCommand(double output){
         return run(() -> setConveyorOutput(output));
     }
+
+    public Command stopCommand(){
+        return run(() -> stop());
+    }
 }

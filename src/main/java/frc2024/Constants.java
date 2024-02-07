@@ -345,6 +345,7 @@ public final class Constants{
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
 
         public static final double AUTO_SHOOT_VELOCITY_THRESHOLD = 4800; //RPMs
+        public static final double AUTO_SHOOT_DISTANCE_THRESHOLD = 6.5; // meters
         public static final double SHOOTER_MAX_VELOCITY = 6000;
         public static final double SHOOTER_TARGET_VELOCITY = 5000;
         public static final double SHOOTER_SHOOT_OUTPUT = 0.8;
@@ -407,16 +408,16 @@ public final class Constants{
         public static final Rotation2d PIVOT_TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(0.0);
         public static final Rotation2d PIVOT_TRAP_FLOOR_ANGLE = Rotation2d.fromDegrees(0.0);
 
-        public static final InterpolatingDoubleTreeMap pivotAngleMap_Localization = new InterpolatingDoubleTreeMap();
+        public static final InterpolatingDoubleTreeMap ANGLE_MAP_UNDEFENDED = new InterpolatingDoubleTreeMap();
         static{
             // (distance, angle (degrees))
-            pivotAngleMap_Localization.put(0.0, 0.0);
+            ANGLE_MAP_UNDEFENDED.put(0.0, 0.0);
         }
         
-        public static final InterpolatingDoubleTreeMap pivotAngleMap_Defense = new InterpolatingDoubleTreeMap();
+        public static final InterpolatingDoubleTreeMap ANGLE_MAP_DEFENDED = new InterpolatingDoubleTreeMap();
         static{
             // (distance, angle (degrees))
-            pivotAngleMap_Defense.put(0.0, 0.0);
+            ANGLE_MAP_DEFENDED.put(0.0, 0.0);
         }
     }
 
@@ -455,22 +456,25 @@ public final class Constants{
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
 
+        public static final double MAX_HEIGHT = 0.0;
+        public static final double MIN_HEIGHT = 0.0;
+
         public static final double ELEVATOR_HOME_POSITION = 0.0;
         public static final double ELEVATOR_SUBWOOFER_POSITION = 0.0;
         public static final double ELEVATOR_AMP_POSITION = 0.0;
         public static final double ELEVATOR_TRAP_CHAIN_POSITION = 0.0;
         public static final double ELEVATOR_TRAP_FLOOR_POSITION = 0.0;
 
-        public static final InterpolatingDoubleTreeMap elevatorHeightMap_Localization = new InterpolatingDoubleTreeMap();
+        public static final InterpolatingDoubleTreeMap HEIGHT_MAP = new InterpolatingDoubleTreeMap();
         static{
             // (distance, height)
-            elevatorHeightMap_Localization.put(0.0, 0.0);
+            HEIGHT_MAP.put(0.0, 0.0);
         }
         
         public static final InterpolatingDoubleTreeMap elevatorHeightMap_Defense = new InterpolatingDoubleTreeMap();
         static{
             // (distance, height)
-            elevatorHeightMap_Localization.put(0.0, 0.0);
+            HEIGHT_MAP.put(0.0, 0.0);
         }
     }
 
@@ -514,7 +518,7 @@ public final class Constants{
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
-        public static final double SPEAKER_SPEED = 1.00;
+        public static final double SHOOT_SPEED = 1.00;
         public static final double AMP_TRAP_SPEED = -0.75;
         public static final double TRANSFER_SPEED = 0.75;
     } 

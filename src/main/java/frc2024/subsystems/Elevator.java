@@ -92,7 +92,7 @@ public class Elevator extends SubsystemBase{
     }
     
     public double getElevatorTargetHeight(double distance){
-        return ElevatorConstants.elevatorHeightMap_Localization.get(distance);
+        return ElevatorConstants.HEIGHT_MAP.get(distance);
     }
 
     public void stop(){

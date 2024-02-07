@@ -11,6 +11,7 @@ import com.team4522.lib.math.Conversions;
 import com.team4522.lib.util.OrchestraUtil;
 import com.team4522.lib.util.ScreamUtil;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.Constants.Ports;
@@ -67,6 +68,15 @@ public class Shooter extends SubsystemBase{
         m_leftShooterMotor.stopMotor();
     }
 
-    @Override
-    public void periodic() {}
+    public Command outputCommand(double output){
+        return run(() -> setShooterOutput(output));
+    }
+
+    public Command velocityCommand(double velocity){
+        return run(() -> setTargetVelocity(velocity));
+    }
+
+    public Command stopCommand(){
+        return run(() -> stop());
+    }
 }

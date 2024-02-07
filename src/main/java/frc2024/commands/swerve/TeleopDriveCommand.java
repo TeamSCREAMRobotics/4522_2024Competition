@@ -62,7 +62,7 @@ public class TeleopDriveCommand extends Command {
         double rotationValue = rotationSup.getAsDouble();//getRotation(rotationSup.getAsDouble());
         boolean fieldRelative = fieldRelativeSup.getAsBoolean();
 
-        if(Controlboard.getZeroGyro().getAsBoolean()) lastAngle = AllianceFlippable.getForwardRotation();
+        if(Controlboard.zeroGyro().getAsBoolean()) lastAngle = AllianceFlippable.getForwardRotation();
 
         swerve.setChassisSpeeds(
             fieldRelative ? swerve.fieldRelativeSpeeds(translationValue, rotationValue) : swerve.robotRelativeSpeeds(translationValue, rotationValue),

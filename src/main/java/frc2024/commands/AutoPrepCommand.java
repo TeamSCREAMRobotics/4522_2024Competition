@@ -53,19 +53,19 @@ public class AutoPrepCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    distanceFromSpeaker_Physical = ScreamUtil.calculateDistanceToPose(swerve.getPose(), AllianceFlippable.getTargetSpeaker());
-    distanceFromSpeaker_Virtual = ScreamUtil.calculateDistanceToPose(swerve.getPose(), new Pose2d(SmartShooting.calculateVirtualTarget(swerve, AllianceFlippable.getTargetSpeaker().getTranslation()), new Rotation2d()));
+    distanceFromSpeaker_Physical = ScreamUtil.calculateDistanceToPose(swerve.getPose().getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation());
+    distanceFromSpeaker_Virtual = ScreamUtil.calculateDistanceToPose(swerve.getPose().getTranslation(), SmartShooting.calculateVirtualTarget(swerve, AllianceFlippable.getTargetSpeaker().getTranslation()));
 
     double shooterTarget_RPM = ShooterConstants.minumumShooterOutput.get(distanceFromSpeaker_Virtual);
     if(shooterTarget_RPM < ShooterConstants.SHOOTER_TARGET_VELOCITY) shooterTarget_RPM = ShooterConstants.SHOOTER_TARGET_VELOCITY;
 
     shooter.setTargetVelocity(shooterTarget_RPM);
     if(!defense){
-      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.pivotAngleMap_Localization.get(distanceFromSpeaker_Physical)));
-      elevator.setTargetPosition(ElevatorConstants.elevatorHeightMap_Localization.get(distanceFromSpeaker_Physical));
+      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP_UNDEFENDED.get(distanceFromSpeaker_Physical)));
+      elevator.setTargetPosition(ElevatorConstants.HEIGHT_MAP.get(distanceFromSpeaker_Physical));
     }
     else{
-      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.pivotAngleMap_Defense.get(distanceFromSpeaker_Physical)));
+      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP_DEFENDED.get(distanceFromSpeaker_Physical)));
       elevator.setTargetPosition(ElevatorConstants.elevatorHeightMap_Defense.get(distanceFromSpeaker_Physical));
     }
   }
