@@ -55,9 +55,4 @@ public class ShuffleboardTabManager extends SubsystemBase {
             tab.periodic();
         }
     }
-
-    @Override
-    public void register() {
-        super.register();
-    }
 }

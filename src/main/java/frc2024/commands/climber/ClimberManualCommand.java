@@ -4,6 +4,8 @@
 
 package frc2024.commands.climber;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.controls.DutyCycleOut;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,9 +14,9 @@ import frc2024.subsystems.Climber;
 public class ClimberManualCommand extends Command {
   
   Climber climber;
-  double speed;
+  DoubleSupplier speed;
 
-  public ClimberManualCommand(Climber climber, double speed) {
+  public ClimberManualCommand(Climber climber, DoubleSupplier speed) {
     addRequirements(climber);
 
     this.climber = climber;
@@ -28,7 +30,7 @@ public class ClimberManualCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.setClimberOutput(speed);
+    climber.setClimberOutput(speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

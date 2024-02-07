@@ -92,7 +92,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     if(((int) coastTimer.get()) == 5){
-      RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Coast, NeutralModeValue.Coast);
+      //RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Coast, NeutralModeValue.Coast);
     }
   }
 
@@ -109,7 +109,7 @@ public class Robot extends TimedRobot {
       autonomousCommand.schedule();
     }
 
-    RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Brake, NeutralModeValue.Brake);
+    //RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Brake, NeutralModeValue.Brake);
   }
 
   /** This function is called periodically during autonomous. */
@@ -125,7 +125,7 @@ public class Robot extends TimedRobot {
     }
 
     RobotContainer.stopAll();
-    RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Brake, NeutralModeValue.Brake);
+    //RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Brake, NeutralModeValue.Brake);
   }
 
   /** This function is called periodically during operator control. */

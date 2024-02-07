@@ -26,8 +26,8 @@ public class Climber extends SubsystemBase{
   private double m_targetHeight;
 
   public Climber (){
-        // m_leftClimberMotor = new TalonFX(Ports.RIGHT_CLIMBER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
-        // m_rightClimberMotor = new TalonFX(Ports.LEFT_CLIMBER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        m_leftClimberMotor = new TalonFX(Ports.RIGHT_CLIMBER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        m_rightClimberMotor = new TalonFX(Ports.LEFT_CLIMBER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
 
         configClimberMotors();
         
@@ -35,8 +35,8 @@ public class Climber extends SubsystemBase{
     }
     
     private void configClimberMotors() {
-        // DeviceConfig.configureTalonFX("Right Climber Motor", m_rightClimberMotor, DeviceConfig.climberFXConfig(), Constants.LOOP_TIME_HZ);
-        // DeviceConfig.configureTalonFX("Left Climber Motor", m_leftClimberMotor, DeviceConfig.climberFXConfig(), Constants.LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Right Climber Motor", m_rightClimberMotor, DeviceConfig.climberFXConfig(), Constants.LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Left Climber Motor", m_leftClimberMotor, DeviceConfig.climberFXConfig(), Constants.LOOP_TIME_HZ);
     }
     
     public void setNeutralMode(NeutralModeValue mode){
@@ -55,7 +55,7 @@ public class Climber extends SubsystemBase{
     
     public void setClimber(ControlRequest control){
         m_rightClimberMotor.setControl(control);
-        m_leftClimberMotor.setControl(new Follower(m_rightClimberMotor.getDeviceID(), true)); //left motor follows right motor in the opposing direction
+        m_leftClimberMotor.setControl(new Follower(m_rightClimberMotor.getDeviceID(), false)); //left motor follows right motor in the opposing direction
     }
 
     public void setClimberOutput(double po){

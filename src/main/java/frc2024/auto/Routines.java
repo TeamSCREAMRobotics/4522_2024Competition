@@ -17,9 +17,11 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc2024.commands.intake.AutoIntakeFloor;
 import frc2024.subsystems.Conveyor;
+import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Intake;
+import frc2024.subsystems.Pivot;
+import frc2024.subsystems.Intake.IntakeCommands;
 import frc2024.subsystems.swerve.Swerve;
 
 public class Routines {
@@ -66,23 +68,24 @@ public class Routines {
         );
     }
 
-    public static Command AmpSide6(Swerve swerve, Intake intake, Conveyor conveyor){
+    public static Command AmpSide6(Swerve swerve, Elevator elevator, Pivot pivot, Intake intake, Conveyor conveyor){
         currentSequence = AmpSide6;
         return new SequentialCommandGroup(
             startTimerCommand(),
             swerve.resetPoseCommand(AmpSide6.getStartingPose()),
             AmpSide6.getStart(),
+            
             new WaitCommand(0.5),
             AmpSide6.getNext(),
             new WaitCommand(0.5),
             AmpSide6.getNext(),
             new WaitCommand(0.5),
             AmpSide6.getNext(),
-            new AutoIntakeFloor(swerve, intake, conveyor),
+            IntakeCommands.autoIntakeFloor(swerve, elevator, pivot, intake, conveyor),
             AmpSide6.getNext(),
             new WaitCommand(0.5),
             AmpSide6.getNext(),
-            new AutoIntakeFloor(swerve, intake, conveyor),
+            IntakeCommands.autoIntakeFloor(swerve, elevator, pivot, intake, conveyor),
             AmpSide6.getEnd(),
             printTimerCommand()
         );

@@ -102,7 +102,7 @@ public class Controlboard{
 
     public static Trigger getManualMode(){
     /* Changes how the angle/height of the pivot and elevator are input */
-        return operatorController.back();
+        return driverController.povRight();
     }
 
     /* Automation */
@@ -123,11 +123,8 @@ public class Controlboard{
     }
 
     /* Climber */
-    public static final Trigger getManualClimber_Up(){
-        return new Trigger(() -> false); //Up POV on the button board
-    }
-    public static final Trigger getManualClimber_Down(){
-        return new Trigger(() -> false); //Down POV on the button board
+    public static final DoubleSupplier getManualClimber(){
+        return () -> (driverController.getLeftTriggerAxis() - driverController.getRightTriggerAxis())/5; //Up POV on the button board
     }
 
     /* Shooter */
@@ -145,7 +142,7 @@ public class Controlboard{
 
     /* Elevator */
     public static final DoubleSupplier getManualElevator_Output(){
-        return () -> operatorController.getLeftY()/2;
+        return () -> driverController.getLeftY()/2;
     }
 
     /* Elevator AND Pivot */    

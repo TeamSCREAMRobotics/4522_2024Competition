@@ -31,12 +31,11 @@ public class Elevator extends SubsystemBase{
     private double m_targetHeight;
 
     public Elevator(){
-        // m_rightElevatorMotor = new TalonFX(Ports.RIGHT_ELEVATOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
-        // m_leftElevatorMotor = new TalonFX(Ports.LEFT_ELEVATOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        m_rightElevatorMotor = new TalonFX(Ports.RIGHT_ELEVATOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        m_leftElevatorMotor = new TalonFX(Ports.LEFT_ELEVATOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
 
-        // configElevatorMotors();
+        configElevatorMotors();
 
-        m_leftElevatorMotor.setControl(new Follower(m_rightElevatorMotor.getDeviceID(), true)); //left motor follows right motor in the opposing direction
         //OrchestraUtil.add(m_rightElevatorMotor, m_leftElevatorMotor);
     }
     
@@ -61,6 +60,7 @@ public class Elevator extends SubsystemBase{
     
     public void setElevator(ControlRequest control){
         m_rightElevatorMotor.setControl(control);
+        m_leftElevatorMotor.setControl(new Follower(m_rightElevatorMotor.getDeviceID(), true)); //left motor follows right motor in the opposing direction
     }
 
     public void setElevatorOutput(double po){

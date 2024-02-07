@@ -53,8 +53,8 @@ public final class Constants{
         public static final int CANDLE_ID = 0;
         
         /* Elevator */
-        public static final int LEFT_CLIMBER_MOTOR_ID = 0; //TODO
-        public static final int RIGHT_CLIMBER_MOTOR_ID = 0; //TODO
+        public static final int LEFT_CLIMBER_MOTOR_ID = 13; //TODO
+        public static final int RIGHT_CLIMBER_MOTOR_ID = 14; //TODO
 
         /* Shooter */
         public static final int RIGHT_SHOOTER_MOTOR_ID = 12; //TODO
@@ -278,7 +278,7 @@ public final class Constants{
         public static final double GEAR_RATIO = 1.0;
 
         /* Motor Invert */
-        public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;;
+        public static final InvertedValue MOTOR_INVERT = InvertedValue.Clockwise_Positive;;
         
         /* Neutral Modes */
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
@@ -515,9 +515,9 @@ public final class Constants{
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
         public static final double SPEAKER_SPEED = 1.00;
-        public static final double AMP_TRAP_SPEED = -0.3;
+        public static final double AMP_TRAP_SPEED = -0.75;
         public static final double TRANSFER_SPEED = 0.75;
-    }
+    } 
 
     public static final class VisionConstants {
         public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
