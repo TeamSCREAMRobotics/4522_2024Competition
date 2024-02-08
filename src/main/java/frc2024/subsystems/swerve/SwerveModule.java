@@ -58,7 +58,7 @@ public class SwerveModule {
      * Set each module's constants in ModuleConstants.
      */
     public SwerveModule(ModuleLocation module, SwerveModuleConstants constants) {
-        m_modNumber = module.getNumber();
+        m_modNumber = module.number;
         m_modLocation = module.toString();
         m_angleOffset = constants.angleOffset();
 

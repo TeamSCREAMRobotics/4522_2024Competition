@@ -33,6 +33,8 @@ import frc2024.Constants.SwerveConstants;
 import frc2024.Constants.VisionConstants;
 import frc2024.Constants.SwerveConstants.ModuleConstants;
 import frc2024.Constants.SwerveConstants.ModuleConstants.ModuleLocation;
+import frc2024.subsystems.Vision;
+import frc2024.subsystems.Vision.TimestampedVisionMeasurement;
 
 /**
  * A swerve drive subsystem.
@@ -310,9 +312,9 @@ public class Swerve extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        /* for(TimestampedVisionMeasurement botpose : Vision.getBotPoses()){
+        for(TimestampedVisionMeasurement botpose : Vision.getBotPoses()){
             m_poseEstimator.addVisionMeasurement(botpose.pose(), botpose.timestamp());
-        } */
+        }
     }
 
     public Command resetPoseCommand(Pose2d pose){

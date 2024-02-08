@@ -13,14 +13,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc2024.Constants.SwerveConstants;
 import frc2024.subsystems.swerve.Swerve;
 
-public class DriveToPoseCommand extends Command {
+public class DriveToPose extends Command {
   
   Swerve swerve;
   Pose2d targetPose;
   PIDController driveController;
   PIDController rotationController;
 
-  public DriveToPoseCommand(Swerve swerve, Pose2d targetPose) {
+  public DriveToPose(Swerve swerve, Pose2d targetPose) {
     addRequirements(swerve);
 
     this.swerve = swerve;

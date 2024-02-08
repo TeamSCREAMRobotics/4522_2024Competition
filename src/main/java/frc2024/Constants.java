@@ -1,5 +1,7 @@
 package frc2024;
 
+import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
+
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -91,7 +93,6 @@ public final class Constants{
         public static final boolean UPDATE_PIVOT = false;
     }
 
-
     public static final class SwerveConstants {
 
         /* Drivebase Constants */
@@ -163,9 +164,9 @@ public final class Constants{
             public static final InvertedValue MOTOR_INVERT = MODULE_TYPE.driveMotorInvert;
 
             /* Current Limit Constants */
-            public static final int SUPPLY_CURRENT_LIMIT = 35;
-            public static final int SUPPLY_CURRENT_THRESHOLD = 60;
-            public static final double SUPPLY_TIME_THRESHOLD = 0.1;
+            public static final int SUPPLY_CURRENT_LIMIT = 40;
+            public static final int SUPPLY_CURRENT_THRESHOLD = 70;
+            public static final double SUPPLY_TIME_THRESHOLD = 1.0;
             public static final boolean CURRENT_LIMIT_ENABLE = true;
             public static final double SLIP_CURRENT = 400;
 
@@ -227,14 +228,10 @@ public final class Constants{
                 BACK_LEFT(2),
                 BACK_RIGHT(3);
 
-                private int number;
+                public int number;
 
                 private ModuleLocation(int number){
                     this.number = number;
-                }
-
-                public int getNumber() {
-                    return number;
                 }
             }
 
@@ -284,8 +281,8 @@ public final class Constants{
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
         
         /* Current Limits */
-        public static final int SUPPLY_CURRENT_LIMIT = 35;
-        public static final int SUPPLY_CURRENT_THRESHOLD = 60;
+        public static final int SUPPLY_CURRENT_LIMIT = 30;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 40;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
@@ -462,7 +459,7 @@ public final class Constants{
         public static final double ELEVATOR_HOME_POSITION = 0.0;
         public static final double ELEVATOR_SUBWOOFER_POSITION = 0.0;
         public static final double ELEVATOR_AMP_POSITION = 0.0;
-        public static final double ELEVATOR_TRAP_CHAIN_POSITION = 0.0;
+        public static final double ELEVATOR_TRAP_CHAIN_POSITION = MAX_HEIGHT;
         public static final double ELEVATOR_TRAP_FLOOR_POSITION = 0.0;
 
         public static final InterpolatingDoubleTreeMap HEIGHT_MAP = new InterpolatingDoubleTreeMap();
@@ -471,7 +468,7 @@ public final class Constants{
             HEIGHT_MAP.put(0.0, 0.0);
         }
         
-        public static final InterpolatingDoubleTreeMap elevatorHeightMap_Defense = new InterpolatingDoubleTreeMap();
+        public static final InterpolatingDoubleTreeMap HEIGHT_MAP_DEFENDED = new InterpolatingDoubleTreeMap();
         static{
             // (distance, height)
             HEIGHT_MAP.put(0.0, 0.0);
@@ -522,6 +519,22 @@ public final class Constants{
         public static final double AMP_TRAP_SPEED = -0.75;
         public static final double TRANSFER_SPEED = 0.75;
     } 
+
+    public static enum Position{
+        HOME(ElevatorConstants.ELEVATOR_HOME_POSITION, PivotConstants.PIVOT_HOME_ANGLE), 
+        AMP(ElevatorConstants.ELEVATOR_AMP_POSITION, PivotConstants.PIVOT_AMP_ANGLE), 
+        SUBWOOFER(ElevatorConstants.ELEVATOR_SUBWOOFER_POSITION, PivotConstants.PIVOT_SUBWOOFER_ANGLE), 
+        TRAP_CHAIN(ElevatorConstants.ELEVATOR_TRAP_CHAIN_POSITION, PivotConstants.PIVOT_TRAP_CHAIN_ANGLE), 
+        TRAP_FLOOR(ElevatorConstants.ELEVATOR_TRAP_FLOOR_POSITION, PivotConstants.PIVOT_TRAP_FLOOR_ANGLE);
+
+        public double elevatorPosition;
+        public Rotation2d pivotAngle;
+
+        private Position(double elevatorPosition, Rotation2d pivotAngle){
+            this.elevatorPosition = elevatorPosition;
+            this.pivotAngle = pivotAngle;
+        }
+    }
 
     public static final class VisionConstants {
         public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);

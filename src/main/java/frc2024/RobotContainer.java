@@ -35,11 +35,11 @@ import frc2024.auto.Autonomous;
 import frc2024.auto.Autonomous.PPEvent;
 import frc2024.auto.Routines;
 import frc2024.commands.AutoFire;
-import frc2024.commands.GoHome;
+import frc2024.commands.SuperstructureToPosition;
 import frc2024.commands.intake.AutoIntakeFloor;
 import frc2024.commands.intake.IntakeFloor;
-import frc2024.commands.swerve.TeleopDriveCommand;
-import frc2024.commands.swerve.DriveToPoseCommand;
+import frc2024.commands.swerve.TeleopDrive;
+import frc2024.commands.swerve.DriveToPose;
 import frc2024.commands.swerve.FacePoint;
 import frc2024.commands.swerve.FaceVisionTarget;
 import frc2024.controlboard.Controlboard;
@@ -53,8 +53,6 @@ import frc2024.subsystems.Shooter;
 import frc2024.subsystems.swerve.Swerve;
 
 public class RobotContainer {
-
-    private static Optional<Alliance> m_alliance = DriverStation.getAlliance();
     
     /* Subsystems */
     private static final Swerve m_swerve = new Swerve();
@@ -216,8 +214,8 @@ public class RobotContainer {
      * @return The current Alliance.
      */
     public static Alliance getAlliance(){
-        if(m_alliance.isPresent()){
-            return m_alliance.get();
+        if(DriverStation.getAlliance().isPresent()){
+            return DriverStation.getAlliance().get();
         } else {
             return Alliance.Blue;
         }
@@ -240,9 +238,5 @@ public class RobotContainer {
         //m_conveyor.setNeutralMode(mode);
         //m_intake.setNeutralMode(mode);
         m_swerve.setNeutralModes(mode, mode);
-    }
-
-    public Command goHome(){
-        return new GoHome(m_elevator, m_pivot, m_intake, m_conveyor);
     }
 }

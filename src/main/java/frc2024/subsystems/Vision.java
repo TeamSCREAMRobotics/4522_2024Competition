@@ -6,11 +6,15 @@ import org.photonvision.PhotonUtils;
 
 import com.team4522.lib.util.LimelightHelpers;
 
+import edu.wpi.first.math.estimator.KalmanFilter;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -108,8 +112,13 @@ public class Vision {
         return filterPose3d(LimelightHelpers.getBotPose3d_TargetSpace(limelight.name));
     }
 
-    public static double getDistanceFromSpeaker(Limelight limelight){
+    public static double getDistanceToSpeaker(Limelight limelight){
         return PhotonUtils.calculateDistanceToTargetMeters(limelight.mountPose.getZ(), FieldConstants.SPEAKER_TAGS_HEIGHT, limelight.mountPose.getRotation().getY(), Units.degreesToRadians(getTY(limelight)));
+    }
+
+    public static double getFusedDistanceToSpeaker(Limelight limelight, Pose2d pose){
+        return PhotonUtils.calculateDistanceToTargetMeters(limelight.mountPose.getZ(), FieldConstants.SPEAKER_TAGS_HEIGHT, limelight.mountPose.getRotation().getY(), Units.degreesToRadians(getTY(limelight)));
+        //TODO
     }
 
     public static TimestampedVisionMeasurement getTimestampedVisionMeasurement(Limelight limelight){

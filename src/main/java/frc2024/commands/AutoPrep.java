@@ -23,7 +23,7 @@ import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Shooter;
 import frc2024.subsystems.swerve.Swerve;
 
-public class AutoPrepCommand extends Command {
+public class AutoPrep extends Command {
   
   Pivot pivot;
   Elevator elevator;
@@ -36,7 +36,7 @@ public class AutoPrepCommand extends Command {
   double distanceFromSpeaker_Physical;
   double distanceFromSpeaker_Virtual;
 
-  public AutoPrepCommand(Pivot pivot, Elevator elevator, Shooter shooter, Swerve swerve, boolean defense) {
+  public AutoPrep(Pivot pivot, Elevator elevator, Shooter shooter, Swerve swerve, boolean defense) {
     addRequirements(pivot, elevator, shooter, swerve);
 
     this.pivot = pivot;
@@ -66,7 +66,7 @@ public class AutoPrepCommand extends Command {
     }
     else{
       pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP_DEFENDED.get(distanceFromSpeaker_Physical)));
-      elevator.setTargetPosition(ElevatorConstants.elevatorHeightMap_Defense.get(distanceFromSpeaker_Physical));
+      elevator.setTargetPosition(ElevatorConstants.HEIGHT_MAP_DEFENDED.get(distanceFromSpeaker_Physical));
     }
   }
 

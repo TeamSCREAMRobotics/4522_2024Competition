@@ -55,7 +55,6 @@ public class DeviceConfig {
         config.Slot0 = FXPIDConfig(DriveConstants.PID_CONSTANTS, DriveConstants.FEEDFORWARD_CONSTANTS);
         config.OpenLoopRamps = FXOpenLoopRampConfig(DriveConstants.OPEN_LOOP_RAMP);
         config.ClosedLoopRamps = FXClosedLoopRampConfig(DriveConstants.CLOSED_LOOP_RAMP);
-        config.TorqueCurrent = FXTorqueCurrentConfig(DriveConstants.SLIP_CURRENT, -DriveConstants.SLIP_CURRENT, 0);
         return config;
     }
 
@@ -281,14 +280,6 @@ public class DeviceConfig {
     public static ClosedLoopGeneralConfigs FXClosedLoopGeneralConfig(boolean continuousWrap){
         ClosedLoopGeneralConfigs config = new ClosedLoopGeneralConfigs();
         config.ContinuousWrap = continuousWrap;
-        return config;
-    }
-
-    public static TorqueCurrentConfigs FXTorqueCurrentConfig(double peakForward, double peakReverse, double neutralDeadband){
-        TorqueCurrentConfigs config = new TorqueCurrentConfigs();
-        config.PeakForwardTorqueCurrent = peakForward;
-        config.PeakReverseTorqueCurrent = peakReverse;
-        config.TorqueNeutralDeadband = neutralDeadband;
         return config;
     }
 

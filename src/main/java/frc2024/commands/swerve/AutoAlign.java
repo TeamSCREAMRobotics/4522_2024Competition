@@ -13,7 +13,7 @@ import frc2024.subsystems.Vision;
 import frc2024.subsystems.Vision.Limelight;
 import frc2024.subsystems.swerve.Swerve;
 
-public class AutoAlignCommand extends Command {
+public class AutoAlign extends Command {
 
   Swerve swerve;
   Rotation2d targetAngle;
@@ -24,7 +24,7 @@ public class AutoAlignCommand extends Command {
   PIDController yController;
   PIDController rotationController;
 
-  public AutoAlignCommand(Swerve swerve, Rotation2d targetAngle, double targetY, Limelight limelight) {
+  public AutoAlign(Swerve swerve, Rotation2d targetAngle, double targetY, Limelight limelight) {
     addRequirements(swerve);
 
     this.swerve = swerve;

@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
+import frc2024.Constants.Position;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.ShooterConstants;
 import frc2024.subsystems.Conveyor;
@@ -25,21 +26,31 @@ public class AutoFire extends SequentialCommandGroup{
         addCommands(
             shooter.velocityCommand(ShooterConstants.SHOOTER_TARGET_VELOCITY)
                 .alongWith(
-                    defense.getAsBoolean() 
-                        ? pivot.angleCommand(Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP_DEFENDED.get(getDistanceFromSpeaker(swerve))))  
-                        : pivot.angleCommand(Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP_UNDEFENDED.get(getDistanceFromSpeaker(swerve))))
-                        .alongWith(
-                            defense.getAsBoolean()
-                                ? elevator.positionCommand(ElevatorConstants.MAX_HEIGHT)
-                                : elevator.positionCommand(ElevatorConstants.HEIGHT_MAP.get(getDistanceFromSpeaker(swerve)))))
-                .onlyWhile(() -> runCondition(swerve))
-                .until(() -> endCondition(swerve, shooter, pivot, elevator))
-                .finallyDo(() -> conveyor.outputCommand(ConveyorConstants.SHOOT_SPEED).withTimeout(0.2).andThen(new GoHome(elevator, pivot)))
+                    new SuperstructureToPosition(
+                        defense.getAsBoolean() 
+                        ? ElevatorConstants.MAX_HEIGHT
+                        : ElevatorConstants.HEIGHT_MAP_DEFENDED.get(getDistanceFromSpeaker(swerve)),
+                        defense.getAsBoolean()
+                        ? Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP_DEFENDED.get(getDistanceFromSpeaker(swerve)).doubleValue())
+                        : Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP_UNDEFENDED.get(getDistanceFromSpeaker(swerve)).doubleValue()),
+                        elevator,
+                        pivot
+                    )
+                .onlyWhile(
+                    () -> runCondition(swerve))
+                .until(
+                    () -> endCondition(swerve, shooter, pivot, elevator))
+                .finallyDo(
+                    () -> conveyor.outputCommand(ConveyorConstants.SHOOT_SPEED)
+                        .withTimeout(0.2)
+                        .andThen(
+                            new SuperstructureToPosition(Position.HOME, elevator, pivot)
+                                .alongWith(shooter.stopCommand().alongWith(conveyor.stopCommand())))))
         );
     }
 
     public double getDistanceFromSpeaker(Swerve swerve){
-        return Vision.getDistanceFromSpeaker(Limelight.SHOOTER);
+        return Vision.getDistanceToSpeaker(Limelight.SHOOTER);
     }
 
     public boolean runCondition(Swerve swerve){

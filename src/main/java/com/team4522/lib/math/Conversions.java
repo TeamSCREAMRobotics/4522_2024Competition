@@ -46,7 +46,7 @@ public class Conversions {
 
   /**
    * @param falconRotations Falcon rotations
-   * @param circumference circumference of wheel
+   * @param circumference circumference of wheel in meters
    * @param gearRatio gear ratio between Falcon and mechanism
    * @return linear distance traveled by wheel in meters
    */
@@ -58,7 +58,7 @@ public class Conversions {
 
   /**
    * @param falconRPS Falcon rotations per second
-   * @param circumference circumference of wheel
+   * @param circumference circumference of wheel in meters
    * @param gearRatio gear ratio between Falcon and mechanism
    * @return mechanism linear velocity in meters per second
    */
@@ -70,7 +70,7 @@ public class Conversions {
 
   /**
    * @param velocity velocity in meters per second
-   * @param circumference circumference of wheel
+   * @param circumference circumference of wheel in meters
    * @param gearRatio gear ratio between Falcon and mechanism
    * @return Falcon rotations per second
    */
