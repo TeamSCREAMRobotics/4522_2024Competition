@@ -518,7 +518,7 @@ public final class Constants{
         public static final double TRANSFER_SPEED = 0.75;
     } 
 
-    public static enum Position{
+    public static enum ElevatorPivotPosition{
         HOME(ElevatorConstants.ELEVATOR_HOME_POSITION, PivotConstants.PIVOT_HOME_ANGLE), 
         AMP(ElevatorConstants.ELEVATOR_AMP_POSITION, PivotConstants.PIVOT_AMP_ANGLE), 
         SUBWOOFER(ElevatorConstants.ELEVATOR_SUBWOOFER_POSITION, PivotConstants.PIVOT_SUBWOOFER_ANGLE), 
@@ -527,7 +527,7 @@ public final class Constants{
         public double elevatorPosition;
         public Rotation2d pivotAngle;
 
-        private Position(double elevatorPosition, Rotation2d pivotAngle){
+        private ElevatorPivotPosition(double elevatorPosition, Rotation2d pivotAngle){
             this.elevatorPosition = elevatorPosition;
             this.pivotAngle = pivotAngle;
         }

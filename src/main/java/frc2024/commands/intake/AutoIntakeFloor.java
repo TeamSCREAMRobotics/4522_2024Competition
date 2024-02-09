@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc2024.Constants.Position;
+import frc2024.Constants.ElevatorPivotPosition;
 import frc2024.Constants.IntakeConstants;
 import frc2024.Constants.SwerveConstants;
 import frc2024.Constants.VisionConstants;
@@ -48,7 +48,7 @@ public class AutoIntakeFloor extends SequentialCommandGroup {
                     new IntakeFloor(elevator, pivot, conveyor, intake)
                         .onlyWhile(() -> Vision.getTY(Limelight.INTAKE) < IntakeConstants.AUTO_INTAKE_TY_THRESHOLD)
                 )
-            .finallyDo((interrupted) -> new SuperstructureToPosition(Position.HOME, elevator, pivot))
+            .finallyDo((interrupted) -> new SuperstructureToPosition(ElevatorPivotPosition.HOME, elevator, pivot))
     );
   }
 
@@ -65,7 +65,7 @@ public class AutoIntakeFloor extends SequentialCommandGroup {
                     new IntakeFloor(elevator, pivot, conveyor, intake)
                         .onlyWhile(() -> Vision.getTY(Limelight.INTAKE) < IntakeConstants.AUTO_INTAKE_TY_THRESHOLD)
                 )
-            .finallyDo((interrupted) -> new SuperstructureToPosition(Position.HOME, elevator, pivot))
+            .finallyDo((interrupted) -> new SuperstructureToPosition(ElevatorPivotPosition.HOME, elevator, pivot))
     );
   }
 }

@@ -29,8 +29,6 @@ public class Pivot extends SubsystemBase{
 
     private Rotation2d m_targetAngle = Rotation2d.fromDegrees(0);
 
-    private ArmFeedforward m_feedforward = new ArmFeedforward(0, 0, 0);
-
     public Pivot(){
         //m_pivotMotor = new TalonFX(Ports.PIVOT_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         //m_encoder = new DutyCycleEncoder(Ports.PIVOT_ENCODER_ID);

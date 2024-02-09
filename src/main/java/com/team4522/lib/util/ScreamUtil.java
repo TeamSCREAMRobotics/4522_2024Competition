@@ -103,7 +103,7 @@ public class ScreamUtil {
         return new Rotation2d(temp.getX(), temp.getY());
     }
 
-    public static double calculateDistanceToPose(Translation2d current, Translation2d target){
+    public static double calculateDistanceToTranslation(Translation2d current, Translation2d target){
         return current.getDistance(target);
     }
 

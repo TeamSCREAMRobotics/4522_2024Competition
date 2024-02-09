@@ -76,7 +76,7 @@ public class Elevator extends SubsystemBase{
     }
 
     public void setElevatorVoltage(double voltage){
-        m_rightElevatorMotor.setControl(new VoltageOut(voltage));
+        setElevator(new VoltageOut(voltage));
     }
     
     public double getElevatorHeight(){

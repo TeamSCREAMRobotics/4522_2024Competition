@@ -53,8 +53,8 @@ public class AutoPrep extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    distanceFromSpeaker_Physical = ScreamUtil.calculateDistanceToPose(swerve.getPose().getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation());
-    distanceFromSpeaker_Virtual = ScreamUtil.calculateDistanceToPose(swerve.getPose().getTranslation(), SmartShooting.calculateVirtualTarget(swerve, AllianceFlippable.getTargetSpeaker().getTranslation()));
+    distanceFromSpeaker_Physical = ScreamUtil.calculateDistanceToTranslation(swerve.getPose().getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation());
+    distanceFromSpeaker_Virtual = ScreamUtil.calculateDistanceToTranslation(swerve.getPose().getTranslation(), SmartShooting.calculateVirtualTarget(swerve, AllianceFlippable.getTargetSpeaker().getTranslation()));
 
     double shooterTarget_RPM = ShooterConstants.minumumShooterOutput.get(distanceFromSpeaker_Virtual);
     if(shooterTarget_RPM < ShooterConstants.SHOOTER_TARGET_VELOCITY) shooterTarget_RPM = ShooterConstants.SHOOTER_TARGET_VELOCITY;

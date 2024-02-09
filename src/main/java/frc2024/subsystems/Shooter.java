@@ -29,7 +29,6 @@ public class Shooter extends SubsystemBase{
 
         configShooterMotors();
         
-        m_leftShooterMotor.setControl(new Follower(m_rightShooterMotor.getDeviceID(), false)); //left motor follows right motor in the opposing direction
         //OrchestraUtil.add(m_rightShooterMotor, m_leftShooterMotor);
     }
     
@@ -61,6 +60,7 @@ public class Shooter extends SubsystemBase{
 
     public void setShooter(ControlRequest control){
         m_rightShooterMotor.setControl(control);
+        m_leftShooterMotor.setControl(new Follower(m_rightShooterMotor.getDeviceID(), false)); //left motor follows right motor in the opposing direction
     }
 
     public void stop(){

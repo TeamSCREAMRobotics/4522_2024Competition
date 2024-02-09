@@ -31,8 +31,6 @@ public class Intake extends SubsystemBase{
     private TalonFX m_leftIntakeMotor;
     private TalonFX m_rightIntakeMotor;
 
-    private static DigitalInput m_beam;
-
     public Intake(){
         m_leftIntakeMotor = new TalonFX(Ports.LEFT_INTAKE_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         m_rightIntakeMotor = new TalonFX(Ports.RIGHT_INTAKE_MOTOR_ID, Ports.RIO_CANBUS_NAME);
@@ -67,10 +65,6 @@ public class Intake extends SubsystemBase{
     public void stop(){
         m_rightIntakeMotor.stopMotor();
         m_leftIntakeMotor.stopMotor();
-    }
-
-    public static boolean hasPiece(){
-        return m_beam.get();
     }
 
     public Command outputCommand(double output){

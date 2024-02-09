@@ -9,7 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
-import frc2024.Constants.Position;
+import frc2024.Constants.ElevatorPivotPosition;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.ShooterConstants;
 import frc2024.subsystems.Conveyor;
@@ -44,13 +44,13 @@ public class AutoFire extends SequentialCommandGroup{
                     () -> conveyor.outputCommand(ConveyorConstants.SHOOT_SPEED)
                         .withTimeout(0.2)
                         .andThen(
-                            new SuperstructureToPosition(Position.HOME, elevator, pivot)
+                            new SuperstructureToPosition(ElevatorPivotPosition.HOME, elevator, pivot)
                                 .alongWith(shooter.stopCommand().alongWith(conveyor.stopCommand())))))
         );
     }
 
     public double getDistanceFromSpeaker(Swerve swerve){
-        return Vision.getDistanceToSpeaker(Limelight.SHOOTER);
+        return Vision.getFusedDistanceToSpeaker(Limelight.SHOOTER, swerve.getPose());
     }
 
     public boolean runCondition(Swerve swerve){

@@ -4,10 +4,15 @@ import java.nio.channels.Pipe;
 
 import org.photonvision.PhotonUtils;
 
+import com.team4522.lib.util.AllianceFlippable;
 import com.team4522.lib.util.LimelightHelpers;
+import com.team4522.lib.util.ScreamUtil;
 
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.KalmanFilter;
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,11 +20,15 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.system.LinearSystem;
+import edu.wpi.first.math.system.LinearSystemLoop;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc2024.Constants;
 import frc2024.Constants.FieldConstants;
 import frc2024.Constants.VisionConstants;
 
@@ -116,9 +125,12 @@ public class Vision {
         return PhotonUtils.calculateDistanceToTargetMeters(limelight.mountPose.getZ(), FieldConstants.SPEAKER_TAGS_HEIGHT, limelight.mountPose.getRotation().getY(), Units.degreesToRadians(getTY(limelight)));
     }
 
-    public static double getFusedDistanceToSpeaker(Limelight limelight, Pose2d pose){
-        return PhotonUtils.calculateDistanceToTargetMeters(limelight.mountPose.getZ(), FieldConstants.SPEAKER_TAGS_HEIGHT, limelight.mountPose.getRotation().getY(), Units.degreesToRadians(getTY(limelight)));
-        //TODO
+    public static double getFusedDistanceToSpeaker(Limelight limelight, Pose2d currentPose){
+        return ScreamUtil.average(
+            PhotonUtils.calculateDistanceToTargetMeters(limelight.mountPose.getZ(), FieldConstants.SPEAKER_TAGS_HEIGHT, limelight.mountPose.getRotation().getY(), Units.degreesToRadians(getTY(limelight))),
+            ScreamUtil.calculateDistanceToTranslation(currentPose.getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation())
+        );
+        //TODO look into Kalman filter
     }
 
     public static TimestampedVisionMeasurement getTimestampedVisionMeasurement(Limelight limelight){
