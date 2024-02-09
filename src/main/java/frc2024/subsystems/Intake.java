@@ -10,6 +10,7 @@ import com.ctre.phoenix6.mechanisms.DifferentialMechanism;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.util.OrchestraUtil;
+import com.team4522.lib.util.ScreamUtil;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -49,6 +50,10 @@ public class Intake extends SubsystemBase{
     public void setNeutralMode(NeutralModeValue mode){
         m_leftIntakeMotor.setNeutralMode(mode);
         m_rightIntakeMotor.setNeutralMode(mode);
+    }
+
+    public double getMotorRPM(){
+        return ScreamUtil.average(m_rightIntakeMotor.getVelocity().getValueAsDouble(), m_leftIntakeMotor.getVelocity().getValueAsDouble())*60;
     }
 
     public void setIntakeOutput(double po){

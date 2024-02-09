@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.Constants.Ports;
 import frc2024.Constants.ShooterConstants;
-import frc2024.dashboard.tabs.ShooterTab;
+import frc2024.dashboard.tabs.SubsystemTestTab;
 
 public class Shooter extends SubsystemBase{
     

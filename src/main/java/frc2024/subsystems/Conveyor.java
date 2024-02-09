@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
+import com.team4522.lib.util.ScreamUtil;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -36,6 +37,10 @@ public class Conveyor extends SubsystemBase{
 
     public void setConveyor(ControlRequest control){
         m_conveyorMotor.setControl(control);
+    }
+    
+    public double getMotorRPM(){
+        return m_conveyorMotor.getVelocity().getValueAsDouble()*60;
     }
 
     public void setConveyorOutput(double po){

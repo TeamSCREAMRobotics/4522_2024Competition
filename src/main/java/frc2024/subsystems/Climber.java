@@ -10,6 +10,7 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
+import com.team4522.lib.pid.ScreamPIDConstants;
 import com.team4522.lib.util.OrchestraUtil;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,6 +38,11 @@ public class Climber extends SubsystemBase{
     private void configClimberMotors() {
         DeviceConfig.configureTalonFX("Right Climber Motor", m_rightClimberMotor, DeviceConfig.climberFXConfig(), Constants.LOOP_TIME_HZ);
         DeviceConfig.configureTalonFX("Left Climber Motor", m_leftClimberMotor, DeviceConfig.climberFXConfig(), Constants.LOOP_TIME_HZ);
+    }
+
+    public void configPID(ScreamPIDConstants screamPIDConstants){
+        m_rightClimberMotor.getConfigurator().apply(screamPIDConstants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
+        m_leftClimberMotor.getConfigurator().apply(screamPIDConstants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
     }
     
     public void setNeutralMode(NeutralModeValue mode){

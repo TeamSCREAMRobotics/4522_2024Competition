@@ -6,8 +6,13 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.RobotContainer;
 import frc2024.dashboard.tabs.MatchTab;
-import frc2024.dashboard.tabs.ShooterTab;
+import frc2024.dashboard.tabs.SubsystemTestTab;
 import frc2024.dashboard.tabs.SwerveTab;
+import frc2024.subsystems.Climber;
+import frc2024.subsystems.Conveyor;
+import frc2024.subsystems.Elevator;
+import frc2024.subsystems.Intake;
+import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Shooter;
 import frc2024.subsystems.swerve.Swerve;
 
@@ -19,10 +24,20 @@ public class ShuffleboardTabManager extends SubsystemBase {
     private static final ArrayList<ShuffleboardTabBase> m_tabs = new ArrayList<ShuffleboardTabBase>();
 
     private Swerve swerve;
+    private Climber climber;
+    private Conveyor conveyor;
+    private Elevator elevator;
+    private Intake intake;
+    private Pivot pivot;
     private Shooter shooter;
 
-    public ShuffleboardTabManager(Swerve swerve, Shooter shooter){
+    public ShuffleboardTabManager(Swerve swerve, Climber climber, Conveyor conveyor, Elevator elevator, Intake intake, Pivot pivot, Shooter shooter){
         this.swerve = swerve;
+        this.climber = climber;
+        this.conveyor = conveyor;
+        this.elevator = elevator;
+        this.intake = intake;
+        this.pivot = pivot;
         this.shooter = shooter;
     }
 
@@ -38,7 +53,7 @@ public class ShuffleboardTabManager extends SubsystemBase {
             }
             
             if(shooter != null){
-                m_tabs.add(new ShooterTab(shooter));
+                m_tabs.add(new SubsystemTestTab(climber, conveyor, elevator, intake, pivot, shooter));
             }
         }
 

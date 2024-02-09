@@ -403,7 +403,6 @@ public final class Constants{
         public static final Rotation2d PIVOT_SUBWOOFER_ANGLE = Rotation2d.fromDegrees(0.0);
         public static final Rotation2d PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(0.0);
         public static final Rotation2d PIVOT_TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(0.0);
-        public static final Rotation2d PIVOT_TRAP_FLOOR_ANGLE = Rotation2d.fromDegrees(0.0);
 
         public static final InterpolatingDoubleTreeMap ANGLE_MAP_UNDEFENDED = new InterpolatingDoubleTreeMap();
         static{
@@ -460,7 +459,6 @@ public final class Constants{
         public static final double ELEVATOR_SUBWOOFER_POSITION = 0.0;
         public static final double ELEVATOR_AMP_POSITION = 0.0;
         public static final double ELEVATOR_TRAP_CHAIN_POSITION = MAX_HEIGHT;
-        public static final double ELEVATOR_TRAP_FLOOR_POSITION = 0.0;
 
         public static final InterpolatingDoubleTreeMap HEIGHT_MAP = new InterpolatingDoubleTreeMap();
         static{
@@ -524,8 +522,7 @@ public final class Constants{
         HOME(ElevatorConstants.ELEVATOR_HOME_POSITION, PivotConstants.PIVOT_HOME_ANGLE), 
         AMP(ElevatorConstants.ELEVATOR_AMP_POSITION, PivotConstants.PIVOT_AMP_ANGLE), 
         SUBWOOFER(ElevatorConstants.ELEVATOR_SUBWOOFER_POSITION, PivotConstants.PIVOT_SUBWOOFER_ANGLE), 
-        TRAP_CHAIN(ElevatorConstants.ELEVATOR_TRAP_CHAIN_POSITION, PivotConstants.PIVOT_TRAP_CHAIN_ANGLE), 
-        TRAP_FLOOR(ElevatorConstants.ELEVATOR_TRAP_FLOOR_POSITION, PivotConstants.PIVOT_TRAP_FLOOR_ANGLE);
+        TRAP_CHAIN(ElevatorConstants.ELEVATOR_TRAP_CHAIN_POSITION, PivotConstants.PIVOT_TRAP_CHAIN_ANGLE);
 
         public double elevatorPosition;
         public Rotation2d pivotAngle;

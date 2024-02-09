@@ -63,7 +63,7 @@ public class RobotContainer {
     private static final Conveyor m_conveyor = new Conveyor();
     private static final Intake m_intake = new Intake();
 
-    private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve, null);
+    private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve, m_climber, m_conveyor, m_elevator, m_intake, m_pivot, m_shooter);
     
     /**
      * Configures the basic robot systems, such as Shuffleboard, autonomous, default commands, and button bindings.

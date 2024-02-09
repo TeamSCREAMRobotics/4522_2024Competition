@@ -11,6 +11,7 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
+import com.team4522.lib.pid.ScreamPIDConstants;
 import com.team4522.lib.util.OrchestraUtil;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc2024.Constants;
+import frc2024.Constants.ClimberConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.Ports;
@@ -42,6 +44,12 @@ public class Elevator extends SubsystemBase{
     private void configElevatorMotors() {
         DeviceConfig.configureTalonFX("Right Elevator Motor", m_rightElevatorMotor, DeviceConfig.elevatorFXConfig(), Constants.LOOP_TIME_HZ);
         DeviceConfig.configureTalonFX("Left Elevator Motor", m_leftElevatorMotor, DeviceConfig.elevatorFXConfig(), Constants.LOOP_TIME_HZ);
+    }
+
+
+    public void configPID(ScreamPIDConstants screamPIDConstants){
+        m_rightElevatorMotor.getConfigurator().apply(screamPIDConstants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
+        m_leftElevatorMotor.getConfigurator().apply(screamPIDConstants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
     }
 
     public void setNeutralMode(NeutralModeValue mode){
