@@ -26,6 +26,7 @@ public class Controlboard{
 
     private static final CommandXboxController driverController = new CommandXboxController(0);
     private static final CommandXboxController operatorController = new CommandXboxController(1);
+    private static final Buttonboard buttonBoard = new Buttonboard(2, 3);
 
     private static boolean fieldCentric = true;
 
