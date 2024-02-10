@@ -31,6 +31,8 @@ public class Intake extends SubsystemBase{
     private TalonFX m_leftIntakeMotor;
     private TalonFX m_rightIntakeMotor;
 
+    private DutyCycleOut m_dutyCycleRequest;
+
     public Intake(){
         m_leftIntakeMotor = new TalonFX(Ports.LEFT_INTAKE_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         m_rightIntakeMotor = new TalonFX(Ports.RIGHT_INTAKE_MOTOR_ID, Ports.RIO_CANBUS_NAME);
@@ -54,8 +56,8 @@ public class Intake extends SubsystemBase{
         return ScreamUtil.average(m_rightIntakeMotor.getVelocity().getValueAsDouble(), m_leftIntakeMotor.getVelocity().getValueAsDouble())*60;
     }
 
-    public void setIntakeOutput(double po){
-        setIntake(new DutyCycleOut(po));
+    public void setIntakeOutput(double output){
+        setIntake(m_dutyCycleRequest.withOutput(output));
     }
 
     public void setIntake(ControlRequest control){

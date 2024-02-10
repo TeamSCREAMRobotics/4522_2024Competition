@@ -30,6 +30,9 @@ public class Elevator extends SubsystemBase{
     private TalonFX m_rightElevatorMotor;
     private TalonFX m_leftElevatorMotor;
 
+    private DutyCycleOut m_dutyCycleRequest;
+    private MotionMagicVoltage m_positionRequest;
+
     private double m_targetHeight;
 
     public Elevator(){
@@ -59,11 +62,12 @@ public class Elevator extends SubsystemBase{
 
     public void zeroHeight(){
         m_rightElevatorMotor.setPosition(0.0);
+        m_leftElevatorMotor.setPosition(0.0);
     }
 
     public void setTargetPosition(double height){
         m_targetHeight = height;
-        setElevator(new MotionMagicVoltage(m_targetHeight));
+        setElevator(m_positionRequest.withPosition(m_targetHeight));
     }
     
     public void setElevator(ControlRequest control){
@@ -71,12 +75,8 @@ public class Elevator extends SubsystemBase{
         m_leftElevatorMotor.setControl(new Follower(m_rightElevatorMotor.getDeviceID(), true)); //left motor follows right motor in the opposing direction
     }
 
-    public void setElevatorOutput(double po){
-        setElevator(new DutyCycleOut(po));
-    }
-
-    public void setElevatorVoltage(double voltage){
-        setElevator(new VoltageOut(voltage));
+    public void setElevatorOutput(double output){
+        setElevator(m_dutyCycleRequest.withOutput(output));
     }
     
     public double getElevatorHeight(){
@@ -89,14 +89,6 @@ public class Elevator extends SubsystemBase{
     
     public boolean getElevatorAtTarget(){
         return Math.abs(getElevatorError()) < ElevatorConstants.TARGET_THRESHOLD;
-    }
-
-    public double getElevatorVelocity(){
-        return m_rightElevatorMotor.getVelocity().getValue();
-    }
-
-    public double getElevatorAcceleration(){
-        return m_rightElevatorMotor.getAcceleration().getValue();
     }
     
     public double getElevatorTargetHeight(double distance){

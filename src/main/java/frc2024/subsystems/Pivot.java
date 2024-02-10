@@ -2,6 +2,7 @@ package frc2024.subsystems;
 
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -26,6 +27,14 @@ public class Pivot extends SubsystemBase{
     
     private TalonFX m_pivotMotor;
     private DutyCycleEncoder m_encoder;
+
+    private MotionMagicVoltage m_positionRequest;
+    private DutyCycleOut m_dutyCycleRequest;
+
+    private SoftwareLimitSwitchConfigs m_pivotAngleLimit = 
+        new SoftwareLimitSwitchConfigs()
+            .withForwardSoftLimitEnable(true)
+            .withReverseSoftLimitEnable(true);
 
     private Rotation2d m_targetAngle = Rotation2d.fromDegrees(0);
 
@@ -62,11 +71,11 @@ public class Pivot extends SubsystemBase{
 
     public void setTargetAngle(Rotation2d angle){
         m_targetAngle = angle;
-        setPivot(new MotionMagicVoltage(angle.getRotations()));
+        setPivot(m_positionRequest.withPosition(m_targetAngle.getDegrees()));
     }
 
-    public void setPivotOutput(double po){
-        setPivot(new DutyCycleOut(po));
+    public void setPivotOutput(double output){
+        setPivot(m_dutyCycleRequest.withOutput(output));
     }
     
     public void setPivot(ControlRequest control){
@@ -91,6 +100,11 @@ public class Pivot extends SubsystemBase{
 
     public void stop(){
         m_pivotMotor.stopMotor();
+    }
+
+    @Override
+    public void periodic() {
+        m_pivotMotor.getConfigurator().refresh(new SoftwareLimitSwitchConfigs());
     }
 
     public Command outputCommand(DoubleSupplier output){

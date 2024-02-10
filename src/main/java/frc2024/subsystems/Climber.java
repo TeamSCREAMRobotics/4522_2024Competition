@@ -6,6 +6,7 @@ import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -23,6 +24,9 @@ public class Climber extends SubsystemBase{
 
   private TalonFX m_rightClimberMotor;
   private TalonFX m_leftClimberMotor;
+
+  private PositionVoltage m_positionRequest;
+  private DutyCycleOut m_dutyCycleRequest;
 
   private double m_targetHeight;
 
@@ -56,7 +60,7 @@ public class Climber extends SubsystemBase{
 
     public void setTargetPosition(double height){
         m_targetHeight = height;
-        setClimber(new MotionMagicVoltage(m_targetHeight));
+        setClimber(m_positionRequest.withPosition(m_targetHeight));
     }
     
     public void setClimber(ControlRequest control){
@@ -64,8 +68,8 @@ public class Climber extends SubsystemBase{
         m_leftClimberMotor.setControl(new Follower(m_rightClimberMotor.getDeviceID(), false)); //left motor follows right motor in the opposing direction
     }
 
-    public void setClimberOutput(double po){
-        setClimber(new DutyCycleOut(po));
+    public void setClimberOutput(double output){
+        setClimber(m_dutyCycleRequest.withOutput(output));
     }
 
     public void stopClimber(){

@@ -18,6 +18,8 @@ public class Conveyor extends SubsystemBase{
     private TalonFX m_conveyorMotor;
     private static DigitalInput m_beam;
 
+    private DutyCycleOut m_dutyCycleRequest;
+
     public Conveyor(){
         m_conveyorMotor = new TalonFX(Ports.CONVEYOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         //m_beam = new DigitalInput(Ports.CONVEYOR_BEAM_ID);
@@ -43,8 +45,8 @@ public class Conveyor extends SubsystemBase{
         return m_conveyorMotor.getVelocity().getValueAsDouble()*60;
     }
 
-    public void setConveyorOutput(double po){
-        setConveyor(new DutyCycleOut(po));
+    public void setConveyorOutput(double output){
+        setConveyor(m_dutyCycleRequest.withOutput(output));
     }
 
     public void stop(){

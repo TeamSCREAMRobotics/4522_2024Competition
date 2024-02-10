@@ -23,6 +23,9 @@ public class Shooter extends SubsystemBase{
     private TalonFX m_rightShooterMotor;
     private TalonFX m_leftShooterMotor;
 
+    private VelocityVoltage m_velocityRequest;
+    private DutyCycleOut m_dutyCycleRequest;
+
     public Shooter(){
         m_rightShooterMotor = new TalonFX(Ports.RIGHT_SHOOTER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         m_leftShooterMotor = new TalonFX(Ports.LEFT_SHOOTER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
@@ -42,8 +45,8 @@ public class Shooter extends SubsystemBase{
         m_leftShooterMotor.setNeutralMode(shooterMode);
     }
 
-    public void setTargetVelocity(double rpm){
-        m_rightShooterMotor.setControl(new VelocityVoltage(Conversions.rpmToFalconRPS(rpm, 1.0)));
+    public void setTargetVelocity(double velocityRPM){
+        m_rightShooterMotor.setControl(m_velocityRequest.withVelocity(velocityRPM));
     }
 
     public double getWheelRPM(){
@@ -54,8 +57,8 @@ public class Shooter extends SubsystemBase{
         return ScreamUtil.average(m_rightShooterMotor.getVelocity().getValueAsDouble(), m_leftShooterMotor.getVelocity().getValueAsDouble())*60;
     }
 
-    public void setShooterOutput(double po){
-        setShooter(new DutyCycleOut(po));
+    public void setShooterOutput(double output){
+        setShooter(m_dutyCycleRequest.withOutput(output));
     }
 
     public void setShooter(ControlRequest control){
