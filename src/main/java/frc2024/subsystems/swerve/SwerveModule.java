@@ -50,6 +50,9 @@ public class SwerveModule {
 
     private SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(DriveConstants.KS, DriveConstants.KV, DriveConstants.KA);
 
+    private VelocityTorqueCurrentFOC m_driveVelocityRequest = new VelocityTorqueCurrentFOC(0);
+    private MotionMagicVoltage m_steerPositionRequest = new MotionMagicVoltage(0);
+
     /**
      * Constructs a SwerveModule object with the given location, module number, and module constants.
      *
@@ -148,11 +151,11 @@ public class SwerveModule {
      */
     public void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
             if(isOpenLoop){
-                m_driveMotor.setControl(new DutyCycleOut(desiredState.speedMetersPerSecond/SwerveConstants.MAX_SPEED).withEnableFOC(true));
+                m_driveMotor.setControl(m_driveVelocityRequest.withVelocity(desiredState.speedMetersPerSecond));
             } else {
                 double velocity = Conversions.mpsToFalconRPS(desiredState.speedMetersPerSecond, SwerveConstants.MODULE_TYPE.wheelCircumference, 1);
                 double feedforward = m_feedforward.calculate(desiredState.speedMetersPerSecond);
-                m_driveMotor.setControl(new VelocityVoltage(velocity).withFeedForward(feedforward).withEnableFOC(true));
+                m_driveMotor.setControl(m_driveVelocityRequest.withVelocity(velocity));
             }
     }
 
@@ -165,7 +168,7 @@ public class SwerveModule {
         /* Prevent rotating module if speed is less then 1%. Prevents jittering when not moving. */
         Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (SwerveConstants.MAX_SPEED * 0.01)) ? m_lastAngle : desiredState.angle;
 
-        m_steerMotor.setControl(new MotionMagicVoltage(angle.getRotations()));
+        m_steerMotor.setControl(m_steerPositionRequest.withPosition(angle.getRotations()));
         m_lastAngle = angle;
     }
 
@@ -192,7 +195,7 @@ public class SwerveModule {
      * See DeviceConfig for more information.
      */
     private void configAngleEncoder() {
-        DeviceConfig.configureSwerveEncoder(m_modLocation + " Angle Encoder", m_angleEncoder, DeviceConfig.swerveEncoderConfig(m_angleOffset), Constants.LOOP_TIME_HZ);
+        DeviceConfig.configureCANcoder(m_modLocation + " Angle Encoder", m_angleEncoder, DeviceConfig.swerveEncoderConfig(m_angleOffset), Constants.LOOP_TIME_HZ);
     }
 
     /**

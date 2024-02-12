@@ -116,4 +116,8 @@ public class ScreamUtil {
         }
         return sum / nums.length;
     }
+
+    public static boolean valueWithinThreshold(double value, double threshold){
+        return Math.abs(value) < threshold;
+    }
 }

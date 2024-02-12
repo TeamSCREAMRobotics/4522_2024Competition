@@ -23,8 +23,8 @@ public class Shooter extends SubsystemBase{
     private TalonFX m_rightShooterMotor;
     private TalonFX m_leftShooterMotor;
 
-    private VelocityVoltage m_velocityRequest;
-    private DutyCycleOut m_dutyCycleRequest;
+    private DutyCycleOut m_dutyCyleRequest = new DutyCycleOut(0);
+    private VelocityVoltage m_velocityRequest = new VelocityVoltage(0);
 
     public Shooter(){
         m_rightShooterMotor = new TalonFX(Ports.RIGHT_SHOOTER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
@@ -46,19 +46,19 @@ public class Shooter extends SubsystemBase{
     }
 
     public void setTargetVelocity(double velocityRPM){
-        m_rightShooterMotor.setControl(m_velocityRequest.withVelocity(velocityRPM));
+        setShooter(m_velocityRequest.withVelocity(velocityRPM));
     }
 
     public double getWheelRPM(){
-        return Conversions.falconRPSToMechanismRPM(ScreamUtil.average(m_rightShooterMotor.getVelocity().getValueAsDouble(), m_leftShooterMotor.getVelocity().getValueAsDouble()), 1.0);
+        return Conversions.falconRPSToMechanismRPM(getMotorRPM()/60, 1.0);
     }
 
     public double getMotorRPM(){
         return ScreamUtil.average(m_rightShooterMotor.getVelocity().getValueAsDouble(), m_leftShooterMotor.getVelocity().getValueAsDouble())*60;
     }
 
-    public void setShooterOutput(double output){
-        setShooter(m_dutyCycleRequest.withOutput(output));
+    public void setShooterOutput(double dutyCyle){
+        setShooter(m_dutyCyleRequest.withOutput(dutyCyle));
     }
 
     public void setShooter(ControlRequest control){

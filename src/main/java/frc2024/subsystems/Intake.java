@@ -31,14 +31,13 @@ public class Intake extends SubsystemBase{
     private TalonFX m_leftIntakeMotor;
     private TalonFX m_rightIntakeMotor;
 
-    private DutyCycleOut m_dutyCycleRequest;
+    private DutyCycleOut m_dutyCycleRequest = new DutyCycleOut(0);
 
     public Intake(){
         m_leftIntakeMotor = new TalonFX(Ports.LEFT_INTAKE_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         m_rightIntakeMotor = new TalonFX(Ports.RIGHT_INTAKE_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         configIntakeMotors();
 
-        m_leftIntakeMotor.setControl(new Follower(m_rightIntakeMotor.getDeviceID(), false));
         //OrchestraUtil.add(m_leftIntakeMotor, m_rightIntakeMotor);
     }
 
@@ -62,6 +61,7 @@ public class Intake extends SubsystemBase{
 
     public void setIntake(ControlRequest control){
         m_rightIntakeMotor.setControl(control);
+        m_leftIntakeMotor.setControl(new Follower(m_rightIntakeMotor.getDeviceID(), false));
     }
 
     public void stop(){

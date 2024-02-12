@@ -2,10 +2,13 @@ package frc2024.subsystems;
 
 import java.util.function.DoubleSupplier;
 
+import org.apache.commons.math3.ml.distance.CanberraDistance;
+
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
@@ -26,32 +29,27 @@ import frc2024.Constants.Ports;
 public class Pivot extends SubsystemBase{
     
     private TalonFX m_pivotMotor;
-    private DutyCycleEncoder m_encoder;
+    private CANcoder m_encoder;
 
-    private MotionMagicVoltage m_positionRequest;
-    private DutyCycleOut m_dutyCycleRequest;
-
-    private SoftwareLimitSwitchConfigs m_pivotAngleLimit = 
-        new SoftwareLimitSwitchConfigs()
-            .withForwardSoftLimitEnable(true)
-            .withReverseSoftLimitEnable(true);
+    private MotionMagicVoltage m_positionRequest = new MotionMagicVoltage(0);
+    private DutyCycleOut m_dutyCycleRequest = new DutyCycleOut(0);
 
     private Rotation2d m_targetAngle = Rotation2d.fromDegrees(0);
 
     public Pivot(){
-        //m_pivotMotor = new TalonFX(Ports.PIVOT_MOTOR_ID, Ports.RIO_CANBUS_NAME);
-        //m_encoder = new DutyCycleEncoder(Ports.PIVOT_ENCODER_ID);
+        m_pivotMotor = new TalonFX(Ports.PIVOT_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        m_encoder = new CANcoder(Ports.PIVOT_ENCODER_ID, Ports.RIO_CANBUS_NAME);
          
-        configPivotMotor();
-        // resetPivotToAbsoulute();
+        configureDevices();
         
         //OrchestraUtil.add(m_pivotMotor);
     }
 
-    private void configPivotMotor() {
-        // DeviceConfig.configureTalonFX("pivotMotor", m_pivotMotor, DeviceConfig.pivotFXConfig(), Constants.LOOP_TIME_HZ);
+    private void configureDevices() {
+        DeviceConfig.configureCANcoder("Pivot Encoder", m_encoder, DeviceConfig.pivotEncoderConfig(), Constants.LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Pivot Motor", m_pivotMotor, DeviceConfig.pivotFXConfig(), Constants.LOOP_TIME_HZ);
+        resetPivotToAbsolute();
     }
-
 
     public void configPID(ScreamPIDConstants screamPIDConstants){
         m_pivotMotor.getConfigurator().apply(screamPIDConstants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
@@ -61,8 +59,8 @@ public class Pivot extends SubsystemBase{
         m_pivotMotor.setNeutralMode(mode);
     }
 
-    public void resetPivotToAbsoulute(){
-        m_pivotMotor.setPosition(m_encoder.getAbsolutePosition());
+    public void resetPivotToAbsolute(){
+        m_pivotMotor.setPosition(m_encoder.getAbsolutePosition().getValueAsDouble());
     }
 
     public void zeroPivot(){
@@ -103,9 +101,7 @@ public class Pivot extends SubsystemBase{
     }
 
     @Override
-    public void periodic() {
-        m_pivotMotor.getConfigurator().refresh(new SoftwareLimitSwitchConfigs());
-    }
+    public void periodic() {}
 
     public Command outputCommand(DoubleSupplier output){
         return run(() -> setPivotOutput(output.getAsDouble()));

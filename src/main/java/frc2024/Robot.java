@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
 
-  private Timer coastTimer = new Timer();
+  private Timer timeSinceDisabled = new Timer();
   
 
   /**
@@ -83,16 +83,15 @@ public class Robot extends TimedRobot {
       autonomousCommand.cancel();
     }
 
-    coastTimer.reset();
-    coastTimer.start();
-    RobotContainer.stopAll();
+    timeSinceDisabled.reset();
+    timeSinceDisabled.start();
   }
 
     /** This function is called periodically when the robot is in Disabled mode. */
   @Override
   public void disabledPeriodic() {
-    if(((int) coastTimer.get()) == 5){
-      //RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Coast, NeutralModeValue.Coast);
+    if(((int) timeSinceDisabled.get()) == 5){
+      RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Coast, NeutralModeValue.Coast);
     }
   }
 
@@ -108,8 +107,6 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
-
-    //RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Brake, NeutralModeValue.Brake);
   }
 
   /** This function is called periodically during autonomous. */
@@ -123,9 +120,6 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-
-    RobotContainer.stopAll();
-    //RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Brake, NeutralModeValue.Brake);
   }
 
   /** This function is called periodically during operator control. */
@@ -141,5 +135,11 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
+  }
+
+  @Override
+  public void disabledExit() {
+    RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Brake, NeutralModeValue.Brake);
+    RobotContainer.stopAll();
   }
 }

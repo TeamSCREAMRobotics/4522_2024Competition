@@ -22,6 +22,7 @@ import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.team4522.lib.config.ErrorChecker.DeviceConfiguration;
 import com.team4522.lib.pid.ScreamPIDConstants;
 
@@ -33,6 +34,7 @@ import frc2024.Constants.FeedforwardConstants;
 import frc2024.Constants.IntakeConstants;
 import frc2024.Constants.MotionMagicConstants;
 import frc2024.Constants.PivotConstants;
+import frc2024.Constants.Ports;
 import frc2024.Constants.ShooterConstants;
 import frc2024.Constants.SwerveConstants;
 import frc2024.Constants.SwerveConstants.DriveConstants;
@@ -52,7 +54,7 @@ public class DeviceConfig {
             DriveConstants.SUPPLY_CURRENT_LIMIT, 
             DriveConstants.SUPPLY_CURRENT_THRESHOLD, 
             DriveConstants.SUPPLY_TIME_THRESHOLD);
-        config.Slot0 = FXPIDConfig(DriveConstants.PID_CONSTANTS, DriveConstants.FEEDFORWARD_CONSTANTS);
+        config.Slot0 = FXPIDConfig(DriveConstants.PID_CONSTANTS);
         config.OpenLoopRamps = FXOpenLoopRampConfig(DriveConstants.OPEN_LOOP_RAMP);
         config.ClosedLoopRamps = FXClosedLoopRampConfig(DriveConstants.CLOSED_LOOP_RAMP);
         return config;
@@ -70,7 +72,7 @@ public class DeviceConfig {
             SteerConstants.SUPPLY_CURRENT_THRESHOLD, 
             SteerConstants.SUPPLY_TIME_THRESHOLD);
         config.MotionMagic = FXMotionMagicConfig(SteerConstants.MOTION_MAGIC_CONSTANTS);
-        config.Slot0 = FXPIDConfig(SteerConstants.PID_CONSTANTS, new FeedforwardConstants());
+        config.Slot0 = FXPIDConfig(SteerConstants.PID_CONSTANTS);
         return config;
     }
 
@@ -100,12 +102,12 @@ public class DeviceConfig {
         return config;
     }
 
-    public static TalonFXConfiguration elevatorFXConfig(){
+    public static TalonFXConfiguration elevatorFXConfig(InvertedValue invert){
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Audio = FXAudioConfigs(false, false, true);
         config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(ElevatorConstants.SOFTWARE_LIMIT_ENABLE, ElevatorConstants.FORWARD_SOFT_LIMIT, ElevatorConstants.REVERSE_SOFT_LIMIT);
-        config.MotorOutput = FXMotorOutputConfig(ElevatorConstants.MOTOR_INVERT, ElevatorConstants.NEUTRAL_MODE);
-        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ElevatorConstants.GEAR_RATIO, 1.0, Rotation2d.fromRotations(0));
+        config.MotorOutput = FXMotorOutputConfig(invert, ElevatorConstants.NEUTRAL_MODE);
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.FusedCANcoder, Ports.ELEVATOR_ENCODER_ID, 1.0, ElevatorConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
         config.CurrentLimits = FXCurrentLimitsConfig(
             ElevatorConstants.CURRENT_LIMIT_ENABLE, 
             ElevatorConstants.SUPPLY_CURRENT_LIMIT, 
@@ -113,6 +115,14 @@ public class DeviceConfig {
             ElevatorConstants.SUPPLY_TIME_THRESHOLD);
         config.MotionMagic = FXMotionMagicConfig(ElevatorConstants.MOTION_MAGIC_CONSTANTS);
         config.Slot0 = FXPIDConfig(ElevatorConstants.PID_CONSTANTS, ElevatorConstants.FEEDFORWARD_CONSTANTS);
+        return config;
+    }
+
+    public static CANcoderConfiguration elevatorEncoderConfig(){
+        CANcoderConfiguration config = new CANcoderConfiguration();
+        config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
+        config.MagnetSensor.MagnetOffset = ElevatorConstants.ENCODER_OFFSET.getRotations();
+        config.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
         return config;
     }
 
@@ -134,7 +144,7 @@ public class DeviceConfig {
         config.Audio = FXAudioConfigs(false, false, true);
         config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(PivotConstants.SOFTWARE_LIMIT_ENABLE, PivotConstants.FORWARD_SOFT_LIMIT, PivotConstants.REVERSE_SOFT_LIMIT);
         config.MotorOutput = FXMotorOutputConfig(PivotConstants.MOTOR_INVERT, PivotConstants.NEUTRAL_MODE);
-        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, PivotConstants.GEAR_RATIO, 1.0, Rotation2d.fromRotations(0));
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.FusedCANcoder, Ports.PIVOT_ENCODER_ID, PivotConstants.SENSOR_TO_MECH_RATIO, PivotConstants.ROTOR_TO_SENSOR_RATIO, Rotation2d.fromRotations(0));
         config.CurrentLimits = FXCurrentLimitsConfig(
             PivotConstants.CURRENT_LIMIT_ENABLE, 
             PivotConstants.SUPPLY_CURRENT_LIMIT, 
@@ -142,6 +152,14 @@ public class DeviceConfig {
             PivotConstants.SUPPLY_TIME_THRESHOLD);
         config.MotionMagic = FXMotionMagicConfig(PivotConstants.MOTION_MAGIC_CONSTANTS);
         config.Slot0 = FXPIDConfig(PivotConstants.PID_CONSTANTS, PivotConstants.FEEDFORWARD_CONSTANTS);
+        return config;
+    }
+
+    public static CANcoderConfiguration pivotEncoderConfig(){
+        CANcoderConfiguration config = new CANcoderConfiguration();
+        config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+        config.MagnetSensor.MagnetOffset = PivotConstants.ENCODER_OFFSET.getRotations();
+        config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         return config;
     }
     
@@ -194,7 +212,7 @@ public class DeviceConfig {
         ErrorChecker.configureDevice(deviceConfig, name + " " + fx.getDeviceID() + " version " + fx.getVersion(), true);
     }
 
-    public static void configureSwerveEncoder(String name, CANcoder encoder, CANcoderConfiguration config, double updateFrequencyHz){
+    public static void configureCANcoder(String name, CANcoder encoder, CANcoderConfiguration config, double updateFrequencyHz){
         DeviceConfiguration deviceConfig = new DeviceConfiguration() {
             @Override
             public boolean configureSettings(){
@@ -254,6 +272,10 @@ public class DeviceConfig {
 
     public static Slot0Configs FXPIDConfig(ScreamPIDConstants constants, FeedforwardConstants ffConstants){
         return constants.toSlot0Configs(ffConstants);
+    }
+
+    public static Slot0Configs FXPIDConfig(ScreamPIDConstants constants){
+        return constants.toSlot0Configs(new FeedforwardConstants());
     }
 
     public static OpenLoopRampsConfigs FXOpenLoopRampConfig(double ramp){

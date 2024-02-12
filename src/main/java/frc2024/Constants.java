@@ -2,6 +2,7 @@ package frc2024;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -31,9 +32,12 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 public final class Constants{
 
     public record MotionMagicConstants(double cruiseVelocity, double acceleration, int jerk){}
-    public record FeedforwardConstants(double kV, double kS, double kG, double kA){
+    public record FeedforwardConstants(double kV, double kS, double kG, double kA, GravityTypeValue gravityType){
+        public FeedforwardConstants(double kV, double kS, double kG, double kA){
+            this(kV, kS, kG, kA, GravityTypeValue.Elevator_Static);
+        }
         public FeedforwardConstants(){
-            this(0, 0, 0, 0);
+            this(0, 0, 0, 0, GravityTypeValue.Elevator_Static);
         }
     }
 
@@ -69,6 +73,7 @@ public final class Constants{
         /* Elevator */
         public static final int LEFT_ELEVATOR_MOTOR_ID = 0; //TODO
         public static final int RIGHT_ELEVATOR_MOTOR_ID = 1; //TODO
+        public static final int ELEVATOR_ENCODER_ID = 0;
 
         /* Conveyor */
         public static final int CONVEYOR_MOTOR_ID = 10; //TODO
@@ -367,7 +372,8 @@ public final class Constants{
     public static final class PivotConstants { //TODO all values
         
         /* Gear Ratio */
-        public static final double GEAR_RATIO = 1.0;
+        public static final double ROTOR_TO_SENSOR_RATIO = 125.0;
+        public static final double SENSOR_TO_MECH_RATIO = 3.0;
 
         /* Motor Invert */
         public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;;
@@ -397,12 +403,14 @@ public final class Constants{
         public static final double KV = 0.0;
         public static final double KA = 0.0;
         public static final double KG = 0.0;
-        public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
+        public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA, GravityTypeValue.Arm_Cosine);
 
         public static final Rotation2d PIVOT_HOME_ANGLE = Rotation2d.fromDegrees(0.0);
         public static final Rotation2d PIVOT_SUBWOOFER_ANGLE = Rotation2d.fromDegrees(0.0);
         public static final Rotation2d PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(0.0);
         public static final Rotation2d PIVOT_TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(0.0);
+
+        public static final Rotation2d ENCODER_OFFSET = Rotation2d.fromRotations(0.0);
 
         public static final InterpolatingDoubleTreeMap ANGLE_MAP_UNDEFENDED = new InterpolatingDoubleTreeMap();
         static{
@@ -430,15 +438,13 @@ public final class Constants{
         
         /* Current Limits */
         public static final int SUPPLY_CURRENT_LIMIT = 35;
-        public static final int SUPPLY_CURRENT_THRESHOLD = 60;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 50;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
         public static final boolean SOFTWARE_LIMIT_ENABLE = false;
         public static final double FORWARD_SOFT_LIMIT = 0.0;
         public static final double REVERSE_SOFT_LIMIT = 0.0;
-
-        public static final double TARGET_THRESHOLD = 0.50; //m
 
         public static final double CRUISE_VELOCITY = 40;
         public static final double ACCELERATION = 10;
@@ -449,8 +455,10 @@ public final class Constants{
         public static final double KS = 0.0;
         public static final double KV = 0.0;
         public static final double KA = 0.0;
-        public static final double KG = 0.0;
-        public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
+        public static final double KG = 3.75;
+        public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA, GravityTypeValue.Elevator_Static);
+
+        public static final double TARGET_THRESHOLD = 0.50; //rotations
 
         public static final double MAX_HEIGHT = 0.0;
         public static final double MIN_HEIGHT = 0.0;
@@ -459,6 +467,8 @@ public final class Constants{
         public static final double ELEVATOR_SUBWOOFER_POSITION = 0.0;
         public static final double ELEVATOR_AMP_POSITION = 0.0;
         public static final double ELEVATOR_TRAP_CHAIN_POSITION = MAX_HEIGHT;
+
+        public static final Rotation2d ENCODER_OFFSET = Rotation2d.fromRotations(0.0);
 
         public static final InterpolatingDoubleTreeMap HEIGHT_MAP = new InterpolatingDoubleTreeMap();
         static{
@@ -492,8 +502,6 @@ public final class Constants{
 
         public static final double INTAKE_SPEED = 0.65;
         public static final double EJECT_SPEED = -0.5;
-
-        public static final double AUTO_INTAKE_TY_THRESHOLD = -3.0;
     }
 
     public static final class ConveyorConstants {//TODO all values
@@ -537,11 +545,10 @@ public final class Constants{
         public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
         public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(0.5, 0.5, 0.5);
 
-        public static final int DETECTOR_PIPELINE = 0;
-
-        public static final double DETECTOR_TARGET_TY = 0.0;
-        public static final double DETECTOR_TARGET_TX = 0.0;
-        public static final double VALID_TARGET_THRESHOLD = 0;
+        public static final double DETECTOR_TARGET_Y = 0.0;
+        public static final double DETECTOR_TARGET_X = 0.0;
+        public static final double AUTO_FIRE_X_THRESHOLD = 0;
+        public static final double AUTO_INTAKE_Y_THRESHOLD = 0.0;
     }
 
     public static final class FieldConstants{

@@ -12,6 +12,7 @@ import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.ElevatorPivotPosition;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.ShooterConstants;
+import frc2024.Constants.VisionConstants;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Pivot;
@@ -60,6 +61,7 @@ public class AutoFire extends SequentialCommandGroup{
     public boolean endCondition(Swerve swerve, Shooter shooter, Pivot pivot, Elevator elevator){
         return shooter.getWheelRPM() > ShooterConstants.minumumShooterOutput.get(getDistanceFromSpeaker(swerve))
            && pivot.getPivotAtTarget()
-           && elevator.getElevatorAtTarget();
+           && elevator.getElevatorAtTarget()
+           && ScreamUtil.valueWithinThreshold(Vision.getTX(Limelight.SHOOTER), VisionConstants.AUTO_FIRE_X_THRESHOLD);
     }
 }

@@ -38,7 +38,7 @@ public class Vision {
     private static LinearFilter poseFilter = LinearFilter.movingAverage(5);
     
     public enum Limelight{
-        TRAP("limelight-back", new Pose3d()), SHOOTER("limelight-front", new Pose3d()), INTAKE("limelight-intake", new Pose3d());
+        TRAP("limelight-trap", new Pose3d()), SHOOTER("limelight-shooter", new Pose3d()), INTAKE("limelight-intake", new Pose3d());
 
         String name;
         Pose3d mountPose;
@@ -126,10 +126,13 @@ public class Vision {
     }
 
     public static double getFusedDistanceToSpeaker(Limelight limelight, Pose2d currentPose){
-        return ScreamUtil.average(
-            PhotonUtils.calculateDistanceToTargetMeters(limelight.mountPose.getZ(), FieldConstants.SPEAKER_TAGS_HEIGHT, limelight.mountPose.getRotation().getY(), Units.degreesToRadians(getTY(limelight))),
-            ScreamUtil.calculateDistanceToTranslation(currentPose.getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation())
-        );
+        double sum;
+        sum = ScreamUtil.calculateDistanceToTranslation(currentPose.getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation());
+        if(getTV(limelight)){
+            sum += PhotonUtils.calculateDistanceToTargetMeters(limelight.mountPose.getZ(), FieldConstants.SPEAKER_TAGS_HEIGHT, limelight.mountPose.getRotation().getY(), Units.degreesToRadians(getTY(limelight)));
+            return sum / 2;
+        }
+        return sum;
         //TODO look into Kalman filter
     }
 

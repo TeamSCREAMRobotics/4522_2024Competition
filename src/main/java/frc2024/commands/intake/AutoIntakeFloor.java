@@ -46,7 +46,7 @@ public class AutoIntakeFloor extends SequentialCommandGroup {
             Limelight.INTAKE)
                 .alongWith(
                     new IntakeFloor(elevator, pivot, conveyor, intake)
-                        .onlyWhile(() -> Vision.getTY(Limelight.INTAKE) < IntakeConstants.AUTO_INTAKE_TY_THRESHOLD)
+                        .onlyWhile(() -> Vision.getTY(Limelight.INTAKE) < VisionConstants.AUTO_INTAKE_Y_THRESHOLD)
                 )
             .finallyDo((interrupted) -> new SuperstructureToPosition(ElevatorPivotPosition.HOME, elevator, pivot))
     );
@@ -63,7 +63,7 @@ public class AutoIntakeFloor extends SequentialCommandGroup {
             Limelight.INTAKE)
                 .alongWith(
                     new IntakeFloor(elevator, pivot, conveyor, intake)
-                        .onlyWhile(() -> Vision.getTY(Limelight.INTAKE) < IntakeConstants.AUTO_INTAKE_TY_THRESHOLD)
+                        .onlyWhile(() -> Vision.getTY(Limelight.INTAKE) < VisionConstants.AUTO_INTAKE_Y_THRESHOLD)
                 )
             .finallyDo((interrupted) -> new SuperstructureToPosition(ElevatorPivotPosition.HOME, elevator, pivot))
     );

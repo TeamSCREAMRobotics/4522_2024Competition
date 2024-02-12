@@ -16,9 +16,9 @@ import frc2024.Constants.Ports;
 public class Conveyor extends SubsystemBase{
         
     private TalonFX m_conveyorMotor;
-    private static DigitalInput m_beam;
+    private DigitalInput m_beam;
 
-    private DutyCycleOut m_dutyCycleRequest;
+    private DutyCycleOut m_dutyCycleRequest = new DutyCycleOut(0);
 
     public Conveyor(){
         m_conveyorMotor = new TalonFX(Ports.CONVEYOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);

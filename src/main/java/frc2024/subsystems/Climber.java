@@ -25,8 +25,8 @@ public class Climber extends SubsystemBase{
   private TalonFX m_rightClimberMotor;
   private TalonFX m_leftClimberMotor;
 
-  private PositionVoltage m_positionRequest;
-  private DutyCycleOut m_dutyCycleRequest;
+  private PositionVoltage m_positionRequest = new PositionVoltage(0);
+  private DutyCycleOut m_dutyCycleRequest = new DutyCycleOut(0);
 
   private double m_targetHeight;
 

@@ -132,7 +132,7 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
 
         /* Elevator */
         if(ShuffleboardConstants.UPDATE_ELEVATOR){
-            m_elevatorHeight.setDouble(elevator.getElevatorHeight());
+            m_elevatorHeight.setDouble(elevator.getElevatorPosition());
 
             elevator.configPID(ClimberConstants.PID_CONSTANTS.withP(m_elevatorKP.get().getDouble()));
             elevator.setTargetPosition(getElevatorHeight());
@@ -158,7 +158,6 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
             m_shooter_MotorVelocity.setDouble(shooter.getMotorRPM());
             m_shooter_WheelVelocity.setDouble(shooter.getWheelRPM());
 
-            shooter.setShooterOutput(getShooterDutyCycle());
             shooter.setTargetVelocity(getShooterVelocity());
         }
     }
@@ -189,9 +188,6 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
     }
 
     /* Shooter */
-    public static double getShooterDutyCycle(){
-        return m_shooter_DutyCycle.getDouble(0);
-    }
     public static double getShooterVelocity(){
         return m_shooter_Velocity.getDouble(0);
     }
