@@ -87,7 +87,8 @@ public class Elevator extends SubsystemBase{
     
     public void setElevator(ControlRequest control){
         m_rightElevatorMotor.setControl(control);
-        m_leftElevatorMotor.setControl(new Follower(m_rightElevatorMotor.getDeviceID(), true)); 
+        m_leftElevatorMotor.setControl(control);
+        //m_leftElevatorMotor.setControl(new Follower(m_rightElevatorMotor.getDeviceID(), true)); 
         //left motor follows right motor in the opposing direction
     }
 
@@ -114,6 +115,14 @@ public class Elevator extends SubsystemBase{
     public void stop(){
         m_rightElevatorMotor.stopMotor();
         m_leftElevatorMotor.stopMotor();
+    }
+
+    @Override
+    public void periodic() {
+        System.out.println("right: " + m_rightElevatorMotor.getPosition().getValueAsDouble());
+        System.out.println("left: " + m_leftElevatorMotor.getPosition().getValueAsDouble());
+        System.out.println("abs encoder: " + m_encoder.getAbsolutePosition().getValueAsDouble());
+        System.out.println("reg encoder: " + m_encoder.getPosition().getValueAsDouble());
     }
 
     public Command outputCommand(DoubleSupplier output){

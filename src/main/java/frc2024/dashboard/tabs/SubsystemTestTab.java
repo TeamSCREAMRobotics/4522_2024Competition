@@ -20,7 +20,7 @@ import frc2024.subsystems.Shooter;
 /** Add your docs here. */
 public class SubsystemTestTab extends ShuffleboardTabBase{
 
-    private Climber climber;
+    //private Climber climber;
     private Conveyor conveyor;
     private Elevator elevator;
     private Intake intake;
@@ -28,7 +28,7 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
     private Shooter shooter;
 
     public SubsystemTestTab(Climber climber, Conveyor conveyor, Elevator elevator, Intake intake, Pivot pivot, Shooter shooter){
-        this.climber = climber;
+        //this.climber = climber;
         this.conveyor = conveyor;
         this.elevator = elevator;
         this.intake = intake;
@@ -117,12 +117,12 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
     @Override
     public void periodic() {
         /* Climber */
-        if(ShuffleboardConstants.UPDATE_CLIMBER){
+        /* if(ShuffleboardConstants.UPDATE_CLIMBER){
             m_climberHeight.setDouble(climber.getClimberHeight());
 
             climber.configPID(ClimberConstants.PID_CONSTANTS.withP(m_climberKP.get().getDouble()));
             climber.setTargetPosition(getClimberHeight());
-        }
+        } */
 
         /* Conveyor */
         if(ShuffleboardConstants.UPDATE_CONVEYOR){
@@ -140,7 +140,7 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
 
         /* Intake */
         if(ShuffleboardConstants.UPDATE_INTAKE){
-            m_intake_MotorVelocity.setDouble(intake.getMotorRPM());
+            //m_intake_MotorVelocity.setDouble(intake.getMotorRPM());
 
             intake.setIntakeOutput(getIntakeDutyCycle());
         }

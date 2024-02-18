@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.math.Conversions;
@@ -36,8 +37,8 @@ public class Shooter extends SubsystemBase{
     }
     
     private void configShooterMotors() {
-        DeviceConfig.configureTalonFX("rightShooterMotor", m_rightShooterMotor, DeviceConfig.shooterFXConfig(), Constants.LOOP_TIME_HZ);
-        DeviceConfig.configureTalonFX("leftShooterMotor", m_leftShooterMotor, DeviceConfig.shooterFXConfig(), Constants.LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("rightShooterMotor", m_rightShooterMotor, DeviceConfig.shooterFXConfig(InvertedValue.Clockwise_Positive), Constants.LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("leftShooterMotor", m_leftShooterMotor, DeviceConfig.shooterFXConfig(InvertedValue.Clockwise_Positive), Constants.LOOP_TIME_HZ);
      }
     
     public void setNeutralMode(NeutralModeValue shooterMode){
@@ -63,7 +64,7 @@ public class Shooter extends SubsystemBase{
 
     public void setShooter(ControlRequest control){
         m_rightShooterMotor.setControl(control);
-        m_leftShooterMotor.setControl(new Follower(m_rightShooterMotor.getDeviceID(), false)); //left motor follows right motor in the opposing direction
+        m_leftShooterMotor.setControl(control); //left motor follows right motor in the opposing direction
     }
 
     public void stop(){

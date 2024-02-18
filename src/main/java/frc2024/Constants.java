@@ -60,27 +60,27 @@ public final class Constants{
         
         /* Elevator */
         public static final int LEFT_CLIMBER_MOTOR_ID = 13; //TODO
-        public static final int RIGHT_CLIMBER_MOTOR_ID = 14; //TODO
+        //public static final int RIGHT_CLIMBER_MOTOR_ID = 14; //TODO
 
         /* Shooter */
         public static final int RIGHT_SHOOTER_MOTOR_ID = 12; //TODO
         public static final int LEFT_SHOOTER_MOTOR_ID = 11; //TODO
 
         /* Pivot */
-        public static final int PIVOT_MOTOR_ID = 0; //TODO
-        public static final int PIVOT_ENCODER_ID = 0; //TODO
+        public static final int PIVOT_MOTOR_ID = 17; //TODO
+        public static final int PIVOT_ENCODER_ID = 4; //TODO
 
         /* Elevator */
-        public static final int LEFT_ELEVATOR_MOTOR_ID = 0; //TODO
-        public static final int RIGHT_ELEVATOR_MOTOR_ID = 1; //TODO
-        public static final int ELEVATOR_ENCODER_ID = 0;
+        public static final int LEFT_ELEVATOR_MOTOR_ID = 16; //TODO
+        public static final int RIGHT_ELEVATOR_MOTOR_ID = 15; //TODO
+        public static final int ELEVATOR_ENCODER_ID = 5;
 
         /* Conveyor */
         public static final int CONVEYOR_MOTOR_ID = 10; //TODO
         public static final int CONVEYOR_BEAM_ID = 0; // TODO
 
         /* Intake */
-        public static final int LEFT_INTAKE_MOTOR_ID = 8;
+        //public static final int LEFT_INTAKE_MOTOR_ID = 9;
         public static final int RIGHT_INTAKE_MOTOR_ID = 9;
         public static final int INTAKE_BEAM_ID = 0;
     }
@@ -91,7 +91,7 @@ public final class Constants{
         /* For updating values like PID from Shuffleboard */
         public static final boolean UPDATE_SWERVE = false;
         public static final boolean UPDATE_INTAKE = false;
-        public static final boolean UPDATE_SHOOTER = true;
+        public static final boolean UPDATE_SHOOTER = false;
         public static final boolean UPDATE_ELEVATOR = false;
         public static final boolean UPDATE_CONVEYOR = false;
         public static final boolean UPDATE_CLIMBER = false;
@@ -245,7 +245,7 @@ public final class Constants{
                 1, 
                 0, 
                 0, 
-                Rotation2d.fromRotations(-0.76416015625+0.5)
+                Rotation2d.fromRotations(-0.327392578125)
             );
 
             /* Front Right */
@@ -253,7 +253,7 @@ public final class Constants{
                 3, 
                 2, 
                 1, 
-                Rotation2d.fromRotations(-0.074462890625+0.5)
+                Rotation2d.fromRotations(-0.465087890625)
             );
 
             /* Back Left */
@@ -261,7 +261,7 @@ public final class Constants{
                 5, 
                 4, 
                 2, 
-                Rotation2d.fromRotations(-0.45458984375+0.5)
+                Rotation2d.fromRotations(-0.074951171875)
             );
 
             /* Back Right */
@@ -269,7 +269,7 @@ public final class Constants{
                 7, 
                 6, 
                 3, 
-                Rotation2d.fromRotations(-0.330078125+0.5)
+                Rotation2d.fromRotations(-0.755859375)
             );
         }
     }
@@ -338,7 +338,7 @@ public final class Constants{
         public static final double ACCELERATION = 10;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(15, 0.0, 0.0);
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.0, 0.0, 0.0);
 
         public static final double KS = 0.0;
         public static final double KV = 0.0;
@@ -373,7 +373,7 @@ public final class Constants{
         
         /* Gear Ratio */
         public static final double ROTOR_TO_SENSOR_RATIO = 125.0;
-        public static final double SENSOR_TO_MECH_RATIO = 3.0;
+        public static final double SENSOR_TO_MECH_RATIO = 72.0 / 22.0;
 
         /* Motor Invert */
         public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;;
@@ -428,13 +428,14 @@ public final class Constants{
     public static final class ElevatorConstants { //TODO all values
 
         /* Gear Ratio */
-        public static final double GEAR_RATIO = 1.0;
+        public static final double ROTOR_TO_SENSOR_RATIO = 6.0;
+        public static final double SENSOR_TO_MECH_RATIO = 1.0;
 
         /* Motor Invert */
         public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;;
         
         /* Neutral Modes */
-        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Coast;
         
         /* Current Limits */
         public static final int SUPPLY_CURRENT_LIMIT = 35;
@@ -442,15 +443,15 @@ public final class Constants{
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
-        public static final boolean SOFTWARE_LIMIT_ENABLE = false;
-        public static final double FORWARD_SOFT_LIMIT = 0.0;
+        public static final boolean SOFTWARE_LIMIT_ENABLE = true;
+        public static final double FORWARD_SOFT_LIMIT = 0.7;//0.85;
         public static final double REVERSE_SOFT_LIMIT = 0.0;
 
         public static final double CRUISE_VELOCITY = 40;
         public static final double ACCELERATION = 10;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(15, 0.0, 0.0);
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(10, 0.0, 0.0);
         
         public static final double KS = 0.0;
         public static final double KV = 0.0;
@@ -468,7 +469,7 @@ public final class Constants{
         public static final double ELEVATOR_AMP_POSITION = 0.0;
         public static final double ELEVATOR_TRAP_CHAIN_POSITION = MAX_HEIGHT;
 
-        public static final Rotation2d ENCODER_OFFSET = Rotation2d.fromRotations(0.0);
+        public static final Rotation2d ENCODER_OFFSET = Rotation2d.fromRotations(-0.400634765625);
 
         public static final InterpolatingDoubleTreeMap HEIGHT_MAP = new InterpolatingDoubleTreeMap();
         static{

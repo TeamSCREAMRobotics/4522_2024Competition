@@ -48,7 +48,7 @@ public class Pivot extends SubsystemBase{
     private void configureDevices() {
         DeviceConfig.configureCANcoder("Pivot Encoder", m_encoder, DeviceConfig.pivotEncoderConfig(), Constants.LOOP_TIME_HZ);
         DeviceConfig.configureTalonFX("Pivot Motor", m_pivotMotor, DeviceConfig.pivotFXConfig(), Constants.LOOP_TIME_HZ);
-        resetPivotToAbsolute();
+        //resetPivotToAbsolute();
     }
 
     public void configPID(ScreamPIDConstants screamPIDConstants){
@@ -59,9 +59,9 @@ public class Pivot extends SubsystemBase{
         m_pivotMotor.setNeutralMode(mode);
     }
 
-    public void resetPivotToAbsolute(){
+    /* public void resetPivotToAbsolute(){
         m_pivotMotor.setPosition(m_encoder.getAbsolutePosition().getValueAsDouble());
-    }
+    } */
 
     public void zeroPivot(){
         m_pivotMotor.setPosition(0.0);

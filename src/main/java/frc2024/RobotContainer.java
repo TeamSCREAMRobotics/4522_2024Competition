@@ -63,7 +63,7 @@ public class RobotContainer {
     private static final Conveyor m_conveyor = new Conveyor();
     private static final Intake m_intake = new Intake();
 
-    private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve, m_climber, m_conveyor, m_elevator, m_intake, m_pivot, m_shooter);
+    private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve, null, m_conveyor, m_elevator, m_intake, m_pivot, m_shooter);
     
     /**
      * Configures the basic robot systems, such as Shuffleboard, autonomous, default commands, and button bindings.
@@ -80,18 +80,21 @@ public class RobotContainer {
      */
     private void configButtonBindings() {
         Controlboard.zeroGyro().onTrue(Commands.runOnce(() -> m_swerve.resetYaw(AllianceFlippable.getForwardRotation())));
-        Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, AllianceFlippable.getForwardRotation()))));
+        //Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, AllianceFlippable.getForwardRotation()))));
         //Controlboard.getBTestButton().whileTrue(new FeedForwardCharacterization(m_elevator, true, new FeedForwardCharacterizationData("Elevator"), m_elevator::setElevatorVoltage, m_elevator::getElevatorVelocity, m_elevator::getElevatorAcceleration));
 
         /* Conveyor */
         Controlboard.ejectThroughShooter().whileTrue(m_conveyor.outputCommand(-0.85)).onFalse(m_conveyor.stopCommand());
-        Controlboard.manuallyShoot().whileTrue(m_conveyor.outputCommand(-ConveyorConstants.AMP_TRAP_SPEED)).onFalse(m_conveyor.stopCommand());
+        //POV Down
+        Controlboard.manuallyShoot().whileTrue(m_conveyor.outputCommand(0.45)).onFalse(m_conveyor.stopCommand());
+        //POV Up
 
         /* Elevator */
-        //Controlboard.getManualMode().toggleOnTrue(new ElevatorManualCommand(m_elevator, Controlboard.getManualElevator_Output())).toggleOnFalse(Commands.runOnce(() -> m_elevator.stop()));
+        Controlboard.manualMode().toggleOnTrue(m_elevator.outputCommand(Controlboard.getManualElevatorOutput())).toggleOnFalse(Commands.runOnce(() -> m_elevator.stop()));
 
         /* Pivot */
-        // Controlboard.getManualMode().toggleOnTrue(new PivotManualCommand(m_pivot, Controlboard.getManualPivot_Output()));
+        Controlboard.manualMode().toggleOnTrue(m_pivot.outputCommand(Controlboard.getManualPivotOutput()));
+        //Right Y
 
         /* Pivot AND Elevator */
         // Controlboard.setPosition_Home().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_HOME_POSITION)).toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_HOME_ANGLE));
@@ -100,10 +103,11 @@ public class RobotContainer {
         // Controlboard.setPosition_Trap().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_TRAP_POSITION)).toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_TRAP_ANGLE));
 
         /* Shooter */
-        Controlboard.manuallyShoot()
+        Controlboard.testA()
             .whileTrue(
-                m_shooter.outputCommand(ShooterConstants.SHOOTER_SHOOT_OUTPUT))
+                m_shooter.outputCommand(1))
                     .onFalse(m_shooter.stopCommand());
+        //A button
                     
         Controlboard.ejectThroughShooter()
             .whileTrue(
@@ -111,25 +115,24 @@ public class RobotContainer {
             .onFalse(m_shooter.stopCommand());
 
         /* Automation */
-        Controlboard.autoFire()
+        /* Controlboard.autoFire()
             .whileTrue(
                 new AutoFire(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, Controlboard.defendedMode())
-                    .deadlineWith(new FacePoint(m_swerve, Controlboard.getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation(), false, true)));
+                    .deadlineWith(new FacePoint(m_swerve, Controlboard.getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation(), false, true))); */
 
         /* Intake */
         Controlboard.intakeFromFloor()
-            .whileTrue(
-                new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake)
-                    .until(() -> m_conveyor.hasPiece()));
+            .whileTrue(m_intake.outputCommand(IntakeConstants.INTAKE_SPEED).alongWith(m_conveyor.outputCommand(ConveyorConstants.TRANSFER_SPEED))).onFalse(m_intake.stopCommand().alongWith(m_conveyor.stopCommand()));
+               /*  new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake)
+                    .until(() -> m_conveyor.hasPiece())); */
 
         Controlboard.ejectThroughIntake()
-            .whileTrue(
-                m_intake.outputCommand(IntakeConstants.EJECT_SPEED));
+            .whileTrue(m_intake.outputCommand(IntakeConstants.EJECT_SPEED).alongWith(m_conveyor.outputCommand(ConveyorConstants.AMP_TRAP_SPEED))).onFalse(m_intake.stopCommand().alongWith(m_conveyor.stopCommand()));
 
-        Controlboard.autoPickupFromFloor()
+        /* Controlboard.autoPickupFromFloor()
             .whileTrue(
                 new AutoIntakeFloor(Controlboard.getTranslation(), m_swerve, m_elevator, m_pivot, m_intake, m_conveyor)
-                    .until(() -> m_conveyor.hasPiece()));
+                    .until(() -> m_conveyor.hasPiece())); */
 
         Controlboard.manualMode()
             .toggleOnTrue(
@@ -138,14 +141,14 @@ public class RobotContainer {
 
     private void configDefaultCommands() { 
         /* Sets the default command for the swerve subsystem */
-        /* m_swerve.setDefaultCommand(
-            new DriveCommand(
+        m_swerve.setDefaultCommand(
+            new TeleopDrive(
                 m_swerve,
                 Controlboard.getTranslation(),
                 Controlboard.getRotation(),
                 Controlboard.getFieldCentric()
             ) 
-        ); */
+        );
     }
 
     /**
@@ -154,13 +157,13 @@ public class RobotContainer {
      * Add auto routines with addCommands(Command... commands)
      */
     private void configAuto() {
-        Autonomous.configure(
+        /* Autonomous.configure(
             Commands.none().withName("Do Nothing"),
             new PPEvent("StartIntake", Commands.none()),//new IntakeAutoCommand(m_intake, IntakeConstants.INTAKE_SPEED, false)),
             new PPEvent("StopIntake", Commands.none()),
             new PPEvent("StartAimAtSpeaker", m_swerve.overrideRotationTargetCommand(ScreamUtil.calculateYawToPose(m_swerve.getPose(), AllianceFlippable.getTargetSpeaker()))),
             new PPEvent("StopAimAtSpeaker", m_swerve.overrideRotationTargetCommand(null))
-        );
+        ); */
 
         Autonomous.addRoutines(
             //Routines.Close4(m_swerve).withName("Close4"),
@@ -237,6 +240,6 @@ public class RobotContainer {
         //m_elevator.setNeutralMode(mode);
         //m_conveyor.setNeutralMode(mode);
         //m_intake.setNeutralMode(mode);
-        m_swerve.setNeutralModes(mode, mode);
+        //m_swerve.setNeutralModes(mode, mode);
     }
 }

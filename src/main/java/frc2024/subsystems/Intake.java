@@ -28,13 +28,13 @@ import frc2024.subsystems.Vision.Limelight;
 import frc2024.subsystems.swerve.Swerve;
 
 public class Intake extends SubsystemBase{
-    private TalonFX m_leftIntakeMotor;
+    //private TalonFX m_leftIntakeMotor;
     private TalonFX m_rightIntakeMotor;
 
     private DutyCycleOut m_dutyCycleRequest = new DutyCycleOut(0);
 
     public Intake(){
-        m_leftIntakeMotor = new TalonFX(Ports.LEFT_INTAKE_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        //m_leftIntakeMotor = new TalonFX(Ports.LEFT_INTAKE_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         m_rightIntakeMotor = new TalonFX(Ports.RIGHT_INTAKE_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         configIntakeMotors();
 
@@ -42,17 +42,13 @@ public class Intake extends SubsystemBase{
     }
 
     public void configIntakeMotors(){
-        DeviceConfig.configureTalonFX("Left Intake Motor", m_leftIntakeMotor, DeviceConfig.intakeFXConfig(), Constants.LOOP_TIME_HZ);
+        //DeviceConfig.configureTalonFX("Left Intake Motor", m_leftIntakeMotor, DeviceConfig.intakeFXConfig(), Constants.LOOP_TIME_HZ);
         DeviceConfig.configureTalonFX("Right Intake Motor", m_rightIntakeMotor, DeviceConfig.intakeFXConfig(), Constants.LOOP_TIME_HZ);
     }
 
     public void setNeutralMode(NeutralModeValue mode){
-        m_leftIntakeMotor.setNeutralMode(mode);
+        //m_leftIntakeMotor.setNeutralMode(mode);
         m_rightIntakeMotor.setNeutralMode(mode);
-    }
-
-    public double getMotorRPM(){
-        return ScreamUtil.average(m_rightIntakeMotor.getVelocity().getValueAsDouble(), m_leftIntakeMotor.getVelocity().getValueAsDouble())*60;
     }
 
     public void setIntakeOutput(double output){
@@ -61,12 +57,12 @@ public class Intake extends SubsystemBase{
 
     public void setIntake(ControlRequest control){
         m_rightIntakeMotor.setControl(control);
-        m_leftIntakeMotor.setControl(new Follower(m_rightIntakeMotor.getDeviceID(), false));
+        //m_leftIntakeMotor.setControl(new Follower(m_rightIntakeMotor.getDeviceID(), false));
     }
 
     public void stop(){
         m_rightIntakeMotor.stopMotor();
-        m_leftIntakeMotor.stopMotor();
+        //m_leftIntakeMotor.stopMotor();
     }
 
     public Command outputCommand(double output){

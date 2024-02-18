@@ -107,7 +107,7 @@ public class DeviceConfig {
         config.Audio = FXAudioConfigs(false, false, true);
         config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(ElevatorConstants.SOFTWARE_LIMIT_ENABLE, ElevatorConstants.FORWARD_SOFT_LIMIT, ElevatorConstants.REVERSE_SOFT_LIMIT);
         config.MotorOutput = FXMotorOutputConfig(invert, ElevatorConstants.NEUTRAL_MODE);
-        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.FusedCANcoder, Ports.ELEVATOR_ENCODER_ID, 1.0, ElevatorConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.FusedCANcoder, Ports.ELEVATOR_ENCODER_ID, ElevatorConstants.SENSOR_TO_MECH_RATIO, ElevatorConstants.ROTOR_TO_SENSOR_RATIO, ElevatorConstants.ENCODER_OFFSET);
         config.CurrentLimits = FXCurrentLimitsConfig(
             ElevatorConstants.CURRENT_LIMIT_ENABLE, 
             ElevatorConstants.SUPPLY_CURRENT_LIMIT, 
@@ -163,10 +163,10 @@ public class DeviceConfig {
         return config;
     }
     
-    public static TalonFXConfiguration shooterFXConfig(){
+    public static TalonFXConfiguration shooterFXConfig(InvertedValue invertValue){
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Audio = FXAudioConfigs(false, false, true);
-        config.MotorOutput = FXMotorOutputConfig(ShooterConstants.MOTOR_INVERT, ShooterConstants.NEUTRAL_MODE);
+        config.MotorOutput = FXMotorOutputConfig(invertValue, ShooterConstants.NEUTRAL_MODE);
         config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ShooterConstants.GEAR_RATIO, 1.0, Rotation2d.fromRotations(0));
         config.CurrentLimits = FXCurrentLimitsConfig(
             ShooterConstants.CURRENT_LIMIT_ENABLE, 

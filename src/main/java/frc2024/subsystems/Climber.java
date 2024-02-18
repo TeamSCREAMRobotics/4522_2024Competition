@@ -22,8 +22,8 @@ import frc2024.Constants.Ports;
 
 public class Climber extends SubsystemBase{
 
-  private TalonFX m_rightClimberMotor;
-  private TalonFX m_leftClimberMotor;
+  private TalonFX m_climberMotor;
+  //private TalonFX m_leftClimberMotor;
 
   private PositionVoltage m_positionRequest = new PositionVoltage(0);
   private DutyCycleOut m_dutyCycleRequest = new DutyCycleOut(0);
@@ -31,8 +31,8 @@ public class Climber extends SubsystemBase{
   private double m_targetHeight;
 
   public Climber (){
-        m_leftClimberMotor = new TalonFX(Ports.RIGHT_CLIMBER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
-        m_rightClimberMotor = new TalonFX(Ports.LEFT_CLIMBER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        //m_leftClimberMotor = new TalonFX(Ports.RIGHT_CLIMBER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        m_climberMotor = new TalonFX(Ports.LEFT_CLIMBER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
 
         configClimberMotors();
         
@@ -40,22 +40,22 @@ public class Climber extends SubsystemBase{
     }
     
     private void configClimberMotors() {
-        DeviceConfig.configureTalonFX("Right Climber Motor", m_rightClimberMotor, DeviceConfig.climberFXConfig(), Constants.LOOP_TIME_HZ);
-        DeviceConfig.configureTalonFX("Left Climber Motor", m_leftClimberMotor, DeviceConfig.climberFXConfig(), Constants.LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Right Climber Motor", m_climberMotor, DeviceConfig.climberFXConfig(), Constants.LOOP_TIME_HZ);
+        //DeviceConfig.configureTalonFX("Left Climber Motor", m_leftClimberMotor, DeviceConfig.climberFXConfig(), Constants.LOOP_TIME_HZ);
     }
 
     public void configPID(ScreamPIDConstants screamPIDConstants){
-        m_rightClimberMotor.getConfigurator().apply(screamPIDConstants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
-        m_leftClimberMotor.getConfigurator().apply(screamPIDConstants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
+        m_climberMotor.getConfigurator().apply(screamPIDConstants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
+        //m_leftClimberMotor.getConfigurator().apply(screamPIDConstants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
     }
     
     public void setNeutralMode(NeutralModeValue mode){
-        m_rightClimberMotor.setNeutralMode(mode);
-        m_leftClimberMotor.setNeutralMode(mode);
+        m_climberMotor.setNeutralMode(mode);
+        //m_leftClimberMotor.setNeutralMode(mode);
     }
 
     public void zeroHeight(){
-        m_rightClimberMotor.setPosition(0.0);
+        m_climberMotor.setPosition(0.0);
     }
 
     public void setTargetPosition(double height){
@@ -64,8 +64,8 @@ public class Climber extends SubsystemBase{
     }
     
     public void setClimber(ControlRequest control){
-        m_rightClimberMotor.setControl(control);
-        m_leftClimberMotor.setControl(new Follower(m_rightClimberMotor.getDeviceID(), false)); //left motor follows right motor in the opposing direction
+        m_climberMotor.setControl(control);
+        //m_leftClimberMotor.setControl(new Follower(m_climberMotor.getDeviceID(), false)); //left motor follows right motor in the opposing direction
     }
 
     public void setClimberOutput(double output){
@@ -73,11 +73,11 @@ public class Climber extends SubsystemBase{
     }
 
     public void stopClimber(){
-        m_rightClimberMotor.stopMotor();
+        m_climberMotor.stopMotor();
     }
 
     public double getClimberHeight(){
-        return m_rightClimberMotor.getPosition().refresh().getValue();
+        return m_climberMotor.getPosition().refresh().getValue();
     }
 
     public double getClimberError(){
@@ -89,8 +89,8 @@ public class Climber extends SubsystemBase{
     }
 
     public void stop(){
-        m_rightClimberMotor.stopMotor();
-        m_leftClimberMotor.stopMotor();
+        m_climberMotor.stopMotor();
+        //m_leftClimberMotor.stopMotor();
     }
 
     public Command outputCommand(DoubleSupplier output){

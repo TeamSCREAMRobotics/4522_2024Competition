@@ -24,7 +24,7 @@ public class MatchTab extends ShuffleboardTabBase {
     public MatchTab(Swerve swerve) {
         this.swerve = swerve;
 
-        checkNulls(swerve);
+        checkNulls(this.swerve);
     }
 
     private ComplexWidget m_autoChooserEntry;
@@ -43,7 +43,7 @@ public class MatchTab extends ShuffleboardTabBase {
 
     @Override
     public void periodic() {
-        m_field2d.setRobotPose(swerve.getPose());
+        //m_field2d.setRobotPose(swerve.getPose());
 
         m_matchTime.setDouble(DriverStation.getMatchTime());
     }

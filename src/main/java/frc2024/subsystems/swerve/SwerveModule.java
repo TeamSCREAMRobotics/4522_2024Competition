@@ -50,7 +50,7 @@ public class SwerveModule {
 
     private SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(DriveConstants.KS, DriveConstants.KV, DriveConstants.KA);
 
-    private VelocityTorqueCurrentFOC m_driveVelocityRequest = new VelocityTorqueCurrentFOC(0);
+    private VelocityVoltage m_driveVelocityRequest = new VelocityVoltage(0);
     private MotionMagicVoltage m_steerPositionRequest = new MotionMagicVoltage(0);
 
     /**
@@ -150,12 +150,12 @@ public class SwerveModule {
      * @param isOpenLoop Whether to drive in an open loop (Tele-Op) or closed loop (Autonomous) state.
      */
     public void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
+            //double velocity = Conversions.mpsToFalconRPS(desiredState.speedMetersPerSecond, SwerveConstants.MODULE_TYPE.wheelCircumference, 1);
             if(isOpenLoop){
-                m_driveMotor.setControl(m_driveVelocityRequest.withVelocity(desiredState.speedMetersPerSecond));
+                m_driveMotor.setControl(new DutyCycleOut(desiredState.speedMetersPerSecond / SwerveConstants.MAX_SPEED).withEnableFOC(true));
             } else {
-                double velocity = Conversions.mpsToFalconRPS(desiredState.speedMetersPerSecond, SwerveConstants.MODULE_TYPE.wheelCircumference, 1);
                 double feedforward = m_feedforward.calculate(desiredState.speedMetersPerSecond);
-                m_driveMotor.setControl(m_driveVelocityRequest.withVelocity(velocity));
+                //m_driveMotor.setControl(m_driveVelocityRequest.withVelocity(velocity));
             }
     }
 

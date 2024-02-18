@@ -27,7 +27,7 @@ public class Controlboard{
     public static final Rotation2d SNAP_TO_POLE_THRESHOLD = Rotation2d.fromDegrees(7.0);
 
     private static final CommandXboxController driverController_Command = new CommandXboxController(0);
-    private static final XboxController driverController = new XboxController(0);
+    //private static final XboxController driverController = new XboxController(0);
     private static final CommandXboxController operatorController_Command = new CommandXboxController(1);
     private static final XboxController operatorController = new XboxController(1);
     private static final Buttonboard buttonBoard = new Buttonboard(2, 3);
@@ -40,13 +40,15 @@ public class Controlboard{
      * @return A DoubleSupplier array representing the x and y values from the controller.
      */
     public static DoubleSupplier[] getTranslation(){
-        double x = -MathUtil.applyDeadband(driverController_Command.getLeftY(), STICK_DEADBAND);
-        double y = -MathUtil.applyDeadband(driverController_Command.getLeftX(), STICK_DEADBAND);
-        return snapTranslationToPole(
+        return new DoubleSupplier[] {
+            () -> -MathUtil.applyDeadband(driverController_Command.getLeftY(), STICK_DEADBAND),
+            () -> -MathUtil.applyDeadband(driverController_Command.getLeftX(), STICK_DEADBAND)
+        };
+        /* return snapTranslationToPole(
             new DoubleSupplier[]{
                 () -> x,
                 () -> y
-            });
+            }); */
     }
 
     private static DoubleSupplier[] snapTranslationToPole(DoubleSupplier[] translation){
@@ -102,7 +104,7 @@ public class Controlboard{
 
     public static Trigger manualMode(){
     /* Changes how the angle/height of the pivot and elevator are input */
-        return driverController_Command.povRight();
+        return operatorController_Command.povRight();
     }
 
     /* Automation */
@@ -131,25 +133,28 @@ public class Controlboard{
 
     /* Climber */
     public static final DoubleSupplier getManualClimberOutput(){
-        return () -> (driverController_Command.getLeftTriggerAxis() - driverController_Command.getRightTriggerAxis())/5; //Up POV on the button board
+        return () -> (operatorController_Command.getLeftTriggerAxis() - operatorController_Command.getRightTriggerAxis())/5; //Up POV on the button board
     }
 
     /* Shooter */
     public static final Trigger manuallyShoot(){
-        return driverController_Command.povUp();
+        return operatorController_Command.povUp();
+    }
+    public static final Trigger testA(){
+        return operatorController_Command.a();
     }
     public static final Trigger ejectThroughShooter(){
-        return driverController_Command.povDown();
+        return operatorController_Command.povDown();
     }
 
     /* Pivot */
     public static final DoubleSupplier getManualPivotOutput(){
-        return () -> operatorController_Command.getRightY();
+        return () -> operatorController_Command.getRightY()/2;
     }
 
     /* Elevator */
     public static final DoubleSupplier getManualElevatorOutput(){
-        return () -> driverController_Command.getLeftY()/2;
+        return () -> operatorController_Command.getLeftY()*50;
     }
 
     /* Elevator AND Pivot */    
