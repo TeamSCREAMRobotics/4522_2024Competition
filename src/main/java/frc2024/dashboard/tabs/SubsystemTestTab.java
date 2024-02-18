@@ -20,7 +20,7 @@ import frc2024.subsystems.Shooter;
 /** Add your docs here. */
 public class SubsystemTestTab extends ShuffleboardTabBase{
 
-    //private Climber climber;
+    private Climber climber;
     private Conveyor conveyor;
     private Elevator elevator;
     private Intake intake;
@@ -28,7 +28,7 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
     private Shooter shooter;
 
     public SubsystemTestTab(Climber climber, Conveyor conveyor, Elevator elevator, Intake intake, Pivot pivot, Shooter shooter){
-        //this.climber = climber;
+        this.climber = climber;
         this.conveyor = conveyor;
         this.elevator = elevator;
         this.intake = intake;
@@ -117,16 +117,16 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
     @Override
     public void periodic() {
         /* Climber */
-        /* if(ShuffleboardConstants.UPDATE_CLIMBER){
+        if(ShuffleboardConstants.UPDATE_CLIMBER){
             m_climberHeight.setDouble(climber.getClimberHeight());
 
             climber.configPID(ClimberConstants.PID_CONSTANTS.withP(m_climberKP.get().getDouble()));
             climber.setTargetPosition(getClimberHeight());
-        } */
+        }
 
         /* Conveyor */
         if(ShuffleboardConstants.UPDATE_CONVEYOR){
-            m_conveyor_MotorVelocity.setDouble(conveyor.getMotorRPM());
+            m_conveyor_MotorVelocity.setDouble(conveyor.getRPM());
             conveyor.setConveyorOutput(getConveyorDutyCycle());
         }
 
@@ -135,12 +135,12 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
             m_elevatorHeight.setDouble(elevator.getElevatorPosition());
 
             elevator.configPID(ClimberConstants.PID_CONSTANTS.withP(m_elevatorKP.get().getDouble()));
-            elevator.setTargetPosition(getElevatorHeight());
+            elevator.setTargetHeight(getElevatorHeight());
         }
 
         /* Intake */
         if(ShuffleboardConstants.UPDATE_INTAKE){
-            //m_intake_MotorVelocity.setDouble(intake.getMotorRPM());
+            m_intake_MotorVelocity.setDouble(intake.getRPM());
 
             intake.setIntakeOutput(getIntakeDutyCycle());
         }
@@ -150,45 +150,45 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
             m_pivotAngle.setDouble(pivot.getPivotAngle().getDegrees());
 
             pivot.configPID(ClimberConstants.PID_CONSTANTS.withP(m_pivotKP.get().getDouble()));
-            pivot.setTargetAngle(new Rotation2d(getPivotAngle()));
+            pivot.setTargetAngle(new Rotation2d(getPivotAngle()), true);
         }
 
         /* Shooter */
         if(ShuffleboardConstants.UPDATE_SHOOTER){
-            m_shooter_MotorVelocity.setDouble(shooter.getMotorRPM());
-            m_shooter_WheelVelocity.setDouble(shooter.getWheelRPM());
+            m_shooter_MotorVelocity.setDouble(shooter.getFeetPerSecond());
+            m_shooter_WheelVelocity.setDouble(shooter.getFeetPerSecond());
 
             shooter.setTargetVelocity(getShooterVelocity());
         }
     }
 
     /* Climber */
-    public static double getClimberHeight(){
+    public double getClimberHeight(){
         return m_climberHeight_Target.getDouble(0);
     }
 
     /* Conveyor */
-    public static double getConveyorDutyCycle(){
+    public double getConveyorDutyCycle(){
         return m_conveyor_DutyCycle.getDouble(0);
     }
 
     /* Elevator */
-    public static double getElevatorHeight(){
-        return m_elevatorHeight_Target.getDouble(0);
+    public double getElevatorHeight(){
+        return m_elevatorHeight_Target.getDouble(elevator.getElevatorHeight());
     }
 
     /* Intake */
-    public static double getIntakeDutyCycle(){
+    public double getIntakeDutyCycle(){
         return m_intake_DutyCycle.getDouble(0);
     }
 
     /* Pivot */
-    public static double getPivotAngle(){
-        return m_pivotAngle_Target.getDouble(0);
+    public double getPivotAngle(){
+        return m_pivotAngle_Target.getDouble(pivot.getPivotAngle().getDegrees());
     }
 
     /* Shooter */
-    public static double getShooterVelocity(){
+    public double getShooterVelocity(){
         return m_shooter_Velocity.getDouble(0);
     }
 }

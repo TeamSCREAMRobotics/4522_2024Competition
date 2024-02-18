@@ -14,6 +14,7 @@ import com.team4522.lib.util.AllianceFlippable;
 import com.team4522.lib.util.COTSFalconSwerveConstants;
 import com.team4522.lib.util.ScreamUtil;
 
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -44,6 +45,7 @@ public final class Constants{
     /* Robot loop time */
     public static final double LOOP_TIME_SEC = 0.02;
     public static final double LOOP_TIME_HZ = 1 / LOOP_TIME_SEC;
+    public static final double DEVICE_LOOP_TIME_HZ = 100.0;
 
     public static final class Ports {
         /** Possible CAN bus strings are:
@@ -102,7 +104,7 @@ public final class Constants{
 
         /* Drivebase Constants */
         // TODO ROBOT SPECIFIC
-        public static final double TRACK_WIDTH = Units.inchesToMeters(22.65); // Distance from left wheels to right wheels
+        public static final double TRACK_WIDTH = Units.inchesToMeters(22.75); // Distance from left wheels to right wheels
         public static final double WHEEL_BASE = Units.inchesToMeters(20.75); // Distance from front wheels to back wheels
 
         /* Gyro Constants */
@@ -277,10 +279,10 @@ public final class Constants{
     public static final class ClimberConstants { //TODO all values
         
         /* Gear Ratio */
-        public static final double GEAR_RATIO = 1.0;
+        public static final double GEAR_RATIO = 36.0;
 
         /* Motor Invert */
-        public static final InvertedValue MOTOR_INVERT = InvertedValue.Clockwise_Positive;;
+        public static final InvertedValue MOTOR_INVERT = InvertedValue.Clockwise_Positive;
         
         /* Neutral Modes */
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
@@ -322,6 +324,9 @@ public final class Constants{
         /* Gear Ratio */
         public static final double GEAR_RATIO = 1.0;
 
+        /* Circumference */
+        public static final double WHEEL_CIRCUMFERENCE = 4.0 * Math.PI;
+
         /* Motor Invert */
         public static final InvertedValue MOTOR_INVERT = InvertedValue.Clockwise_Positive;;
         
@@ -350,22 +355,22 @@ public final class Constants{
         public static final double AUTO_SHOOT_DISTANCE_THRESHOLD = 6.5; // meters
         public static final double SHOOTER_MAX_VELOCITY = 6000;
         public static final double SHOOTER_TARGET_VELOCITY = 5000;
-        public static final double SHOOTER_SHOOT_OUTPUT = 0.8;
-        public static final double SHOOTER_EJECT_OUTPUT = 0.35;//0.5;
+        public static final double SHOOT_OUTPUT = 0.8;
+        public static final double EJECT_OUTPUT = 0.35;//0.5;
 
-        public static final InterpolatingDoubleTreeMap minumumShooterOutput = new InterpolatingDoubleTreeMap();
+        public static final InterpolatingDoubleTreeMap MINIMUM_VELOCITY_MAP = new InterpolatingDoubleTreeMap();
         static{
             // (distance, rpm output)
-            minumumShooterOutput.put(0.0, 0.0);
+            MINIMUM_VELOCITY_MAP.put(0.0, 0.0);
         }
 
         //I believe it is actually the time it takes for it to leave the shooter,
             //not the time it takes for the note to reach the speaker, from 1706
                 //1706 values ranged from .78 - .83 and was changing based on the angle they shot at
-        public static final InterpolatingDoubleTreeMap timeToGoalMap = new InterpolatingDoubleTreeMap();
+        public static final InterpolatingDoubleTreeMap TIME_TO_GOAL_MAP = new InterpolatingDoubleTreeMap();
         static{
             // (angle to target, time (seconds))
-            timeToGoalMap.put(0.0, 0.0);
+            TIME_TO_GOAL_MAP.put(0.0, 0.0);
         }
     }
     
@@ -388,8 +393,8 @@ public final class Constants{
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
         public static final boolean SOFTWARE_LIMIT_ENABLE = false;
-        public static final double FORWARD_SOFT_LIMIT = 0.0;
-        public static final double REVERSE_SOFT_LIMIT = 0.0;
+        public static final double FORWARD_SOFT_LIMIT = 7.0;
+        public static final double REVERSE_SOFT_LIMIT = 44.0;
 
         public static final double TARGET_THRESHOLD = 0.50; //Degrees
 
@@ -405,10 +410,12 @@ public final class Constants{
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA, GravityTypeValue.Arm_Cosine);
 
-        public static final Rotation2d PIVOT_HOME_ANGLE = Rotation2d.fromDegrees(0.0);
-        public static final Rotation2d PIVOT_SUBWOOFER_ANGLE = Rotation2d.fromDegrees(0.0);
-        public static final Rotation2d PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(0.0);
-        public static final Rotation2d PIVOT_TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(0.0);
+        public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(44.0);
+        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(48.5);
+        public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(0.0);
+        public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(0.0);
+
+        public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(38.0);
 
         public static final Rotation2d ENCODER_OFFSET = Rotation2d.fromRotations(0.0);
 
@@ -456,18 +463,23 @@ public final class Constants{
         public static final double KS = 0.0;
         public static final double KV = 0.0;
         public static final double KA = 0.0;
-        public static final double KG = 3.75;
+        public static final double KG = 4.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA, GravityTypeValue.Elevator_Static);
 
-        public static final double TARGET_THRESHOLD = 0.50; //rotations
+        public static final double TARGET_THRESHOLD = 0.50; // inches
 
-        public static final double MAX_HEIGHT = 0.0;
-        public static final double MIN_HEIGHT = 0.0;
+        public static final double MAX_HEIGHT = 23.835; // inches
+        public static final double MIN_HEIGHT = 0.0; // inches
+        public static final double ENCODER_MAX = 8.5;
+        public static final double ENCODER_MIN = 0.0;
 
-        public static final double ELEVATOR_HOME_POSITION = 0.0;
-        public static final double ELEVATOR_SUBWOOFER_POSITION = 0.0;
-        public static final double ELEVATOR_AMP_POSITION = 0.0;
-        public static final double ELEVATOR_TRAP_CHAIN_POSITION = MAX_HEIGHT;
+        public static final double HOME_HEIGHT = 0.0;
+        public static final double SUBWOOFER_HEIGHT = 0.0;
+        public static final double AMP_HEIGHT = 0.0;
+        public static final double TRAP_CHAIN_HEIGHT = MAX_HEIGHT;
+
+        public static final double REHOME_VOLTAGE = -5.0;
+        public static final double REHOME_CURRENT_THRESHOLD = 0.0;
 
         public static final Rotation2d ENCODER_OFFSET = Rotation2d.fromRotations(-0.400634765625);
 
@@ -487,7 +499,7 @@ public final class Constants{
     public static final class IntakeConstants { //TODO all values
 
         /* Gear Ratio */
-        public static final double GEAR_RATIO = 1.0;
+        public static final double GEAR_RATIO = 3.0;
         
         /* Motor Invert */
         public static final InvertedValue MOTOR_INVERT = InvertedValue.Clockwise_Positive;
@@ -501,14 +513,14 @@ public final class Constants{
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
 
-        public static final double INTAKE_SPEED = 0.65;
-        public static final double EJECT_SPEED = -0.5;
+        public static final double INTAKE_OUTPUT = 0.65;
+        public static final double EJECT_OUTPUT = -0.5;
     }
 
     public static final class ConveyorConstants {//TODO all values
         
         /* Gear Ratio */
-        public static final double GEAR_RATIO = 1.0;
+        public static final double GEAR_RATIO = 4.0;
         
         /* Motor Invert */
         public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;;
@@ -523,22 +535,25 @@ public final class Constants{
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
         public static final double SHOOT_SPEED = 1.00;
-        public static final double AMP_TRAP_SPEED = -0.75;
-        public static final double TRANSFER_SPEED = 0.75;
+        public static final double AMP_TRAP_OUTPUT = -0.75;
+        public static final double TRANSFER_OUTPUT = 0.75;
     } 
 
     public static enum ElevatorPivotPosition{
-        HOME(ElevatorConstants.ELEVATOR_HOME_POSITION, PivotConstants.PIVOT_HOME_ANGLE), 
-        AMP(ElevatorConstants.ELEVATOR_AMP_POSITION, PivotConstants.PIVOT_AMP_ANGLE), 
-        SUBWOOFER(ElevatorConstants.ELEVATOR_SUBWOOFER_POSITION, PivotConstants.PIVOT_SUBWOOFER_ANGLE), 
-        TRAP_CHAIN(ElevatorConstants.ELEVATOR_TRAP_CHAIN_POSITION, PivotConstants.PIVOT_TRAP_CHAIN_ANGLE);
+        HOME(ElevatorConstants.HOME_HEIGHT, PivotConstants.HOME_ANGLE, true), 
+        AMP(ElevatorConstants.AMP_HEIGHT, PivotConstants.AMP_ANGLE, false), 
+        SUBWOOFER(ElevatorConstants.SUBWOOFER_HEIGHT, PivotConstants.SUBWOOFER_ANGLE, true), 
+        TRAP_CHAIN(ElevatorConstants.TRAP_CHAIN_HEIGHT, PivotConstants.TRAP_CHAIN_ANGLE, true),
+        SUBWOOFER_DEFENDED(ElevatorConstants.MAX_HEIGHT, PivotConstants.SUBWOOFER_ANGLE_DEFENDED, true);
 
         public double elevatorPosition;
         public Rotation2d pivotAngle;
+        public boolean limitPivotMotion;
 
-        private ElevatorPivotPosition(double elevatorPosition, Rotation2d pivotAngle){
+        private ElevatorPivotPosition(double elevatorPosition, Rotation2d pivotAngle, boolean limitPivotMotion){
             this.elevatorPosition = elevatorPosition;
             this.pivotAngle = pivotAngle;
+            this.limitPivotMotion = limitPivotMotion;
         }
     }
 
@@ -571,8 +586,6 @@ public final class Constants{
         public static final Translation2d RED_PIECE_2 = new Translation2d(13.631, 5.553);
         public static final Translation2d RED_PIECE_3 = new Translation2d(13.631, 4.106);
 
-        public static final Translation2d ROBOT_OFFSET = new Translation2d(Units.inchesToMeters(38.0), 0);
-
         public static final Translation2d[] CENTER_PIECE_TRANSLATIONS = new Translation2d[]{
             CENTER_PIECE_1,
             CENTER_PIECE_2,
@@ -591,10 +604,12 @@ public final class Constants{
         public static final Translation2d RED_STAGE_MID = AllianceFlippable.MirroredTranslation2d(BLUE_STAGE_MID);
         public static final Translation2d RED_STAGE_RIGHT = AllianceFlippable.MirroredTranslation2d(BLUE_STAGE_RIGHT);
 
-        public static final Translation2d BLUE_SPEAKER_OPENING = new Translation2d(0.0, 5.54);
-        public static final Translation2d RED_SPEAKER_OPENING = AllianceFlippable.MirroredTranslation2d(BLUE_SPEAKER_OPENING);
+        public static final Translation2d BLUE_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(7).get().getTranslation().toTranslation2d();
+        public static final Translation2d RED_SPEAKER = AllianceFlippable.MirroredTranslation2d(BLUE_SPEAKER);
 
-        public static final double SPEAKER_TAGS_HEIGHT = 1.440488;
-        public static final double STAGE_TAGS_HEIGHT = 1.320884;
+        public static final double SPEAKER_TAG_HEIGHT = 1.468864;
+        public static final double STAGE_TAG_HEIGHT = 1.320884;
+        public static final double SOURCE_TAG_HEIGHT = 1.355726;
+        public static final double AMP_TAG_HEIGHT = SOURCE_TAG_HEIGHT;
     }
 }

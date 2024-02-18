@@ -28,27 +28,23 @@ import frc2024.subsystems.Vision.Limelight;
 import frc2024.subsystems.swerve.Swerve;
 
 public class Intake extends SubsystemBase{
-    //private TalonFX m_leftIntakeMotor;
-    private TalonFX m_rightIntakeMotor;
+    private TalonFX m_intakeMotor;
 
     private DutyCycleOut m_dutyCycleRequest = new DutyCycleOut(0);
 
     public Intake(){
-        //m_leftIntakeMotor = new TalonFX(Ports.LEFT_INTAKE_MOTOR_ID, Ports.RIO_CANBUS_NAME);
-        m_rightIntakeMotor = new TalonFX(Ports.RIGHT_INTAKE_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        m_intakeMotor = new TalonFX(Ports.RIGHT_INTAKE_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         configIntakeMotors();
 
-        //OrchestraUtil.add(m_leftIntakeMotor, m_rightIntakeMotor);
+        OrchestraUtil.add(m_intakeMotor);
     }
 
     public void configIntakeMotors(){
-        //DeviceConfig.configureTalonFX("Left Intake Motor", m_leftIntakeMotor, DeviceConfig.intakeFXConfig(), Constants.LOOP_TIME_HZ);
-        DeviceConfig.configureTalonFX("Right Intake Motor", m_rightIntakeMotor, DeviceConfig.intakeFXConfig(), Constants.LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Right Intake Motor", m_intakeMotor, DeviceConfig.intakeFXConfig(), Constants.DEVICE_LOOP_TIME_HZ);
     }
 
     public void setNeutralMode(NeutralModeValue mode){
-        //m_leftIntakeMotor.setNeutralMode(mode);
-        m_rightIntakeMotor.setNeutralMode(mode);
+        m_intakeMotor.setNeutralMode(mode);
     }
 
     public void setIntakeOutput(double output){
@@ -56,13 +52,15 @@ public class Intake extends SubsystemBase{
     }
 
     public void setIntake(ControlRequest control){
-        m_rightIntakeMotor.setControl(control);
-        //m_leftIntakeMotor.setControl(new Follower(m_rightIntakeMotor.getDeviceID(), false));
+        m_intakeMotor.setControl(control);
+    }
+
+    public double getRPM(){
+        return m_intakeMotor.getVelocity().getValueAsDouble()*60.0;
     }
 
     public void stop(){
-        m_rightIntakeMotor.stopMotor();
-        //m_leftIntakeMotor.stopMotor();
+        m_intakeMotor.stopMotor();
     }
 
     public Command outputCommand(double output){

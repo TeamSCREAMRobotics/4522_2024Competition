@@ -42,34 +42,29 @@ public class Pivot extends SubsystemBase{
          
         configureDevices();
         
-        //OrchestraUtil.add(m_pivotMotor);
+        OrchestraUtil.add(m_pivotMotor);
     }
 
     private void configureDevices() {
-        DeviceConfig.configureCANcoder("Pivot Encoder", m_encoder, DeviceConfig.pivotEncoderConfig(), Constants.LOOP_TIME_HZ);
-        DeviceConfig.configureTalonFX("Pivot Motor", m_pivotMotor, DeviceConfig.pivotFXConfig(), Constants.LOOP_TIME_HZ);
-        //resetPivotToAbsolute();
+        DeviceConfig.configureCANcoder("Pivot Encoder", m_encoder, DeviceConfig.pivotEncoderConfig(), Constants.DEVICE_LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Pivot Motor", m_pivotMotor, DeviceConfig.pivotFXConfig(), Constants.DEVICE_LOOP_TIME_HZ);
     }
 
-    public void configPID(ScreamPIDConstants screamPIDConstants){
-        m_pivotMotor.getConfigurator().apply(screamPIDConstants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
+    public void configPID(ScreamPIDConstants constants){
+        m_pivotMotor.getConfigurator().apply(constants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
     }
     
     public void setNeutralMode(NeutralModeValue mode){
         m_pivotMotor.setNeutralMode(mode);
     }
 
-    /* public void resetPivotToAbsolute(){
-        m_pivotMotor.setPosition(m_encoder.getAbsolutePosition().getValueAsDouble());
-    } */
-
     public void zeroPivot(){
         m_pivotMotor.setPosition(0.0);
     }
 
-    public void setTargetAngle(Rotation2d angle){
+    public void setTargetAngle(Rotation2d angle, boolean limitMotion){
         m_targetAngle = angle;
-        setPivot(m_positionRequest.withPosition(m_targetAngle.getDegrees()));
+        setPivot(m_positionRequest.withPosition(m_targetAngle.getRotations()).withLimitForwardMotion(limitMotion).withLimitReverseMotion(limitMotion));
     }
 
     public void setPivotOutput(double output){
@@ -112,6 +107,10 @@ public class Pivot extends SubsystemBase{
     }
 
     public Command angleCommand(Rotation2d angle){
-        return run(() -> setTargetAngle(angle));
+        return run(() -> setTargetAngle(angle, true));
+    }
+
+    public Command angleCommand(Rotation2d angle, boolean limitMotion){
+        return run(() -> setTargetAngle(angle, limitMotion));
     }
 }

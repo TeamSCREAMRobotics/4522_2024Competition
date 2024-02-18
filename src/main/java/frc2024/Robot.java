@@ -35,59 +35,25 @@ public class Robot extends TimedRobot {
   private RobotContainer robotContainer;
 
   private Timer timeSinceDisabled = new Timer();
-  
-
-  /**
-   * This function is run when the robot is first started up and should be used
-   * for any
-   * initialization code.
-   */
 
   public Robot() {}
 
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer. This will perform all our button bindings,
-    // and put our
-    // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
   }
 
-  /**
-   * This function is called every robot packet, no matter the mode. Use this for
-   * items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and
-   * test.
-   *
-   * 
-   * This runs after the mode specific periodic functions, but before LiveWindow
-   * and
-   * SmartDashboard integrated updating.
-   */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler. This is responsible for polling buttons, adding
-    // newly-scheduled
-    // commands, running already-scheduled commands, removing finished or
-    // interrupted commands,
-    // and running subsystem periodic() methods. This must be called from the
-    // robot's periodic
-    // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
   }
 
-  /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    if (autonomousCommand != null) {
-      autonomousCommand.cancel();
-    }
-
     timeSinceDisabled.reset();
     timeSinceDisabled.start();
   }
 
-    /** This function is called periodically when the robot is in Disabled mode. */
   @Override
   public void disabledPeriodic() {
     if(((int) timeSinceDisabled.get()) == 5){
@@ -95,12 +61,16 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /**
-   * This autonomous runs the autonomous command selected by your
-   * {@link RobotContainer} class.
-   */
+  @Override
+  public void disabledExit() {
+    RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Brake, NeutralModeValue.Brake);
+    CommandScheduler.getInstance().cancelAll();
+    RobotContainer.stopAll();
+  }
+
   @Override
   public void autonomousInit() {
+    RobotContainer.setAlliance(DriverStation.getAlliance().get());
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -109,12 +79,12 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {
-  }
+  public void autonomousPeriodic() {}
 
-    /** This function is called once each time the robot enters Tele-Op mode. */
+  @Override
+  public void autonomousExit() {}
+
   @Override
   public void teleopInit() {
     if (autonomousCommand != null) {
@@ -122,24 +92,31 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {}
 
   @Override
+  public void teleopExit() {}
+
+  @Override
   public void testInit() {
-    // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }
 
-  /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {
-  }
+  public void testPeriodic() {}
 
   @Override
-  public void disabledExit() {
-    RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Brake, NeutralModeValue.Brake);
-    RobotContainer.stopAll();
+  public void testExit() {}
+
+  @Override
+  public void simulationInit() {}
+
+  @Override
+  public void simulationPeriodic() {}
+
+  @Override
+  public void driverStationConnected() {
+    RobotContainer.setAlliance(DriverStation.getAlliance().get());
   }
 }

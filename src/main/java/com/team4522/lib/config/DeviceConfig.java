@@ -107,7 +107,7 @@ public class DeviceConfig {
         config.Audio = FXAudioConfigs(false, false, true);
         config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(ElevatorConstants.SOFTWARE_LIMIT_ENABLE, ElevatorConstants.FORWARD_SOFT_LIMIT, ElevatorConstants.REVERSE_SOFT_LIMIT);
         config.MotorOutput = FXMotorOutputConfig(invert, ElevatorConstants.NEUTRAL_MODE);
-        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.FusedCANcoder, Ports.ELEVATOR_ENCODER_ID, ElevatorConstants.SENSOR_TO_MECH_RATIO, ElevatorConstants.ROTOR_TO_SENSOR_RATIO, ElevatorConstants.ENCODER_OFFSET);
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ElevatorConstants.ROTOR_TO_SENSOR_RATIO, 1.0, Rotation2d.fromDegrees(0));
         config.CurrentLimits = FXCurrentLimitsConfig(
             ElevatorConstants.CURRENT_LIMIT_ENABLE, 
             ElevatorConstants.SUPPLY_CURRENT_LIMIT, 
@@ -120,9 +120,8 @@ public class DeviceConfig {
 
     public static CANcoderConfiguration elevatorEncoderConfig(){
         CANcoderConfiguration config = new CANcoderConfiguration();
-        config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
         config.MagnetSensor.MagnetOffset = ElevatorConstants.ENCODER_OFFSET.getRotations();
-        config.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+        config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         return config;
     }
 
@@ -159,7 +158,7 @@ public class DeviceConfig {
         CANcoderConfiguration config = new CANcoderConfiguration();
         config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
         config.MagnetSensor.MagnetOffset = PivotConstants.ENCODER_OFFSET.getRotations();
-        config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+        config.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
         return config;
     }
     
@@ -206,6 +205,9 @@ public class DeviceConfig {
                     fx.getDutyCycle().setUpdateFrequency(updateFrequencyHz),
                     fx.getPosition().setUpdateFrequency(updateFrequencyHz),
                     fx.getVelocity().setUpdateFrequency(updateFrequencyHz),
+                    fx.getRotorPosition().setUpdateFrequency(updateFrequencyHz),
+                    fx.getRotorVelocity().setUpdateFrequency(updateFrequencyHz),
+                    fx.getSupplyCurrent().setUpdateFrequency(updateFrequencyHz),
                     fx.optimizeBusUtilization());
             }
         };

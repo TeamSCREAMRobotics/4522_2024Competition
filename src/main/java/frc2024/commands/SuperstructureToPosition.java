@@ -17,21 +17,15 @@ public class SuperstructureToPosition extends SequentialCommandGroup{
 
     public SuperstructureToPosition(ElevatorPivotPosition position, Elevator elevator, Pivot pivot){
         addCommands(
-            elevator.positionCommand(position.elevatorPosition)
-                .alongWith(pivot.angleCommand(position.pivotAngle))
-                .until(() -> endCondition(elevator, pivot))
+            elevator.heightCommand(position.elevatorPosition)
+                .alongWith(pivot.angleCommand(position.pivotAngle, position.limitPivotMotion))
         );
     }
 
     public SuperstructureToPosition(double elevatorPosition, Rotation2d pivotAngle, Elevator elevator, Pivot pivot){
         addCommands(
-            elevator.positionCommand(elevatorPosition)
+            elevator.heightCommand(elevatorPosition)
                 .alongWith(pivot.angleCommand(pivotAngle))
-                .until(() -> endCondition(elevator, pivot))
         );
-    }
-
-    public boolean endCondition(Elevator elevator, Pivot pivot){
-        return elevator.getElevatorAtTarget() && pivot.getPivotAtTarget();
     }
 }

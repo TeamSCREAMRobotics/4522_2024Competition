@@ -9,7 +9,6 @@ import java.util.function.DoubleSupplier;
 import org.photonvision.PhotonUtils;
 
 import com.team1706.FieldRelativeAccel;
-import com.team1706.FieldRelativeSpeed;
 import com.team1706.SmartShooting;
 import com.team4522.lib.util.AllianceFlippable;
 import com.team4522.lib.util.ScreamUtil;

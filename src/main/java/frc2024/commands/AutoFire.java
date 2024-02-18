@@ -30,10 +30,10 @@ public class AutoFire extends SequentialCommandGroup{
                     new SuperstructureToPosition(
                         defense.getAsBoolean() 
                         ? ElevatorConstants.MAX_HEIGHT
-                        : ElevatorConstants.HEIGHT_MAP_DEFENDED.get(getDistanceFromSpeaker(swerve)),
+                        : ElevatorConstants.HEIGHT_MAP_DEFENDED.get(getDistanceToSpeaker(swerve)),
                         defense.getAsBoolean()
-                        ? Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP_DEFENDED.get(getDistanceFromSpeaker(swerve)).doubleValue())
-                        : Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP_UNDEFENDED.get(getDistanceFromSpeaker(swerve)).doubleValue()),
+                        ? Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP_DEFENDED.get(getDistanceToSpeaker(swerve)).doubleValue())
+                        : Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP_UNDEFENDED.get(getDistanceToSpeaker(swerve)).doubleValue()),
                         elevator,
                         pivot
                     )
@@ -50,16 +50,16 @@ public class AutoFire extends SequentialCommandGroup{
         );
     }
 
-    public double getDistanceFromSpeaker(Swerve swerve){
+    public double getDistanceToSpeaker(Swerve swerve){
         return Vision.getFusedDistanceToSpeaker(Limelight.SHOOTER, swerve.getPose());
     }
 
     public boolean runCondition(Swerve swerve){
-        return getDistanceFromSpeaker(swerve) <= ShooterConstants.AUTO_SHOOT_DISTANCE_THRESHOLD;
+        return getDistanceToSpeaker(swerve) <= ShooterConstants.AUTO_SHOOT_DISTANCE_THRESHOLD;
     }
 
     public boolean endCondition(Swerve swerve, Shooter shooter, Pivot pivot, Elevator elevator){
-        return shooter.getWheelRPM() > ShooterConstants.minumumShooterOutput.get(getDistanceFromSpeaker(swerve))
+        return shooter.getRPM() >= ShooterConstants.MINIMUM_VELOCITY_MAP.get(getDistanceToSpeaker(swerve))
            && pivot.getPivotAtTarget()
            && elevator.getElevatorAtTarget()
            && ScreamUtil.valueWithinThreshold(Vision.getTX(Limelight.SHOOTER), VisionConstants.AUTO_FIRE_X_THRESHOLD);

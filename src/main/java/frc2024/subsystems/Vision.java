@@ -8,6 +8,7 @@ import com.team4522.lib.util.AllianceFlippable;
 import com.team4522.lib.util.LimelightHelpers;
 import com.team4522.lib.util.ScreamUtil;
 
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.KalmanFilter;
@@ -121,15 +122,15 @@ public class Vision {
         return filterPose3d(LimelightHelpers.getBotPose3d_TargetSpace(limelight.name));
     }
 
-    public static double getDistanceToSpeaker(Limelight limelight){
-        return PhotonUtils.calculateDistanceToTargetMeters(limelight.mountPose.getZ(), FieldConstants.SPEAKER_TAGS_HEIGHT, limelight.mountPose.getRotation().getY(), Units.degreesToRadians(getTY(limelight)));
+    public static double getDistanceToTarget(double targetHeight, Limelight limelight){
+        return PhotonUtils.calculateDistanceToTargetMeters(limelight.mountPose.getZ(), targetHeight, limelight.mountPose.getRotation().getY(), Units.degreesToRadians(getTY(limelight)));
     }
 
     public static double getFusedDistanceToSpeaker(Limelight limelight, Pose2d currentPose){
         double sum;
         sum = ScreamUtil.calculateDistanceToTranslation(currentPose.getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation());
         if(getTV(limelight)){
-            sum += PhotonUtils.calculateDistanceToTargetMeters(limelight.mountPose.getZ(), FieldConstants.SPEAKER_TAGS_HEIGHT, limelight.mountPose.getRotation().getY(), Units.degreesToRadians(getTY(limelight)));
+            sum += getDistanceToTarget(FieldConstants.SPEAKER_TAG_HEIGHT, limelight);
             return sum / 2;
         }
         return sum;

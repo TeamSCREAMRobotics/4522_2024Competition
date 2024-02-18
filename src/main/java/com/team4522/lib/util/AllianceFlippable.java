@@ -16,10 +16,12 @@ import frc2024.subsystems.Vision.IntakePipeline;
 
 public final class AllianceFlippable {
 
-    private static boolean flip = RobotContainer.getAlliance() == Alliance.Blue;
+    public static boolean shouldFlip(){
+        return RobotContainer.getAlliance() == Alliance.Blue;
+    }
 
     public static Rotation2d getForwardRotation(){
-        return flip ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180);
+        return shouldFlip() ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180);
     }
 
     public static int getDirectionCoefficient(){
@@ -27,7 +29,7 @@ public final class AllianceFlippable {
     }
 
     public static Pose2d getTargetSpeaker(){
-        return Pose2d(new Pose2d(FieldConstants.BLUE_SPEAKER_OPENING, getForwardRotation()), new Pose2d(FieldConstants.RED_SPEAKER_OPENING, getForwardRotation()));
+        return Pose2d(new Pose2d(FieldConstants.BLUE_SPEAKER, getForwardRotation()), new Pose2d(FieldConstants.RED_SPEAKER, getForwardRotation()));
     }
 
     public static IntakePipeline getIntakePipeline(Side side){
@@ -47,7 +49,7 @@ public final class AllianceFlippable {
     }
 
     public static Object Object(Object blueValue, Object redValue){
-        return flip ? blueValue : redValue;
+        return shouldFlip() ? blueValue : redValue;
     }
 
     public static double Number(double blueValue, double redValue){

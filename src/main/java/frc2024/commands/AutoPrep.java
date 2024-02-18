@@ -56,17 +56,17 @@ public class AutoPrep extends Command {
     distanceFromSpeaker_Physical = ScreamUtil.calculateDistanceToTranslation(swerve.getPose().getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation());
     distanceFromSpeaker_Virtual = ScreamUtil.calculateDistanceToTranslation(swerve.getPose().getTranslation(), SmartShooting.calculateVirtualTarget(swerve, AllianceFlippable.getTargetSpeaker().getTranslation()));
 
-    double shooterTarget_RPM = ShooterConstants.minumumShooterOutput.get(distanceFromSpeaker_Virtual);
+    double shooterTarget_RPM = ShooterConstants.MINIMUM_VELOCITY_MAP.get(distanceFromSpeaker_Virtual);
     if(shooterTarget_RPM < ShooterConstants.SHOOTER_TARGET_VELOCITY) shooterTarget_RPM = ShooterConstants.SHOOTER_TARGET_VELOCITY;
 
     shooter.setTargetVelocity(shooterTarget_RPM);
     if(!defense){
-      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP_UNDEFENDED.get(distanceFromSpeaker_Physical)));
-      elevator.setTargetPosition(ElevatorConstants.HEIGHT_MAP.get(distanceFromSpeaker_Physical));
+      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP_UNDEFENDED.get(distanceFromSpeaker_Physical)), true);
+      elevator.setTargetHeight(ElevatorConstants.HEIGHT_MAP.get(distanceFromSpeaker_Physical));
     }
     else{
-      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP_DEFENDED.get(distanceFromSpeaker_Physical)));
-      elevator.setTargetPosition(ElevatorConstants.HEIGHT_MAP_DEFENDED.get(distanceFromSpeaker_Physical));
+      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP_DEFENDED.get(distanceFromSpeaker_Physical)), true);
+      elevator.setTargetHeight(ElevatorConstants.HEIGHT_MAP_DEFENDED.get(distanceFromSpeaker_Physical));
     }
   }
 

@@ -89,7 +89,7 @@ public class TeleopDrive extends Command {
             lastAngle = swerve.getRotation();
         }
 
-        if(correctionTimer.hasElapsed(SwerveConstants.CORRECTION_TIME_THRESHOLD)){
+        if(swerve.getGyro().getAngularVelocityZWorld().getValueAsDouble() < 0.5){
             return swerve.calculateHeadingCorrection(swerve.getRotation().getDegrees(), lastAngle.getDegrees());
         }
 

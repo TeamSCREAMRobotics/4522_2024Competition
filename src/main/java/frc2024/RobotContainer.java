@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -28,8 +29,11 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc2024.Constants.ConveyorConstants;
+import frc2024.Constants.ElevatorConstants;
+import frc2024.Constants.ElevatorPivotPosition;
 import frc2024.Constants.FieldConstants;
 import frc2024.Constants.IntakeConstants;
+import frc2024.Constants.PivotConstants;
 import frc2024.Constants.ShooterConstants;
 import frc2024.auto.Autonomous;
 import frc2024.auto.Autonomous.PPEvent;
@@ -63,7 +67,9 @@ public class RobotContainer {
     private static final Conveyor m_conveyor = new Conveyor();
     private static final Intake m_intake = new Intake();
 
-    private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve, null, m_conveyor, m_elevator, m_intake, m_pivot, m_shooter);
+    private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve, m_climber, m_conveyor, m_elevator, m_intake, m_pivot, m_shooter);
+
+    private static Alliance m_alliance;
     
     /**
      * Configures the basic robot systems, such as Shuffleboard, autonomous, default commands, and button bindings.
@@ -90,28 +96,45 @@ public class RobotContainer {
         //POV Up
 
         /* Elevator */
-        Controlboard.manualMode().toggleOnTrue(m_elevator.outputCommand(Controlboard.getManualElevatorOutput())).toggleOnFalse(Commands.runOnce(() -> m_elevator.stop()));
+        Controlboard.manualMode().toggleOnTrue(m_elevator.voltageCommand(Controlboard.getManualElevatorOutput())).toggleOnFalse(Commands.runOnce(() -> m_elevator.stop()));
 
         /* Pivot */
         Controlboard.manualMode().toggleOnTrue(m_pivot.outputCommand(Controlboard.getManualPivotOutput()));
         //Right Y
 
         /* Pivot AND Elevator */
-        // Controlboard.setPosition_Home().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_HOME_POSITION)).toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_HOME_ANGLE));
-        // Controlboard.setPosition_Subwoofer().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_SUBWOOFER_POSITION)).toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_SUBWOOFER_ANGLE));
-        // Controlboard.setPosition_Amp().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_AMP_POSITION)).toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_AMP_ANGLE));
-        // Controlboard.setPosition_Trap().toggleOnTrue(new ElevatorTargetCommand(m_elevator, ElevatorConstants.ELEVATOR_TRAP_POSITION)).toggleOnTrue(new PivotTargetCommand(m_pivot, PivotConstants.PIVOT_TRAP_ANGLE));
+        Controlboard.goToHomePosition().onTrue(
+            new SuperstructureToPosition(ElevatorPivotPosition.HOME, m_elevator, m_pivot)
+                .until(() -> superstructureAtTarget()));
+
+        Controlboard.goToSubwooferPosition()
+            .whileTrue(new SuperstructureToPosition(ElevatorPivotPosition.SUBWOOFER, m_elevator, m_pivot))
+            .onFalse(
+                new SuperstructureToPosition(ElevatorPivotPosition.HOME, m_elevator, m_pivot)
+                    .until((() -> superstructureAtTarget())));
+
+        Controlboard.goToAmpPosition()
+            .whileTrue(new SuperstructureToPosition(ElevatorPivotPosition.AMP, m_elevator, m_pivot))
+            .onFalse(
+                new SuperstructureToPosition(ElevatorPivotPosition.HOME, m_elevator, m_pivot)
+                    .until((() ->  superstructureAtTarget())));
+
+        Controlboard.goToTrapPosition()
+            .whileTrue(new SuperstructureToPosition(ElevatorPivotPosition.TRAP_CHAIN, m_elevator, m_pivot))
+            .onFalse(
+                new SuperstructureToPosition(ElevatorPivotPosition.HOME, m_elevator, m_pivot)
+                    .until((() -> superstructureAtTarget())));
 
         /* Shooter */
         Controlboard.testA()
             .whileTrue(
-                m_shooter.outputCommand(1))
+                m_shooter.outputCommand(ShooterConstants.SHOOT_OUTPUT))
                     .onFalse(m_shooter.stopCommand());
         //A button
                     
         Controlboard.ejectThroughShooter()
             .whileTrue(
-                m_shooter.outputCommand(ShooterConstants.SHOOTER_EJECT_OUTPUT))
+                m_shooter.outputCommand(ShooterConstants.EJECT_OUTPUT))
             .onFalse(m_shooter.stopCommand());
 
         /* Automation */
@@ -122,12 +145,12 @@ public class RobotContainer {
 
         /* Intake */
         Controlboard.intakeFromFloor()
-            .whileTrue(m_intake.outputCommand(IntakeConstants.INTAKE_SPEED).alongWith(m_conveyor.outputCommand(ConveyorConstants.TRANSFER_SPEED))).onFalse(m_intake.stopCommand().alongWith(m_conveyor.stopCommand()));
+            .whileTrue(m_intake.outputCommand(IntakeConstants.INTAKE_OUTPUT).alongWith(m_conveyor.outputCommand(ConveyorConstants.TRANSFER_OUTPUT))).onFalse(m_intake.stopCommand().alongWith(m_conveyor.stopCommand()));
                /*  new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake)
                     .until(() -> m_conveyor.hasPiece())); */
 
-        Controlboard.ejectThroughIntake()
-            .whileTrue(m_intake.outputCommand(IntakeConstants.EJECT_SPEED).alongWith(m_conveyor.outputCommand(ConveyorConstants.AMP_TRAP_SPEED))).onFalse(m_intake.stopCommand().alongWith(m_conveyor.stopCommand()));
+        Controlboard.ejectThroughConveyor()
+            .whileTrue(m_intake.outputCommand(IntakeConstants.EJECT_OUTPUT).alongWith(m_conveyor.outputCommand(ConveyorConstants.AMP_TRAP_OUTPUT))).onFalse(m_intake.stopCommand().alongWith(m_conveyor.stopCommand()));
 
         /* Controlboard.autoPickupFromFloor()
             .whileTrue(
@@ -157,13 +180,13 @@ public class RobotContainer {
      * Add auto routines with addCommands(Command... commands)
      */
     private void configAuto() {
-        /* Autonomous.configure(
+        Autonomous.configure(
             Commands.none().withName("Do Nothing"),
             new PPEvent("StartIntake", Commands.none()),//new IntakeAutoCommand(m_intake, IntakeConstants.INTAKE_SPEED, false)),
             new PPEvent("StopIntake", Commands.none()),
             new PPEvent("StartAimAtSpeaker", m_swerve.overrideRotationTargetCommand(ScreamUtil.calculateYawToPose(m_swerve.getPose(), AllianceFlippable.getTargetSpeaker()))),
             new PPEvent("StopAimAtSpeaker", m_swerve.overrideRotationTargetCommand(null))
-        ); */
+        );
 
         Autonomous.addRoutines(
             //Routines.Close4(m_swerve).withName("Close4"),
@@ -191,7 +214,11 @@ public class RobotContainer {
         return m_swerve;
     }
 
-    /* public static Shooter getShooter(){
+    public static Climber getClimber(){
+        return m_climber;
+    }
+
+    public static Shooter getShooter(){
         return m_shooter;
     }
 
@@ -205,11 +232,11 @@ public class RobotContainer {
 
     public static Conveyor getConveyor(){
         return m_conveyor;
-    } */
+    }
 
-    /* public static Intake getIntake(){
+    public static Intake getIntake(){
         return m_intake;
-    } */
+    }
 
     /**
      * Retrieves the current Alliance as detected by the DriverStation. 
@@ -217,20 +244,25 @@ public class RobotContainer {
      * @return The current Alliance.
      */
     public static Alliance getAlliance(){
-        if(DriverStation.getAlliance().isPresent()){
-            return DriverStation.getAlliance().get();
-        } else {
-            return Alliance.Blue;
-        }
+        return m_alliance;
+    }
+
+    public static void setAlliance(Alliance alliance){
+        m_alliance = alliance;
+    }
+
+    public static boolean superstructureAtTarget(){
+        return m_elevator.getElevatorAtTarget() && m_pivot.getPivotAtTarget();
     }
 
     public static void stopAll(){
-        //m_shooter.stop();
-        //m_pivot.stop();
-        //m_elevator.stop();
-        //m_conveyor.stop();
-        //m_intake.stop();
-        //m_swerve.stopAll();
+        m_climber.stop();
+        m_shooter.stop();
+        m_pivot.stop();
+        m_elevator.stop();
+        m_conveyor.stop();
+        m_intake.stop();
+        m_swerve.stopAll();
         OrchestraUtil.stop();
     }
     

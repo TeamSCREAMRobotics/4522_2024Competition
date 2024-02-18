@@ -50,7 +50,8 @@ public class SwerveModule {
 
     private SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(DriveConstants.KS, DriveConstants.KV, DriveConstants.KA);
 
-    private VelocityVoltage m_driveVelocityRequest = new VelocityVoltage(0);
+    private DutyCycleOut m_driveDutyCyleRequest = new DutyCycleOut(0).withEnableFOC(true);
+    private VelocityVoltage m_driveVelocityRequest = new VelocityVoltage(0).withEnableFOC(true);
     private MotionMagicVoltage m_steerPositionRequest = new MotionMagicVoltage(0);
 
     /**
@@ -150,12 +151,12 @@ public class SwerveModule {
      * @param isOpenLoop Whether to drive in an open loop (Tele-Op) or closed loop (Autonomous) state.
      */
     public void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
-            //double velocity = Conversions.mpsToFalconRPS(desiredState.speedMetersPerSecond, SwerveConstants.MODULE_TYPE.wheelCircumference, 1);
             if(isOpenLoop){
-                m_driveMotor.setControl(new DutyCycleOut(desiredState.speedMetersPerSecond / SwerveConstants.MAX_SPEED).withEnableFOC(true));
+                m_driveMotor.setControl(m_driveDutyCyleRequest.withOutput(desiredState.speedMetersPerSecond / SwerveConstants.MAX_SPEED));
             } else {
+                double velocity = Conversions.mpsToFalconRPS(desiredState.speedMetersPerSecond, SwerveConstants.MODULE_TYPE.wheelCircumference, 1);
                 double feedforward = m_feedforward.calculate(desiredState.speedMetersPerSecond);
-                //m_driveMotor.setControl(m_driveVelocityRequest.withVelocity(velocity));
+                m_driveMotor.setControl(m_driveVelocityRequest.withVelocity(velocity).withFeedForward(feedforward));
             }
     }
 
@@ -195,7 +196,7 @@ public class SwerveModule {
      * See DeviceConfig for more information.
      */
     private void configAngleEncoder() {
-        DeviceConfig.configureCANcoder(m_modLocation + " Angle Encoder", m_angleEncoder, DeviceConfig.swerveEncoderConfig(m_angleOffset), Constants.LOOP_TIME_HZ);
+        DeviceConfig.configureCANcoder(m_modLocation + " Angle Encoder", m_angleEncoder, DeviceConfig.swerveEncoderConfig(m_angleOffset), Constants.DEVICE_LOOP_TIME_HZ);
     }
 
     /**
@@ -203,7 +204,7 @@ public class SwerveModule {
      * See DeviceConfig for more information.
      */
     private void configSteerMotor() {
-        DeviceConfig.configureTalonFX(m_modLocation + " Steer Motor", m_steerMotor, DeviceConfig.steerFXConfig(m_angleEncoder.getDeviceID()), Constants.LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX(m_modLocation + " Steer Motor", m_steerMotor, DeviceConfig.steerFXConfig(m_angleEncoder.getDeviceID()), Constants.DEVICE_LOOP_TIME_HZ);
     }
 
     /**
@@ -211,7 +212,7 @@ public class SwerveModule {
      * See DeviceConfig for more information.
      */
     private void configDriveMotor() {
-        DeviceConfig.configureTalonFX(m_modLocation + " Drive Motor", m_driveMotor, DeviceConfig.driveFXConfig(), Constants.LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX(m_modLocation + " Drive Motor", m_driveMotor, DeviceConfig.driveFXConfig(), Constants.DEVICE_LOOP_TIME_HZ);
     }
 
     /**

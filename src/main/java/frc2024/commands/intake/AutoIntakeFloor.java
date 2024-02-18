@@ -40,7 +40,7 @@ public class AutoIntakeFloor extends SequentialCommandGroup {
         new FaceVisionTarget(
             swerve, 
             Vision.getTV(Limelight.INTAKE) 
-                ? new DoubleSupplier[]{() -> 0, () -> 3} 
+                ? new DoubleSupplier[]{() -> 0, () -> 0} 
                 : translation, 
             SwerveConstants.VISION_ROTATION_CONSTANTS, 
             Limelight.INTAKE)

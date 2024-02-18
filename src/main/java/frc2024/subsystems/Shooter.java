@@ -33,12 +33,12 @@ public class Shooter extends SubsystemBase{
 
         configShooterMotors();
         
-        //OrchestraUtil.add(m_rightShooterMotor, m_leftShooterMotor);
+        OrchestraUtil.add(m_rightShooterMotor, m_leftShooterMotor);
     }
     
     private void configShooterMotors() {
-        DeviceConfig.configureTalonFX("rightShooterMotor", m_rightShooterMotor, DeviceConfig.shooterFXConfig(InvertedValue.Clockwise_Positive), Constants.LOOP_TIME_HZ);
-        DeviceConfig.configureTalonFX("leftShooterMotor", m_leftShooterMotor, DeviceConfig.shooterFXConfig(InvertedValue.Clockwise_Positive), Constants.LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Right Shooter Motor", m_rightShooterMotor, DeviceConfig.shooterFXConfig(InvertedValue.Clockwise_Positive), Constants.DEVICE_LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Left Shooter Motor", m_leftShooterMotor, DeviceConfig.shooterFXConfig(InvertedValue.Clockwise_Positive), Constants.DEVICE_LOOP_TIME_HZ);
      }
     
     public void setNeutralMode(NeutralModeValue shooterMode){
@@ -50,12 +50,12 @@ public class Shooter extends SubsystemBase{
         setShooter(m_velocityRequest.withVelocity(velocityRPM));
     }
 
-    public double getWheelRPM(){
-        return Conversions.falconRPSToMechanismRPM(getMotorRPM()/60, 1.0);
+    public double getFeetPerSecond(){
+        return Conversions.rpmToFTPS(getRPM(), ShooterConstants.WHEEL_CIRCUMFERENCE);
     }
 
-    public double getMotorRPM(){
-        return ScreamUtil.average(m_rightShooterMotor.getVelocity().getValueAsDouble(), m_leftShooterMotor.getVelocity().getValueAsDouble())*60;
+    public double getRPM(){
+        return ScreamUtil.average(m_rightShooterMotor.getRotorVelocity().getValueAsDouble(), m_leftShooterMotor.getRotorVelocity().getValueAsDouble())*60;
     }
 
     public void setShooterOutput(double dutyCyle){
@@ -64,7 +64,7 @@ public class Shooter extends SubsystemBase{
 
     public void setShooter(ControlRequest control){
         m_rightShooterMotor.setControl(control);
-        m_leftShooterMotor.setControl(control); //left motor follows right motor in the opposing direction
+        m_leftShooterMotor.setControl(control);
     }
 
     public void stop(){

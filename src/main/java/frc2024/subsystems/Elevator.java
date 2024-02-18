@@ -23,6 +23,7 @@ import com.team4522.lib.util.ScreamUtil;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -38,10 +39,10 @@ public class Elevator extends SubsystemBase{
     private TalonFX m_leftElevatorMotor;
     private CANcoder m_encoder;
 
-    private VelocityVoltage m_velocityRequest = new VelocityVoltage(0);
+    private VoltageOut m_voltageRequest = new VoltageOut(0);
     private MotionMagicVoltage m_positionRequest = new MotionMagicVoltage(0);
 
-    private double m_targetHeight;
+    private double m_targetPosition;
 
     public Elevator(){
         m_rightElevatorMotor = new TalonFX(Ports.RIGHT_ELEVATOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
@@ -50,24 +51,24 @@ public class Elevator extends SubsystemBase{
 
         configureDevices();
 
-        //OrchestraUtil.add(m_rightElevatorMotor, m_leftElevatorMotor);
+        OrchestraUtil.add(m_rightElevatorMotor, m_leftElevatorMotor);
     }
     
     private void configureDevices() {
-        DeviceConfig.configureCANcoder("Elevator Encoder", m_encoder, DeviceConfig.elevatorEncoderConfig(), Constants.LOOP_TIME_HZ);
-        DeviceConfig.configureTalonFX("Right Elevator Motor", m_rightElevatorMotor, DeviceConfig.elevatorFXConfig(InvertedValue.Clockwise_Positive), Constants.LOOP_TIME_HZ);
-        DeviceConfig.configureTalonFX("Left Elevator Motor", m_leftElevatorMotor, DeviceConfig.elevatorFXConfig(InvertedValue.CounterClockwise_Positive), Constants.LOOP_TIME_HZ);
-        resetElevatorToAbsolute();
+        DeviceConfig.configureCANcoder("Elevator Encoder", m_encoder, DeviceConfig.elevatorEncoderConfig(), Constants.DEVICE_LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Right Elevator Motor", m_rightElevatorMotor, DeviceConfig.elevatorFXConfig(InvertedValue.Clockwise_Positive), Constants.DEVICE_LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Left Elevator Motor", m_leftElevatorMotor, DeviceConfig.elevatorFXConfig(InvertedValue.CounterClockwise_Positive), Constants.DEVICE_LOOP_TIME_HZ);
+        resetToAbsolute();
     }
 
-    public void configPID(ScreamPIDConstants screamPIDConstants){
-        m_rightElevatorMotor.getConfigurator().apply(screamPIDConstants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
-        m_leftElevatorMotor.getConfigurator().apply(screamPIDConstants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
+    public void resetToAbsolute(){
+        m_rightElevatorMotor.setPosition(m_encoder.getPosition().getValueAsDouble());
+        m_leftElevatorMotor.setPosition(m_encoder.getPosition().getValueAsDouble());
     }
 
-    public void resetElevatorToAbsolute(){
-        m_rightElevatorMotor.setPosition(m_encoder.getAbsolutePosition().getValueAsDouble());
-        m_leftElevatorMotor.setPosition(m_encoder.getAbsolutePosition().getValueAsDouble());
+    public void configPID(ScreamPIDConstants constants){
+        m_rightElevatorMotor.getConfigurator().apply(constants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
+        m_leftElevatorMotor.getConfigurator().apply(constants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
     }
 
     public void setNeutralMode(NeutralModeValue mode){
@@ -75,33 +76,40 @@ public class Elevator extends SubsystemBase{
         m_leftElevatorMotor.setNeutralMode(mode);
     }
 
-    public void zeroHeight(){
+    public void zeroPosition(){
         m_rightElevatorMotor.setPosition(0.0);
         m_leftElevatorMotor.setPosition(0.0);
-    }
-
-    public void setTargetPosition(double height){
-        m_targetHeight = height;
-        setElevator(m_positionRequest.withPosition(m_targetHeight));
+        m_encoder.setPosition(0.0);
     }
     
     public void setElevator(ControlRequest control){
         m_rightElevatorMotor.setControl(control);
         m_leftElevatorMotor.setControl(control);
-        //m_leftElevatorMotor.setControl(new Follower(m_rightElevatorMotor.getDeviceID(), true)); 
-        //left motor follows right motor in the opposing direction
     }
 
-    public void setElevatorVelocity(double velocity){
-        setElevator(m_velocityRequest.withVelocity(velocity));
+    public void setElevatorVoltage(double voltage){
+        setElevator(m_voltageRequest.withOutput(voltage + ElevatorConstants.KG));
+    }
+
+    public void setTargetHeight(double heightInches){
+        setTargetPosition(heightInchesToPosition(heightInches));;
+    }
+
+    private void setTargetPosition(double positionRotations){
+        m_targetPosition = positionRotations;
+        setElevator(m_positionRequest.withPosition(positionRotations));
     }
     
     public double getElevatorPosition(){
-        return ScreamUtil.average(m_rightElevatorMotor.getPosition().getValueAsDouble(), -m_leftElevatorMotor.getPosition().getValueAsDouble());
+        return ScreamUtil.average(m_rightElevatorMotor.getPosition().getValueAsDouble(), m_leftElevatorMotor.getPosition().getValueAsDouble());
+    }
+
+    public double getElevatorHeight(){
+        return getElevatorPosition() * (ElevatorConstants.MAX_HEIGHT - ElevatorConstants.MIN_HEIGHT) / (ElevatorConstants.ENCODER_MAX - ElevatorConstants.ENCODER_MIN);
     }
 
     public double getElevatorError(){
-        return m_targetHeight - getElevatorPosition();
+        return m_targetPosition - getElevatorPosition();
     }
     
     public boolean getElevatorAtTarget(){
@@ -112,28 +120,37 @@ public class Elevator extends SubsystemBase{
         return ElevatorConstants.HEIGHT_MAP.get(distance);
     }
 
+    public double getElevatorCurrent(){
+        return ScreamUtil.average(m_rightElevatorMotor.getSupplyCurrent().getValueAsDouble(), m_leftElevatorMotor.getSupplyCurrent().getValueAsDouble());
+    }
+
     public void stop(){
         m_rightElevatorMotor.stopMotor();
         m_leftElevatorMotor.stopMotor();
     }
 
     @Override
-    public void periodic() {
-        System.out.println("right: " + m_rightElevatorMotor.getPosition().getValueAsDouble());
-        System.out.println("left: " + m_leftElevatorMotor.getPosition().getValueAsDouble());
-        System.out.println("abs encoder: " + m_encoder.getAbsolutePosition().getValueAsDouble());
-        System.out.println("reg encoder: " + m_encoder.getPosition().getValueAsDouble());
+    public void periodic() {}
+
+    public double heightInchesToPosition(double inches){
+        return ((inches - ElevatorConstants.MIN_HEIGHT) / (ElevatorConstants.MAX_HEIGHT - ElevatorConstants.MIN_HEIGHT)) * (ElevatorConstants.ENCODER_MAX - ElevatorConstants.ENCODER_MIN);
     }
 
-    public Command outputCommand(DoubleSupplier output){
-        return run(() -> setElevatorVelocity(output.getAsDouble()));
+    public Command voltageCommand(DoubleSupplier voltage){
+        return run(() -> setElevatorVoltage(voltage.getAsDouble()));
     }
 
-    public Command outputCommand(double output){
-        return run(() -> setElevatorVelocity(output));
+    public Command voltageCommand(double voltage){
+        return run(() -> setElevatorVoltage(voltage));
     }
 
-    public Command positionCommand(double position){
-        return run(() -> setTargetPosition(position));
+    public Command heightCommand(double heightInches){
+        return startEnd(() -> setTargetHeight(heightInches), () -> setTargetHeight(ElevatorConstants.HOME_HEIGHT));
+    }
+
+    public Command reHomeCommand(){
+        return voltageCommand(ElevatorConstants.REHOME_VOLTAGE)
+            .until(() -> getElevatorCurrent() >= ElevatorConstants.REHOME_CURRENT_THRESHOLD)
+            .finallyDo(() -> zeroPosition());
     }
 }

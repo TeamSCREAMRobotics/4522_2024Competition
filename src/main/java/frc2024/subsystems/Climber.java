@@ -36,16 +36,16 @@ public class Climber extends SubsystemBase{
 
         configClimberMotors();
         
-        // OrchestraUtil.add(m_rightClimberMotor, m_leftClimberMotor);
+        OrchestraUtil.add(m_climberMotor);
     }
     
     private void configClimberMotors() {
-        DeviceConfig.configureTalonFX("Right Climber Motor", m_climberMotor, DeviceConfig.climberFXConfig(), Constants.LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Climber Motor", m_climberMotor, DeviceConfig.climberFXConfig(), Constants.DEVICE_LOOP_TIME_HZ);
         //DeviceConfig.configureTalonFX("Left Climber Motor", m_leftClimberMotor, DeviceConfig.climberFXConfig(), Constants.LOOP_TIME_HZ);
     }
 
-    public void configPID(ScreamPIDConstants screamPIDConstants){
-        m_climberMotor.getConfigurator().apply(screamPIDConstants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
+    public void configPID(ScreamPIDConstants constants){
+        m_climberMotor.getConfigurator().apply(constants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
         //m_leftClimberMotor.getConfigurator().apply(screamPIDConstants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
     }
     

@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -27,12 +28,20 @@ public class Controlboard{
     public static final Rotation2d SNAP_TO_POLE_THRESHOLD = Rotation2d.fromDegrees(7.0);
 
     private static final CommandXboxController driverController_Command = new CommandXboxController(0);
-    //private static final XboxController driverController = new XboxController(0);
+    private static final XboxController driverController = new XboxController(0);
     private static final CommandXboxController operatorController_Command = new CommandXboxController(1);
     private static final XboxController operatorController = new XboxController(1);
     private static final Buttonboard buttonBoard = new Buttonboard(2, 3);
 
     private static boolean fieldCentric = true;
+
+    public static void setDriverRumble(RumbleType type, double value){
+        driverController.setRumble(type, value);
+    }
+
+    public static void setOperatorRumble(RumbleType type, double value){
+        operatorController.setRumble(type, value);
+    }
 
     /**
      * Retrieves the swerve translation from the driver controller.
@@ -40,15 +49,11 @@ public class Controlboard{
      * @return A DoubleSupplier array representing the x and y values from the controller.
      */
     public static DoubleSupplier[] getTranslation(){
-        return new DoubleSupplier[] {
-            () -> -MathUtil.applyDeadband(driverController_Command.getLeftY(), STICK_DEADBAND),
-            () -> -MathUtil.applyDeadband(driverController_Command.getLeftX(), STICK_DEADBAND)
-        };
-        /* return snapTranslationToPole(
-            new DoubleSupplier[]{
-                () -> x,
-                () -> y
-            }); */
+        return snapTranslationToPole(
+            new DoubleSupplier[] {
+                () -> -MathUtil.applyDeadband(driverController_Command.getLeftY(), STICK_DEADBAND),
+                () -> -MathUtil.applyDeadband(driverController_Command.getLeftX(), STICK_DEADBAND)
+            });
     }
 
     private static DoubleSupplier[] snapTranslationToPole(DoubleSupplier[] translation){
@@ -170,12 +175,16 @@ public class Controlboard{
         return operatorController_Command.y();
     }
 
+    public static final Trigger goToTrapPosition(){
+        return operatorController_Command.x();
+    }
+
     /* Intake */
     public static final Trigger intakeFromFloor(){
         return driverController_Command.rightTrigger(TRIGGER_DEADBAND);
     }
 
-    public static final Trigger ejectThroughIntake(){
+    public static final Trigger ejectThroughConveyor(){
         return driverController_Command.rightBumper();
     }
 

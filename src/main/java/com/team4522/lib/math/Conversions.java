@@ -79,6 +79,10 @@ public class Conversions {
     return rpmToFalconRPS(wheelRPM, gearRatio);
   }
 
+  public static double rpmToFTPS(double rpm, double circumference){
+    return (circumference * rpm) / 60;
+  }
+
   public static double mapRange(double value, double fromLow, double fromHigh, double toLow, double toHigh) {
     if (fromHigh - fromLow == 0) {
         throw new IllegalArgumentException("Input range has zero width");

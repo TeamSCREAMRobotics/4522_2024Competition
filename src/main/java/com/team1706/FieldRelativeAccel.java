@@ -1,5 +1,7 @@
 package com.team1706;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+
 public class FieldRelativeAccel {
     public double ax;
     public double ay;
@@ -11,10 +13,10 @@ public class FieldRelativeAccel {
         this.alpha = alpha;
     }
 
-    public FieldRelativeAccel(FieldRelativeSpeed newSpeed, FieldRelativeSpeed oldSpeed, double time) {
-        this.ax = (newSpeed.vx - oldSpeed.vx) / time;
-        this.ay = (newSpeed.vy - oldSpeed.vy) / time;
-        this.alpha = (newSpeed.omega - oldSpeed.omega) / time;
+    public FieldRelativeAccel(ChassisSpeeds newSpeed, ChassisSpeeds oldSpeed, double time) {
+        this.ax = (newSpeed.vxMetersPerSecond - oldSpeed.vxMetersPerSecond) / time;
+        this.ay = (newSpeed.vyMetersPerSecond - oldSpeed.vyMetersPerSecond) / time;
+        this.alpha = (newSpeed.omegaRadiansPerSecond - oldSpeed.omegaRadiansPerSecond) / time;
 
         if (Math.abs(this.ax) > 6.0) {
             this.ax = 6.0 * Math.signum(this.ax);
