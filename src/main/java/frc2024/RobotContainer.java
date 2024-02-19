@@ -86,7 +86,7 @@ public class RobotContainer {
      */
     private void configButtonBindings() {
         Controlboard.zeroGyro().onTrue(Commands.runOnce(() -> m_swerve.resetYaw(AllianceFlippable.getForwardRotation())));
-        //Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, AllianceFlippable.getForwardRotation()))));
+        Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_elevator.zeroPosition()));
         //Controlboard.getBTestButton().whileTrue(new FeedForwardCharacterization(m_elevator, true, new FeedForwardCharacterizationData("Elevator"), m_elevator::setElevatorVoltage, m_elevator::getElevatorVelocity, m_elevator::getElevatorAcceleration));
 
         /* Conveyor */

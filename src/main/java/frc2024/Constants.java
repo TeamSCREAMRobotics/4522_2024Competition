@@ -381,10 +381,10 @@ public final class Constants{
         public static final double SENSOR_TO_MECH_RATIO = 72.0 / 22.0;
 
         /* Motor Invert */
-        public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;;
+        public static final InvertedValue MOTOR_INVERT = InvertedValue.Clockwise_Positive;
         
         /* Neutral Modes */
-        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Coast;
         
         /* Current Limits */
         public static final int SUPPLY_CURRENT_LIMIT = 35;
@@ -393,8 +393,8 @@ public final class Constants{
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
         public static final boolean SOFTWARE_LIMIT_ENABLE = false;
-        public static final double FORWARD_SOFT_LIMIT = 7.0;
-        public static final double REVERSE_SOFT_LIMIT = 44.0;
+        public static final double FORWARD_SOFT_LIMIT = 0.517;
+        public static final double REVERSE_SOFT_LIMIT = 0.0;
 
         public static final double TARGET_THRESHOLD = 0.50; //Degrees
 
@@ -402,7 +402,7 @@ public final class Constants{
         public static final double ACCELERATION = 10;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(15, 0.0, 0.0);
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(50.0, 0.0, 0.0);
         
         public static final double KS = 0.0;
         public static final double KV = 0.0;
@@ -415,9 +415,7 @@ public final class Constants{
         public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(0.0);
         public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(0.0);
 
-        public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(38.0);
-
-        public static final Rotation2d ENCODER_OFFSET = Rotation2d.fromRotations(0.0);
+        public static final Rotation2d ENCODER_OFFSET = Rotation2d.fromRotations(-0.79443359375);
 
         public static final InterpolatingDoubleTreeMap ANGLE_MAP_UNDEFENDED = new InterpolatingDoubleTreeMap();
         static{
@@ -437,9 +435,6 @@ public final class Constants{
         /* Gear Ratio */
         public static final double ROTOR_TO_SENSOR_RATIO = 6.0;
         public static final double SENSOR_TO_MECH_RATIO = 1.0;
-
-        /* Motor Invert */
-        public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;;
         
         /* Neutral Modes */
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Coast;
@@ -451,31 +446,31 @@ public final class Constants{
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
         public static final boolean SOFTWARE_LIMIT_ENABLE = true;
-        public static final double FORWARD_SOFT_LIMIT = 0.7;//0.85;
+        public static final double FORWARD_SOFT_LIMIT = 3.05;
         public static final double REVERSE_SOFT_LIMIT = 0.0;
 
-        public static final double CRUISE_VELOCITY = 40;
-        public static final double ACCELERATION = 10;
+        public static final double CRUISE_VELOCITY = 65;
+        public static final double ACCELERATION = 50;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(10, 0.0, 0.0);
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.0, 0.0, 0.0);//50
         
         public static final double KS = 0.0;
         public static final double KV = 0.0;
         public static final double KA = 0.0;
-        public static final double KG = 4.0;
+        public static final double KG = 0.28;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA, GravityTypeValue.Elevator_Static);
 
-        public static final double TARGET_THRESHOLD = 0.50; // inches
+        public static final double TARGET_THRESHOLD = 0.1; // inches
 
         public static final double MAX_HEIGHT = 23.835; // inches
         public static final double MIN_HEIGHT = 0.0; // inches
-        public static final double ENCODER_MAX = 8.5;
+        public static final double ENCODER_MAX = 3.05;
         public static final double ENCODER_MIN = 0.0;
 
         public static final double HOME_HEIGHT = 0.0;
-        public static final double SUBWOOFER_HEIGHT = 0.0;
-        public static final double AMP_HEIGHT = 0.0;
+        public static final double SUBWOOFER_HEIGHT = 1.0;
+        public static final double AMP_HEIGHT = MAX_HEIGHT-0.2;
         public static final double TRAP_CHAIN_HEIGHT = MAX_HEIGHT;
 
         public static final double REHOME_VOLTAGE = -5.0;
@@ -543,8 +538,7 @@ public final class Constants{
         HOME(ElevatorConstants.HOME_HEIGHT, PivotConstants.HOME_ANGLE, true), 
         AMP(ElevatorConstants.AMP_HEIGHT, PivotConstants.AMP_ANGLE, false), 
         SUBWOOFER(ElevatorConstants.SUBWOOFER_HEIGHT, PivotConstants.SUBWOOFER_ANGLE, true), 
-        TRAP_CHAIN(ElevatorConstants.TRAP_CHAIN_HEIGHT, PivotConstants.TRAP_CHAIN_ANGLE, true),
-        SUBWOOFER_DEFENDED(ElevatorConstants.MAX_HEIGHT, PivotConstants.SUBWOOFER_ANGLE_DEFENDED, true);
+        TRAP_CHAIN(ElevatorConstants.TRAP_CHAIN_HEIGHT, PivotConstants.TRAP_CHAIN_ANGLE, true);
 
         public double elevatorPosition;
         public Rotation2d pivotAngle;

@@ -49,11 +49,10 @@ public class Controlboard{
      * @return A DoubleSupplier array representing the x and y values from the controller.
      */
     public static DoubleSupplier[] getTranslation(){
-        return snapTranslationToPole(
-            new DoubleSupplier[] {
-                () -> -MathUtil.applyDeadband(driverController_Command.getLeftY(), STICK_DEADBAND),
-                () -> -MathUtil.applyDeadband(driverController_Command.getLeftX(), STICK_DEADBAND)
-            });
+        return new DoubleSupplier[]{
+            () -> -MathUtil.applyDeadband(driverController_Command.getLeftY(), STICK_DEADBAND),
+            () -> -MathUtil.applyDeadband(driverController_Command.getLeftX(), STICK_DEADBAND)
+        };
     }
 
     private static DoubleSupplier[] snapTranslationToPole(DoubleSupplier[] translation){
@@ -138,7 +137,7 @@ public class Controlboard{
 
     /* Climber */
     public static final DoubleSupplier getManualClimberOutput(){
-        return () -> (operatorController_Command.getLeftTriggerAxis() - operatorController_Command.getRightTriggerAxis())/5; //Up POV on the button board
+        return () -> (operatorController_Command.getLeftTriggerAxis() - operatorController_Command.getRightTriggerAxis()); //Up POV on the button board
     }
 
     /* Shooter */
@@ -154,29 +153,29 @@ public class Controlboard{
 
     /* Pivot */
     public static final DoubleSupplier getManualPivotOutput(){
-        return () -> operatorController_Command.getRightY()/2;
+        return () -> -operatorController_Command.getRightY()/2;
     }
 
     /* Elevator */
     public static final DoubleSupplier getManualElevatorOutput(){
-        return () -> operatorController_Command.getLeftY()*50;
+        return () -> -operatorController_Command.getLeftY()*8;
     }
 
     /* Elevator AND Pivot */    
     public static final Trigger goToHomePosition(){
-        return operatorController_Command.a();
+        return new Trigger(() -> buttonBoard.getRawButton(9));
     }
     
     public static final Trigger goToSubwooferPosition(){
-        return operatorController_Command.b();
+        return new Trigger(() -> buttonBoard.getRawButton(10));
     }
     
     public static final Trigger goToAmpPosition(){
-        return operatorController_Command.y();
+        return new Trigger(() -> buttonBoard.getRawButton(11));
     }
 
     public static final Trigger goToTrapPosition(){
-        return operatorController_Command.x();
+        return new Trigger(() -> buttonBoard.getRawButton(12));
     }
 
     /* Intake */

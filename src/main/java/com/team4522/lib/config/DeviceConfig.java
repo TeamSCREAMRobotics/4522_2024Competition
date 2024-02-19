@@ -141,9 +141,9 @@ public class DeviceConfig {
     public static TalonFXConfiguration pivotFXConfig(){
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Audio = FXAudioConfigs(false, false, true);
-        config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(PivotConstants.SOFTWARE_LIMIT_ENABLE, PivotConstants.FORWARD_SOFT_LIMIT, PivotConstants.REVERSE_SOFT_LIMIT);
         config.MotorOutput = FXMotorOutputConfig(PivotConstants.MOTOR_INVERT, PivotConstants.NEUTRAL_MODE);
-        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.FusedCANcoder, Ports.PIVOT_ENCODER_ID, PivotConstants.SENSOR_TO_MECH_RATIO, PivotConstants.ROTOR_TO_SENSOR_RATIO, Rotation2d.fromRotations(0));
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.SyncCANcoder, Ports.PIVOT_ENCODER_ID, PivotConstants.SENSOR_TO_MECH_RATIO, PivotConstants.ROTOR_TO_SENSOR_RATIO, Rotation2d.fromRotations(0));
+        config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(PivotConstants.SOFTWARE_LIMIT_ENABLE, PivotConstants.FORWARD_SOFT_LIMIT, PivotConstants.REVERSE_SOFT_LIMIT);
         config.CurrentLimits = FXCurrentLimitsConfig(
             PivotConstants.CURRENT_LIMIT_ENABLE, 
             PivotConstants.SUPPLY_CURRENT_LIMIT, 
@@ -156,9 +156,9 @@ public class DeviceConfig {
 
     public static CANcoderConfiguration pivotEncoderConfig(){
         CANcoderConfiguration config = new CANcoderConfiguration();
-        config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+        config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
         config.MagnetSensor.MagnetOffset = PivotConstants.ENCODER_OFFSET.getRotations();
-        config.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+        config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         return config;
     }
     
@@ -201,7 +201,6 @@ public class DeviceConfig {
             public boolean configureSettings(){
                 return ErrorChecker.hasConfiguredWithoutErrors(
                     fx.getConfigurator().apply(config),
-                    fx.getConfigurator().setPosition(0),
                     fx.getDutyCycle().setUpdateFrequency(updateFrequencyHz),
                     fx.getPosition().setUpdateFrequency(updateFrequencyHz),
                     fx.getVelocity().setUpdateFrequency(updateFrequencyHz),

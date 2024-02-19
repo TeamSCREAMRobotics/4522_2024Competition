@@ -60,6 +60,7 @@ public class Pivot extends SubsystemBase{
 
     public void zeroPivot(){
         m_pivotMotor.setPosition(0.0);
+        m_encoder.setPosition(0.0);
     }
 
     public void setTargetAngle(Rotation2d angle, boolean limitMotion){
@@ -96,7 +97,11 @@ public class Pivot extends SubsystemBase{
     }
 
     @Override
-    public void periodic() {}
+    public void periodic() {
+        System.out.println("motor:" + m_pivotMotor.getPosition().getValueAsDouble());
+        System.out.println("enc  :" + m_encoder.getPosition().getValueAsDouble());
+        System.out.println("abs  :" + m_encoder.getAbsolutePosition().getValueAsDouble());
+    }
 
     public Command outputCommand(DoubleSupplier output){
         return run(() -> setPivotOutput(output.getAsDouble()));

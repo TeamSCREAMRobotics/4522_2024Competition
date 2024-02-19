@@ -56,14 +56,9 @@ public class Elevator extends SubsystemBase{
     
     private void configureDevices() {
         DeviceConfig.configureCANcoder("Elevator Encoder", m_encoder, DeviceConfig.elevatorEncoderConfig(), Constants.DEVICE_LOOP_TIME_HZ);
-        DeviceConfig.configureTalonFX("Right Elevator Motor", m_rightElevatorMotor, DeviceConfig.elevatorFXConfig(InvertedValue.Clockwise_Positive), Constants.DEVICE_LOOP_TIME_HZ);
-        DeviceConfig.configureTalonFX("Left Elevator Motor", m_leftElevatorMotor, DeviceConfig.elevatorFXConfig(InvertedValue.CounterClockwise_Positive), Constants.DEVICE_LOOP_TIME_HZ);
-        resetToAbsolute();
-    }
-
-    public void resetToAbsolute(){
-        m_rightElevatorMotor.setPosition(m_encoder.getPosition().getValueAsDouble());
-        m_leftElevatorMotor.setPosition(m_encoder.getPosition().getValueAsDouble());
+        DeviceConfig.configureTalonFX("Right Elevator Motor", m_rightElevatorMotor, DeviceConfig.elevatorFXConfig(InvertedValue.CounterClockwise_Positive), Constants.DEVICE_LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Left Elevator Motor", m_leftElevatorMotor, DeviceConfig.elevatorFXConfig(InvertedValue.Clockwise_Positive), Constants.DEVICE_LOOP_TIME_HZ);
+        zeroPosition();
     }
 
     public void configPID(ScreamPIDConstants constants){
@@ -92,7 +87,7 @@ public class Elevator extends SubsystemBase{
     }
 
     public void setTargetHeight(double heightInches){
-        setTargetPosition(heightInchesToPosition(heightInches));;
+        setTargetPosition(heightInchesToPosition(heightInches));
     }
 
     private void setTargetPosition(double positionRotations){
