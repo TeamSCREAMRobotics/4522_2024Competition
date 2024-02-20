@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
@@ -108,9 +109,9 @@ public class RobotContainer {
                 .until(() -> superstructureAtTarget()));
 
         Controlboard.goToSubwooferPosition()
-            .whileTrue(new SuperstructureToPosition(ElevatorPivotPosition.SUBWOOFER, m_elevator, m_pivot))
+            .whileTrue(new SuperstructureToPosition(ElevatorPivotPosition.SUBWOOFER, m_elevator, m_pivot).alongWith(m_shooter.outputCommand(0.5)))
             .onFalse(
-                new SuperstructureToPosition(ElevatorPivotPosition.HOME, m_elevator, m_pivot)
+                new SuperstructureToPosition(ElevatorPivotPosition.HOME, m_elevator, m_pivot).alongWith(m_shooter.stopCommand())
                     .until((() -> superstructureAtTarget())));
 
         Controlboard.goToAmpPosition()
@@ -128,10 +129,10 @@ public class RobotContainer {
         /* Shooter */
         Controlboard.testA()
             .whileTrue(
-                m_shooter.outputCommand(ShooterConstants.SHOOT_OUTPUT))
+                m_shooter.outputCommand(0.3))
                     .onFalse(m_shooter.stopCommand());
         //A button
-                    
+        
         Controlboard.ejectThroughShooter()
             .whileTrue(
                 m_shooter.outputCommand(ShooterConstants.EJECT_OUTPUT))
@@ -144,13 +145,9 @@ public class RobotContainer {
                     .deadlineWith(new FacePoint(m_swerve, Controlboard.getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation(), false, true))); */
 
         /* Intake */
-        Controlboard.intakeFromFloor()
-            .whileTrue(new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake)
-                    .until(() -> m_conveyor.hasPiece()))
-            .onFalse(
-                m_intake.stopCommand().alongWith(m_conveyor.stopCommand())
-            );
-
+        Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece()).negate())
+            .whileTrue(new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake));
+        
         Controlboard.ejectThroughConveyor()
             .whileTrue(m_intake.outputCommand(IntakeConstants.EJECT_OUTPUT).alongWith(m_conveyor.outputCommand(ConveyorConstants.AMP_TRAP_OUTPUT))).onFalse(m_intake.stopCommand().alongWith(m_conveyor.stopCommand()));
 

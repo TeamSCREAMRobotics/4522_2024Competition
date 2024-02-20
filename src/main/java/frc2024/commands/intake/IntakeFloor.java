@@ -4,10 +4,14 @@
 
 package frc2024.commands.intake;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.ElevatorPivotPosition;
@@ -21,6 +25,7 @@ import frc2024.subsystems.Intake;
 import frc2024.subsystems.Pivot;
 
 public class IntakeFloor extends SequentialCommandGroup {
+  
   public IntakeFloor(Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake) {
     addCommands(
         elevator.heightCommand(ElevatorConstants.HOME_HEIGHT)
@@ -28,11 +33,11 @@ public class IntakeFloor extends SequentialCommandGroup {
             .alongWith(intake.outputCommand(IntakeConstants.INTAKE_OUTPUT))
             .alongWith(conveyor.outputCommand(ConveyorConstants.TRANSFER_OUTPUT))
             .finallyDo(
-              (interrupted) -> new SuperstructureToPosition(ElevatorPivotPosition.HOME, elevator, pivot)
-                .alongWith(
-                  new RunCommand(() -> Controlboard.setDriverRumble(RumbleType.kBothRumble, 0.5))
-                      .withTimeout(0.1)
-                      .finallyDo(() -> Controlboard.setDriverRumble(RumbleType.kBothRumble, 0.0))))
-    );
+              (interrupted) -> {
+                intake.stop();
+                conveyor.stop();
+              }
+            )
+      );
   }
 }

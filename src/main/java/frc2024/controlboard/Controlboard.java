@@ -137,12 +137,13 @@ public class Controlboard{
 
     /* Climber */
     public static final DoubleSupplier getManualClimberOutput(){
-        return () -> (operatorController_Command.getLeftTriggerAxis() - operatorController_Command.getRightTriggerAxis()); //Up POV on the button board
+        return () -> -buttonBoard.getBigSwitchY()/2;//(operatorController_Command.getLeftTriggerAxis() - operatorController_Command.getRightTriggerAxis()); //Up POV on the button board
     }
 
     /* Shooter */
     public static final Trigger manuallyShoot(){
-        return operatorController_Command.povUp();
+        return new Trigger(() -> buttonBoard.getRawButton(1));
+        // return operatorController_Command.povUp();
     }
     public static final Trigger testA(){
         return operatorController_Command.a();

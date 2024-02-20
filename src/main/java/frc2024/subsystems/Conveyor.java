@@ -1,13 +1,16 @@
 package frc2024.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.util.OrchestraUtil;
-import com.team4522.lib.util.ScreamUtil;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,6 +23,7 @@ public class Conveyor extends SubsystemBase{
     private DigitalInput m_beam;
 
     private DutyCycleOut m_dutyCycleRequest = new DutyCycleOut(0);
+    private Debouncer m_beamDebouncer = new Debouncer(0.05, DebounceType.kBoth);
 
     public Conveyor(){
         m_conveyorMotor = new TalonFX(Ports.CONVEYOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
@@ -54,8 +58,8 @@ public class Conveyor extends SubsystemBase{
         m_conveyorMotor.stopMotor();
     }
     
-    public boolean hasPiece(){
-        return !m_beam.get();
+    public BooleanSupplier hasPiece(){
+        return () -> m_beamDebouncer.calculate(!m_beam.get());
     }
 
     public Command outputCommand(double output){
@@ -68,6 +72,6 @@ public class Conveyor extends SubsystemBase{
 
     @Override
     public void periodic() {
-        System.out.println(hasPiece());
+        // System.out.println(hasPiece());
     }
 }

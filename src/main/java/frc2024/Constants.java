@@ -178,8 +178,8 @@ public final class Constants{
             public static final double SLIP_CURRENT = 400;
 
             /* Ramps */
-            public static final double OPEN_LOOP_RAMP = 0.25;
-            public static final double CLOSED_LOOP_RAMP = 0.25;
+            public static final double OPEN_LOOP_RAMP = 0.05;
+            public static final double CLOSED_LOOP_RAMP = 0.1;
 
             /* PID Constants */
             public static final double KP = 0.12; // TODO ROBOT SPECIFIC
