@@ -26,7 +26,7 @@ public class IntakeFloor extends SequentialCommandGroup {
         elevator.heightCommand(ElevatorConstants.HOME_HEIGHT)
             .alongWith(pivot.angleCommand(PivotConstants.HOME_ANGLE))
             .alongWith(intake.outputCommand(IntakeConstants.INTAKE_OUTPUT))
-            .andThen(conveyor.outputCommand(ConveyorConstants.TRANSFER_OUTPUT))
+            .alongWith(conveyor.outputCommand(ConveyorConstants.TRANSFER_OUTPUT))
             .finallyDo(
               (interrupted) -> new SuperstructureToPosition(ElevatorPivotPosition.HOME, elevator, pivot)
                 .alongWith(

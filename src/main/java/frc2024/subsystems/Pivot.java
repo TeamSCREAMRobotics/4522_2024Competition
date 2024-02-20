@@ -97,11 +97,7 @@ public class Pivot extends SubsystemBase{
     }
 
     @Override
-    public void periodic() {
-        System.out.println("motor:" + m_pivotMotor.getPosition().getValueAsDouble());
-        System.out.println("enc  :" + m_encoder.getPosition().getValueAsDouble());
-        System.out.println("abs  :" + m_encoder.getAbsolutePosition().getValueAsDouble());
-    }
+    public void periodic() {}
 
     public Command outputCommand(DoubleSupplier output){
         return run(() -> setPivotOutput(output.getAsDouble()));
@@ -112,7 +108,7 @@ public class Pivot extends SubsystemBase{
     }
 
     public Command angleCommand(Rotation2d angle){
-        return run(() -> setTargetAngle(angle, true));
+        return run(() -> setTargetAngle(angle, false));
     }
 
     public Command angleCommand(Rotation2d angle, boolean limitMotion){

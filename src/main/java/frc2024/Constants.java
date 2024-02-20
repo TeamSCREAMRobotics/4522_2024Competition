@@ -379,9 +379,10 @@ public final class Constants{
         /* Gear Ratio */
         public static final double ROTOR_TO_SENSOR_RATIO = 125.0;
         public static final double SENSOR_TO_MECH_RATIO = 72.0 / 22.0;
+        public static final double TOTAL_GEAR_RATIO = ROTOR_TO_SENSOR_RATIO * SENSOR_TO_MECH_RATIO;
 
         /* Motor Invert */
-        public static final InvertedValue MOTOR_INVERT = InvertedValue.Clockwise_Positive;
+        public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;
         
         /* Neutral Modes */
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Coast;
@@ -393,16 +394,16 @@ public final class Constants{
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
         public static final boolean SOFTWARE_LIMIT_ENABLE = false;
-        public static final double FORWARD_SOFT_LIMIT = 0.517;
-        public static final double REVERSE_SOFT_LIMIT = 0.0;
+        public static final Rotation2d FORWARD_SOFT_LIMIT = Rotation2d.fromDegrees(18.0);
+        public static final Rotation2d REVERSE_SOFT_LIMIT = Rotation2d.fromDegrees(0);
 
         public static final double TARGET_THRESHOLD = 0.50; //Degrees
 
-        public static final double CRUISE_VELOCITY = 40;
-        public static final double ACCELERATION = 10;
+        public static final double CRUISE_VELOCITY = 200;
+        public static final double ACCELERATION = 200;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(50.0, 0.0, 0.0);
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(500.0, 0.0, 0.0); //500
         
         public static final double KS = 0.0;
         public static final double KV = 0.0;
@@ -410,12 +411,12 @@ public final class Constants{
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA, GravityTypeValue.Arm_Cosine);
 
-        public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(44.0);
-        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(48.5);
-        public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(0.0);
-        public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(0.0);
+        public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(14.0);
+        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(6.0);
+        public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(16);
+        public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(44.0);
 
-        public static final Rotation2d ENCODER_OFFSET = Rotation2d.fromRotations(-0.79443359375);
+        public static final Rotation2d ENCODER_OFFSET = Rotation2d.fromRotations(-0.207275390625);
 
         public static final InterpolatingDoubleTreeMap ANGLE_MAP_UNDEFENDED = new InterpolatingDoubleTreeMap();
         static{
@@ -453,7 +454,7 @@ public final class Constants{
         public static final double ACCELERATION = 50;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.0, 0.0, 0.0);//50
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(50.0, 0.0, 0.0);//50
         
         public static final double KS = 0.0;
         public static final double KV = 0.0;
@@ -469,8 +470,8 @@ public final class Constants{
         public static final double ENCODER_MIN = 0.0;
 
         public static final double HOME_HEIGHT = 0.0;
-        public static final double SUBWOOFER_HEIGHT = 1.0;
-        public static final double AMP_HEIGHT = MAX_HEIGHT-0.2;
+        public static final double SUBWOOFER_HEIGHT = 3.5;
+        public static final double AMP_HEIGHT = MAX_HEIGHT-0.5;
         public static final double TRAP_CHAIN_HEIGHT = MAX_HEIGHT;
 
         public static final double REHOME_VOLTAGE = -5.0;

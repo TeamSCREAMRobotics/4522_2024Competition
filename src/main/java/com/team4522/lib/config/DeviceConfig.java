@@ -142,8 +142,8 @@ public class DeviceConfig {
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Audio = FXAudioConfigs(false, false, true);
         config.MotorOutput = FXMotorOutputConfig(PivotConstants.MOTOR_INVERT, PivotConstants.NEUTRAL_MODE);
-        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.SyncCANcoder, Ports.PIVOT_ENCODER_ID, PivotConstants.SENSOR_TO_MECH_RATIO, PivotConstants.ROTOR_TO_SENSOR_RATIO, Rotation2d.fromRotations(0));
-        config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(PivotConstants.SOFTWARE_LIMIT_ENABLE, PivotConstants.FORWARD_SOFT_LIMIT, PivotConstants.REVERSE_SOFT_LIMIT);
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, PivotConstants.TOTAL_GEAR_RATIO, 1.0, Rotation2d.fromDegrees(0.0));
+        config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(PivotConstants.SOFTWARE_LIMIT_ENABLE, PivotConstants.FORWARD_SOFT_LIMIT.getRotations(), PivotConstants.REVERSE_SOFT_LIMIT.getRotations());
         config.CurrentLimits = FXCurrentLimitsConfig(
             PivotConstants.CURRENT_LIMIT_ENABLE, 
             PivotConstants.SUPPLY_CURRENT_LIMIT, 
@@ -201,6 +201,7 @@ public class DeviceConfig {
             public boolean configureSettings(){
                 return ErrorChecker.hasConfiguredWithoutErrors(
                     fx.getConfigurator().apply(config),
+                    fx.getConfigurator().setPosition(0.0),
                     fx.getDutyCycle().setUpdateFrequency(updateFrequencyHz),
                     fx.getPosition().setUpdateFrequency(updateFrequencyHz),
                     fx.getVelocity().setUpdateFrequency(updateFrequencyHz),

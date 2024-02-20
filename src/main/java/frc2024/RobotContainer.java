@@ -86,7 +86,7 @@ public class RobotContainer {
      */
     private void configButtonBindings() {
         Controlboard.zeroGyro().onTrue(Commands.runOnce(() -> m_swerve.resetYaw(AllianceFlippable.getForwardRotation())));
-        Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_elevator.zeroPosition()));
+        Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_elevator.zeroPosition()).ignoringDisable(true));
         //Controlboard.getBTestButton().whileTrue(new FeedForwardCharacterization(m_elevator, true, new FeedForwardCharacterizationData("Elevator"), m_elevator::setElevatorVoltage, m_elevator::getElevatorVelocity, m_elevator::getElevatorAcceleration));
 
         /* Conveyor */
@@ -103,7 +103,7 @@ public class RobotContainer {
         //Right Y
 
         /* Pivot AND Elevator */
-        Controlboard.goToHomePosition().onTrue(
+        Controlboard.goToHomePosition().whileTrue(
             new SuperstructureToPosition(ElevatorPivotPosition.HOME, m_elevator, m_pivot)
                 .until(() -> superstructureAtTarget()));
 
@@ -145,9 +145,11 @@ public class RobotContainer {
 
         /* Intake */
         Controlboard.intakeFromFloor()
-            .whileTrue(m_intake.outputCommand(IntakeConstants.INTAKE_OUTPUT).alongWith(m_conveyor.outputCommand(ConveyorConstants.TRANSFER_OUTPUT))).onFalse(m_intake.stopCommand().alongWith(m_conveyor.stopCommand()));
-               /*  new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake)
-                    .until(() -> m_conveyor.hasPiece())); */
+            .whileTrue(new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake)
+                    .until(() -> m_conveyor.hasPiece()))
+            .onFalse(
+                m_intake.stopCommand().alongWith(m_conveyor.stopCommand())
+            );
 
         Controlboard.ejectThroughConveyor()
             .whileTrue(m_intake.outputCommand(IntakeConstants.EJECT_OUTPUT).alongWith(m_conveyor.outputCommand(ConveyorConstants.AMP_TRAP_OUTPUT))).onFalse(m_intake.stopCommand().alongWith(m_conveyor.stopCommand()));

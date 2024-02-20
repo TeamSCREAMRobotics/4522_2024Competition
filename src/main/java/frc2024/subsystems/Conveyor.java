@@ -55,7 +55,7 @@ public class Conveyor extends SubsystemBase{
     }
     
     public boolean hasPiece(){
-        return m_beam.get();
+        return !m_beam.get();
     }
 
     public Command outputCommand(double output){
@@ -64,5 +64,10 @@ public class Conveyor extends SubsystemBase{
 
     public Command stopCommand(){
         return run(() -> stop());
+    }
+
+    @Override
+    public void periodic() {
+        System.out.println(hasPiece());
     }
 }

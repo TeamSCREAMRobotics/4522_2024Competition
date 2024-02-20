@@ -18,7 +18,7 @@ public class SuperstructureToPosition extends SequentialCommandGroup{
     public SuperstructureToPosition(ElevatorPivotPosition position, Elevator elevator, Pivot pivot){
         addCommands(
             elevator.heightCommand(position.elevatorPosition)
-                .alongWith(pivot.angleCommand(position.pivotAngle, position.limitPivotMotion))
+                .alongWith(pivot.angleCommand(position.pivotAngle, false))
         );
     }
 
