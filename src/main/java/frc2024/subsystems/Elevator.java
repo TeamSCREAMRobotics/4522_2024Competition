@@ -111,9 +111,9 @@ public class Elevator extends SubsystemBase{
         return Math.abs(getElevatorError()) < ElevatorConstants.TARGET_THRESHOLD;
     }
     
-    public double getElevatorTargetHeight(double distance){
+/*     public double getElevatorTargetHeight(double distance){
         return ElevatorConstants.HEIGHT_MAP.get(distance);
-    }
+    } */
 
     public double getElevatorCurrent(){
         return ScreamUtil.average(m_rightElevatorMotor.getSupplyCurrent().getValueAsDouble(), m_leftElevatorMotor.getSupplyCurrent().getValueAsDouble());

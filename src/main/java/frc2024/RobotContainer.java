@@ -40,7 +40,10 @@ import frc2024.auto.Autonomous;
 import frc2024.auto.Autonomous.PPEvent;
 import frc2024.auto.Routines;
 import frc2024.commands.AutoFire;
+import frc2024.commands.AutoPrep;
+import frc2024.commands.FeedForwardCharacterization;
 import frc2024.commands.SuperstructureToPosition;
+import frc2024.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import frc2024.commands.intake.AutoIntakeFloor;
 import frc2024.commands.intake.IntakeFloor;
 import frc2024.commands.swerve.TeleopDrive;
@@ -87,8 +90,8 @@ public class RobotContainer {
      */
     private void configButtonBindings() {
         Controlboard.zeroGyro().onTrue(Commands.runOnce(() -> m_swerve.resetYaw(AllianceFlippable.getForwardRotation())));
-        Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_elevator.zeroPosition()).ignoringDisable(true));
-        //Controlboard.getBTestButton().whileTrue(new FeedForwardCharacterization(m_elevator, true, new FeedForwardCharacterizationData("Elevator"), m_elevator::setElevatorVoltage, m_elevator::getElevatorVelocity, m_elevator::getElevatorAcceleration));
+        Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, new Rotation2d()))));/* m_elevator.zeroPosition()).ignoringDisable(true) );*/
+        Controlboard.test().whileTrue(new FeedForwardCharacterization(m_elevator, true, new FeedForwardCharacterizationData("Shooter"), m_shooter::setShooterVoltage, m_shooter::getMotorVelocity, m_shooter::getShooterAcceleration));
 
         /* Conveyor */
         Controlboard.ejectThroughShooter().whileTrue(m_conveyor.outputCommand(-0.85)).onFalse(m_conveyor.stopCommand());
@@ -98,9 +101,11 @@ public class RobotContainer {
 
         /* Elevator */
         Controlboard.manualMode().toggleOnTrue(m_elevator.voltageCommand(Controlboard.getManualElevatorOutput())).toggleOnFalse(Commands.runOnce(() -> m_elevator.stop()));
+        Controlboard.resetElevatorHeight().onTrue(Commands.runOnce(() -> m_elevator.zeroPosition()));
 
         /* Pivot */
         Controlboard.manualMode().toggleOnTrue(m_pivot.outputCommand(Controlboard.getManualPivotOutput()));
+        Controlboard.resetPivotAngle().onTrue(Commands.runOnce(() -> m_pivot.zeroPivot()));
         //Right Y
 
         /* Pivot AND Elevator */
@@ -109,7 +114,7 @@ public class RobotContainer {
                 .until(() -> superstructureAtTarget()));
 
         Controlboard.goToSubwooferPosition()
-            .whileTrue(new SuperstructureToPosition(ElevatorPivotPosition.SUBWOOFER, m_elevator, m_pivot).alongWith(m_shooter.outputCommand(0.5)))
+            .whileTrue(new SuperstructureToPosition(ElevatorPivotPosition.SUBWOOFER, m_elevator, m_pivot))
             .onFalse(
                 new SuperstructureToPosition(ElevatorPivotPosition.HOME, m_elevator, m_pivot).alongWith(m_shooter.stopCommand())
                     .until((() -> superstructureAtTarget())));
@@ -129,7 +134,7 @@ public class RobotContainer {
         /* Shooter */
         Controlboard.testA()
             .whileTrue(
-                m_shooter.outputCommand(0.3))
+                m_shooter.velocityCommand(0))
                     .onFalse(m_shooter.stopCommand());
         //A button
         
@@ -139,6 +144,12 @@ public class RobotContainer {
             .onFalse(m_shooter.stopCommand());
 
         /* Automation */
+        Controlboard.autoFire()
+            .whileTrue(new AutoFire(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, Controlboard.defendedMode()))
+                .onFalse(
+                    new SuperstructureToPosition(ElevatorPivotPosition.HOME, m_elevator, m_pivot)
+                        .until((() -> superstructureAtTarget())).alongWith(m_shooter.stopCommand()));
+
         /* Controlboard.autoFire()
             .whileTrue(
                 new AutoFire(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, Controlboard.defendedMode())
@@ -148,8 +159,8 @@ public class RobotContainer {
         Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece()).negate())
             .whileTrue(new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake));
         
-        Controlboard.ejectThroughConveyor()
-            .whileTrue(m_intake.outputCommand(IntakeConstants.EJECT_OUTPUT).alongWith(m_conveyor.outputCommand(ConveyorConstants.AMP_TRAP_OUTPUT))).onFalse(m_intake.stopCommand().alongWith(m_conveyor.stopCommand()));
+        Controlboard.score()
+            .whileTrue(m_conveyor.outputCommand(ConveyorConstants.SHOOT_SPEED));
 
         /* Controlboard.autoPickupFromFloor()
             .whileTrue(

@@ -114,17 +114,17 @@ public class Controlboard{
     /* Automation */
     public static final Trigger prepShot(){
         /* Uses a toggle switch to enable or disable automatic prep shooting */
-        return operatorController_Command.start();
+        return new Trigger(() -> false);
     }
 
     public static final Trigger autoFire(){
         /* Uses a toggle switch to enable or disable automatic firing when requirements are met */
-        return new Trigger(() -> false);
+        return new Trigger(() -> buttonBoard.getRawSwitch(4));
     }
 
     public static final BooleanSupplier defendedMode(){
         /* Uses a toggle switch to enable or disable wether we are being defended. This allows us to raise our elevator with auto shots */
-        return () -> false;
+        return new Trigger(() -> buttonBoard.getRawSwitch(3));
     }
 
     public static final Trigger autoClimb(){
@@ -157,9 +157,17 @@ public class Controlboard{
         return () -> -operatorController_Command.getRightY()/2;
     }
 
+    public static final Trigger resetPivotAngle(){
+        return new Trigger(() -> buttonBoard.getRawButton(2));
+    }
+
     /* Elevator */
     public static final DoubleSupplier getManualElevatorOutput(){
         return () -> -operatorController_Command.getLeftY()*8;
+    }
+    
+    public static final Trigger resetElevatorHeight(){
+        return new Trigger(() -> buttonBoard.getRawButton(3));
     }
 
     /* Elevator AND Pivot */    
@@ -184,7 +192,7 @@ public class Controlboard{
         return driverController_Command.rightTrigger(TRIGGER_DEADBAND);
     }
 
-    public static final Trigger ejectThroughConveyor(){
+    public static final Trigger score(){
         return driverController_Command.rightBumper();
     }
 

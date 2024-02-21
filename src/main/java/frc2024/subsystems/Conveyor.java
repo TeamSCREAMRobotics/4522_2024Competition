@@ -71,7 +71,5 @@ public class Conveyor extends SubsystemBase{
     }
 
     @Override
-    public void periodic() {
-        // System.out.println(hasPiece());
-    }
+    public void periodic() {}
 }

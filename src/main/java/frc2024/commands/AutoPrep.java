@@ -53,7 +53,7 @@ public class AutoPrep extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    distanceFromSpeaker_Physical = ScreamUtil.calculateDistanceToTranslation(swerve.getPose().getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation());
+    /* distanceFromSpeaker_Physical = ScreamUtil.calculateDistanceToTranslation(swerve.getPose().getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation());
     distanceFromSpeaker_Virtual = ScreamUtil.calculateDistanceToTranslation(swerve.getPose().getTranslation(), SmartShooting.calculateVirtualTarget(swerve, AllianceFlippable.getTargetSpeaker().getTranslation()));
 
     double shooterTarget_RPM = ShooterConstants.MINIMUM_VELOCITY_MAP.get(distanceFromSpeaker_Virtual);
@@ -61,13 +61,13 @@ public class AutoPrep extends Command {
 
     shooter.setTargetVelocity(shooterTarget_RPM);
     if(!defense){
-      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP_UNDEFENDED.get(distanceFromSpeaker_Physical)), true);
+      pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP.get(distanceFromSpeaker_Physical)), true);
       elevator.setTargetHeight(ElevatorConstants.HEIGHT_MAP.get(distanceFromSpeaker_Physical));
     }
     else{
       pivot.setTargetAngle(Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP_DEFENDED.get(distanceFromSpeaker_Physical)), true);
       elevator.setTargetHeight(ElevatorConstants.HEIGHT_MAP_DEFENDED.get(distanceFromSpeaker_Physical));
-    }
+    } */
   }
 
   // Called once the command ends or is interrupted.

@@ -13,6 +13,7 @@ import com.team4522.lib.pid.ScreamPIDConstants;
 import com.team4522.lib.util.AllianceFlippable;
 import com.team4522.lib.util.COTSFalconSwerveConstants;
 import com.team4522.lib.util.ScreamUtil;
+import com.team4522.lib.util.ShootStateInterpolatingTreeMap;
 
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
@@ -79,7 +80,7 @@ public final class Constants{
 
         /* Conveyor */
         public static final int CONVEYOR_MOTOR_ID = 10; //TODO
-        public static final int CONVEYOR_BEAM_ID = 0; // TODO
+        public static final int CONVEYOR_BEAM_ID = 2; // TODO
 
         /* Intake */
         //public static final int LEFT_INTAKE_MOTOR_ID = 9;
@@ -93,7 +94,7 @@ public final class Constants{
         /* For updating values like PID from Shuffleboard */
         public static final boolean UPDATE_SWERVE = false;
         public static final boolean UPDATE_INTAKE = false;
-        public static final boolean UPDATE_SHOOTER = false;
+        public static final boolean UPDATE_SHOOTER = true;
         public static final boolean UPDATE_ELEVATOR = false;
         public static final boolean UPDATE_CONVEYOR = false;
         public static final boolean UPDATE_CLIMBER = false;
@@ -339,30 +340,27 @@ public final class Constants{
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
 
-        public static final double CRUISE_VELOCITY = 40;
-        public static final double ACCELERATION = 10;
+        public static final double CRUISE_VELOCITY = 10;
+        public static final double ACCELERATION = 5;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.0, 0.0, 0.0);
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.35, 0.0, 0.0);
 
         public static final double KS = 0.0;
-        public static final double KV = 0.0;
+        public static final double KV = 0.11;
         public static final double KA = 0.0;
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
 
         public static final double AUTO_SHOOT_VELOCITY_THRESHOLD = 4800; //RPMs
         public static final double AUTO_SHOOT_DISTANCE_THRESHOLD = 6.5; // meters
-        public static final double SHOOTER_MAX_VELOCITY = 6000;
+
+        public static final double SHOOTER_MAX_VELOCITY = 6100;
         public static final double SHOOTER_TARGET_VELOCITY = 5000;
+        public static final double SUBWOOFER_VELOCITY = 2750.0;
+
         public static final double SHOOT_OUTPUT = 0.8;
         public static final double EJECT_OUTPUT = 0.35;//0.5;
-
-        public static final InterpolatingDoubleTreeMap MINIMUM_VELOCITY_MAP = new InterpolatingDoubleTreeMap();
-        static{
-            // (distance, rpm output)
-            MINIMUM_VELOCITY_MAP.put(0.0, 0.0);
-        }
 
         //I believe it is actually the time it takes for it to leave the shooter,
             //not the time it takes for the note to reach the speaker, from 1706
@@ -371,6 +369,29 @@ public final class Constants{
         static{
             // (angle to target, time (seconds))
             TIME_TO_GOAL_MAP.put(0.0, 0.0);
+        }
+
+        public static final ShootStateInterpolatingTreeMap SHOOT_STATE_MAP = new ShootStateInterpolatingTreeMap();
+        static{
+            SHOOT_STATE_MAP.put(1.3005, new ShootState(PivotConstants.SUBWOOFER_ANGLE, ElevatorConstants.SUBWOOFER_HEIGHT, SUBWOOFER_VELOCITY));
+            SHOOT_STATE_MAP.put(1.5596, new ShootState(Rotation2d.fromDegrees(6.767), 0.0, 2750.0));
+            SHOOT_STATE_MAP.put(1.8296, new ShootState(Rotation2d.fromDegrees(8.9648), 0.0, 2850.0));
+            SHOOT_STATE_MAP.put(2.1437, new ShootState(Rotation2d.fromDegrees(13.7109), 0.0, 2950.0));
+            SHOOT_STATE_MAP.put(2.3822, new ShootState(Rotation2d.fromDegrees(18.6328), 0.0, 3100.0));
+            SHOOT_STATE_MAP.put(2.708, new ShootState(Rotation2d.fromDegrees(20.4785), 0.0, 3250.0));
+            SHOOT_STATE_MAP.put(3.0022, new ShootState(Rotation2d.fromDegrees(23.5546), 0.0, 3500.0));
+            SHOOT_STATE_MAP.put(3.3039, new ShootState(Rotation2d.fromDegrees(23.6425), 0.0, 3600.0));
+        }
+
+        public static final ShootStateInterpolatingTreeMap SHOOT_STATE_MAP_DEFENDED = new ShootStateInterpolatingTreeMap();
+        static{
+            SHOOT_STATE_MAP_DEFENDED.put(1.5596, new ShootState(Rotation2d.fromDegrees(20.39), ElevatorConstants.MAX_HEIGHT, 2250.0));
+            SHOOT_STATE_MAP_DEFENDED.put(1.8296, new ShootState(Rotation2d.fromDegrees(23.267), ElevatorConstants.MAX_HEIGHT, 2500.0));
+            SHOOT_STATE_MAP_DEFENDED.put(2.1437, new ShootState(Rotation2d.fromDegrees(25.4), ElevatorConstants.MAX_HEIGHT, 2750.0));
+            SHOOT_STATE_MAP_DEFENDED.put(2.3822, new ShootState(Rotation2d.fromDegrees(28.6523), ElevatorConstants.MAX_HEIGHT, 3000.0));
+            SHOOT_STATE_MAP_DEFENDED.put(2.708, new ShootState(Rotation2d.fromDegrees(31.0253), ElevatorConstants.MAX_HEIGHT, 3250.0));
+            SHOOT_STATE_MAP_DEFENDED.put(3.0022, new ShootState(Rotation2d.fromDegrees(34.4531), ElevatorConstants.MAX_HEIGHT, 3500.0));
+            SHOOT_STATE_MAP_DEFENDED.put(3.3039, new ShootState(Rotation2d.fromDegrees(34.4531), ElevatorConstants.MAX_HEIGHT, 3600.0));
         }
     }
     
@@ -385,7 +406,7 @@ public final class Constants{
         public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;
         
         /* Neutral Modes */
-        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Coast;
+        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
         
         /* Current Limits */
         public static final int SUPPLY_CURRENT_LIMIT = 35;
@@ -417,12 +438,6 @@ public final class Constants{
         public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(44.0);
 
         public static final Rotation2d ENCODER_OFFSET = Rotation2d.fromRotations(-0.207275390625);
-
-        public static final InterpolatingDoubleTreeMap ANGLE_MAP_UNDEFENDED = new InterpolatingDoubleTreeMap();
-        static{
-            // (distance, angle (degrees))
-            ANGLE_MAP_UNDEFENDED.put(0.0, 0.0);
-        }
         
         public static final InterpolatingDoubleTreeMap ANGLE_MAP_DEFENDED = new InterpolatingDoubleTreeMap();
         static{
@@ -450,8 +465,8 @@ public final class Constants{
         public static final double FORWARD_SOFT_LIMIT = 3.05;
         public static final double REVERSE_SOFT_LIMIT = 0.0;
 
-        public static final double CRUISE_VELOCITY = 65;
-        public static final double ACCELERATION = 50;
+        public static final double CRUISE_VELOCITY = 50;
+        public static final double ACCELERATION = 30;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
         public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(50.0, 0.0, 0.0);//50
@@ -459,7 +474,7 @@ public final class Constants{
         public static final double KS = 0.0;
         public static final double KV = 0.0;
         public static final double KA = 0.0;
-        public static final double KG = 0.28;
+        public static final double KG = 0.31;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA, GravityTypeValue.Elevator_Static);
 
         public static final double TARGET_THRESHOLD = 0.1; // inches
@@ -478,18 +493,6 @@ public final class Constants{
         public static final double REHOME_CURRENT_THRESHOLD = 0.0;
 
         public static final Rotation2d ENCODER_OFFSET = Rotation2d.fromRotations(-0.400634765625);
-
-        public static final InterpolatingDoubleTreeMap HEIGHT_MAP = new InterpolatingDoubleTreeMap();
-        static{
-            // (distance, height)
-            HEIGHT_MAP.put(0.0, 0.0);
-        }
-        
-        public static final InterpolatingDoubleTreeMap HEIGHT_MAP_DEFENDED = new InterpolatingDoubleTreeMap();
-        static{
-            // (distance, height)
-            HEIGHT_MAP.put(0.0, 0.0);
-        }
     }
 
     public static final class IntakeConstants { //TODO all values
@@ -538,7 +541,7 @@ public final class Constants{
     public static enum ElevatorPivotPosition{
         HOME(ElevatorConstants.HOME_HEIGHT, PivotConstants.HOME_ANGLE, true), 
         AMP(ElevatorConstants.AMP_HEIGHT, PivotConstants.AMP_ANGLE, false), 
-        SUBWOOFER(ElevatorConstants.SUBWOOFER_HEIGHT, PivotConstants.SUBWOOFER_ANGLE, true), 
+        SUBWOOFER(ElevatorConstants.SUBWOOFER_HEIGHT, PivotConstants.SUBWOOFER_ANGLE, true),
         TRAP_CHAIN(ElevatorConstants.TRAP_CHAIN_HEIGHT, PivotConstants.TRAP_CHAIN_ANGLE, true);
 
         public double elevatorPosition;
@@ -552,9 +555,11 @@ public final class Constants{
         }
     }
 
+    public static record ShootState(Rotation2d pivotAngle, double elevatorHeightInches, double velocityRPM){}
+
     public static final class VisionConstants {
         public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
-        public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(0.5, 0.5, 0.5);
+        public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(0.3, 0.3, 0.3);
 
         public static final double DETECTOR_TARGET_Y = 0.0;
         public static final double DETECTOR_TARGET_X = 0.0;

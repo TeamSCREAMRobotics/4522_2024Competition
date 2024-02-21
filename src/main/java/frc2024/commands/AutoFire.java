@@ -6,6 +6,7 @@ import com.team4522.lib.util.AllianceFlippable;
 import com.team4522.lib.util.ScreamUtil;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
@@ -25,15 +26,15 @@ public class AutoFire extends SequentialCommandGroup{
 
     public AutoFire(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, BooleanSupplier defense){
         addCommands(
-            shooter.velocityCommand(ShooterConstants.SHOOTER_TARGET_VELOCITY)
+            shooter.velocityCommand(ShooterConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker(swerve)).velocityRPM())
                 .alongWith(
                     new SuperstructureToPosition(
-                        defense.getAsBoolean() 
+                        defense.getAsBoolean()
                         ? ElevatorConstants.MAX_HEIGHT
-                        : ElevatorConstants.HEIGHT_MAP_DEFENDED.get(getDistanceToSpeaker(swerve)),
+                        : ShooterConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker(swerve)).elevatorHeightInches(),
                         defense.getAsBoolean()
                         ? Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP_DEFENDED.get(getDistanceToSpeaker(swerve)).doubleValue())
-                        : Rotation2d.fromDegrees(PivotConstants.ANGLE_MAP_UNDEFENDED.get(getDistanceToSpeaker(swerve)).doubleValue()),
+                        : ShooterConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker(swerve)).pivotAngle(),
                         elevator,
                         pivot
                     )
@@ -59,7 +60,7 @@ public class AutoFire extends SequentialCommandGroup{
     }
 
     public boolean endCondition(Swerve swerve, Shooter shooter, Pivot pivot, Elevator elevator){
-        return shooter.getRPM() >= ShooterConstants.MINIMUM_VELOCITY_MAP.get(getDistanceToSpeaker(swerve))
+        return shooter.getRPM() >= ShooterConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker(swerve)).velocityRPM()
            && pivot.getPivotAtTarget()
            && elevator.getElevatorAtTarget()
            && ScreamUtil.valueWithinThreshold(Vision.getTX(Limelight.SHOOTER), VisionConstants.AUTO_FIRE_X_THRESHOLD);

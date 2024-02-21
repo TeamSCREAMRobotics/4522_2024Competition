@@ -46,6 +46,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    System.out.println("(" + RobotContainer.getPivot().getPivotAngle().getDegrees() + ", " + RobotContainer.getElevator().getElevatorHeight() + ", " + RobotContainer.getShooter().getRPM() + ")");
   }
 
   @Override

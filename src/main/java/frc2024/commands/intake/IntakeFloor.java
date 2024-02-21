@@ -28,9 +28,9 @@ public class IntakeFloor extends SequentialCommandGroup {
   
   public IntakeFloor(Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake) {
     addCommands(
-        elevator.heightCommand(ElevatorConstants.HOME_HEIGHT)
-            .alongWith(pivot.angleCommand(PivotConstants.HOME_ANGLE))
-            .alongWith(intake.outputCommand(IntakeConstants.INTAKE_OUTPUT))
+        //elevator.heightCommand(ElevatorConstants.HOME_HEIGHT)
+            //.alongWith(pivot.angleCommand(PivotConstants.HOME_ANGLE))
+            intake.outputCommand(IntakeConstants.INTAKE_OUTPUT)
             .alongWith(conveyor.outputCommand(ConveyorConstants.TRANSFER_OUTPUT))
             .finallyDo(
               (interrupted) -> {

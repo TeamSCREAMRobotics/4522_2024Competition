@@ -173,6 +173,7 @@ public class DeviceConfig {
             ShooterConstants.SUPPLY_CURRENT_THRESHOLD, 
             ShooterConstants.SUPPLY_TIME_THRESHOLD);
         config.Slot0 = FXPIDConfig(ShooterConstants.PID_CONSTANTS, ShooterConstants.FEEDFORWARD_CONSTANTS);
+        //config.MotionMagic = FXMotionMagicConfig(ShooterConstants.MOTION_MAGIC_CONSTANTS);
         return config;
     }
 

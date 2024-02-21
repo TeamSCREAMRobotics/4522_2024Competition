@@ -63,7 +63,6 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
     private static GenericEntry m_shooter_DutyCycle;
     private static GenericEntry m_shooter_Velocity;
     private GenericEntry m_shooter_MotorVelocity;
-    private GenericEntry m_shooter_WheelVelocity;
 
     @Override
     public void createEntries() {
@@ -106,7 +105,6 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
         
         /* Shooter */
         m_shooter_MotorVelocity = createNumberEntry("Shooter Motor RPM", 0, new EntryProperties(5, 0, 2, 1));
-        m_shooter_WheelVelocity = createNumberEntry("Shooter Wheel RPM", 0, new EntryProperties(6, 0, 2, 1));
 
         if(ShuffleboardConstants.UPDATE_SHOOTER){
             m_shooter_DutyCycle = createNumberEntry("Shooter Target Duty Cycle", 0.0, new EntryProperties(5, 1, 2, 1));
@@ -155,8 +153,7 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
 
         /* Shooter */
         if(ShuffleboardConstants.UPDATE_SHOOTER){
-            m_shooter_MotorVelocity.setDouble(shooter.getFeetPerSecond());
-            m_shooter_WheelVelocity.setDouble(shooter.getFeetPerSecond());
+            m_shooter_MotorVelocity.setDouble(shooter.getRPM());
 
             shooter.setTargetVelocity(getShooterVelocity());
         }

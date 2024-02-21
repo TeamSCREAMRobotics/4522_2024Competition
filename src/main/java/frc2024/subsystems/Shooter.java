@@ -4,6 +4,7 @@ import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -47,7 +48,7 @@ public class Shooter extends SubsystemBase{
     }
 
     public void setTargetVelocity(double velocityRPM){
-        setShooter(m_velocityRequest.withVelocity(velocityRPM));
+        setShooter(m_velocityRequest.withVelocity(velocityRPM/60.0));
     }
 
     public double getFeetPerSecond(){
@@ -62,6 +63,19 @@ public class Shooter extends SubsystemBase{
         setShooter(m_dutyCyleRequest.withOutput(dutyCyle));
     }
 
+    public void setShooterVoltage(double volts){
+        setShooter(new VoltageOut(volts));
+    }
+
+    public double getShooterAcceleration(){
+        return ScreamUtil.average(m_leftShooterMotor.getAcceleration().getValueAsDouble(), m_rightShooterMotor.getAcceleration().getValueAsDouble());
+    }
+
+    public double getMotorVelocity(){
+        return ScreamUtil.average(m_leftShooterMotor.getVelocity().getValueAsDouble(), m_rightShooterMotor.getVelocity().getValueAsDouble());
+    }
+
+
     public void setShooter(ControlRequest control){
         m_rightShooterMotor.setControl(control);
         m_leftShooterMotor.setControl(control);
@@ -71,6 +85,9 @@ public class Shooter extends SubsystemBase{
         m_rightShooterMotor.stopMotor();
         m_leftShooterMotor.stopMotor();
     }
+
+    @Override
+    public void periodic() {}
 
     public Command outputCommand(double output){
         return run(() -> setShooterOutput(output));

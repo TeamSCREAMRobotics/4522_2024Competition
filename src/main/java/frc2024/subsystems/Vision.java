@@ -39,7 +39,7 @@ public class Vision {
     private static LinearFilter poseFilter = LinearFilter.movingAverage(5);
     
     public enum Limelight{
-        TRAP("limelight-trap", new Pose3d()), SHOOTER("limelight-shooter", new Pose3d()), INTAKE("limelight-intake", new Pose3d());
+        TRAP("limelight-trap", new Pose3d()), SHOOTER("limelight-shooter", new Pose3d(-0.286, 0.162, 0.233, new Rotation3d(0, Units.degreesToRadians(60.0), 0))), INTAKE("limelight-intake", new Pose3d());
 
         String name;
         Pose3d mountPose;
@@ -102,12 +102,16 @@ public class Vision {
         return LimelightHelpers.getTV(limelight.name);
     }
 
-    public static double getLatency(Limelight limelight){
+    public static double getLatency_Pipeline(Limelight limelight){
         return LimelightHelpers.getLatency_Pipeline(limelight.name);
     }
 
+    public static double getLatency_Capture(Limelight limelight){
+        return LimelightHelpers.getLatency_Capture(limelight.name);
+    }
+
     public static Pose2d getBotPose2d(Limelight limelight){
-        return filterPose2d(LimelightHelpers.getBotPose2d_wpiBlue(limelight.name));
+        return LimelightHelpers.getBotPose2d_wpiBlue(limelight.name);
     }
 
     public static Pose3d getBotPose3d(Limelight limelight){
@@ -138,13 +142,13 @@ public class Vision {
     }
 
     public static TimestampedVisionMeasurement getTimestampedVisionMeasurement(Limelight limelight){
-        return new TimestampedVisionMeasurement(getBotPose2d(limelight), Timer.getFPGATimestamp() - LimelightHelpers.getBotPose(limelight.name)[6]/1000.0);
+        return new TimestampedVisionMeasurement(getBotPose2d(limelight), Timer.getFPGATimestamp() - LimelightHelpers.getBotPose_wpiBlue(limelight.name)[6]);
     }
 
     public static TimestampedVisionMeasurement[] getBotPoses(){
         return new TimestampedVisionMeasurement[] {
             getTimestampedVisionMeasurement(Limelight.SHOOTER),
-            getTimestampedVisionMeasurement(Limelight.TRAP)
+            //getTimestampedVisionMeasurement(Limelight.TRAP)
         };
     }
 

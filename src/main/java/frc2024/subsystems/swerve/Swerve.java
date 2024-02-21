@@ -2,6 +2,8 @@ package frc2024.subsystems.swerve;
 
 import java.util.Optional;
 
+import org.apache.commons.math3.exception.util.LocalizedFormats;
+
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
@@ -11,6 +13,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.pid.ScreamPIDConstants;
 import com.team4522.lib.util.AllianceFlippable;
+import com.team4522.lib.util.ScreamUtil;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -22,12 +25,15 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.RobotContainer;
+import frc2024.Constants.FieldConstants;
 import frc2024.Constants.Ports;
 import frc2024.Constants.SwerveConstants;
 import frc2024.Constants.VisionConstants;
@@ -35,6 +41,7 @@ import frc2024.Constants.SwerveConstants.ModuleConstants;
 import frc2024.Constants.SwerveConstants.ModuleConstants.ModuleLocation;
 import frc2024.controlboard.Controlboard;
 import frc2024.subsystems.Vision;
+import frc2024.subsystems.Vision.Limelight;
 import frc2024.subsystems.Vision.TimestampedVisionMeasurement;
 
 /**
@@ -84,7 +91,7 @@ public class Swerve extends SubsystemBase {
             SwerveConstants.KINEMATICS, 
             getYaw(), 
             getModulePositions(), 
-            new Pose2d(new Translation2d(), AllianceFlippable.getForwardRotation()), 
+            Vision.getBotPose2d(Limelight.SHOOTER), 
             VisionConstants.STATE_STD_DEVS,
             VisionConstants.VISION_STD_DEVS
         );
@@ -313,9 +320,10 @@ public class Swerve extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        /* for(TimestampedVisionMeasurement botpose : Vision.getBotPoses()){
-            m_poseEstimator.addVisionMeasurement(botpose.pose(), botpose.timestamp());
-        } */
+        for(TimestampedVisionMeasurement measurement : Vision.getBotPoses()){
+            m_poseEstimator.addVisionMeasurement(measurement.pose(), measurement.timestamp());
+        }
+        System.out.println(ScreamUtil.calculateDistanceToTranslation(getPose().getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation()));
     }
 
     public Command resetPoseCommand(Pose2d pose){
