@@ -1,5 +1,7 @@
 package frc2024.commands;
 
+import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.function.BooleanSupplier;
 
 import com.team4522.lib.util.AllianceFlippable;
@@ -12,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.ElevatorPivotPosition;
+import frc2024.Constants.FieldConstants;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.ShooterConstants;
 import frc2024.Constants.VisionConstants;
@@ -27,31 +30,15 @@ public class AutoFire extends SequentialCommandGroup{
 
     public AutoFire(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, BooleanSupplier defense){
         addCommands(
-            shooter.velocityCommand(ShooterConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker(swerve)).velocityRPM())
-                .alongWith(pivot.angleCommand(() -> ShooterConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker(swerve)).pivotAngle()).alongWith(elevator.heightCommand(() -> ShooterConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker(swerve)).elevatorHeightInches())))
-                .onlyWhile(
-                    () -> runCondition(swerve))
-/*                 .until(
-                    () -> endCondition(swerve, shooter, pivot, elevator)) */
-                .finallyDo(
-                    () -> {
-                            // conveyor.setConveyorOutput(ConveyorConstants.SHOOT_SPEED);
-                        }
-                )
+            shooter.velocityCommand(VisionConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker().getAsDouble()).velocityRPM())
+                .alongWith(
+                    pivot.angleCommand(() -> VisionConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker().getAsDouble()).pivotAngle())
+                        .alongWith(elevator.heightCommand(() -> VisionConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker().getAsDouble()).elevatorHeightInches())))
+                .onlyWhile(() -> getDistanceToSpeaker().isPresent())
         );
     }
 
-    public double getDistanceToSpeaker(Swerve swerve){
-        return ScreamUtil.calculateDistanceToTranslation(Vision.getBotPose2d(Limelight.SHOOTER).getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation());
-    }
-
-    public boolean runCondition(Swerve swerve){
-        return getDistanceToSpeaker(swerve) <= 4.5;
-    }
-
-    public boolean endCondition(Swerve swerve, Shooter shooter, Pivot pivot, Elevator elevator){
-        return shooter.getRPM() >= ShooterConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker(swerve)).velocityRPM()-100
-           && pivot.getPivotAtTarget()
-           && elevator.getElevatorAtTarget();
+    public OptionalDouble getDistanceToSpeaker(){
+        return Vision.getDistanceToTarget(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER);
     }
 }

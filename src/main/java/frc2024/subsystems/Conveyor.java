@@ -23,7 +23,7 @@ public class Conveyor extends SubsystemBase{
     private DigitalInput m_beam;
 
     private DutyCycleOut m_dutyCycleRequest = new DutyCycleOut(0);
-    private Debouncer m_beamDebouncer = new Debouncer(0.05, DebounceType.kBoth);
+    private Debouncer m_beamDebouncer = new Debouncer(0.1, DebounceType.kBoth);
 
     public Conveyor(){
         m_conveyorMotor = new TalonFX(Ports.CONVEYOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
@@ -45,22 +45,25 @@ public class Conveyor extends SubsystemBase{
     public void setConveyor(ControlRequest control){
         m_conveyorMotor.setControl(control);
     }
-    
-    public double getRPM(){
-        return m_conveyorMotor.getVelocity().getValueAsDouble()*60;
-    }
 
     public void setConveyorOutput(double output){
         setConveyor(m_dutyCycleRequest.withOutput(output));
     }
 
-    public void stop(){
-        m_conveyorMotor.stopMotor();
+    public double getRPM(){
+        return m_conveyorMotor.getVelocity().getValueAsDouble()*60;
     }
     
     public BooleanSupplier hasPiece(){
         return () -> m_beamDebouncer.calculate(!m_beam.get());
     }
+
+    public void stop(){
+        m_conveyorMotor.stopMotor();
+    }
+
+    @Override
+    public void periodic() {}
 
     public Command outputCommand(double output){
         return run(() -> setConveyorOutput(output));
@@ -70,6 +73,5 @@ public class Conveyor extends SubsystemBase{
         return run(() -> stop());
     }
 
-    @Override
-    public void periodic() {}
+
 }

@@ -370,29 +370,6 @@ public final class Constants{
             // (angle to target, time (seconds))
             TIME_TO_GOAL_MAP.put(0.0, 0.0);
         }
-
-        public static final ShootStateInterpolatingTreeMap SHOOT_STATE_MAP = new ShootStateInterpolatingTreeMap();
-        static{
-            SHOOT_STATE_MAP.put(1.3005, new ShootState(PivotConstants.SUBWOOFER_ANGLE, ElevatorConstants.SUBWOOFER_HEIGHT, SUBWOOFER_VELOCITY));
-            SHOOT_STATE_MAP.put(1.5596, new ShootState(Rotation2d.fromDegrees(6.767), 0.0, 2750.0));
-            SHOOT_STATE_MAP.put(1.8296, new ShootState(Rotation2d.fromDegrees(8.9648), 0.0, 2850.0));
-            SHOOT_STATE_MAP.put(2.1437, new ShootState(Rotation2d.fromDegrees(13.7109), 0.0, 2950.0));
-            SHOOT_STATE_MAP.put(2.3822, new ShootState(Rotation2d.fromDegrees(18.6328), 0.0, 3100.0));
-            SHOOT_STATE_MAP.put(2.708, new ShootState(Rotation2d.fromDegrees(20.4785), 0.0, 3250.0));
-            SHOOT_STATE_MAP.put(3.0022, new ShootState(Rotation2d.fromDegrees(23.5546), 0.0, 3500.0));
-            SHOOT_STATE_MAP.put(3.3039, new ShootState(Rotation2d.fromDegrees(23.6425), 0.0, 3600.0));
-        }
-
-        public static final ShootStateInterpolatingTreeMap SHOOT_STATE_MAP_DEFENDED = new ShootStateInterpolatingTreeMap();
-        static{
-            SHOOT_STATE_MAP_DEFENDED.put(1.5596, new ShootState(Rotation2d.fromDegrees(20.39), ElevatorConstants.MAX_HEIGHT, 2250.0));
-            SHOOT_STATE_MAP_DEFENDED.put(1.8296, new ShootState(Rotation2d.fromDegrees(23.267), ElevatorConstants.MAX_HEIGHT, 2500.0));
-            SHOOT_STATE_MAP_DEFENDED.put(2.1437, new ShootState(Rotation2d.fromDegrees(25.4), ElevatorConstants.MAX_HEIGHT, 2750.0));
-            SHOOT_STATE_MAP_DEFENDED.put(2.3822, new ShootState(Rotation2d.fromDegrees(28.6523), ElevatorConstants.MAX_HEIGHT, 3000.0));
-            SHOOT_STATE_MAP_DEFENDED.put(2.708, new ShootState(Rotation2d.fromDegrees(31.0253), ElevatorConstants.MAX_HEIGHT, 3250.0));
-            SHOOT_STATE_MAP_DEFENDED.put(3.0022, new ShootState(Rotation2d.fromDegrees(34.4531), ElevatorConstants.MAX_HEIGHT, 3500.0));
-            SHOOT_STATE_MAP_DEFENDED.put(3.3039, new ShootState(Rotation2d.fromDegrees(34.4531), ElevatorConstants.MAX_HEIGHT, 3600.0));
-        }
     }
     
     public static final class PivotConstants { //TODO all values
@@ -565,6 +542,29 @@ public final class Constants{
         public static final double DETECTOR_TARGET_X = 0.0;
         public static final double AUTO_FIRE_X_THRESHOLD = 0;
         public static final double AUTO_INTAKE_Y_THRESHOLD = 0.0;
+
+        public static final ShootStateInterpolatingTreeMap SHOOT_STATE_MAP = new ShootStateInterpolatingTreeMap();
+        static{
+            SHOOT_STATE_MAP.put(1.3005, new ShootState(PivotConstants.SUBWOOFER_ANGLE, ElevatorConstants.SUBWOOFER_HEIGHT, ShooterConstants.SUBWOOFER_VELOCITY));
+            SHOOT_STATE_MAP.put(1.5596, new ShootState(Rotation2d.fromDegrees(6.767), 0.0, 2750.0));
+            SHOOT_STATE_MAP.put(1.8296, new ShootState(Rotation2d.fromDegrees(8.9648), 0.0, 2850.0));
+            SHOOT_STATE_MAP.put(2.1437, new ShootState(Rotation2d.fromDegrees(13.7109), 0.0, 2950.0));
+            SHOOT_STATE_MAP.put(2.3822, new ShootState(Rotation2d.fromDegrees(18.6328), 0.0, 3100.0));
+            SHOOT_STATE_MAP.put(2.708, new ShootState(Rotation2d.fromDegrees(20.4785), 0.0, 3250.0));
+            SHOOT_STATE_MAP.put(3.0022, new ShootState(Rotation2d.fromDegrees(23.5546), 0.0, 3500.0));
+            SHOOT_STATE_MAP.put(3.3039, new ShootState(Rotation2d.fromDegrees(23.6425), 0.0, 3600.0));
+        }
+
+        public static final ShootStateInterpolatingTreeMap SHOOT_STATE_MAP_DEFENDED = new ShootStateInterpolatingTreeMap();
+        static{
+            SHOOT_STATE_MAP_DEFENDED.put(1.5596, new ShootState(Rotation2d.fromDegrees(20.39), ElevatorConstants.MAX_HEIGHT, 2250.0));
+            SHOOT_STATE_MAP_DEFENDED.put(1.8296, new ShootState(Rotation2d.fromDegrees(23.267), ElevatorConstants.MAX_HEIGHT, 2500.0));
+            SHOOT_STATE_MAP_DEFENDED.put(2.1437, new ShootState(Rotation2d.fromDegrees(25.4), ElevatorConstants.MAX_HEIGHT, 2750.0));
+            SHOOT_STATE_MAP_DEFENDED.put(2.3822, new ShootState(Rotation2d.fromDegrees(28.6523), ElevatorConstants.MAX_HEIGHT, 3000.0));
+            SHOOT_STATE_MAP_DEFENDED.put(2.708, new ShootState(Rotation2d.fromDegrees(31.0253), ElevatorConstants.MAX_HEIGHT, 3250.0));
+            SHOOT_STATE_MAP_DEFENDED.put(3.0022, new ShootState(Rotation2d.fromDegrees(34.4531), ElevatorConstants.MAX_HEIGHT, 3500.0));
+            SHOOT_STATE_MAP_DEFENDED.put(3.3039, new ShootState(Rotation2d.fromDegrees(34.4531), ElevatorConstants.MAX_HEIGHT, 3600.0));
+        }
     }
 
     public static final class FieldConstants{

@@ -1,6 +1,8 @@
 package frc2024.subsystems;
 
 import java.nio.channels.Pipe;
+import java.util.Optional;
+import java.util.OptionalDouble;
 
 import org.photonvision.PhotonUtils;
 
@@ -34,12 +36,9 @@ import frc2024.Constants.FieldConstants;
 import frc2024.Constants.VisionConstants;
 
 public class Vision {
-
-    private static LinearFilter numberFilter = LinearFilter.movingAverage(5);
-    private static LinearFilter poseFilter = LinearFilter.movingAverage(5);
     
     public enum Limelight{
-        TRAP("limelight-trap", new Pose3d()), SHOOTER("limelight-shooter", new Pose3d(-0.286, 0.162, 0.233, new Rotation3d(0, Units.degreesToRadians(60.0), 0))), INTAKE("limelight-intake", new Pose3d());
+        TRAP("limelight-trap", new Pose3d()), SHOOTER("limelight-shooter", new Pose3d(0.286, -0.162, 0.220615, new Rotation3d(0, Math.toRadians(30.0), Math.toRadians(180.0)))), INTAKE("limelight-intake", new Pose3d());
 
         String name;
         Pose3d mountPose;
@@ -87,15 +86,15 @@ public class Vision {
     }
 
     public static double getTX(Limelight limelight){
-        return filter(LimelightHelpers.getTX(limelight.name));
+        return LimelightHelpers.getTX(limelight.name);
     }
 
     public static double getTY(Limelight limelight){
-        return filter(LimelightHelpers.getTY(limelight.name));
+        return LimelightHelpers.getTY(limelight.name);
     }
 
     public static double getTA(Limelight limelight){
-        return filter(LimelightHelpers.getTA(limelight.name));
+        return LimelightHelpers.getTA(limelight.name);
     }
 
     public static boolean getTV(Limelight limelight){
@@ -115,26 +114,29 @@ public class Vision {
     }
 
     public static Pose3d getBotPose3d(Limelight limelight){
-        return filterPose3d(LimelightHelpers.getBotPose3d_wpiBlue(limelight.name));
+        return LimelightHelpers.getBotPose3d_wpiBlue(limelight.name);
     }
 
     public static Pose2d getBotPose2d_TargetSpace(Limelight limelight){
-        return filterPose2d(LimelightHelpers.getBotPose3d_TargetSpace(limelight.name).toPose2d());
+        return LimelightHelpers.getBotPose3d_TargetSpace(limelight.name).toPose2d();
     }
 
     public static Pose3d getBotPose3d_TargetSpace(Limelight limelight){
-        return filterPose3d(LimelightHelpers.getBotPose3d_TargetSpace(limelight.name));
+        return LimelightHelpers.getBotPose3d_TargetSpace(limelight.name);
     }
 
-    public static double getDistanceToTarget(double targetHeight, Limelight limelight){
-        return PhotonUtils.calculateDistanceToTargetMeters(limelight.mountPose.getZ(), targetHeight, limelight.mountPose.getRotation().getY(), Units.degreesToRadians(getTY(limelight)));
+    public static OptionalDouble getDistanceToTarget(double targetHeight, Limelight limelight){
+        double goal_theta = limelight.mountPose.getRotation().getY() + Math.toRadians(getTY(Limelight.SHOOTER));
+        double height_diff = targetHeight - limelight.mountPose.getZ();
+
+        return OptionalDouble.of(height_diff / Math.tan(goal_theta));
     }
 
     public static double getFusedDistanceToSpeaker(Limelight limelight, Pose2d currentPose){
         double sum;
         sum = ScreamUtil.calculateDistanceToTranslation(currentPose.getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation());
         if(getTV(limelight)){
-            sum += getDistanceToTarget(FieldConstants.SPEAKER_TAG_HEIGHT, limelight);
+            sum += getDistanceToTarget(FieldConstants.SPEAKER_TAG_HEIGHT, limelight).getAsDouble();
             return sum / 2;
         }
         return sum;
@@ -184,30 +186,6 @@ public class Vision {
 
     public static void setPipeline(BackPipeline pipeline){
         setPipeline(Limelight.TRAP, pipeline.index);
-    }
-
-    public static double filter(double value){
-        return numberFilter.calculate(value);
-    }
-
-    public static Pose2d filterPose2d(Pose2d pose){
-        return new Pose2d(
-            poseFilter.calculate(pose.getX()),
-            poseFilter.calculate(pose.getY()),
-            Rotation2d.fromRadians(poseFilter.calculate(pose.getRotation().getRadians()))
-        );
-    }
-
-    public static Pose3d filterPose3d(Pose3d pose){
-        return new Pose3d(
-            poseFilter.calculate(pose.getX()),
-            poseFilter.calculate(pose.getY()),
-            poseFilter.calculate(pose.getZ()),
-            new Rotation3d(
-               poseFilter.calculate(pose.getRotation().getX()), 
-               poseFilter.calculate(pose.getRotation().getY()), 
-               poseFilter.calculate(pose.getRotation().getZ())
-            ));
     }
 
     public Command intakePipelineCommand(IntakePipeline pipeline){

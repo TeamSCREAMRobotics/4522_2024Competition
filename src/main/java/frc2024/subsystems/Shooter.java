@@ -1,5 +1,7 @@
 package frc2024.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
@@ -47,8 +49,17 @@ public class Shooter extends SubsystemBase{
         m_leftShooterMotor.setNeutralMode(shooterMode);
     }
 
+    public void setShooter(ControlRequest control){
+        m_rightShooterMotor.setControl(control);
+        m_leftShooterMotor.setControl(control);
+    }
+
     public void setTargetVelocity(double velocityRPM){
         setShooter(m_velocityRequest.withVelocity(velocityRPM/60.0));
+    }
+
+    public void setShooterOutput(double dutyCyle){
+        setShooter(m_dutyCyleRequest.withOutput(dutyCyle));
     }
 
     public double getFeetPerSecond(){
@@ -59,26 +70,8 @@ public class Shooter extends SubsystemBase{
         return ScreamUtil.average(m_rightShooterMotor.getRotorVelocity().getValueAsDouble(), m_leftShooterMotor.getRotorVelocity().getValueAsDouble())*60;
     }
 
-    public void setShooterOutput(double dutyCyle){
-        setShooter(m_dutyCyleRequest.withOutput(dutyCyle));
-    }
-
-    public void setShooterVoltage(double volts){
-        setShooter(new VoltageOut(volts));
-    }
-
-    public double getShooterAcceleration(){
-        return ScreamUtil.average(m_leftShooterMotor.getAcceleration().getValueAsDouble(), m_rightShooterMotor.getAcceleration().getValueAsDouble());
-    }
-
     public double getMotorVelocity(){
         return ScreamUtil.average(m_leftShooterMotor.getVelocity().getValueAsDouble(), m_rightShooterMotor.getVelocity().getValueAsDouble());
-    }
-
-
-    public void setShooter(ControlRequest control){
-        m_rightShooterMotor.setControl(control);
-        m_leftShooterMotor.setControl(control);
     }
 
     public void stop(){
@@ -89,12 +82,16 @@ public class Shooter extends SubsystemBase{
     @Override
     public void periodic() {}
 
-    public Command outputCommand(double output){
-        return run(() -> setShooterOutput(output));
+    public Command dutyCycleCommand(double dutyCycle){
+        return run(() -> setShooterOutput(dutyCycle));
     }
 
-    public Command velocityCommand(double velocity){
-        return run(() -> setTargetVelocity(velocity));
+    public Command velocityCommand(double velocityRPM){
+        return run(() -> setTargetVelocity(velocityRPM));
+    }
+
+    public Command velocityCommand(DoubleSupplier velocityRPM){
+        return run(() -> setTargetVelocity(velocityRPM.getAsDouble()));
     }
 
     public Command stopCommand(){

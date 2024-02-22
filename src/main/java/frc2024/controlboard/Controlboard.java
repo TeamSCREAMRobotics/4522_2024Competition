@@ -50,8 +50,12 @@ public class Controlboard{
      */
     public static DoubleSupplier[] getTranslation(){
         return new DoubleSupplier[]{
-            () -> -MathUtil.applyDeadband(driverController_Command.getLeftY(), STICK_DEADBAND),
-            () -> -MathUtil.applyDeadband(driverController_Command.getLeftX(), STICK_DEADBAND)
+            driverController_Command.leftTrigger(TRIGGER_DEADBAND).getAsBoolean() 
+            ? () -> -MathUtil.applyDeadband(driverController_Command.getLeftY(), STICK_DEADBAND)*0.5 
+            : () -> -MathUtil.applyDeadband(driverController_Command.getLeftY(), STICK_DEADBAND),
+            driverController_Command.leftTrigger(TRIGGER_DEADBAND).getAsBoolean() 
+            ? () -> -MathUtil.applyDeadband(driverController_Command.getLeftX(), STICK_DEADBAND)*0.5 
+            : () -> -MathUtil.applyDeadband(driverController_Command.getLeftX(), STICK_DEADBAND),
         };
     }
 

@@ -54,14 +54,18 @@ public class Pivot extends SubsystemBase{
     public void configPID(ScreamPIDConstants constants){
         m_pivotMotor.getConfigurator().apply(constants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
     }
+
+    public void zeroPivot(){
+        m_pivotMotor.setPosition(0.0);
+        m_encoder.setPosition(0.0);
+    }
     
     public void setNeutralMode(NeutralModeValue mode){
         m_pivotMotor.setNeutralMode(mode);
     }
 
-    public void zeroPivot(){
-        m_pivotMotor.setPosition(0.0);
-        m_encoder.setPosition(0.0);
+    public void setPivot(ControlRequest control){
+        m_pivotMotor.setControl(control);
     }
 
     public void setTargetAngle(Rotation2d angle, boolean limitMotion){
@@ -71,10 +75,6 @@ public class Pivot extends SubsystemBase{
 
     public void setPivotOutput(double output){
         setPivot(m_dutyCycleRequest.withOutput(output));
-    }
-    
-    public void setPivot(ControlRequest control){
-        m_pivotMotor.setControl(control);
     }
 
     public Rotation2d getPivotAngle(){
@@ -88,10 +88,6 @@ public class Pivot extends SubsystemBase{
     public boolean getPivotAtTarget(){
         return Math.abs(getPivotError().getDegrees()) < PivotConstants.TARGET_THRESHOLD;
     }
-    
-/*     public double getPivotTargetAngle_Localization(double distance){
-        return PivotConstants.ANGLE_MAP.get(distance);
-    } */
 
     public void stop(){
         m_pivotMotor.stopMotor();
@@ -100,12 +96,12 @@ public class Pivot extends SubsystemBase{
     @Override
     public void periodic() {}
 
-    public Command outputCommand(DoubleSupplier output){
-        return run(() -> setPivotOutput(output.getAsDouble()));
+    public Command dutyCycleCommand(DoubleSupplier dutyCycle){
+        return run(() -> setPivotOutput(dutyCycle.getAsDouble()));
     }
 
-    public Command outputCommand(double output){
-        return run(() -> setPivotOutput(output));
+    public Command dutyCycleCommand(double dutyCycle){
+        return run(() -> setPivotOutput(dutyCycle));
     }
 
     public Command angleCommand(Rotation2d angle){

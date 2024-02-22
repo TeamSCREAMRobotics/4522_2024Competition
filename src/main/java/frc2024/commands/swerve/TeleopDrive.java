@@ -58,9 +58,9 @@ public class TeleopDrive extends Command {
     @Override
     public void execute() {
 
-        Translation2d translationValue = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
-        double rotationValue = rotationSup.getAsDouble()*SwerveConstants.MAX_ANGULAR_VELOCITY;//getRotation(rotationSup.getAsDouble());
         boolean fieldRelative = fieldRelativeSup.getAsBoolean();
+        Translation2d translationValue = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * (fieldRelative ? AllianceFlippable.getDirectionCoefficient() : 1));
+        double rotationValue = getRotation(rotationSup.getAsDouble());
 
         if(Controlboard.zeroGyro().getAsBoolean()) lastAngle = AllianceFlippable.getForwardRotation();
 
@@ -74,13 +74,13 @@ public class TeleopDrive extends Command {
      * Checks if the swerve drive should start heading correction.<p>
      * If no manual input is given for a time, this method will return the rotation value required to maintain the current heading.
      * 
-     * @param current The current rotation value.
+     * @param currentValue The current rotation value.
      * @return The determined rotation value.
      */
-    private double getRotation(double current){
-        if(Math.abs(current) > 0.1){
+    private double getRotation(double currentValue){
+        if(Math.abs(currentValue) > 0.1){
             correctionTimer.reset();
-            return current * SwerveConstants.MAX_ANGULAR_VELOCITY;
+            return currentValue * SwerveConstants.MAX_ANGULAR_VELOCITY;
         }
 
         correctionTimer.start();
@@ -89,10 +89,10 @@ public class TeleopDrive extends Command {
             lastAngle = swerve.getRotation();
         }
 
-        if(swerve.getGyro().getAngularVelocityZWorld().getValueAsDouble() < 0.5){
+        if(correctionTimer.hasElapsed(SwerveConstants.CORRECTION_TIME_THRESHOLD)){
             return swerve.calculateHeadingCorrection(swerve.getRotation().getDegrees(), lastAngle.getDegrees());
         }
 
-        return current * SwerveConstants.MAX_ANGULAR_VELOCITY;
+        return currentValue * SwerveConstants.MAX_ANGULAR_VELOCITY;
     }
 }

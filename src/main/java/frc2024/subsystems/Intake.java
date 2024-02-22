@@ -40,19 +40,19 @@ public class Intake extends SubsystemBase{
     }
 
     public void configIntakeMotors(){
-        DeviceConfig.configureTalonFX("Right Intake Motor", m_intakeMotor, DeviceConfig.intakeFXConfig(), Constants.DEVICE_LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Intake Motor", m_intakeMotor, DeviceConfig.intakeFXConfig(), Constants.DEVICE_LOOP_TIME_HZ);
     }
 
     public void setNeutralMode(NeutralModeValue mode){
         m_intakeMotor.setNeutralMode(mode);
     }
 
-    public void setIntakeOutput(double output){
-        setIntake(m_dutyCycleRequest.withOutput(output));
-    }
-
     public void setIntake(ControlRequest control){
         m_intakeMotor.setControl(control);
+    }
+
+    public void setIntakeOutput(double output){
+        setIntake(m_dutyCycleRequest.withOutput(output));
     }
 
     public double getRPM(){

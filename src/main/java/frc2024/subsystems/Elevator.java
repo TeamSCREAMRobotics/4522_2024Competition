@@ -82,12 +82,12 @@ public class Elevator extends SubsystemBase{
         m_leftElevatorMotor.setControl(control);
     }
 
-    public void setElevatorVoltage(double voltage){
-        setElevator(m_voltageRequest.withOutput(voltage + ElevatorConstants.KG));
-    }
-
     public void setTargetHeight(double heightInches){
         setTargetPosition(heightInchesToPosition(heightInches));
+    }
+
+    public void setElevatorVoltage(double voltage){
+        setElevator(m_voltageRequest.withOutput(voltage + ElevatorConstants.KG));
     }
 
     private void setTargetPosition(double positionRotations){

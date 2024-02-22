@@ -31,7 +31,6 @@ public class Climber extends SubsystemBase{
   private double m_targetHeight;
 
   public Climber (){
-        //m_leftClimberMotor = new TalonFX(Ports.RIGHT_CLIMBER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         m_climberMotor = new TalonFX(Ports.LEFT_CLIMBER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
 
         configClimberMotors();
@@ -41,31 +40,27 @@ public class Climber extends SubsystemBase{
     
     private void configClimberMotors() {
         DeviceConfig.configureTalonFX("Climber Motor", m_climberMotor, DeviceConfig.climberFXConfig(), Constants.DEVICE_LOOP_TIME_HZ);
-        //DeviceConfig.configureTalonFX("Left Climber Motor", m_leftClimberMotor, DeviceConfig.climberFXConfig(), Constants.LOOP_TIME_HZ);
     }
 
     public void configPID(ScreamPIDConstants constants){
         m_climberMotor.getConfigurator().apply(constants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
-        //m_leftClimberMotor.getConfigurator().apply(screamPIDConstants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
-    }
-    
-    public void setNeutralMode(NeutralModeValue mode){
-        m_climberMotor.setNeutralMode(mode);
-        //m_leftClimberMotor.setNeutralMode(mode);
     }
 
     public void zeroHeight(){
         m_climberMotor.setPosition(0.0);
     }
+    
+    public void setNeutralMode(NeutralModeValue mode){
+        m_climberMotor.setNeutralMode(mode);
+    }
+
+    public void setClimber(ControlRequest control){
+        m_climberMotor.setControl(control);
+    }
 
     public void setTargetPosition(double height){
         m_targetHeight = height;
         setClimber(m_positionRequest.withPosition(m_targetHeight));
-    }
-    
-    public void setClimber(ControlRequest control){
-        m_climberMotor.setControl(control);
-        //m_leftClimberMotor.setControl(new Follower(m_climberMotor.getDeviceID(), false)); //left motor follows right motor in the opposing direction
     }
 
     public void setClimberOutput(double output){
@@ -90,7 +85,6 @@ public class Climber extends SubsystemBase{
 
     public void stop(){
         m_climberMotor.stopMotor();
-        //m_leftClimberMotor.stopMotor();
     }
 
     public Command outputCommand(DoubleSupplier output){

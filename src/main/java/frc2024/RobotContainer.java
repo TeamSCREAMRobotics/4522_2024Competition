@@ -40,7 +40,6 @@ import frc2024.auto.Autonomous;
 import frc2024.auto.Autonomous.PPEvent;
 import frc2024.auto.Routines;
 import frc2024.commands.AutoFire;
-import frc2024.commands.AutoPrep;
 import frc2024.commands.FeedForwardCharacterization;
 import frc2024.commands.SuperstructureToPosition;
 import frc2024.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
@@ -91,7 +90,6 @@ public class RobotContainer {
     private void configButtonBindings() {
         Controlboard.zeroGyro().onTrue(Commands.runOnce(() -> m_swerve.resetYaw(AllianceFlippable.getForwardRotation())));
         Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, new Rotation2d()))));/* m_elevator.zeroPosition()).ignoringDisable(true) );*/
-        Controlboard.test().whileTrue(new FeedForwardCharacterization(m_elevator, true, new FeedForwardCharacterizationData("Shooter"), m_shooter::setShooterVoltage, m_shooter::getMotorVelocity, m_shooter::getShooterAcceleration));
 
         /* Conveyor */
         Controlboard.ejectThroughShooter().whileTrue(m_conveyor.outputCommand(-0.85)).onFalse(m_conveyor.stopCommand());
@@ -104,7 +102,7 @@ public class RobotContainer {
         Controlboard.resetElevatorHeight().onTrue(Commands.runOnce(() -> m_elevator.zeroPosition()));
 
         /* Pivot */
-        Controlboard.manualMode().toggleOnTrue(m_pivot.outputCommand(Controlboard.getManualPivotOutput()));
+        Controlboard.manualMode().toggleOnTrue(m_pivot.dutyCycleCommand(Controlboard.getManualPivotOutput()));
         Controlboard.resetPivotAngle().onTrue(Commands.runOnce(() -> m_pivot.zeroPivot()));
         //Right Y
 
@@ -140,7 +138,7 @@ public class RobotContainer {
         
         Controlboard.ejectThroughShooter()
             .whileTrue(
-                m_shooter.outputCommand(ShooterConstants.EJECT_OUTPUT))
+                m_shooter.dutyCycleCommand(ShooterConstants.EJECT_OUTPUT))
             .onFalse(m_shooter.stopCommand());
 
         /* Automation */
