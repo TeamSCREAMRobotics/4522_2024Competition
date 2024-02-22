@@ -1,6 +1,7 @@
 package frc2024.subsystems;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import org.apache.commons.math3.ml.distance.CanberraDistance;
 
@@ -111,7 +112,7 @@ public class Pivot extends SubsystemBase{
         return run(() -> setTargetAngle(angle, false));
     }
 
-    public Command angleCommand(Rotation2d angle, boolean limitMotion){
-        return run(() -> setTargetAngle(angle, limitMotion));
+    public Command angleCommand(Supplier<Rotation2d> angle){
+        return run(() -> setTargetAngle(angle.get(), false));
     }
 }

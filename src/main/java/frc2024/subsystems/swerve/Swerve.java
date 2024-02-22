@@ -14,6 +14,7 @@ import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.pid.ScreamPIDConstants;
 import com.team4522.lib.util.AllianceFlippable;
 import com.team4522.lib.util.ScreamUtil;
+import com.team6328.PoseEstimator;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -54,6 +55,7 @@ public class Swerve extends SubsystemBase {
     private SwerveModule[] m_swerveModules;
     private SwerveModulePosition[] m_modulePositions;
     private SwerveDrivePoseEstimator m_poseEstimator;
+    //private PoseEstimator m_poseEstimator;
     private OdometryThread m_odometryThread;
     private ChassisSpeeds m_currentSpeeds = new ChassisSpeeds();
 
@@ -321,9 +323,10 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic() {
         for(TimestampedVisionMeasurement measurement : Vision.getBotPoses()){
+            //System.out.println("Vision: " + measurement.pose().getTranslation() + "\n" + "Estimator: " + getPose().getTranslation());
             m_poseEstimator.addVisionMeasurement(measurement.pose(), measurement.timestamp());
         }
-        System.out.println(ScreamUtil.calculateDistanceToTranslation(getPose().getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation()));
+        //System.out.println(ScreamUtil.calculateDistanceToTranslation(getPose().getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation()));
     }
 
     public Command resetPoseCommand(Pose2d pose){

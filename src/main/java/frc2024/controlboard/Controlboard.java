@@ -146,7 +146,7 @@ public class Controlboard{
         // return operatorController_Command.povUp();
     }
     public static final Trigger testA(){
-        return operatorController_Command.a();
+        return new Trigger(() -> buttonBoard.getRawButton(5));
     }
     public static final Trigger ejectThroughShooter(){
         return operatorController_Command.povDown();

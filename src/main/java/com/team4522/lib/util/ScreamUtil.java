@@ -102,6 +102,13 @@ public class ScreamUtil {
         Translation2d temp = target.relativeTo(current).getTranslation();
         return new Rotation2d(temp.getX(), temp.getY());
     }
+    
+    public static Rotation2d calculateAngleToPoint(Translation2d current, Translation2d target){
+        double targetX = target.getX() - current.getX();
+        double targetY = target.getY() - current.getY();
+        /* adding PI faces the point with the backside of the robot */
+        return Rotation2d.fromRadians(Math.atan2(targetY, targetX)).plus(Rotation2d.fromRadians(Math.PI));
+      }
 
     public static double calculateDistanceToTranslation(Translation2d current, Translation2d target){
         return current.getDistance(target);

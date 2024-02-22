@@ -58,7 +58,7 @@ public class FacePoint extends Command {
 
     Translation2d drivingTranslation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
 
-    targetAngle = ScreamUtil.calculateYawToPose(swerve.getPose(), new Pose2d(target, Rotation2d.fromDegrees(0)));
+    targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getPose().getTranslation(), target);
     /* Substract PI if the robot should face the point with the front of the robot */
     if(front) targetAngle = targetAngle.minus(Rotation2d.fromRadians(Math.PI));
 

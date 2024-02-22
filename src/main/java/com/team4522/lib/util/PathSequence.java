@@ -73,7 +73,7 @@ public class PathSequence {
     }
 
     public Command getAll(){
-        Command[] commands = new Command[list.size()-1];
+        Command[] commands = new Command[list.size()];
         for(int i = 0; i < list.size(); i++){
             commands[i] = getPathCommand(list.get(i));
         }

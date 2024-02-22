@@ -1,5 +1,7 @@
 package frc2024.commands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -18,14 +20,14 @@ public class SuperstructureToPosition extends SequentialCommandGroup{
     public SuperstructureToPosition(ElevatorPivotPosition position, Elevator elevator, Pivot pivot){
         addCommands(
             elevator.heightCommand(position.elevatorPosition)
-                .alongWith(pivot.angleCommand(position.pivotAngle, false))
+                .alongWith(pivot.angleCommand(position.pivotAngle))
         );
     }
 
-    public SuperstructureToPosition(double elevatorPosition, Rotation2d pivotAngle, Elevator elevator, Pivot pivot){
+    public SuperstructureToPosition(DoubleSupplier elevatorHeight, DoubleSupplier pivotAngleDeg, Elevator elevator, Pivot pivot){
         addCommands(
-            elevator.heightCommand(elevatorPosition)
-                .alongWith(pivot.angleCommand(pivotAngle))
+            elevator.heightCommand(elevatorHeight.getAsDouble())
+                .alongWith(pivot.angleCommand(Rotation2d.fromDegrees(pivotAngleDeg.getAsDouble())))
         );
     }
 }

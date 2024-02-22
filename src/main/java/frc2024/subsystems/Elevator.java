@@ -140,7 +140,11 @@ public class Elevator extends SubsystemBase{
     }
 
     public Command heightCommand(double heightInches){
-        return startEnd(() -> setTargetHeight(heightInches), () -> setTargetHeight(ElevatorConstants.HOME_HEIGHT));
+        return run(() -> setTargetHeight(heightInches));
+    }
+
+    public Command heightCommand(DoubleSupplier heightInches){
+        return run(() -> setTargetHeight(heightInches.getAsDouble()));
     }
 
     public Command reHomeCommand(){

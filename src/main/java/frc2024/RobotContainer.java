@@ -114,7 +114,7 @@ public class RobotContainer {
                 .until(() -> superstructureAtTarget()));
 
         Controlboard.goToSubwooferPosition()
-            .whileTrue(new SuperstructureToPosition(ElevatorPivotPosition.SUBWOOFER, m_elevator, m_pivot))
+            .whileTrue(new SuperstructureToPosition(ElevatorPivotPosition.SUBWOOFER, m_elevator, m_pivot).alongWith(m_shooter.velocityCommand(ShooterConstants.SUBWOOFER_VELOCITY)))
             .onFalse(
                 new SuperstructureToPosition(ElevatorPivotPosition.HOME, m_elevator, m_pivot).alongWith(m_shooter.stopCommand())
                     .until((() -> superstructureAtTarget())));
@@ -145,10 +145,12 @@ public class RobotContainer {
 
         /* Automation */
         Controlboard.autoFire()
-            .whileTrue(new AutoFire(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, Controlboard.defendedMode()))
-                .onFalse(
-                    new SuperstructureToPosition(ElevatorPivotPosition.HOME, m_elevator, m_pivot)
-                        .until((() -> superstructureAtTarget())).alongWith(m_shooter.stopCommand()));
+            .toggleOnTrue(
+                new AutoFire(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, Controlboard.defendedMode())
+                    .alongWith(new FacePoint(m_swerve, Controlboard.getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation(), false, true)))
+            .onFalse(
+                new SuperstructureToPosition(ElevatorPivotPosition.HOME, m_elevator, m_pivot)
+                    .until((() -> superstructureAtTarget())).alongWith(m_shooter.stopCommand().alongWith(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()))));
 
         /* Controlboard.autoFire()
             .whileTrue(
@@ -160,7 +162,8 @@ public class RobotContainer {
             .whileTrue(new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake));
         
         Controlboard.score()
-            .whileTrue(m_conveyor.outputCommand(ConveyorConstants.SHOOT_SPEED));
+            .whileTrue(m_conveyor.outputCommand(ConveyorConstants.AMP_TRAP_OUTPUT))
+                .onFalse(m_conveyor.stopCommand());
 
         /* Controlboard.autoPickupFromFloor()
             .whileTrue(
@@ -192,16 +195,16 @@ public class RobotContainer {
     private void configAuto() {
         Autonomous.configure(
             Commands.none().withName("Do Nothing"),
-            new PPEvent("StartIntake", Commands.none()),//new IntakeAutoCommand(m_intake, IntakeConstants.INTAKE_SPEED, false)),
+            new PPEvent("StartIntake", new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake)),//new IntakeAutoCommand(m_intake, IntakeConstants.INTAKE_SPEED, false)),
             new PPEvent("StopIntake", Commands.none()),
             new PPEvent("StartAimAtSpeaker", m_swerve.overrideRotationTargetCommand(ScreamUtil.calculateYawToPose(m_swerve.getPose(), AllianceFlippable.getTargetSpeaker()))),
             new PPEvent("StopAimAtSpeaker", m_swerve.overrideRotationTargetCommand(null))
         );
 
         Autonomous.addRoutines(
-            //Routines.Close4(m_swerve).withName("Close4"),
-            //Routines.AmpSide6(m_swerve).withName("AmpSide6"),
-            //Routines.SourceSide4(m_swerve).withName("SourceSide4")
+            Routines.Close4(m_swerve).withName("Close4"),
+            Routines.AmpSide6(m_swerve, m_elevator, m_pivot, m_intake, m_conveyor).withName("AmpSide6"),
+            Routines.SourceSide4(m_swerve).withName("SourceSide4")
         );
     }
 

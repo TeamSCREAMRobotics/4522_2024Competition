@@ -84,11 +84,11 @@ public class Routines {
             AmpSide6.getNext(),
             new WaitCommand(0.5),
             AmpSide6.getNext(),
-            new AutoIntakeFloor(swerve, elevator, pivot, intake, conveyor),
+            //new AutoIntakeFloor(swerve, elevator, pivot, intake, conveyor),
             AmpSide6.getNext(),
             new WaitCommand(0.5),
             AmpSide6.getNext(),
-            new AutoIntakeFloor(swerve, elevator, pivot, intake, conveyor),
+            //new AutoIntakeFloor(swerve, elevator, pivot, intake, conveyor),
             AmpSide6.getEnd(),
             printTimer()
         );

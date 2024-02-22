@@ -26,9 +26,7 @@ public class SmartShooting {
     for(int i=0; i<5; i++){
       /* Calculates the  distance and time for the virtual target */
         double virtualGoalX = target.getX() - shotTime * (m_fieldRelVel.vxMetersPerSecond + m_fieldRelAccel.ax * 0.01 /* ShooterConstants.kAccelCompFactor */);
-        //TODO shooter constant comp factor? It is necessary but why? How do you get the value?
         double virtualGoalY = target.getY() - shotTime * (m_fieldRelVel.vyMetersPerSecond + m_fieldRelAccel.ay * 0.01 /* ShooterConstants.kAccelCompFactor */);
-        //TODO shooter constant comp factor? It is necessary but why? How do you get the value?
         Translation2d testGoalLocation = new Translation2d(virtualGoalX, virtualGoalY);
         Translation2d toGoalDistance = testGoalLocation.minus(swerve.getPose().getTranslation());
         double newShotTime = 0.3;//ShooterConstants.timeToGoalMap.get(toGoalDistance.getDistance(new Translation2d()));

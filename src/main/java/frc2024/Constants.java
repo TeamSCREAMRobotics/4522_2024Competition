@@ -94,7 +94,7 @@ public final class Constants{
         /* For updating values like PID from Shuffleboard */
         public static final boolean UPDATE_SWERVE = false;
         public static final boolean UPDATE_INTAKE = false;
-        public static final boolean UPDATE_SHOOTER = true;
+        public static final boolean UPDATE_SHOOTER = false;
         public static final boolean UPDATE_ELEVATOR = false;
         public static final boolean UPDATE_CONVEYOR = false;
         public static final boolean UPDATE_CLIMBER = false;
@@ -138,7 +138,7 @@ public final class Constants{
         public static final ScreamPIDConstants VISION_ROTATION_CONSTANTS = new ScreamPIDConstants(0.16, 0.0, 0.0);
         public static final ScreamPIDConstants VISION_TRANSLATION_X_CONSTANTS = new ScreamPIDConstants(1.0, 0.0, 0.0);
         public static final ScreamPIDConstants VISION_TRANSLATION_Y_CONSTANTS = new ScreamPIDConstants(4.5, 0.0, 0.0);
-        public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(0.2, 0.0, 0.0);
+        public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(0.1, 0.0, 0.0);
         public static final ScreamPIDConstants DRIVE_TO_TARGET_CONSTANTS = new ScreamPIDConstants(1.5, 0.0, 0.0);
 
         /* PathPlanner Constants */
@@ -434,7 +434,7 @@ public final class Constants{
 
         public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(14.0);
         public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(6.0);
-        public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(16);
+        public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(19.0);
         public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(44.0);
 
         public static final Rotation2d ENCODER_OFFSET = Rotation2d.fromRotations(-0.207275390625);
@@ -558,8 +558,8 @@ public final class Constants{
     public static record ShootState(Rotation2d pivotAngle, double elevatorHeightInches, double velocityRPM){}
 
     public static final class VisionConstants {
-        public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
-        public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(0.3, 0.3, 0.3);
+        public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.03, 0.03, 0.001);
+        public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
 
         public static final double DETECTOR_TARGET_Y = 0.0;
         public static final double DETECTOR_TARGET_X = 0.0;
@@ -605,7 +605,7 @@ public final class Constants{
         public static final Translation2d RED_STAGE_RIGHT = AllianceFlippable.MirroredTranslation2d(BLUE_STAGE_RIGHT);
 
         public static final Translation2d BLUE_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(7).get().getTranslation().toTranslation2d();
-        public static final Translation2d RED_SPEAKER = AllianceFlippable.MirroredTranslation2d(BLUE_SPEAKER);
+        public static final Translation2d RED_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(4).get().getTranslation().toTranslation2d();
 
         public static final double SPEAKER_TAG_HEIGHT = 1.468864;
         public static final double STAGE_TAG_HEIGHT = 1.320884;
