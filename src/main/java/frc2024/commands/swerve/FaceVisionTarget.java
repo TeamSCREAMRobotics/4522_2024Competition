@@ -45,7 +45,7 @@ public class FaceVisionTarget extends Command {
     Translation2d translationValue = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
     double rotationValue = Math.abs(Vision.getTX(limelight)) < 2.0 ? 0 : rotController.calculate(Vision.getTX(limelight), 0.0);
 
-    swerve.setChassisSpeeds(swerve.robotRelativeSpeeds(translationValue, rotationValue));
+    swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(translationValue, rotationValue));
   }
 
   // Called once the command ends or is interrupted.

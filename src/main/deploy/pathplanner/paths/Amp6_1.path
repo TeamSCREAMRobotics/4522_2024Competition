@@ -87,7 +87,7 @@
             {
               "type": "named",
               "data": {
-                "name": "StartAimAtSpeaker"
+                "name": null
               }
             }
           ]
@@ -104,7 +104,7 @@
             {
               "type": "named",
               "data": {
-                "name": "StopAimAtSpeaker"
+                "name": null
               }
             }
           ]

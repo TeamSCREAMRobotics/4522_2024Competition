@@ -30,13 +30,30 @@ public class AutoFire extends SequentialCommandGroup{
 
     public AutoFire(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, BooleanSupplier defense){
         addCommands(
-            shooter.velocityCommand(VisionConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker().getAsDouble()).velocityRPM())
-                .alongWith(
-                    pivot.angleCommand(() -> VisionConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker().getAsDouble()).pivotAngle())
-                        .alongWith(elevator.heightCommand(() -> VisionConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker().getAsDouble()).elevatorHeightInches())))
-                .onlyWhile(() -> getDistanceToSpeaker().isPresent())
+            shooter.velocityCommand(() -> defense.getAsBoolean() ?
+                VisionConstants.SHOOT_STATE_MAP_DEFENDED.get(getDistanceToSpeaker().getAsDouble()).velocityRPM() :
+                VisionConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker().getAsDouble()).velocityRPM())
+                    .alongWith(
+                        pivot.angleCommand(() -> defense.getAsBoolean() ?
+                            VisionConstants.SHOOT_STATE_MAP_DEFENDED.get(getDistanceToSpeaker().getAsDouble()).pivotAngle() :
+                            VisionConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker().getAsDouble()).pivotAngle())
+                                .alongWith(elevator.heightCommand(() -> defense.getAsBoolean() ?
+                                    VisionConstants.SHOOT_STATE_MAP_DEFENDED.get(getDistanceToSpeaker().getAsDouble()).elevatorHeightInches() :
+                                    VisionConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker().getAsDouble()).elevatorHeightInches())))
+                    .onlyWhile(() -> getDistanceToSpeaker().isPresent())
         );
     }
+
+    /* public AutoFire(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, BooleanSupplier defense){
+        addCommands(
+            shooter.velocityCommand(() -> VisionConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker().getAsDouble()).velocityRPM())
+                .alongWith(
+                    pivot.angleCommand(() -> 
+                    Rotation2d.fromRadians(Math.atan(((78.75-16.5))/(Vision.getDistanceToTarget(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER).getAsDouble()+9.0))).minus(Rotation2d.fromDegrees(50.086)))
+                        .alongWith(elevator.heightCommand(() -> 0.0)))
+                .onlyWhile(() -> getDistanceToSpeaker().isPresent())
+        );
+    } */
 
     public OptionalDouble getDistanceToSpeaker(){
         return Vision.getDistanceToTarget(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER);

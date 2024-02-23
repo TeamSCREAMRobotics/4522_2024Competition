@@ -93,7 +93,7 @@ public class Swerve extends SubsystemBase {
             SwerveConstants.KINEMATICS, 
             getYaw(), 
             getModulePositions(), 
-            Vision.getBotPose2d(Limelight.SHOOTER), 
+            new Pose2d(), 
             VisionConstants.STATE_STD_DEVS,
             VisionConstants.VISION_STD_DEVS
         );
@@ -322,11 +322,9 @@ public class Swerve extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        for(TimestampedVisionMeasurement measurement : Vision.getBotPoses()){
-            //System.out.println("Vision: " + measurement.pose().getTranslation() + "\n" + "Estimator: " + getPose().getTranslation());
+        /* for(TimestampedVisionMeasurement measurement : Vision.getBotPoses()){
             m_poseEstimator.addVisionMeasurement(measurement.pose(), measurement.timestamp());
-        }
-        //System.out.println(ScreamUtil.calculateDistanceToTranslation(getPose().getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation()));
+        } */
     }
 
     public Command resetPoseCommand(Pose2d pose){

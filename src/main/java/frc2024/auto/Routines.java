@@ -1,6 +1,7 @@
 package frc2024.auto;
 
 import java.util.Optional;
+import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.util.PathPlannerLogging;
@@ -17,11 +18,19 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc2024.Constants.ConveyorConstants;
+import frc2024.Constants.ElevatorConstants;
+import frc2024.Constants.PivotConstants;
+import frc2024.Constants.SwerveConstants;
+import frc2024.commands.AutoFire;
 import frc2024.commands.intake.AutoIntakeFloor;
+import frc2024.commands.swerve.FaceVisionTarget;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Intake;
 import frc2024.subsystems.Pivot;
+import frc2024.subsystems.Shooter;
+import frc2024.subsystems.Vision.Limelight;
 import frc2024.subsystems.swerve.Swerve;
 
 public class Routines {
@@ -62,12 +71,46 @@ public class Routines {
         );
     } */
  
-    public static Command Close4(Swerve swerve){
+    public static Command Close4(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor){
         currentSequence = Close4;
         return new SequentialCommandGroup(
             startTimer(),
             swerve.resetPoseCommand(Close4.getStartingPose()),
-            Close4.getAll(),
+            new AutoFire(swerve, shooter, elevator, pivot, conveyor, () -> false)
+                .alongWith(new FaceVisionTarget(swerve, new DoubleSupplier[] {() -> 0, () -> 0}, SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))
+                    .withTimeout(2)
+                .alongWith(new WaitCommand(0.5)
+                    .andThen(conveyor.outputCommand(ConveyorConstants.SHOOT_SPEED).until(() -> !conveyor.hasPiece().getAsBoolean()).finallyDo(() -> {
+                        elevator.heightCommand(ElevatorConstants.HOME_HEIGHT);
+                        pivot.angleCommand(PivotConstants.HOME_ANGLE);
+                    }))),
+            Close4.getStart(),
+            new AutoFire(swerve, shooter, elevator, pivot, conveyor, () -> false)
+                .alongWith(new FaceVisionTarget(swerve, new DoubleSupplier[] {() -> 0, () -> 0}, SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))
+                    .withTimeout(2)
+                .alongWith(new WaitCommand(0.5)
+                    .andThen(conveyor.outputCommand(ConveyorConstants.SHOOT_SPEED).until(() -> !conveyor.hasPiece().getAsBoolean()).finallyDo(() -> {
+                        elevator.heightCommand(ElevatorConstants.HOME_HEIGHT);
+                        pivot.angleCommand(PivotConstants.HOME_ANGLE);
+                    }))),
+            Close4.getNext(),
+            new AutoFire(swerve, shooter, elevator, pivot, conveyor, () -> false)
+                .alongWith(new FaceVisionTarget(swerve, new DoubleSupplier[] {() -> 0, () -> 0}, SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))
+                    .withTimeout(2)
+                .alongWith(new WaitCommand(0.5)
+                    .andThen(conveyor.outputCommand(ConveyorConstants.SHOOT_SPEED).until(() -> !conveyor.hasPiece().getAsBoolean()).finallyDo(() -> {
+                        elevator.heightCommand(ElevatorConstants.HOME_HEIGHT);
+                        pivot.angleCommand(PivotConstants.HOME_ANGLE);
+                    }))),
+            Close4.getEnd(),
+            new AutoFire(swerve, shooter, elevator, pivot, conveyor, () -> false)
+                .alongWith(new FaceVisionTarget(swerve, new DoubleSupplier[] {() -> 0, () -> 0}, SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))
+                    .withTimeout(2)
+                .alongWith(new WaitCommand(0.5)
+                    .andThen(conveyor.outputCommand(ConveyorConstants.SHOOT_SPEED).until(() -> !conveyor.hasPiece().getAsBoolean()).finallyDo(() -> {
+                        elevator.heightCommand(ElevatorConstants.HOME_HEIGHT);
+                        pivot.angleCommand(PivotConstants.HOME_ANGLE);
+                    }))),
             printTimer()
         );
     }

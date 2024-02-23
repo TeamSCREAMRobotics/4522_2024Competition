@@ -3,6 +3,7 @@ package frc2024;
 import java.lang.reflect.Field;
 import java.sql.Driver;
 import java.util.Optional;
+import java.util.function.DoubleSupplier;
 
 import javax.swing.text.html.Option;
 
@@ -36,6 +37,7 @@ import frc2024.Constants.FieldConstants;
 import frc2024.Constants.IntakeConstants;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.ShooterConstants;
+import frc2024.Constants.SwerveConstants;
 import frc2024.auto.Autonomous;
 import frc2024.auto.Autonomous.PPEvent;
 import frc2024.auto.Routines;
@@ -57,6 +59,7 @@ import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Intake;
 import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Shooter;
+import frc2024.subsystems.Vision.Limelight;
 import frc2024.subsystems.swerve.Swerve;
 
 public class RobotContainer {
@@ -99,11 +102,11 @@ public class RobotContainer {
 
         /* Elevator */
         Controlboard.manualMode().toggleOnTrue(m_elevator.voltageCommand(Controlboard.getManualElevatorOutput())).toggleOnFalse(Commands.runOnce(() -> m_elevator.stop()));
-        Controlboard.resetElevatorHeight().onTrue(Commands.runOnce(() -> m_elevator.zeroPosition()));
+        Controlboard.resetElevatorHeight().onTrue(Commands.runOnce(() -> m_elevator.zeroPosition()).ignoringDisable(true));
 
         /* Pivot */
         Controlboard.manualMode().toggleOnTrue(m_pivot.dutyCycleCommand(Controlboard.getManualPivotOutput()));
-        Controlboard.resetPivotAngle().onTrue(Commands.runOnce(() -> m_pivot.zeroPivot()));
+        Controlboard.resetPivotAngle().onTrue(Commands.runOnce(() -> m_pivot.zeroPivot()).ignoringDisable(true));
         //Right Y
 
         /* Pivot AND Elevator */
@@ -145,7 +148,7 @@ public class RobotContainer {
         Controlboard.autoFire()
             .toggleOnTrue(
                 new AutoFire(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, Controlboard.defendedMode())
-                    .alongWith(new FacePoint(m_swerve, Controlboard.getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation(), false, true)))
+                    .alongWith(new FaceVisionTarget(m_swerve, Controlboard.getTranslation(), SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER)))
             .onFalse(
                 new SuperstructureToPosition(ElevatorPivotPosition.HOME, m_elevator, m_pivot)
                     .until((() -> superstructureAtTarget())).alongWith(m_shooter.stopCommand().alongWith(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()))));
@@ -193,14 +196,20 @@ public class RobotContainer {
     private void configAuto() {
         Autonomous.configure(
             Commands.none().withName("Do Nothing"),
-            new PPEvent("StartIntake", new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake)),//new IntakeAutoCommand(m_intake, IntakeConstants.INTAKE_SPEED, false)),
+            new PPEvent("StartIntake", new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake).withTimeout(3)),//new IntakeAutoCommand(m_intake, IntakeConstants.INTAKE_SPEED, false)),
             new PPEvent("StopIntake", Commands.none()),
-            new PPEvent("StartAimAtSpeaker", m_swerve.overrideRotationTargetCommand(ScreamUtil.calculateYawToPose(m_swerve.getPose(), AllianceFlippable.getTargetSpeaker()))),
-            new PPEvent("StopAimAtSpeaker", m_swerve.overrideRotationTargetCommand(null))
+            new PPEvent("StartAutoFire", 
+                new AutoFire(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, () -> false)
+                    .alongWith(new FaceVisionTarget(m_swerve, new DoubleSupplier[2], SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))),
+            new PPEvent("StopAutoFire", 
+                m_shooter.stopCommand()
+                    .alongWith(m_conveyor.stopCommand())
+                    .alongWith(m_intake.stopCommand())
+                    .alongWith(new InstantCommand(() -> m_swerve.getCurrentCommand().cancel())))
         );
 
         Autonomous.addRoutines(
-            Routines.Close4(m_swerve).withName("Close4"),
+            Routines.Close4(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor).withName("Close4"),
             Routines.AmpSide6(m_swerve, m_elevator, m_pivot, m_intake, m_conveyor).withName("AmpSide6"),
             Routines.SourceSide4(m_swerve).withName("SourceSide4")
         );

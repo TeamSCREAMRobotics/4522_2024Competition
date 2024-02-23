@@ -60,7 +60,7 @@ public class TeleopDrive extends Command {
 
         boolean fieldRelative = fieldRelativeSup.getAsBoolean();
         Translation2d translationValue = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * (fieldRelative ? AllianceFlippable.getDirectionCoefficient() : 1));
-        double rotationValue = getRotation(rotationSup.getAsDouble());
+        double rotationValue = rotationSup.getAsDouble()*SwerveConstants.MAX_ANGULAR_VELOCITY; //getRotation(rotationSup.getAsDouble());
 
         if(Controlboard.zeroGyro().getAsBoolean()) lastAngle = AllianceFlippable.getForwardRotation();
 

@@ -86,6 +86,7 @@ public class DeviceConfig {
 
     public static Pigeon2Configuration swervePigeonConfig(){
         Pigeon2Configuration config = new Pigeon2Configuration();
+        config.MountPose.MountPoseYaw = 90;
         return config;
     }
     

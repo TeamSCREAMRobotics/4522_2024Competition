@@ -36,9 +36,13 @@ import frc2024.Constants.FieldConstants;
 import frc2024.Constants.VisionConstants;
 
 public class Vision {
+
+    static LinearFilter test = LinearFilter.movingAverage(10);
     
     public enum Limelight{
-        TRAP("limelight-trap", new Pose3d()), SHOOTER("limelight-shooter", new Pose3d(0.286, -0.162, 0.220615, new Rotation3d(0, Math.toRadians(30.0), Math.toRadians(180.0)))), INTAKE("limelight-intake", new Pose3d());
+        TRAP("limelight-trap", new Pose3d()), 
+        SHOOTER("limelight-shooter", new Pose3d(0.286, -0.162, 0.233, new Rotation3d(0, Math.toRadians(27.0), Math.toRadians(180.0)))), // z: 0.220615
+        INTAKE("limelight-intake", new Pose3d());
 
         String name;
         Pose3d mountPose;
@@ -90,7 +94,7 @@ public class Vision {
     }
 
     public static double getTY(Limelight limelight){
-        return LimelightHelpers.getTY(limelight.name);
+        return test.calculate(LimelightHelpers.getTY(limelight.name));
     }
 
     public static double getTA(Limelight limelight){
@@ -129,7 +133,7 @@ public class Vision {
         double goal_theta = limelight.mountPose.getRotation().getY() + Math.toRadians(getTY(Limelight.SHOOTER));
         double height_diff = targetHeight - limelight.mountPose.getZ();
 
-        return OptionalDouble.of(height_diff / Math.tan(goal_theta));
+        return OptionalDouble.of(Units.metersToFeet(height_diff / Math.tan(goal_theta)));
     }
 
     public static double getFusedDistanceToSpeaker(Limelight limelight, Pose2d currentPose){
