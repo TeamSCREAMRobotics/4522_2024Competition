@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc2024.Constants.FieldConstants;
 import frc2024.Constants.VisionConstants;
+import frc2024.commands.AutoFire;
 import frc2024.controlboard.Controlboard;
 import frc2024.subsystems.Vision;
 import frc2024.subsystems.Vision.Limelight;

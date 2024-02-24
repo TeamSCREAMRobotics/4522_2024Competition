@@ -19,6 +19,4 @@ public class ShootStateInterpolatingTreeMap{
     public ShootState get(double distance){
         return new ShootState(Rotation2d.fromDegrees(angleInterpolator.get(distance)), heightInterpolator.get(distance), velocityInterpolator.get(distance));
     }
-
-
 }

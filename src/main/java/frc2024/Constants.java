@@ -359,6 +359,8 @@ public final class Constants{
         public static final double PODIUM_VELOCITY = 3000.0;
         public static final double RESTING_VELOCITY = 500.0;
 
+        public static final double TRAJECTORY_VELOCITY_EXTRA = 1425.0;
+
         public static final double SHOOT_OUTPUT = 0.8;
         public static final double EJECT_OUTPUT = 0.35;//0.5;
 
@@ -416,7 +418,10 @@ public final class Constants{
         public static final Rotation2d PODIUM_DEFENDED_ANGLE = Rotation2d.fromDegrees(33.05); //Robot Angle = -154.53 deg
         public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(44.0);
 
-        public static final Rotation2d ENCODER_OFFSET = Rotation2d.fromRotations(-0.207275390625);
+        public static final Rotation2d ABSOLUTE_ENCODER_OFFSET = Rotation2d.fromRotations(-0.207275390625);
+        public static final Rotation2d RELATIVE_ENCODER_TO_HORIZONTAL = Rotation2d.fromDegrees(52.07);
+
+        public static final double PIVOT_HEIGHT_HOME = Units.inchesToMeters(19.741169);
         
         public static final InterpolatingDoubleTreeMap ANGLE_MAP_DEFENDED = new InterpolatingDoubleTreeMap();
         static{
@@ -460,8 +465,8 @@ public final class Constants{
 
         public static final double MAX_HEIGHT = 23.835; // inches
         public static final double MIN_HEIGHT = 0.0; // inches
-        public static final double ENCODER_MAX = 3.05;
-        public static final double ENCODER_MIN = 0.0;
+        public static final double ENCODER_MAX = 3.05; //relative
+        public static final double ENCODER_MIN = 0.0; //relative
 
         public static final double HOME_HEIGHT = 0.0;
         public static final double SUBWOOFER_HEIGHT = 3.5;
@@ -626,6 +631,8 @@ public final class Constants{
 
         public static final Translation2d BLUE_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(7).get().getTranslation().toTranslation2d();
         public static final Translation2d RED_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(4).get().getTranslation().toTranslation2d();
+
+        public static final double SPEAKER_OPENING_HEIGHT = 2.106;
 
         public static final double SPEAKER_TAG_HEIGHT = 1.468864;
         public static final double STAGE_TAG_HEIGHT = 1.320884;

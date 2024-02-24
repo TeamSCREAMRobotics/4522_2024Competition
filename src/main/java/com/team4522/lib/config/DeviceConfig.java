@@ -158,7 +158,7 @@ public class DeviceConfig {
     public static CANcoderConfiguration pivotEncoderConfig(){
         CANcoderConfiguration config = new CANcoderConfiguration();
         config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
-        config.MagnetSensor.MagnetOffset = PivotConstants.ENCODER_OFFSET.getRotations();
+        config.MagnetSensor.MagnetOffset = PivotConstants.ABSOLUTE_ENCODER_OFFSET.getRotations();
         config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         return config;
     }

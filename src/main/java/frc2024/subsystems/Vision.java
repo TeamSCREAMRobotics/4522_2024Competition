@@ -129,18 +129,18 @@ public class Vision {
         return LimelightHelpers.getBotPose3d_TargetSpace(limelight.name);
     }
 
-    public static OptionalDouble getDistanceToTarget(double targetHeight, Limelight limelight){
+    public static OptionalDouble getDistanceToTargetMeters(double targetHeight, Limelight limelight){
         double goal_theta = limelight.mountPose.getRotation().getY() + Math.toRadians(getTY(Limelight.SHOOTER));
         double height_diff = targetHeight - limelight.mountPose.getZ();
 
-        return OptionalDouble.of(Units.metersToFeet(height_diff / Math.tan(goal_theta)));
+        return OptionalDouble.of(height_diff / Math.tan(goal_theta));
     }
 
     public static double getFusedDistanceToSpeaker(Limelight limelight, Pose2d currentPose){
         double sum;
         sum = ScreamUtil.calculateDistanceToTranslation(currentPose.getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation());
         if(getTV(limelight)){
-            sum += getDistanceToTarget(FieldConstants.SPEAKER_TAG_HEIGHT, limelight).getAsDouble();
+            sum += getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, limelight).getAsDouble();
             return sum / 2;
         }
         return sum;
