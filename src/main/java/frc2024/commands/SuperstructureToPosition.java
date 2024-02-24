@@ -29,8 +29,8 @@ public class SuperstructureToPosition extends SequentialCommandGroup{
     public SuperstructureToPosition(ElevatorPivotPosition position1, ElevatorPivotPosition position2, Elevator elevator, Pivot pivot, BooleanSupplier defense){
         ElevatorPivotPosition position = defense.getAsBoolean() ? position1 : position2;
         addCommands(
-            elevator.heightCommand(position.elevatorPosition)
-                .alongWith(pivot.angleCommand(position.pivotAngle))
+            elevator.heightCommand(defense.getAsBoolean() ? position1.elevatorPosition : position2.elevatorPosition)
+                .alongWith(pivot.angleCommand(defense.getAsBoolean() ? position1.pivotAngle : position2.pivotAngle))
         );
     }
 

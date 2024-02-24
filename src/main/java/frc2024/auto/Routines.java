@@ -15,14 +15,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
+import frc2024.Constants.ElevatorPivotPosition;
+import frc2024.Constants.IntakeConstants;
 import frc2024.Constants.PivotConstants;
+import frc2024.Constants.ShooterConstants;
 import frc2024.Constants.SwerveConstants;
 import frc2024.commands.AutoFire;
+import frc2024.commands.ShootSequence;
+import frc2024.commands.SuperstructureToPosition;
 import frc2024.commands.intake.AutoIntakeFloor;
 import frc2024.commands.swerve.FaceVisionTarget;
 import frc2024.subsystems.Conveyor;
@@ -71,46 +77,19 @@ public class Routines {
         );
     } */
  
-    public static Command Close4(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor){
+    public static Command Close4(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake){
         currentSequence = Close4;
+
         return new SequentialCommandGroup(
             startTimer(),
             swerve.resetPoseCommand(Close4.getStartingPose()),
-            new AutoFire(swerve, shooter, elevator, pivot, conveyor, () -> false)
-                .alongWith(new FaceVisionTarget(swerve, new DoubleSupplier[] {() -> 0, () -> 0}, SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))
-                    .withTimeout(2)
-                .alongWith(new WaitCommand(0.5)
-                    .andThen(conveyor.outputCommand(ConveyorConstants.SHOOT_SPEED).until(() -> !conveyor.hasPiece().getAsBoolean()).finallyDo(() -> {
-                        elevator.heightCommand(ElevatorConstants.HOME_HEIGHT);
-                        pivot.angleCommand(PivotConstants.HOME_ANGLE);
-                    }))),
-            Close4.getStart(),
-            new AutoFire(swerve, shooter, elevator, pivot, conveyor, () -> false)
-                .alongWith(new FaceVisionTarget(swerve, new DoubleSupplier[] {() -> 0, () -> 0}, SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))
-                    .withTimeout(2)
-                .alongWith(new WaitCommand(0.5)
-                    .andThen(conveyor.outputCommand(ConveyorConstants.SHOOT_SPEED).until(() -> !conveyor.hasPiece().getAsBoolean()).finallyDo(() -> {
-                        elevator.heightCommand(ElevatorConstants.HOME_HEIGHT);
-                        pivot.angleCommand(PivotConstants.HOME_ANGLE);
-                    }))),
-            Close4.getNext(),
-            new AutoFire(swerve, shooter, elevator, pivot, conveyor, () -> false)
-                .alongWith(new FaceVisionTarget(swerve, new DoubleSupplier[] {() -> 0, () -> 0}, SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))
-                    .withTimeout(2)
-                .alongWith(new WaitCommand(0.5)
-                    .andThen(conveyor.outputCommand(ConveyorConstants.SHOOT_SPEED).until(() -> !conveyor.hasPiece().getAsBoolean()).finallyDo(() -> {
-                        elevator.heightCommand(ElevatorConstants.HOME_HEIGHT);
-                        pivot.angleCommand(PivotConstants.HOME_ANGLE);
-                    }))),
-            Close4.getEnd(),
-            new AutoFire(swerve, shooter, elevator, pivot, conveyor, () -> false)
-                .alongWith(new FaceVisionTarget(swerve, new DoubleSupplier[] {() -> 0, () -> 0}, SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))
-                    .withTimeout(2)
-                .alongWith(new WaitCommand(0.5)
-                    .andThen(conveyor.outputCommand(ConveyorConstants.SHOOT_SPEED).until(() -> !conveyor.hasPiece().getAsBoolean()).finallyDo(() -> {
-                        elevator.heightCommand(ElevatorConstants.HOME_HEIGHT);
-                        pivot.angleCommand(PivotConstants.HOME_ANGLE);
-                    }))),
+            new ShootSequence(swerve, pivot, shooter, elevator, conveyor)
+                .andThen(Close4.getStart())
+                .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor))
+                .andThen(Close4.getNext())
+                .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor))
+                .andThen(Close4.getEnd())
+                .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor)),
             printTimer()
         );
     }

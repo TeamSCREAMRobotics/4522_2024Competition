@@ -219,7 +219,7 @@ public final class Constants{
             public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(KP, KI, KD, KF);
 
             public static final double CRUISE_VELOCITY = 40.0;
-            public static final double ACCELERATION = 40.0;
+            public static final double ACCELERATION = 30.0;
             public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
         }
 
@@ -359,7 +359,7 @@ public final class Constants{
         public static final double PODIUM_VELOCITY = 3000.0;
         public static final double RESTING_VELOCITY = 500.0;
 
-        public static final double TRAJECTORY_VELOCITY_EXTRA = 1425.0;
+        public static final double TRAJECTORY_VELOCITY_EXTRA = 1680.0;
 
         public static final double SHOOT_OUTPUT = 0.8;
         public static final double EJECT_OUTPUT = 0.35;//0.5;
@@ -393,7 +393,7 @@ public final class Constants{
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
-        public static final boolean SOFTWARE_LIMIT_ENABLE = true;
+        public static final boolean SOFTWARE_LIMIT_ENABLE = false;
         public static final Rotation2d FORWARD_SOFT_LIMIT = Rotation2d.fromDegrees(40.0);
         public static final Rotation2d REVERSE_SOFT_LIMIT = Rotation2d.fromDegrees(-9999);
 
@@ -412,7 +412,8 @@ public final class Constants{
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA, GravityTypeValue.Arm_Cosine);
 
         public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(14.0);
-        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(6.0);
+        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(8.0);
+        public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(33.4863);
         public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(19.0);
         public static final Rotation2d PODIUM_ANGLE = Rotation2d.fromDegrees(22.24); //Robot Angle = -154.53 deg
         public static final Rotation2d PODIUM_DEFENDED_ANGLE = Rotation2d.fromDegrees(33.05); //Robot Angle = -154.53 deg
@@ -445,7 +446,7 @@ public final class Constants{
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
-        public static final boolean SOFTWARE_LIMIT_ENABLE = true;
+        public static final boolean SOFTWARE_LIMIT_ENABLE = false;
         public static final double FORWARD_SOFT_LIMIT = 3.05;
         public static final double REVERSE_SOFT_LIMIT = 0.0;
 
@@ -458,7 +459,7 @@ public final class Constants{
         public static final double KS = 0.0;
         public static final double KV = 0.0;
         public static final double KA = 0.0;
-        public static final double KG = 0.31;
+        public static final double KG = 0.4;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA, GravityTypeValue.Elevator_Static);
 
         public static final double TARGET_THRESHOLD = 0.1; // inches
@@ -528,7 +529,8 @@ public final class Constants{
         SUBWOOFER(ElevatorConstants.SUBWOOFER_HEIGHT, PivotConstants.SUBWOOFER_ANGLE),
         PODIUM_LOW(ElevatorConstants.HOME_HEIGHT, PivotConstants.PODIUM_ANGLE),
         PODIUM_HIGH(ElevatorConstants.MAX_HEIGHT, PivotConstants.PODIUM_DEFENDED_ANGLE),
-        TRAP_CHAIN(ElevatorConstants.TRAP_CHAIN_HEIGHT, PivotConstants.TRAP_CHAIN_ANGLE);
+        TRAP_CHAIN(ElevatorConstants.TRAP_CHAIN_HEIGHT, PivotConstants.TRAP_CHAIN_ANGLE),
+        SUBWOOFER_DEFENDED(ElevatorConstants.MAX_HEIGHT, PivotConstants.SUBWOOFER_ANGLE_DEFENDED);
 
         public double elevatorPosition;
         public Rotation2d pivotAngle;
@@ -569,7 +571,7 @@ public final class Constants{
             SHOOT_STATE_MAP.put(12.0, new ShootState(Rotation2d.fromDegrees(28.0371-2), 0.0, 3800.0));
             SHOOT_STATE_MAP.put(13.0, new ShootState(Rotation2d.fromDegrees(28.7402), 0.0, 4000.0));
             //^^^
-            SHOOT_STATE_MAP.put(14.0, new ShootState(Rotation2d.fromDegrees(33.5742-3), 0.0, 4150.0));
+            SHOOT_STATE_MAP.put(14.0, new ShootState(Rotation2d.fromDegrees(33.5742-3.25), 0.0, 4150.0));
             SHOOT_STATE_MAP.put(15.0, new ShootState(Rotation2d.fromDegrees(35.9472-4), 0.0, 4250.0));
             SHOOT_STATE_MAP.put(16.0, new ShootState(Rotation2d.fromDegrees(39.7265-6), 0.0, 4600.0));
             SHOOT_STATE_MAP.put(17.0, new ShootState(Rotation2d.fromDegrees(41.2207-6.5), 0.0, 4900.0));

@@ -38,7 +38,7 @@ public class AutoClimbCommand extends Command {
   public void execute() {
     climber.setTargetPosition(ClimberConstants.CLIMBER_TOP);
     elevator.setTargetHeight(ElevatorConstants.TRAP_CHAIN_HEIGHT);
-    pivot.setTargetAngle(PivotConstants.TRAP_CHAIN_ANGLE, true);
+    pivot.setTargetAngle(PivotConstants.TRAP_CHAIN_ANGLE);
   }
 
   // Called once the command ends or is interrupted.
@@ -48,11 +48,11 @@ public class AutoClimbCommand extends Command {
 
     if(isTrapping){
       elevator.setTargetHeight(ElevatorConstants.TRAP_CHAIN_HEIGHT);
-      pivot.setTargetAngle(PivotConstants.TRAP_CHAIN_ANGLE, true);
+      pivot.setTargetAngle(PivotConstants.TRAP_CHAIN_ANGLE);
     }
     else {
       elevator.setTargetHeight(ElevatorConstants.HOME_HEIGHT);
-      pivot.setTargetAngle(PivotConstants.HOME_ANGLE, true);
+      pivot.setTargetAngle(PivotConstants.HOME_ANGLE);
     }
   }
 

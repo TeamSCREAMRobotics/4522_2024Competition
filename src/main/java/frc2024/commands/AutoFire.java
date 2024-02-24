@@ -81,6 +81,16 @@ public class AutoFire extends SequentialCommandGroup{
         Rotation2d launchAngle = Rotation2d.fromRadians(launchAngleRads).unaryMinus().plus(PivotConstants.RELATIVE_ENCODER_TO_HORIZONTAL);
         double launchVel = Conversions.mpsToFalconRPS(Math.sqrt(vx * vx + vy * vy), ShooterConstants.WHEEL_CIRCUMFERENCE, 1.0) * 60.0; // rpm
 
-        return new ShootState(launchAngle, 0.0, launchVel);
+        return new ShootState(launchAngle, 0.0, VisionConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker().getAsDouble()).velocityRPM());
     }
+    
+    /* public Rotation2d calculateAngle(double distance){
+        double x = distance + (9.0/12.0);
+        double y = (78.75/12.0)-(16.5/12.0);
+        return Rotation2d.fromRadians(Math.atan2(y, x));
+    }
+
+    public OptionalDouble getDistanceToSpeaker(){
+        return Vision.getDistanceToTarget(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER);
+    } */
 }

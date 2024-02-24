@@ -81,7 +81,7 @@ public final class AllianceFlippable {
     }
 
     public static Pose2d MirroredPose2d(Pose2d blueValue){
-        return new Pose2d(MirroredTranslation2d(blueValue.getTranslation()), getForwardRotation());
+        return new Pose2d(MirroredTranslation2d(blueValue.getTranslation()), Rotation2d.fromDegrees(0.0));
     }
 
     public static Translation3d MirroredTranslation3d(Translation3d blueValue){

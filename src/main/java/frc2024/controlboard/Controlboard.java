@@ -50,12 +50,8 @@ public class Controlboard{
      */
     public static DoubleSupplier[] getTranslation(){
         return new DoubleSupplier[]{
-            driverController_Command.leftTrigger(TRIGGER_DEADBAND).getAsBoolean() 
-            ? () -> -MathUtil.applyDeadband(driverController_Command.getLeftY(), STICK_DEADBAND)*0.5 
-            : () -> -MathUtil.applyDeadband(driverController_Command.getLeftY(), STICK_DEADBAND),
-            driverController_Command.leftTrigger(TRIGGER_DEADBAND).getAsBoolean() 
-            ? () -> -MathUtil.applyDeadband(driverController_Command.getLeftX(), STICK_DEADBAND)*0.5 
-            : () -> -MathUtil.applyDeadband(driverController_Command.getLeftX(), STICK_DEADBAND),
+            () -> -MathUtil.applyDeadband(driverController_Command.getLeftY(), STICK_DEADBAND),
+            () -> -MathUtil.applyDeadband(driverController_Command.getLeftX(), STICK_DEADBAND),
         };
     }
 
@@ -72,6 +68,10 @@ public class Controlboard{
 		}
         return translation;
 	}
+
+    public static BooleanSupplier getSlowMode(){
+        return () -> driverController_Command.leftTrigger(TRIGGER_DEADBAND).getAsBoolean();
+    }
 
     /**
      * Retrieves the rotation value from the driver controller.
@@ -141,7 +141,7 @@ public class Controlboard{
 
     /* Climber */
     public static final DoubleSupplier getManualClimberOutput(){
-        return () -> -buttonBoard.getBigSwitchY()/2;//(operatorController_Command.getLeftTriggerAxis() - operatorController_Command.getRightTriggerAxis()); //Up POV on the button board
+        return () -> -buttonBoard.getBigSwitchY()/5;//(operatorController_Command.getLeftTriggerAxis() - operatorController_Command.getRightTriggerAxis()); //Up POV on the button board
     }
 
     /* Shooter/Conveyor */
@@ -171,7 +171,7 @@ public class Controlboard{
 
     /* Elevator */
     public static final DoubleSupplier getManualElevatorOutput(){
-        return () -> -MathUtil.applyDeadband(operatorController_Command.getLeftY(), STICK_DEADBAND)/2;
+        return () -> (-MathUtil.applyDeadband(operatorController_Command.getLeftY(), STICK_DEADBAND))*8;
     }
     
     public static final Trigger resetElevatorHeight(){
@@ -210,5 +210,13 @@ public class Controlboard{
 
     public static final Trigger autoPickupFromFloor(){
         return driverController_Command.leftBumper();
+    }
+
+    public static final Trigger button4(){
+        return new Trigger(() -> buttonBoard.getRawButton(4));
+    }
+    
+    public static final Trigger button6(){
+        return new Trigger(() -> buttonBoard.getRawButton(6));
     }
 }

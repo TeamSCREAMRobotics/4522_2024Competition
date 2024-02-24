@@ -22,6 +22,7 @@ public class TeleopDrive extends Command {
     private DoubleSupplier[] translationSup;
     private DoubleSupplier rotationSup;
     private BooleanSupplier fieldRelativeSup;
+    private BooleanSupplier slowModeSup;
     private Rotation2d lastAngle;
     private Timer correctionTimer = new Timer();
 
@@ -34,13 +35,14 @@ public class TeleopDrive extends Command {
      * @param rotationSup A supplier for the rotation value.
      * @param fieldCentricSup A supplier for the drive mode. Robot centric = false; Field centric = true
      */
-    public TeleopDrive(Swerve swerve, DoubleSupplier[] translationSup, DoubleSupplier rotationSup, BooleanSupplier fieldCentricSup) {
+    public TeleopDrive(Swerve swerve, DoubleSupplier[] translationSup, DoubleSupplier rotationSup, BooleanSupplier fieldCentricSup, BooleanSupplier slowMode) {
         addRequirements(swerve);
 
         this.swerve = swerve;
         this.translationSup = translationSup;
         this.rotationSup = rotationSup;
         this.fieldRelativeSup = fieldCentricSup;
+        this.slowModeSup = slowMode;
     }
 
     @Override
@@ -59,7 +61,10 @@ public class TeleopDrive extends Command {
     public void execute() {
 
         boolean fieldRelative = fieldRelativeSup.getAsBoolean();
-        Translation2d translationValue = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * (fieldRelative ? AllianceFlippable.getDirectionCoefficient() : 1));
+        Translation2d translationValue = 
+            slowModeSup.getAsBoolean() 
+            ? new Translation2d(translationSup[0].getAsDouble()*0.5, translationSup[1].getAsDouble()*0.5).times(SwerveConstants.MAX_SPEED * (fieldRelative ? AllianceFlippable.getDirectionCoefficient() : 1))
+            : new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * (fieldRelative ? AllianceFlippable.getDirectionCoefficient() : 1));
         double rotationValue = rotationSup.getAsDouble()*SwerveConstants.MAX_ANGULAR_VELOCITY; //getRotation(rotationSup.getAsDouble());
 
         if(Controlboard.zeroGyro().getAsBoolean()) lastAngle = AllianceFlippable.getForwardRotation();

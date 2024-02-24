@@ -148,7 +148,7 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
             m_pivotAngle.setDouble(pivot.getPivotAngle().getDegrees());
 
             pivot.configPID(ClimberConstants.PID_CONSTANTS.withP(m_pivotKP.get().getDouble()));
-            pivot.setTargetAngle(new Rotation2d(getPivotAngle()), true);
+            pivot.setTargetAngle(new Rotation2d(getPivotAngle()));
         }
 
         /* Shooter */
@@ -181,7 +181,7 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
 
     /* Pivot */
     public double getPivotAngle(){
-        return m_pivotAngle_Target.getDouble(pivot.getPivotAngle().getDegrees());
+        return m_pivotAngle_Target.getDouble(pivot.getPivotAngle().getRadians());
     }
 
     /* Shooter */

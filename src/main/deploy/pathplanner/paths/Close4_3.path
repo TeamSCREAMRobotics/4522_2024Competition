@@ -3,37 +3,53 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.4733924503512332,
-        "y": 5.562647359246215
+        "x": 2.883271729453586,
+        "y": 5.550936522700434
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2988050495875,
-        "y": 5.785930667906534
+        "x": 2.708684328689853,
+        "y": 5.774219831360753
       },
       "isLocked": false,
       "linkedName": "Close4_2End"
     },
     {
       "anchor": {
-        "x": 2.649054998537956,
-        "y": 6.874261052373746
+        "x": 2.2274648828898216,
+        "y": 6.581490138729208
       },
       "prevControl": {
-        "x": 2.1828545352005957,
-        "y": 6.423658497034508
+        "x": 1.6663471888265358,
+        "y": 6.256632526376781
+      },
+      "nextControl": {
+        "x": 2.672476671629519,
+        "y": 6.8391285427364
+      },
+      "isLocked": false,
+      "linkedName": "Close4_3End"
+    },
+    {
+      "anchor": {
+        "x": 3.0120909314571827,
+        "y": 7.038212764014687
+      },
+      "prevControl": {
+        "x": 2.8012958736331153,
+        "y": 6.90939356201109
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Close4_3End"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "StartIntake",
-      "waypointRelativePos": 0.3,
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.65,
       "command": {
         "type": "parallel",
         "data": {

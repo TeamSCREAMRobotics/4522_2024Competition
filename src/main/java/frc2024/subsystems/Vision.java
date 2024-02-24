@@ -37,7 +37,7 @@ import frc2024.Constants.VisionConstants;
 
 public class Vision {
 
-    static LinearFilter test = LinearFilter.movingAverage(10);
+    static MedianFilter test = new MedianFilter(50);
     
     public enum Limelight{
         TRAP("limelight-trap", new Pose3d()), 

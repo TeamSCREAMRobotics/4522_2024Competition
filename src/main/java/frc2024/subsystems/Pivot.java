@@ -66,9 +66,9 @@ public class Pivot extends SubsystemBase{
         m_pivotMotor.setControl(control);
     }
 
-    public void setTargetAngle(Rotation2d angle, boolean limitMotion){
+    public void setTargetAngle(Rotation2d angle){
         m_targetAngle = angle;
-        setPivot(m_positionRequest.withPosition(m_targetAngle.getRotations()).withLimitForwardMotion(limitMotion).withLimitReverseMotion(limitMotion));
+        setPivot(m_positionRequest.withPosition(m_targetAngle.getRotations()));
     }
 
     public void setPivotOutput(double output){
@@ -103,10 +103,10 @@ public class Pivot extends SubsystemBase{
     }
 
     public Command angleCommand(Rotation2d angle){
-        return run(() -> setTargetAngle(angle, false));
+        return run(() -> setTargetAngle(angle));
     }
 
     public Command angleCommand(Supplier<Rotation2d> angle){
-        return run(() -> setTargetAngle(angle.get(), false));
+        return run(() -> setTargetAngle(angle.get()));
     }
 }
