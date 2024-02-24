@@ -144,7 +144,7 @@ public class Controlboard{
         return () -> -buttonBoard.getBigSwitchY()/2;//(operatorController_Command.getLeftTriggerAxis() - operatorController_Command.getRightTriggerAxis()); //Up POV on the button board
     }
 
-    /* Shooter */
+    /* Shooter/Conveyor */
     public static final Trigger manuallyShoot(){
         return new Trigger(() -> buttonBoard.getRawButton(1));
         // return operatorController_Command.povUp();
@@ -156,9 +156,13 @@ public class Controlboard{
         return operatorController_Command.povDown();
     }
 
+    public static final Trigger stopFlywheel(){
+        return new Trigger(() -> buttonBoard.getRawButton(5));
+    }
+
     /* Pivot */
     public static final DoubleSupplier getManualPivotOutput(){
-        return () -> -operatorController_Command.getRightY()/2;
+        return () -> -MathUtil.applyDeadband(operatorController_Command.getRightY(), STICK_DEADBAND)/2;
     }
 
     public static final Trigger resetPivotAngle(){
@@ -167,7 +171,7 @@ public class Controlboard{
 
     /* Elevator */
     public static final DoubleSupplier getManualElevatorOutput(){
-        return () -> -operatorController_Command.getLeftY()*8;
+        return () -> -MathUtil.applyDeadband(operatorController_Command.getLeftY(), STICK_DEADBAND)/2;
     }
     
     public static final Trigger resetElevatorHeight(){
@@ -187,8 +191,12 @@ public class Controlboard{
         return new Trigger(() -> buttonBoard.getRawButton(11));
     }
 
-    public static final Trigger goToTrapPosition(){
+    public static final Trigger goToPodiumPosition(){
         return new Trigger(() -> buttonBoard.getRawButton(12));
+    }
+
+    public static final Trigger goToTrapPosition(){
+        return new Trigger(() -> buttonBoard.getRawButton(8));
     }
 
     /* Intake */

@@ -2,8 +2,6 @@ package frc2024.subsystems.swerve;
 
 import java.util.Optional;
 
-import org.apache.commons.math3.exception.util.LocalizedFormats;
-
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
@@ -325,6 +323,7 @@ public class Swerve extends SubsystemBase {
         /* for(TimestampedVisionMeasurement measurement : Vision.getBotPoses()){
             m_poseEstimator.addVisionMeasurement(measurement.pose(), measurement.timestamp());
         } */
+        //System.out.println("Rotation: " + getPose().getRotation().getDegrees());
     }
 
     public Command resetPoseCommand(Pose2d pose){

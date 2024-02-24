@@ -1,8 +1,10 @@
 package frc2024.commands;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc2024.Constants.ConveyorConstants;
@@ -18,6 +20,14 @@ import frc2024.subsystems.Pivot;
 public class SuperstructureToPosition extends SequentialCommandGroup{
 
     public SuperstructureToPosition(ElevatorPivotPosition position, Elevator elevator, Pivot pivot){
+        addCommands(
+            elevator.heightCommand(position.elevatorPosition)
+                .alongWith(pivot.angleCommand(position.pivotAngle))
+        );
+    }
+
+    public SuperstructureToPosition(ElevatorPivotPosition position1, ElevatorPivotPosition position2, Elevator elevator, Pivot pivot, BooleanSupplier defense){
+        ElevatorPivotPosition position = defense.getAsBoolean() ? position1 : position2;
         addCommands(
             elevator.heightCommand(position.elevatorPosition)
                 .alongWith(pivot.angleCommand(position.pivotAngle))

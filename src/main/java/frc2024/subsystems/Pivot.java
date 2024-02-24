@@ -3,8 +3,6 @@ package frc2024.subsystems;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-import org.apache.commons.math3.ml.distance.CanberraDistance;
-
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
