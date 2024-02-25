@@ -135,11 +135,12 @@ public class RobotContainer {
                             new SuperstructureToPosition(ElevatorPivotPosition.HOME, m_elevator, m_pivot)
                                 .until((() ->  superstructureAtTarget())).alongWith(m_shooter.velocityCommand(ShooterConstants.RESTING_VELOCITY)));
 
-        Controlboard.goToTrapPosition()
-            .whileTrue(new SuperstructureToPosition(ElevatorPivotPosition.TRAP_CHAIN, m_elevator, m_pivot))
+        Controlboard.goToChainPosition()
+            .whileTrue(new SuperstructureToPosition(ElevatorPivotPosition.CHAIN, m_elevator, m_pivot)
+                .alongWith(m_shooter.velocityCommand(ShooterConstants.CHAIN_VELOCITY)))
             .onFalse(
                 new SuperstructureToPosition(ElevatorPivotPosition.HOME, m_elevator, m_pivot)
-                    .until((() -> superstructureAtTarget())));
+                    .until((() ->  superstructureAtTarget())));
 
         /* Shooter */
         Controlboard.testA()
@@ -154,16 +155,6 @@ public class RobotContainer {
             .onFalse(m_shooter.stopCommand());
 
         Controlboard.stopFlywheel().toggleOnTrue(m_shooter.stopCommand());
-
-        Controlboard.button4().whileTrue(
-            m_conveyor.outputCommand(-.75)
-        )
-            .onFalse(m_conveyor.stopCommand());
-            
-        Controlboard.button6().whileTrue(
-            m_conveyor.outputCommand(.75)
-        )
-            .onFalse(m_conveyor.stopCommand());
 
         /* Automation */
         Controlboard.autoFire()
@@ -180,9 +171,15 @@ public class RobotContainer {
                     .deadlineWith(new FacePoint(m_swerve, Controlboard.getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation(), false, true))); */
 
         /* Intake */
-        Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece()).negate())
-            .whileTrue(new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake))
-            .onFalse(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()));
+       /*  Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece()).negate())
+            .or(Controlboard.intakeOverride())
+                .whileTrue(new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake))
+                .onFalse(m_conveyor.stopCommand().alongWith(m_intake.stopCommand())); */
+            Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece()).negate())
+                .or(Controlboard.intakeOverride())
+                    .whileTrue(m_intake.outputCommand(IntakeConstants.INTAKE_OUTPUT)
+                    .alongWith(m_conveyor.outputCommand(ConveyorConstants.AMP_TRAP_OUTPUT)))
+                        .onFalse(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()));
         
         Controlboard.score()
             .whileTrue(m_conveyor.outputCommand(ConveyorConstants.AMP_TRAP_OUTPUT))
@@ -220,8 +217,11 @@ public class RobotContainer {
     private void configAuto() {
         Autonomous.configure(
             Commands.none().withName("Do Nothing"),
-            new PPEvent("StartIntake", new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake).until(m_conveyor.hasPiece())),
-            new PPEvent("StopIntake", Commands.none()),
+            new PPEvent("StartIntake", m_intake.outputCommand(IntakeConstants.INTAKE_OUTPUT).alongWith(m_conveyor.outputCommand(ConveyorConstants.TRANSFER_OUTPUT)).until(m_conveyor.hasPiece()).finallyDo(() -> {
+                        m_intake.stop();
+                        m_conveyor.stop();
+            })),
+            new PPEvent("StopIntake", m_intake.stopCommand().alongWith(m_conveyor.stopCommand())),
             new PPEvent("StartAutoFire", 
                 new AutoFire(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, () -> false)
                     .alongWith(new FaceVisionTarget(m_swerve, new DoubleSupplier[2], SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))),
@@ -235,7 +235,9 @@ public class RobotContainer {
         Autonomous.addRoutines(
             Routines.Close4(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake).withName("Close4"),
             Routines.AmpSide6(m_swerve, m_elevator, m_pivot, m_intake, m_conveyor).withName("AmpSide6"),
-            Routines.SourceSide4(m_swerve).withName("SourceSide4")
+            Routines.SourceSide4(m_swerve).withName("SourceSide4"),
+            Routines.AmpSide3(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake).withName("AmpSide3"),
+            Routines.Sweep(m_swerve, m_pivot, m_shooter, m_conveyor, m_intake)
         );
     }
 

@@ -37,7 +37,7 @@ import frc2024.Constants.VisionConstants;
 
 public class Vision {
 
-    static MedianFilter test = new MedianFilter(50);
+    static MedianFilter test = new MedianFilter(5);
     
     public enum Limelight{
         TRAP("limelight-trap", new Pose3d()), 
@@ -94,7 +94,7 @@ public class Vision {
     }
 
     public static double getTY(Limelight limelight){
-        return test.calculate(LimelightHelpers.getTY(limelight.name));
+        return LimelightHelpers.getTY(limelight.name);
     }
 
     public static double getTA(Limelight limelight){

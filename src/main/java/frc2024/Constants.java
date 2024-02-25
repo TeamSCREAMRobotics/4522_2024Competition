@@ -355,11 +355,12 @@ public final class Constants{
 
         public static final double SHOOTER_MAX_VELOCITY = 6100;
         public static final double SHOOTER_TARGET_VELOCITY = 5000;
-        public static final double SUBWOOFER_VELOCITY = 2750.0;
+        public static final double SUBWOOFER_VELOCITY = 2500.0;
+        public static final double CHAIN_VELOCITY = 4000.0;
         public static final double PODIUM_VELOCITY = 3000.0;
         public static final double RESTING_VELOCITY = 500.0;
 
-        public static final double TRAJECTORY_VELOCITY_EXTRA = 1680.0;
+        public static final double TRAJECTORY_VELOCITY_EXTRA = 1700.0;
 
         public static final double SHOOT_OUTPUT = 0.8;
         public static final double EJECT_OUTPUT = 0.35;//0.5;
@@ -414,7 +415,8 @@ public final class Constants{
         public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(14.0);
         public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(8.0);
         public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(33.4863);
-        public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(19.0);
+        public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(24.0);
+        public static final Rotation2d CHAIN_ANGLE = Rotation2d.fromDegrees(26.103);
         public static final Rotation2d PODIUM_ANGLE = Rotation2d.fromDegrees(22.24); //Robot Angle = -154.53 deg
         public static final Rotation2d PODIUM_DEFENDED_ANGLE = Rotation2d.fromDegrees(33.05); //Robot Angle = -154.53 deg
         public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(44.0);
@@ -527,6 +529,7 @@ public final class Constants{
         HOME(ElevatorConstants.HOME_HEIGHT, PivotConstants.HOME_ANGLE), 
         AMP(ElevatorConstants.AMP_HEIGHT, PivotConstants.AMP_ANGLE), 
         SUBWOOFER(ElevatorConstants.SUBWOOFER_HEIGHT, PivotConstants.SUBWOOFER_ANGLE),
+        CHAIN(ElevatorConstants.HOME_HEIGHT, PivotConstants.CHAIN_ANGLE),
         PODIUM_LOW(ElevatorConstants.HOME_HEIGHT, PivotConstants.PODIUM_ANGLE),
         PODIUM_HIGH(ElevatorConstants.MAX_HEIGHT, PivotConstants.PODIUM_DEFENDED_ANGLE),
         TRAP_CHAIN(ElevatorConstants.TRAP_CHAIN_HEIGHT, PivotConstants.TRAP_CHAIN_ANGLE),
@@ -634,7 +637,7 @@ public final class Constants{
         public static final Translation2d BLUE_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(7).get().getTranslation().toTranslation2d();
         public static final Translation2d RED_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(4).get().getTranslation().toTranslation2d();
 
-        public static final double SPEAKER_OPENING_HEIGHT = 2.106;
+        public static final double SPEAKER_OPENING_HEIGHT = 2.098;
 
         public static final double SPEAKER_TAG_HEIGHT = 1.468864;
         public static final double STAGE_TAG_HEIGHT = 1.320884;

@@ -47,6 +47,8 @@ public class Routines {
     private static final PathSequence AmpSide5 = new PathSequence(Side.AMP, "Close4_1", "Close4_2", "Amp6_0", "Amp6_1", "Amp6_2");
     private static final PathSequence AmpSide6 = new PathSequence(Side.AMP, "Close4_1", "Close4_2", "Amp6_0", "Amp6_1", "Amp6_2", "Amp6_3", "Amp6_4");
     private static final PathSequence SourceSide4 = new PathSequence(Side.SOURCE, "SourceSide4_1", "SourceSide4_2", "SourceSide4_3", "SourceSide4_4", "SourceSide4_5", "SourceSide4_6");
+    private static final PathSequence AmpSide3 = new PathSequence(Side.AMP, "Amp3_1", "Amp3_2", "Amp3_3");
+    private static final PathSequence Sweep = new PathSequence(Side.SOURCE, "Sweep");
 
     private static Command startTimer(){
         return Commands.runOnce(
@@ -89,6 +91,24 @@ public class Routines {
                 .andThen(Close4.getNext())
                 .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor))
                 .andThen(Close4.getEnd())
+                .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor)),
+            printTimer()
+        );
+    }
+
+    public static Command AmpSide3(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake){
+        currentSequence = AmpSide3;
+        
+        return new SequentialCommandGroup(
+            startTimer(),
+            swerve.resetPoseCommand(AmpSide3.getStartingPose()),
+            //new ShootSequence(swerve, pivot, shooter, elevator, conveyor))
+                AmpSide3.getStart().alongWith(Commands.run(() -> intake.setIntakeOutput(IntakeConstants.INTAKE_OUTPUT))).withTimeout(3)
+                .finallyDo(() -> intake.stop())
+                .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor))
+                .andThen(AmpSide3.getNext())
+                .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor))
+                .andThen(AmpSide3.getEnd())
                 .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor)),
             printTimer()
         );
@@ -148,6 +168,18 @@ public class Routines {
         AmpSide6.getEnd(),
         new WaitCommand(0.5),
         printTimer()
+        );
+    }
+
+    public static Command Sweep(Swerve swerve, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake){
+        currentSequence = Sweep;
+        return new ParallelCommandGroup(
+            swerve.resetPoseCommand(Sweep.getStartingPose()),
+            pivot.angleCommand(PivotConstants.HOME_ANGLE),
+            shooter.dutyCycleCommand(0.2),
+            conveyor.outputCommand(1.0),
+            intake.outputCommand(IntakeConstants.INTAKE_OUTPUT),
+            Sweep.getAll()
         );
     }
 }

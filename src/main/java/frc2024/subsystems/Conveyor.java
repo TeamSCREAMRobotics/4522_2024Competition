@@ -55,7 +55,7 @@ public class Conveyor extends SubsystemBase{
     }
     
     public BooleanSupplier hasPiece(){
-        return () -> m_beamDebouncer.calculate(!m_beam.get());
+        return () -> !m_beam.get();
     }
 
     public void stop(){

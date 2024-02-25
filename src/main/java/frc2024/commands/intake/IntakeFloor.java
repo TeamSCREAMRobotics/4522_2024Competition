@@ -34,8 +34,8 @@ public class IntakeFloor extends SequentialCommandGroup {
             .alongWith(conveyor.outputCommand(ConveyorConstants.TRANSFER_OUTPUT))
             .finallyDo(
               () -> {
-                // intake.stop();
-                // conveyor.stop();
+                intake.stop();
+                conveyor.stop();
               }
             )
       );

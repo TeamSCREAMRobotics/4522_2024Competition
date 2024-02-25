@@ -141,7 +141,7 @@ public class Controlboard{
 
     /* Climber */
     public static final DoubleSupplier getManualClimberOutput(){
-        return () -> -buttonBoard.getBigSwitchY()/5;//(operatorController_Command.getLeftTriggerAxis() - operatorController_Command.getRightTriggerAxis()); //Up POV on the button board
+        return () -> -buttonBoard.getBigSwitchY();//(operatorController_Command.getLeftTriggerAxis() - operatorController_Command.getRightTriggerAxis()); //Up POV on the button board
     }
 
     /* Shooter/Conveyor */
@@ -195,8 +195,12 @@ public class Controlboard{
         return new Trigger(() -> buttonBoard.getRawButton(12));
     }
 
-    public static final Trigger goToTrapPosition(){
+    public static final Trigger goToChainPosition(){
         return new Trigger(() -> buttonBoard.getRawButton(8));
+    }
+    
+    public static final Trigger goToTrapPosition(){
+        return new Trigger(() -> false);
     }
 
     /* Intake */
@@ -212,11 +216,7 @@ public class Controlboard{
         return driverController_Command.leftBumper();
     }
 
-    public static final Trigger button4(){
-        return new Trigger(() -> buttonBoard.getRawButton(4));
-    }
-    
-    public static final Trigger button6(){
-        return new Trigger(() -> buttonBoard.getRawButton(6));
+    public static final Trigger intakeOverride(){
+        return new Trigger(() -> buttonBoard.getRawButton(7));
     }
 }

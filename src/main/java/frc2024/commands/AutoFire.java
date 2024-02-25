@@ -66,7 +66,7 @@ public class AutoFire extends SequentialCommandGroup{
     }
 
     public static ShootState calculateTimeVelocityAngle() {
-        double distanceToTarget = getDistanceToSpeaker().getAsDouble();
+        double distanceToTarget = getDistanceToSpeaker().getAsDouble() + 0.2202;
 
         double extraYVel = Conversions.falconRPSToMechanismMPS(ShooterConstants.TRAJECTORY_VELOCITY_EXTRA / 60.0, ShooterConstants.WHEEL_CIRCUMFERENCE, 1.0);
 
@@ -81,7 +81,7 @@ public class AutoFire extends SequentialCommandGroup{
         Rotation2d launchAngle = Rotation2d.fromRadians(launchAngleRads).unaryMinus().plus(PivotConstants.RELATIVE_ENCODER_TO_HORIZONTAL);
         double launchVel = Conversions.mpsToFalconRPS(Math.sqrt(vx * vx + vy * vy), ShooterConstants.WHEEL_CIRCUMFERENCE, 1.0) * 60.0; // rpm
 
-        return new ShootState(launchAngle, 0.0, VisionConstants.SHOOT_STATE_MAP.get(getDistanceToSpeaker().getAsDouble()).velocityRPM());
+        return new ShootState(launchAngle.minus(Rotation2d.fromDegrees(0.13)), 0.0, launchVel);
     }
     
     /* public Rotation2d calculateAngle(double distance){

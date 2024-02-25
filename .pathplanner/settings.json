@@ -1,13 +1,15 @@
 {
-  "robotWidth": 0.95,
-  "robotLength": 0.86,
+  "robotWidth": 0.9144,
+  "robotLength": 0.97,
   "holonomicMode": true,
   "pathFolders": [
     "2Amp",
+    "AmpSide3",
     "AmpSide6",
     "AmpSide7",
     "CenterPiecePathfinding",
     "Close4",
+    "Sweep",
     "SourceSide4"
   ],
   "autoFolders": [],
