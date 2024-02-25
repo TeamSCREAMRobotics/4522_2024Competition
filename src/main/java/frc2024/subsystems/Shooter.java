@@ -16,6 +16,7 @@ import com.team4522.lib.util.OrchestraUtil;
 import com.team4522.lib.util.ScreamUtil;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.Constants.Ports;
@@ -29,6 +30,8 @@ public class Shooter extends SubsystemBase{
 
     private DutyCycleOut m_dutyCyleRequest = new DutyCycleOut(0);
     private VelocityVoltage m_velocityRequest = new VelocityVoltage(0);
+
+    private double m_targetVelocity = 0.0;
 
     public Shooter(){
         m_rightShooterMotor = new TalonFX(Ports.RIGHT_SHOOTER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
@@ -55,6 +58,7 @@ public class Shooter extends SubsystemBase{
     }
 
     public void setTargetVelocity(double velocityRPM){
+        m_targetVelocity = velocityRPM;
         setShooter(m_velocityRequest.withVelocity(velocityRPM/60.0));
     }
 
@@ -72,6 +76,18 @@ public class Shooter extends SubsystemBase{
 
     public double getMotorVelocity(){
         return ScreamUtil.average(m_leftShooterMotor.getVelocity().getValueAsDouble(), m_rightShooterMotor.getVelocity().getValueAsDouble());
+    }
+
+    public double getShooterError(){
+        return m_targetVelocity - getRPM();
+    }
+
+    public double getTargetVelocity(){
+        return m_targetVelocity;
+    }
+
+    public boolean getShooterAtTarget(){
+        return Math.abs(getShooterError()) < ShooterConstants.TARGET_THRESHOLD;
     }
 
     public void stop(){
@@ -95,6 +111,6 @@ public class Shooter extends SubsystemBase{
     }
 
     public Command stopCommand(){
-        return run(() -> stop());
+        return Commands.runOnce(() -> stop(), this);
     }
 }

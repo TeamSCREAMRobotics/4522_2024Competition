@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc2024.RobotContainer;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.IntakeConstants;
@@ -20,21 +21,15 @@ import frc2024.subsystems.Pivot;
 public class SuperstructureToPosition extends SequentialCommandGroup{
 
     public SuperstructureToPosition(ElevatorPivotPosition position, Elevator elevator, Pivot pivot){
+        RobotContainer.setCurrentPosition(position);
         addCommands(
             elevator.heightCommand(position.elevatorPosition)
                 .alongWith(pivot.angleCommand(position.pivotAngle))
         );
     }
 
-    public SuperstructureToPosition(ElevatorPivotPosition position1, ElevatorPivotPosition position2, Elevator elevator, Pivot pivot, BooleanSupplier defense){
-        ElevatorPivotPosition position = defense.getAsBoolean() ? position1 : position2;
-        addCommands(
-            elevator.heightCommand(defense.getAsBoolean() ? position1.elevatorPosition : position2.elevatorPosition)
-                .alongWith(pivot.angleCommand(defense.getAsBoolean() ? position1.pivotAngle : position2.pivotAngle))
-        );
-    }
-
     public SuperstructureToPosition(DoubleSupplier elevatorHeight, DoubleSupplier pivotAngleDeg, Elevator elevator, Pivot pivot){
+        RobotContainer.setCurrentPosition(ElevatorPivotPosition.NONE);
         addCommands(
             elevator.heightCommand(elevatorHeight.getAsDouble())
                 .alongWith(pivot.angleCommand(Rotation2d.fromDegrees(pivotAngleDeg.getAsDouble())))

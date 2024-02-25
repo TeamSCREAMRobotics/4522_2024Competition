@@ -35,6 +35,14 @@ public class FaceVisionTarget extends Command {
     this.limelight = limelight;
   }
 
+  public FaceVisionTarget(Swerve swerve, ScreamPIDConstants rotationConstants, Limelight limelight) {
+    addRequirements(swerve);
+    this.swerve = swerve;
+    this.translationSup = new DoubleSupplier[]{() -> 0.0, () -> 0.0};
+    rotController = rotationConstants.toPIDController();
+    this.limelight = limelight;
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}

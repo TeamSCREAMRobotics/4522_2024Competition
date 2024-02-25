@@ -1,6 +1,7 @@
 package frc2024.subsystems;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -13,8 +14,11 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
+import frc2024.Constants.ConveyorConstants;
+import frc2024.Constants.ElevatorPivotPosition;
 import frc2024.Constants.Ports;
 
 public class Conveyor extends SubsystemBase{
@@ -70,8 +74,27 @@ public class Conveyor extends SubsystemBase{
     }
 
     public Command stopCommand(){
-        return run(() -> stop());
+        return Commands.runOnce(() -> stop(), this);
     }
 
-
+    public Command scoreCommand(Supplier<ElevatorPivotPosition> position){
+        Runnable runnable;
+        switch (position.get()) {
+            case AMP:
+            case TRAP_CHAIN:
+                runnable = () -> setConveyorOutput(ConveyorConstants.AMP_TRAP_OUTPUT);
+                break;
+            case CHAIN:
+            case PODIUM_DEFENDED:
+            case PODIUM:
+            case SUBWOOFER:
+            case SUBWOOFER_DEFENDED:
+                runnable = () -> setConveyorOutput(ConveyorConstants.SHOOT_SPEED);
+                break;
+            default:
+                runnable = () -> stop();
+                break;
+        }
+        return Commands.run(runnable, this);
+    }
 }

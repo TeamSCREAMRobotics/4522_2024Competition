@@ -350,7 +350,9 @@ public final class Constants{
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
 
-        public static final double AUTO_SHOOT_VELOCITY_THRESHOLD = 4800; //RPMs
+        public static final double TARGET_THRESHOLD = 75.0; // rpm
+
+        public static final double AUTO_SHOOT_VELOCITY_THRESHOLD = 4800; // rpm
         public static final double AUTO_SHOOT_DISTANCE_THRESHOLD = 6.5; // meters
 
         public static final double SHOOTER_MAX_VELOCITY = 6100;
@@ -358,7 +360,7 @@ public final class Constants{
         public static final double SUBWOOFER_VELOCITY = 2500.0;
         public static final double CHAIN_VELOCITY = 4000.0;
         public static final double PODIUM_VELOCITY = 3000.0;
-        public static final double RESTING_VELOCITY = 500.0;
+        public static final double IDLE_VELOCITY = 500.0;
 
         public static final double TRAJECTORY_VELOCITY_EXTRA = 1700.0;
 
@@ -425,6 +427,7 @@ public final class Constants{
         public static final Rotation2d RELATIVE_ENCODER_TO_HORIZONTAL = Rotation2d.fromDegrees(52.07);
 
         public static final double PIVOT_HEIGHT_HOME = Units.inchesToMeters(19.741169);
+        public static final double PIVOT_HEIGHT_FROM_ELEVATOR = Units.inchesToMeters(7.223608);
         
         public static final InterpolatingDoubleTreeMap ANGLE_MAP_DEFENDED = new InterpolatingDoubleTreeMap();
         static{
@@ -526,12 +529,13 @@ public final class Constants{
     } 
 
     public static enum ElevatorPivotPosition{
+        NONE(ElevatorConstants.HOME_HEIGHT, PivotConstants.HOME_ANGLE),
         HOME(ElevatorConstants.HOME_HEIGHT, PivotConstants.HOME_ANGLE), 
         AMP(ElevatorConstants.AMP_HEIGHT, PivotConstants.AMP_ANGLE), 
         SUBWOOFER(ElevatorConstants.SUBWOOFER_HEIGHT, PivotConstants.SUBWOOFER_ANGLE),
         CHAIN(ElevatorConstants.HOME_HEIGHT, PivotConstants.CHAIN_ANGLE),
-        PODIUM_LOW(ElevatorConstants.HOME_HEIGHT, PivotConstants.PODIUM_ANGLE),
-        PODIUM_HIGH(ElevatorConstants.MAX_HEIGHT, PivotConstants.PODIUM_DEFENDED_ANGLE),
+        PODIUM(ElevatorConstants.HOME_HEIGHT, PivotConstants.PODIUM_ANGLE),
+        PODIUM_DEFENDED(ElevatorConstants.MAX_HEIGHT, PivotConstants.PODIUM_DEFENDED_ANGLE),
         TRAP_CHAIN(ElevatorConstants.TRAP_CHAIN_HEIGHT, PivotConstants.TRAP_CHAIN_ANGLE),
         SUBWOOFER_DEFENDED(ElevatorConstants.MAX_HEIGHT, PivotConstants.SUBWOOFER_ANGLE_DEFENDED);
 

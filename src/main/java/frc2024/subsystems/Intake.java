@@ -68,6 +68,6 @@ public class Intake extends SubsystemBase{
     }
 
     public Command stopCommand(){
-        return run(() -> stop());
+        return Commands.runOnce(() -> stop(), this);
     }
 }

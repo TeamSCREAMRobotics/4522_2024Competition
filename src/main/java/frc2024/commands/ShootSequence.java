@@ -3,6 +3,8 @@ package frc2024.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc2024.Constants.ConveyorConstants;
@@ -21,18 +23,12 @@ public class ShootSequence extends SequentialCommandGroup{
 
         public ShootSequence(Swerve swerve, Pivot pivot, Shooter shooter, Elevator elevator, Conveyor conveyor){
             addCommands(
-                new InstantCommand(() -> {
-                    conveyor.stop();
-                }),
-                new AutoFire(swerve, shooter, elevator, pivot, conveyor, () -> false)
-                        .alongWith(new FaceVisionTarget(swerve, new DoubleSupplier[] {() -> 0, () -> 0}, SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))
-                            .withTimeout(2.0)
-                        .alongWith(new WaitCommand(1.0)
-                            .andThen(conveyor.outputCommand(ConveyorConstants.SHOOT_SPEED).withTimeout(0.75)
-                                .finallyDo(() -> {
-                                    conveyor.stop();
-                                    //elevator.setTargetHeight(ElevatorConstants.HOME_HEIGHT);
-                                    //pivot.setTargetAngle(PivotConstants.HOME_ANGLE);
-                            }))));
+                new ParallelCommandGroup(
+                    new AutoFire(swerve, shooter, elevator, pivot, conveyor, () -> false),
+                    new FaceVisionTarget(swerve, SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))
+                .until(() -> shooter.getShooterAtTarget())
+                .andThen(conveyor.outputCommand(ConveyorConstants.SHOOT_SPEED).until(() -> !conveyor.hasPiece().getAsBoolean()))
+                .andThen(conveyor.stopCommand().alongWith(shooter.stopCommand()))
+            );
         }
     }

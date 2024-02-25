@@ -180,19 +180,19 @@ public class Controlboard{
 
     /* Elevator AND Pivot */    
     public static final Trigger goToHomePosition(){
-        return new Trigger(() -> buttonBoard.getRawButton(9));
+        return new Trigger(() -> buttonBoard.getRawButton(9)).and(new Trigger(defendedMode()).negate());
     }
     
     public static final Trigger goToSubwooferPosition(){
-        return new Trigger(() -> buttonBoard.getRawButton(10));
+        return new Trigger(() -> buttonBoard.getRawButton(10)).and(new Trigger(defendedMode()).negate());
     }
     
     public static final Trigger goToAmpPosition(){
-        return new Trigger(() -> buttonBoard.getRawButton(11));
+        return new Trigger(() -> buttonBoard.getRawButton(11)).and(new Trigger(defendedMode()).negate());
     }
 
     public static final Trigger goToPodiumPosition(){
-        return new Trigger(() -> buttonBoard.getRawButton(12));
+        return new Trigger(() -> buttonBoard.getRawButton(12)).and(new Trigger(defendedMode()).negate());
     }
 
     public static final Trigger goToChainPosition(){
@@ -201,6 +201,14 @@ public class Controlboard{
     
     public static final Trigger goToTrapPosition(){
         return new Trigger(() -> false);
+    }
+    
+    public static final Trigger goToSubwooferPositionDefended(){
+        return new Trigger(() -> buttonBoard.getRawButton(10)).and(defendedMode());
+    }
+
+    public static final Trigger goToPodiumPositionDefended(){
+        return new Trigger(() -> buttonBoard.getRawButton(12)).and(defendedMode());
     }
 
     /* Intake */

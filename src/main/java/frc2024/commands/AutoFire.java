@@ -17,6 +17,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc2024.RobotContainer;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.ElevatorPivotPosition;
@@ -54,10 +55,12 @@ public class AutoFire extends SequentialCommandGroup{
     } */
 
     public AutoFire(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, BooleanSupplier defense){
+        RobotContainer.setCurrentPosition(ElevatorPivotPosition.NONE);
         addCommands(
-            shooter.velocityCommand(() -> calculateTimeVelocityAngle().velocityRPM())
-                .alongWith(elevator.heightCommand(() -> calculateTimeVelocityAngle().elevatorHeightInches()))
-                .alongWith(pivot.angleCommand(() -> calculateTimeVelocityAngle().pivotAngle()))
+            shooter.velocityCommand(() -> calculateTimeVelocityAngle(elevator.getElevatorHeight()).velocityRPM())
+                .alongWith(elevator.heightCommand(
+                    () -> defense.getAsBoolean() ? ElevatorConstants.MAX_HEIGHT : ElevatorConstants.MIN_HEIGHT))
+                .alongWith(pivot.angleCommand(() -> calculateTimeVelocityAngle(elevator.getElevatorHeight()).pivotAngle()))
         );
     }
 
@@ -65,14 +68,14 @@ public class AutoFire extends SequentialCommandGroup{
         return Vision.getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER);
     }
 
-    public static ShootState calculateTimeVelocityAngle() {
+    public static ShootState calculateTimeVelocityAngle(double elevatorHeight) {
         double distanceToTarget = getDistanceToSpeaker().getAsDouble() + 0.2202;
 
         double extraYVel = Conversions.falconRPSToMechanismMPS(ShooterConstants.TRAJECTORY_VELOCITY_EXTRA / 60.0, ShooterConstants.WHEEL_CIRCUMFERENCE, 1.0);
 
         double vy = Math.sqrt(
                 extraYVel * extraYVel
-                + (FieldConstants.SPEAKER_OPENING_HEIGHT - PivotConstants.PIVOT_HEIGHT_HOME) * 2 * GRAVITY
+                + (FieldConstants.SPEAKER_OPENING_HEIGHT - (Units.inchesToMeters(elevatorHeight) - PivotConstants.PIVOT_HEIGHT_FROM_ELEVATOR)) * 2 * GRAVITY
         );
         double airtime = (vy - extraYVel) / GRAVITY;
         double vx = distanceToTarget / airtime;
