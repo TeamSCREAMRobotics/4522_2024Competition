@@ -8,6 +8,7 @@ import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
@@ -145,6 +146,7 @@ public class DeviceConfig {
         config.MotorOutput = FXMotorOutputConfig(PivotConstants.MOTOR_INVERT, PivotConstants.NEUTRAL_MODE);
         config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, PivotConstants.TOTAL_GEAR_RATIO, 1.0, Rotation2d.fromDegrees(0.0));
         config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(PivotConstants.SOFTWARE_LIMIT_ENABLE, PivotConstants.FORWARD_SOFT_LIMIT.getRotations(), PivotConstants.REVERSE_SOFT_LIMIT.getRotations());
+        config.HardwareLimitSwitch = FXHardwareLimitSwitchConfig(PivotConstants.HARDWARE_LIMIT_ENABLE_FORWARD, PivotConstants.HARDWARE_LIMIT_ENABLE_REVERSE, PivotConstants.HARDWARE_LIMIT_POSITION_FORWARD, PivotConstants.HARDWARE_LIMIT_POSITION_REVERSE);
         config.CurrentLimits = FXCurrentLimitsConfig(
             PivotConstants.CURRENT_LIMIT_ENABLE, 
             PivotConstants.SUPPLY_CURRENT_LIMIT, 
@@ -315,6 +317,15 @@ public class DeviceConfig {
         config.ReverseSoftLimitEnable = enable;
         config.ForwardSoftLimitThreshold = forwardLimit;
         config.ReverseSoftLimitThreshold = reverseLimit;
+        return config;
+    }
+
+    public static HardwareLimitSwitchConfigs FXHardwareLimitSwitchConfig(boolean forwardEnable, boolean reverseEnable, double forwardPosition, double reversePosition){
+        HardwareLimitSwitchConfigs config = new HardwareLimitSwitchConfigs();
+        config.ForwardLimitAutosetPositionEnable = forwardEnable;
+        config.ReverseLimitAutosetPositionEnable = reverseEnable;
+        config.ForwardLimitAutosetPositionValue = forwardPosition;
+        config.ReverseLimitAutosetPositionValue = reversePosition;
         return config;
     }
 

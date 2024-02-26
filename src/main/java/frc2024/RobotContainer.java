@@ -41,6 +41,7 @@ import frc2024.auto.Autonomous;
 import frc2024.auto.Autonomous.PPEvent;
 import frc2024.auto.Routines;
 import frc2024.commands.AutoFire;
+import frc2024.commands.AutoZero;
 import frc2024.commands.FeedForwardCharacterization;
 import frc2024.commands.SuperstructureToPosition;
 import frc2024.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
@@ -97,9 +98,8 @@ public class RobotContainer {
 
         /* Conveyor */
         Controlboard.ejectThroughShooter().whileTrue(m_conveyor.outputCommand(-0.85)).onFalse(m_conveyor.stopCommand());
-        //POV Down
+        
         Controlboard.manuallyShoot().whileTrue(m_conveyor.outputCommand(0.45)).onFalse(m_conveyor.stopCommand());
-        //POV Up
 
         /* Elevator */
         Controlboard.manualMode().toggleOnTrue(m_elevator.voltageCommand(Controlboard.getManualElevatorOutput()));
@@ -114,6 +114,11 @@ public class RobotContainer {
         Controlboard.goToHomePosition()
             .whileTrue(
                 new SuperstructureToPosition(ElevatorPivotPosition.HOME, m_elevator, m_pivot)
+                    .until(() -> superstructureAtTarget()));
+                    
+        Controlboard.goToHomePosition()
+            .whileTrue(
+                new SuperstructureToPosition(ElevatorPivotPosition.HOME_ENDGAME, m_elevator, m_pivot)
                     .until(() -> superstructureAtTarget()));
 
         Controlboard.goToSubwooferPosition()
@@ -163,13 +168,7 @@ public class RobotContainer {
                 new SuperstructureToPosition(ElevatorPivotPosition.HOME, m_elevator, m_pivot)
                     .until((() ->  superstructureAtTarget())));
 
-        /* Shooter */
-        Controlboard.testA()
-            .whileTrue(
-                m_shooter.velocityCommand(0))
-                    .onFalse(m_shooter.stopCommand());
-        //A button
-        
+        /* Shooter */        
         Controlboard.ejectThroughShooter()
             .whileTrue(
                 m_shooter.dutyCycleCommand(ShooterConstants.EJECT_OUTPUT))
@@ -186,11 +185,27 @@ public class RobotContainer {
                 new SuperstructureToPosition(ElevatorPivotPosition.HOME, m_elevator, m_pivot)
                     .until((() -> superstructureAtTarget())).alongWith(m_shooter.velocityCommand(ShooterConstants.IDLE_VELOCITY).alongWith(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()))));
 
+        Controlboard.autoZero()
+            .whileTrue(
+                new AutoZero(m_elevator, m_pivot)
+            )
+            .onFalse(
+                new SuperstructureToPosition(ElevatorPivotPosition.HOME, m_elevator, m_pivot)
+                    .until((() -> superstructureAtTarget())).alongWith(m_shooter.velocityCommand(ShooterConstants.IDLE_VELOCITY).alongWith(m_conveyor.stopCommand().alongWith(m_intake.stopCommand())))
+            );
+
         /* Intake */
-        Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece()).negate())
+        /* Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece()).negate())
             .or(Controlboard.intakeOverride())
                 .whileTrue(m_intake.outputCommand(IntakeConstants.INTAKE_OUTPUT)
                 .alongWith(m_conveyor.outputCommand(ConveyorConstants.AMP_TRAP_OUTPUT)))
+                    .onFalse(m_conveyor.stopCommand().alongWith(m_intake.stopCommand())); */
+                    
+        Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece()).negate())
+            .or(Controlboard.intakeOverride())
+                .whileTrue(
+                    new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, Controlboard.endGameMode())
+                )
                     .onFalse(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()));
         
         Controlboard.score()
@@ -218,10 +233,6 @@ public class RobotContainer {
                 Controlboard.getFieldCentric(),
                 Controlboard.getSlowMode()
             ) 
-        );
-
-        m_shooter.setDefaultCommand(
-            m_shooter.velocityCommand(ShooterConstants.IDLE_VELOCITY)
         );
     }
 

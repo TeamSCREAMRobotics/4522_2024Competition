@@ -58,8 +58,8 @@ public class AutoFire extends SequentialCommandGroup{
         RobotContainer.setCurrentPosition(ElevatorPivotPosition.NONE);
         addCommands(
             shooter.velocityCommand(() -> calculateTimeVelocityAngle(elevator.getElevatorHeight()).velocityRPM())
-                .alongWith(elevator.heightCommand(
-                    () -> defense.getAsBoolean() ? ElevatorConstants.MAX_HEIGHT : ElevatorConstants.MIN_HEIGHT))
+/*                 .alongWith(elevator.heightCommand(
+                    () -> defense.getAsBoolean() ? ElevatorConstants.MAX_HEIGHT : ElevatorConstants.MIN_HEIGHT)) */
                 .alongWith(pivot.angleCommand(() -> calculateTimeVelocityAngle(elevator.getElevatorHeight()).pivotAngle()))
         );
     }
@@ -75,7 +75,7 @@ public class AutoFire extends SequentialCommandGroup{
 
         double vy = Math.sqrt(
                 extraYVel * extraYVel
-                + (FieldConstants.SPEAKER_OPENING_HEIGHT - (Units.inchesToMeters(elevatorHeight) - PivotConstants.PIVOT_HEIGHT_FROM_ELEVATOR)) * 2 * GRAVITY
+                + (FieldConstants.SPEAKER_OPENING_HEIGHT - (Units.inchesToMeters(elevatorHeight) - PivotConstants.PIVOT_HEIGHT_FROM_ELEVATOR_TOP)) * 2 * GRAVITY
         );
         double airtime = (vy - extraYVel) / GRAVITY;
         double vx = distanceToTarget / airtime;
@@ -84,7 +84,7 @@ public class AutoFire extends SequentialCommandGroup{
         Rotation2d launchAngle = Rotation2d.fromRadians(launchAngleRads).unaryMinus().plus(PivotConstants.RELATIVE_ENCODER_TO_HORIZONTAL);
         double launchVel = Conversions.mpsToFalconRPS(Math.sqrt(vx * vx + vy * vy), ShooterConstants.WHEEL_CIRCUMFERENCE, 1.0) * 60.0; // rpm
 
-        return new ShootState(launchAngle.minus(Rotation2d.fromDegrees(0.13)), 0.0, launchVel);
+        return new ShootState(launchAngle, 0.0, launchVel);
     }
     
     /* public Rotation2d calculateAngle(double distance){

@@ -92,7 +92,7 @@ public final class Constants{
         /* For updating values like PID from Shuffleboard */
         public static final boolean UPDATE_SWERVE = false;
         public static final boolean UPDATE_INTAKE = false;
-        public static final boolean UPDATE_SHOOTER = false;
+        public static final boolean UPDATE_SHOOTER = true;
         public static final boolean UPDATE_ELEVATOR = false;
         public static final boolean UPDATE_CONVEYOR = false;
         public static final boolean UPDATE_CLIMBER = false;
@@ -400,6 +400,11 @@ public final class Constants{
         public static final Rotation2d FORWARD_SOFT_LIMIT = Rotation2d.fromDegrees(40.0);
         public static final Rotation2d REVERSE_SOFT_LIMIT = Rotation2d.fromDegrees(-9999);
 
+        public static final boolean HARDWARE_LIMIT_ENABLE_FORWARD = true;
+        public static final boolean HARDWARE_LIMIT_ENABLE_REVERSE = true;
+        public static final double HARDWARE_LIMIT_POSITION_FORWARD = 0.0;
+        public static final double HARDWARE_LIMIT_POSITION_REVERSE = 0.0;
+
         public static final double TARGET_THRESHOLD = 0.50; //Degrees
 
         public static final double CRUISE_VELOCITY = 200;
@@ -414,20 +419,25 @@ public final class Constants{
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA, GravityTypeValue.Arm_Cosine);
 
-        public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(14.0);
-        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(8.0);
-        public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(33.4863);
-        public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(24.0);
-        public static final Rotation2d CHAIN_ANGLE = Rotation2d.fromDegrees(26.103);
-        public static final Rotation2d PODIUM_ANGLE = Rotation2d.fromDegrees(22.24); //Robot Angle = -154.53 deg
-        public static final Rotation2d PODIUM_DEFENDED_ANGLE = Rotation2d.fromDegrees(33.05); //Robot Angle = -154.53 deg
-        public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(44.0);
+        public static final Rotation2d BUMPER_ZERO = Rotation2d.fromDegrees(0.0);// 0.7 //6.85546875
+
+        public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(14.0).minus(BUMPER_ZERO);
+        public static final Rotation2d HOME_ANGLE_ENDGAME = Rotation2d.fromDegrees(0.0);
+        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(-2.8125).minus(BUMPER_ZERO);
+        public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(18.6328).minus(BUMPER_ZERO);
+        public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(24.0).minus(BUMPER_ZERO);
+        public static final Rotation2d CHAIN_ANGLE = Rotation2d.fromDegrees(26.103).minus(BUMPER_ZERO);
+        public static final Rotation2d PODIUM_ANGLE = Rotation2d.fromDegrees(22.24).minus(BUMPER_ZERO); //Robot Angle = -154.53 deg
+        public static final Rotation2d PODIUM_DEFENDED_ANGLE = Rotation2d.fromDegrees(33.05).minus(BUMPER_ZERO); //Robot Angle = -154.53 deg
+        public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(44.0).minus(BUMPER_ZERO);
+
+        public static final double AUTO_ZERO_OUTPUT = 0.0;
 
         public static final Rotation2d ABSOLUTE_ENCODER_OFFSET = Rotation2d.fromRotations(-0.207275390625);
-        public static final Rotation2d RELATIVE_ENCODER_TO_HORIZONTAL = Rotation2d.fromDegrees(52.07);
+        public static final Rotation2d RELATIVE_ENCODER_TO_HORIZONTAL = Rotation2d.fromDegrees(52.07).minus(BUMPER_ZERO);
 
         public static final double PIVOT_HEIGHT_HOME = Units.inchesToMeters(19.741169);
-        public static final double PIVOT_HEIGHT_FROM_ELEVATOR = Units.inchesToMeters(7.223608);
+        public static final double PIVOT_HEIGHT_FROM_ELEVATOR_TOP = Units.inchesToMeters(7.2);
         
         public static final InterpolatingDoubleTreeMap ANGLE_MAP_DEFENDED = new InterpolatingDoubleTreeMap();
         static{
@@ -443,7 +453,7 @@ public final class Constants{
         public static final double SENSOR_TO_MECH_RATIO = 1.0;
         
         /* Neutral Modes */
-        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Coast;
+        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
         
         /* Current Limits */
         public static final int SUPPLY_CURRENT_LIMIT = 35;
@@ -464,7 +474,7 @@ public final class Constants{
         public static final double KS = 0.0;
         public static final double KV = 0.0;
         public static final double KA = 0.0;
-        public static final double KG = 0.4;
+        public static final double KG = 0.415;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA, GravityTypeValue.Elevator_Static);
 
         public static final double TARGET_THRESHOLD = 0.1; // inches
@@ -475,9 +485,12 @@ public final class Constants{
         public static final double ENCODER_MIN = 0.0; //relative
 
         public static final double HOME_HEIGHT = 0.0;
-        public static final double SUBWOOFER_HEIGHT = 3.5;
+        public static final double HOME_HEIGHT_ENDGAME = 0.0;
+        public static final double SUBWOOFER_HEIGHT = 4.889;//3.5;
         public static final double AMP_HEIGHT = MAX_HEIGHT-0.5;
         public static final double TRAP_CHAIN_HEIGHT = MAX_HEIGHT;
+
+        public static final double AUTO_ZERO_VOLTAGE = 0.0;
 
         public static final double REHOME_VOLTAGE = -5.0;
         public static final double REHOME_CURRENT_THRESHOLD = 0.0;
@@ -531,6 +544,7 @@ public final class Constants{
     public static enum ElevatorPivotPosition{
         NONE(ElevatorConstants.HOME_HEIGHT, PivotConstants.HOME_ANGLE),
         HOME(ElevatorConstants.HOME_HEIGHT, PivotConstants.HOME_ANGLE), 
+        HOME_ENDGAME(ElevatorConstants.HOME_HEIGHT_ENDGAME, PivotConstants.HOME_ANGLE_ENDGAME), 
         AMP(ElevatorConstants.AMP_HEIGHT, PivotConstants.AMP_ANGLE), 
         SUBWOOFER(ElevatorConstants.SUBWOOFER_HEIGHT, PivotConstants.SUBWOOFER_ANGLE),
         CHAIN(ElevatorConstants.HOME_HEIGHT, PivotConstants.CHAIN_ANGLE),

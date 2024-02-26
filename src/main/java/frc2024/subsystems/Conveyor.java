@@ -95,6 +95,6 @@ public class Conveyor extends SubsystemBase{
                 runnable = () -> stop();
                 break;
         }
-        return Commands.run(runnable, this);
+        return run(runnable);
     }
 }

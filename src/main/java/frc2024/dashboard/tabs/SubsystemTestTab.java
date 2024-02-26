@@ -4,6 +4,8 @@
 
 package frc2024.dashboard.tabs;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -39,7 +41,6 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
     /* Climber */
     private static GenericEntry m_climberHeight_Target;
     private GenericEntry m_climberHeight;
-    private static GenericEntry m_climberKP;
 
     /* Conveyor */
     private static GenericEntry m_conveyor_DutyCycle;
@@ -48,7 +49,6 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
     /* Elevator */
     private static GenericEntry m_elevatorHeight_Target;
     private GenericEntry m_elevatorHeight;
-    private static GenericEntry m_elevatorKP;
 
     /* Intake */
     private static GenericEntry m_intake_DutyCycle;
@@ -57,10 +57,8 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
     /* Pivot */
     private static GenericEntry m_pivotAngle_Target;
     private GenericEntry m_pivotAngle;
-    private static GenericEntry m_pivotKP;
         
     /* Shooter */
-    private static GenericEntry m_shooter_DutyCycle;
     private static GenericEntry m_shooter_Velocity;
     private GenericEntry m_shooter_MotorVelocity;
 
@@ -107,7 +105,6 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
         m_shooter_MotorVelocity = createNumberEntry("Shooter Motor RPM", 0, new EntryProperties(5, 0, 2, 1));
 
         if(ShuffleboardConstants.UPDATE_SHOOTER){
-            m_shooter_DutyCycle = createNumberEntry("Shooter Target Duty Cycle", 0.0, new EntryProperties(5, 1, 2, 1));
             m_shooter_Velocity = createNumberEntry("Shooter Target Velocity", 0.0, new EntryProperties(6, 1, 2, 1));
         }
     }
@@ -116,47 +113,41 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
     public void periodic() {
         /* Climber */
         if(ShuffleboardConstants.UPDATE_CLIMBER){
-            m_climberHeight.setDouble(climber.getClimberHeight());
-
-            climber.configPID(ClimberConstants.PID_CONSTANTS.withP(m_climberKP.get().getDouble()));
             climber.setTargetPosition(getClimberHeight());
         }
 
         /* Conveyor */
         if(ShuffleboardConstants.UPDATE_CONVEYOR){
-            m_conveyor_MotorVelocity.setDouble(conveyor.getRPM());
             conveyor.setConveyorOutput(getConveyorDutyCycle());
         }
 
         /* Elevator */
         if(ShuffleboardConstants.UPDATE_ELEVATOR){
-            m_elevatorHeight.setDouble(elevator.getElevatorPosition());
-
-            elevator.configPID(ClimberConstants.PID_CONSTANTS.withP(m_elevatorKP.get().getDouble()));
             elevator.setTargetHeight(getElevatorHeight());
         }
 
         /* Intake */
         if(ShuffleboardConstants.UPDATE_INTAKE){
-            m_intake_MotorVelocity.setDouble(intake.getRPM());
-
             intake.setIntakeOutput(getIntakeDutyCycle());
         }
 
         /* Pivot */
         if(ShuffleboardConstants.UPDATE_PIVOT){
-            m_pivotAngle.setDouble(pivot.getPivotAngle().getDegrees());
-
-            pivot.configPID(ClimberConstants.PID_CONSTANTS.withP(m_pivotKP.get().getDouble()));
             pivot.setTargetAngle(new Rotation2d(getPivotAngle()));
         }
 
         /* Shooter */
         if(ShuffleboardConstants.UPDATE_SHOOTER){
-            m_shooter_MotorVelocity.setDouble(shooter.getRPM());
-
             shooter.setTargetVelocity(getShooterVelocity());
         }
+
+        m_shooter_MotorVelocity.setDouble(shooter.getRPM());
+        m_pivotAngle.setDouble(pivot.getPivotAngle().getDegrees());
+        m_intake_MotorVelocity.setDouble(intake.getRPM());
+        m_elevatorHeight.setDouble(elevator.getElevatorPosition());
+        m_conveyor_MotorVelocity.setDouble(conveyor.getRPM());
+        m_climberHeight.setDouble(climber.getClimberHeight());
+
     }
 
     /* Climber */

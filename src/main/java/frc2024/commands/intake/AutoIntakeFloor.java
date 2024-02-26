@@ -45,7 +45,7 @@ public class AutoIntakeFloor extends SequentialCommandGroup {
             SwerveConstants.VISION_ROTATION_CONSTANTS, 
             Limelight.INTAKE)
                 .alongWith(
-                    new IntakeFloor(elevator, pivot, conveyor, intake)
+                    new IntakeFloor(elevator, pivot, conveyor, intake, () -> false)
                         .onlyWhile(() -> Vision.getTY(Limelight.INTAKE) < VisionConstants.AUTO_INTAKE_Y_THRESHOLD)
                 )
             .finallyDo((interrupted) -> new SuperstructureToPosition(ElevatorPivotPosition.HOME, elevator, pivot))
@@ -62,7 +62,7 @@ public class AutoIntakeFloor extends SequentialCommandGroup {
             SwerveConstants.VISION_ROTATION_CONSTANTS, 
             Limelight.INTAKE)
                 .alongWith(
-                    new IntakeFloor(elevator, pivot, conveyor, intake)
+                    new IntakeFloor(elevator, pivot, conveyor, intake, () -> false)
                         .onlyWhile(() -> Vision.getTY(Limelight.INTAKE) < VisionConstants.AUTO_INTAKE_Y_THRESHOLD)
                 )
             .finallyDo((interrupted) -> new SuperstructureToPosition(ElevatorPivotPosition.HOME, elevator, pivot))

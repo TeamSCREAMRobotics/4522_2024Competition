@@ -112,7 +112,8 @@ public class Controlboard{
 
     public static Trigger manualMode(){
     /* Changes how the angle/height of the pivot and elevator are input */
-        return operatorController_Command.povRight();
+        return new Trigger(() -> buttonBoard.getRawSwitch(1))
+            .or(operatorController_Command.povRight());
     }
 
     /* Automation */
@@ -131,26 +132,31 @@ public class Controlboard{
         return new Trigger(() -> buttonBoard.getRawSwitch(3));
     }
 
-    public static final Trigger autoClimb(){
-        return new Trigger(() -> false);
+    public static final BooleanSupplier endGameMode(){
+        return new Trigger(() -> buttonBoard.getRawSwitch(2));
     }
 
-    public static Trigger snapToSpeaker(){
+    public static final Trigger autoClimb(){
+        return new Trigger(() -> buttonBoard.getRawButton(2));
+    }
+
+    public static final Trigger autoZero(){
+        return new Trigger(() -> buttonBoard.getRawButton(3));
+    }
+
+    public static final Trigger snapToSpeaker(){
         return driverController_Command.a();
     }
 
     /* Climber */
     public static final DoubleSupplier getManualClimberOutput(){
-        return () -> -buttonBoard.getBigSwitchY();//(operatorController_Command.getLeftTriggerAxis() - operatorController_Command.getRightTriggerAxis()); //Up POV on the button board
+        return () -> -buttonBoard.getBigSwitchY();
+        //(operatorController_Command.getLeftTriggerAxis() - operatorController_Command.getRightTriggerAxis()); //Up POV on the button board
     }
 
     /* Shooter/Conveyor */
     public static final Trigger manuallyShoot(){
         return new Trigger(() -> buttonBoard.getRawButton(1));
-        // return operatorController_Command.povUp();
-    }
-    public static final Trigger testA(){
-        return new Trigger(() -> buttonBoard.getRawButton(5));
     }
     public static final Trigger ejectThroughShooter(){
         return operatorController_Command.povDown();
@@ -166,7 +172,7 @@ public class Controlboard{
     }
 
     public static final Trigger resetPivotAngle(){
-        return new Trigger(() -> buttonBoard.getRawButton(2));
+        return new Trigger(() -> buttonBoard.getRawButton(4));
     }
 
     /* Elevator */
@@ -175,12 +181,20 @@ public class Controlboard{
     }
     
     public static final Trigger resetElevatorHeight(){
-        return new Trigger(() -> buttonBoard.getRawButton(3));
+        return new Trigger(() -> buttonBoard.getRawButton(6));
     }
 
     /* Elevator AND Pivot */    
+    public static final Trigger goToChainPosition(){
+        return new Trigger(() -> buttonBoard.getRawButton(8));
+    }
+
     public static final Trigger goToHomePosition(){
-        return new Trigger(() -> buttonBoard.getRawButton(9)).and(new Trigger(defendedMode()).negate());
+        return new Trigger(() -> buttonBoard.getRawButton(9)).and(new Trigger(endGameMode()).negate());
+    }
+    
+    public static final Trigger goToHomePosition_EndGame(){
+        return new Trigger(() -> buttonBoard.getRawButton(9)).and(new Trigger(endGameMode()));
     }
     
     public static final Trigger goToSubwooferPosition(){
@@ -188,19 +202,16 @@ public class Controlboard{
     }
     
     public static final Trigger goToAmpPosition(){
-        return new Trigger(() -> buttonBoard.getRawButton(11)).and(new Trigger(defendedMode()).negate());
+        return new Trigger(() -> buttonBoard.getRawButton(11));
     }
 
     public static final Trigger goToPodiumPosition(){
-        return new Trigger(() -> buttonBoard.getRawButton(12)).and(new Trigger(defendedMode()).negate());
+        return new Trigger(() -> buttonBoard.getRawButton(12)).and(new Trigger(defendedMode()).negate())
+            .and(new Trigger(endGameMode()).negate());
     }
 
-    public static final Trigger goToChainPosition(){
-        return new Trigger(() -> buttonBoard.getRawButton(8));
-    }
-    
     public static final Trigger goToTrapPosition(){
-        return new Trigger(() -> false);
+        return new Trigger(() -> buttonBoard.getRawButton(12)).and(new Trigger(endGameMode()));
     }
     
     public static final Trigger goToSubwooferPositionDefended(){
@@ -208,7 +219,8 @@ public class Controlboard{
     }
 
     public static final Trigger goToPodiumPositionDefended(){
-        return new Trigger(() -> buttonBoard.getRawButton(12)).and(defendedMode());
+        return new Trigger(() -> buttonBoard.getRawButton(12)).and(defendedMode())
+            .and(new Trigger(endGameMode()).negate());
     }
 
     /* Intake */

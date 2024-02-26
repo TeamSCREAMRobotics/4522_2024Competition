@@ -4,6 +4,8 @@
 
 package frc2024.commands.intake;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,10 +28,10 @@ import frc2024.subsystems.Pivot;
 
 public class IntakeFloor extends SequentialCommandGroup {
   
-  public IntakeFloor(Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake) {
+  public IntakeFloor(Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake, BooleanSupplier endGame) {
     addCommands(
-        elevator.heightCommand(ElevatorConstants.HOME_HEIGHT)
-            .alongWith(pivot.angleCommand(PivotConstants.HOME_ANGLE))
+        elevator.heightCommand(endGame.getAsBoolean() ? ElevatorConstants.HOME_HEIGHT_ENDGAME : ElevatorConstants.HOME_HEIGHT)
+            .alongWith(pivot.angleCommand(endGame.getAsBoolean() ? PivotConstants.HOME_ANGLE_ENDGAME : PivotConstants.HOME_ANGLE))
             .alongWith(intake.outputCommand(IntakeConstants.INTAKE_OUTPUT))
             .alongWith(conveyor.outputCommand(ConveyorConstants.TRANSFER_OUTPUT))
             .finallyDo(

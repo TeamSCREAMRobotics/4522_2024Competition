@@ -46,7 +46,7 @@ public class ShuffleboardTabManager extends SubsystemBase {
      * @param includeDebug Whether to include additional debug tabs.
      */
     public void addTabs(boolean includeDebug){
-        m_tabs.add(new MatchTab(swerve));
+        //m_tabs.add(new MatchTab(swerve, elevator, pivot));
         if (includeDebug) {
             if(swerve != null){
                 m_tabs.add(new SwerveTab(swerve));

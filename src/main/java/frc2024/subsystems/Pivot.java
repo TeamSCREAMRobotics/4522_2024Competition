@@ -87,6 +87,10 @@ public class Pivot extends SubsystemBase{
         return Math.abs(getPivotError().getDegrees()) < PivotConstants.TARGET_THRESHOLD;
     }
 
+    public double getPivotCurrent(){
+        return m_pivotMotor.getSupplyCurrent().getValueAsDouble();
+    }
+
     public void stop(){
         m_pivotMotor.stopMotor();
     }
