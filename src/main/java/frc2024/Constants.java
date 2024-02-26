@@ -25,6 +25,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc2024.subsystems.Pivot;
 
 /**
  * A class for constants used in various places in the project.
@@ -419,31 +420,27 @@ public final class Constants{
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA, GravityTypeValue.Arm_Cosine);
 
-        public static final Rotation2d BUMPER_ZERO = Rotation2d.fromDegrees(0.0);// 0.7 //6.85546875
-
-        public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(14.0).minus(BUMPER_ZERO);
+        public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(14.0);
         public static final Rotation2d HOME_ANGLE_ENDGAME = Rotation2d.fromDegrees(0.0);
-        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(-2.8125).minus(BUMPER_ZERO);
-        public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(18.6328).minus(BUMPER_ZERO);
-        public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(24.0).minus(BUMPER_ZERO);
-        public static final Rotation2d CHAIN_ANGLE = Rotation2d.fromDegrees(26.103).minus(BUMPER_ZERO);
-        public static final Rotation2d PODIUM_ANGLE = Rotation2d.fromDegrees(22.24).minus(BUMPER_ZERO); //Robot Angle = -154.53 deg
-        public static final Rotation2d PODIUM_DEFENDED_ANGLE = Rotation2d.fromDegrees(33.05).minus(BUMPER_ZERO); //Robot Angle = -154.53 deg
-        public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(44.0).minus(BUMPER_ZERO);
+        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(-2.8125);
+        public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(18.6328);
+        public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(24.0);
+        public static final Rotation2d CHAIN_ANGLE = Rotation2d.fromDegrees(26.103);
+        public static final Rotation2d PODIUM_ANGLE = Rotation2d.fromDegrees(22.24); //Robot Angle = -154.53 deg
+        public static final Rotation2d PODIUM_DEFENDED_ANGLE = Rotation2d.fromDegrees(33.05); //Robot Angle = -154.53 deg
+        public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(44.0);
 
         public static final double AUTO_ZERO_OUTPUT = 0.0;
 
         public static final Rotation2d ABSOLUTE_ENCODER_OFFSET = Rotation2d.fromRotations(-0.207275390625);
-        public static final Rotation2d RELATIVE_ENCODER_TO_HORIZONTAL = Rotation2d.fromDegrees(52.07).minus(BUMPER_ZERO);
+        public static final Rotation2d RELATIVE_ENCODER_TO_HORIZONTAL = Rotation2d.fromDegrees(52.07); // TODO RE-MEASURE
 
-        public static final double PIVOT_HEIGHT_HOME = Units.inchesToMeters(19.741169);
-        public static final double PIVOT_HEIGHT_FROM_ELEVATOR_TOP = Units.inchesToMeters(7.2);
-        
-        public static final InterpolatingDoubleTreeMap ANGLE_MAP_DEFENDED = new InterpolatingDoubleTreeMap();
-        static{
-            // (distance, angle (degrees))
-            ANGLE_MAP_DEFENDED.put(0.0, 0.0);
-        }
+        public static final double AXLE_HEIGHT_HOME = Units.inchesToMeters(16.640069);
+        public static final double AXLE_HEIGHT_TOP = Units.inchesToMeters(38.059638);
+        public static final double AXLE_DISTANCE_FROM_ELEVATOR_TOP = Units.inchesToMeters(9.975600);
+        public static final double AXLE_DISTANCE_FROM_LENS_HOME = Units.inchesToMeters(9.189772);
+        public static final double AXLE_DISTANCE_FROM_LENS_TOP = Units.inchesToMeters(12.966620);
+        public static final double SHOOTER_DISTANCE_FROM_AXLE = Units.inchesToMeters(3.100600);
     }
 
     public static final class ElevatorConstants { //TODO all values
@@ -479,18 +476,17 @@ public final class Constants{
 
         public static final double TARGET_THRESHOLD = 0.1; // inches
 
-        public static final double MAX_HEIGHT = 23.835; // inches
+        public static final double MAX_HEIGHT = 21.75; // inches
         public static final double MIN_HEIGHT = 0.0; // inches
-        public static final double ENCODER_MAX = 3.05; //relative
-        public static final double ENCODER_MIN = 0.0; //relative
+        public static final double ENCODER_MAX = 3.05; // relative
+        public static final double ENCODER_MIN = 0.0; // relative
+        public static final double HOME_HEIGHT_FROM_FLOOR = 26.553805;
 
         public static final double HOME_HEIGHT = 0.0;
         public static final double HOME_HEIGHT_ENDGAME = 0.0;
-        public static final double SUBWOOFER_HEIGHT = 4.889;//3.5;
+        public static final double SUBWOOFER_HEIGHT = 4.889; //3.5;
         public static final double AMP_HEIGHT = MAX_HEIGHT-0.5;
         public static final double TRAP_CHAIN_HEIGHT = MAX_HEIGHT;
-
-        public static final double AUTO_ZERO_VOLTAGE = 0.0;
 
         public static final double REHOME_VOLTAGE = -5.0;
         public static final double REHOME_CURRENT_THRESHOLD = 0.0;
@@ -541,7 +537,7 @@ public final class Constants{
         public static final double TRANSFER_OUTPUT = 0.75;
     } 
 
-    public static enum ElevatorPivotPosition{
+    public static enum SuperstructureState{
         NONE(ElevatorConstants.HOME_HEIGHT, PivotConstants.HOME_ANGLE),
         HOME(ElevatorConstants.HOME_HEIGHT, PivotConstants.HOME_ANGLE), 
         HOME_ENDGAME(ElevatorConstants.HOME_HEIGHT_ENDGAME, PivotConstants.HOME_ANGLE_ENDGAME), 
@@ -551,13 +547,14 @@ public final class Constants{
         PODIUM(ElevatorConstants.HOME_HEIGHT, PivotConstants.PODIUM_ANGLE),
         PODIUM_DEFENDED(ElevatorConstants.MAX_HEIGHT, PivotConstants.PODIUM_DEFENDED_ANGLE),
         TRAP_CHAIN(ElevatorConstants.TRAP_CHAIN_HEIGHT, PivotConstants.TRAP_CHAIN_ANGLE),
-        SUBWOOFER_DEFENDED(ElevatorConstants.MAX_HEIGHT, PivotConstants.SUBWOOFER_ANGLE_DEFENDED);
+        SUBWOOFER_DEFENDED(ElevatorConstants.MAX_HEIGHT, PivotConstants.SUBWOOFER_ANGLE_DEFENDED),
+        AUTO_FIRE(ElevatorConstants.HOME_HEIGHT, PivotConstants.HOME_ANGLE);
 
         public double elevatorPosition;
         public Rotation2d pivotAngle;
         public boolean limitPivotMotion;
 
-        private ElevatorPivotPosition(double elevatorPosition, Rotation2d pivotAngle){
+        private SuperstructureState(double elevatorPosition, Rotation2d pivotAngle){
             this.elevatorPosition = elevatorPosition;
             this.pivotAngle = pivotAngle;
         }
@@ -655,7 +652,7 @@ public final class Constants{
         public static final Translation2d BLUE_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(7).get().getTranslation().toTranslation2d();
         public static final Translation2d RED_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(4).get().getTranslation().toTranslation2d();
 
-        public static final double SPEAKER_OPENING_HEIGHT = 2.098;
+        public static final double SPEAKER_OPENING_HEIGHT = Units.inchesToMeters(80.567496);
 
         public static final double SPEAKER_TAG_HEIGHT = 1.468864;
         public static final double STAGE_TAG_HEIGHT = 1.320884;

@@ -13,6 +13,7 @@ import com.team4522.lib.util.ScreamUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -20,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc2024.RobotContainer;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
-import frc2024.Constants.ElevatorPivotPosition;
+import frc2024.Constants.SuperstructureState;
 import frc2024.Constants.FieldConstants;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.ShootState;
@@ -37,6 +38,7 @@ import frc2024.subsystems.swerve.Swerve;
 public class AutoFire extends SequentialCommandGroup{
 
     public static final double GRAVITY = 9.802; 
+    public static final Interpolator<Double> pivotDistanceInterpolator = Interpolator.forDouble();
 
     /* public AutoFire(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, BooleanSupplier defense){
         addCommands(
@@ -54,13 +56,14 @@ public class AutoFire extends SequentialCommandGroup{
         );
     } */
 
-    public AutoFire(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, BooleanSupplier defense){
-        RobotContainer.setCurrentPosition(ElevatorPivotPosition.NONE);
+    public AutoFire(Shooter shooter, Elevator elevator, Pivot pivot, BooleanSupplier defense){
+        RobotContainer.currentPosition = SuperstructureState.AUTO_FIRE;
         addCommands(
-            shooter.velocityCommand(() -> calculateTimeVelocityAngle(elevator.getElevatorHeight()).velocityRPM())
+            shooter.velocityCommand(() -> calculateShotTrajectory(elevator.getElevatorHeight()).velocityRPM())
 /*                 .alongWith(elevator.heightCommand(
                     () -> defense.getAsBoolean() ? ElevatorConstants.MAX_HEIGHT : ElevatorConstants.MIN_HEIGHT)) */
-                .alongWith(pivot.angleCommand(() -> calculateTimeVelocityAngle(elevator.getElevatorHeight()).pivotAngle()))
+                .alongWith(pivot.angleCommand(() -> calculateShotTrajectory(elevator.getElevatorHeight()).pivotAngle()))
+            .onlyWhile(() -> getDistanceToSpeaker().isPresent())
         );
     }
 
@@ -68,32 +71,31 @@ public class AutoFire extends SequentialCommandGroup{
         return Vision.getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER);
     }
 
-    public static ShootState calculateTimeVelocityAngle(double elevatorHeight) {
-        double distanceToTarget = getDistanceToSpeaker().getAsDouble() + 0.2202;
+    // From FRC 1757 Westwood Robotics 
+    // https://github.com/1757WestwoodRobotics/2024-Crescendo/blob/main/commands/shooter/alignandaim.py
+
+    public static ShootState calculateShotTrajectory(double elevatorHeight) {
+        double distanceToTarget = getDistanceToSpeaker().getAsDouble() + getPivotDistanceFromLens(elevatorHeight);
+        double absoluteElevatorHeight = elevatorHeight + ElevatorConstants.HOME_HEIGHT_FROM_FLOOR;
+        double shooterDistance = PivotConstants.AXLE_DISTANCE_FROM_ELEVATOR_TOP - PivotConstants.SHOOTER_DISTANCE_FROM_AXLE;
 
         double extraYVel = Conversions.falconRPSToMechanismMPS(ShooterConstants.TRAJECTORY_VELOCITY_EXTRA / 60.0, ShooterConstants.WHEEL_CIRCUMFERENCE, 1.0);
 
         double vy = Math.sqrt(
                 extraYVel * extraYVel
-                + (FieldConstants.SPEAKER_OPENING_HEIGHT - (Units.inchesToMeters(elevatorHeight) - PivotConstants.PIVOT_HEIGHT_FROM_ELEVATOR_TOP)) * 2 * GRAVITY
+                + (FieldConstants.SPEAKER_OPENING_HEIGHT - (Units.inchesToMeters(absoluteElevatorHeight) - shooterDistance)) * 2 * GRAVITY
         );
         double airtime = (vy - extraYVel) / GRAVITY;
         double vx = distanceToTarget / airtime;
 
-        double launchAngleRads = Math.atan2(vy, vx); // radians
+        double launchAngleRads = Math.atan2(vy, vx);
         Rotation2d launchAngle = Rotation2d.fromRadians(launchAngleRads).unaryMinus().plus(PivotConstants.RELATIVE_ENCODER_TO_HORIZONTAL);
-        double launchVel = Conversions.mpsToFalconRPS(Math.sqrt(vx * vx + vy * vy), ShooterConstants.WHEEL_CIRCUMFERENCE, 1.0) * 60.0; // rpm
+        double launchVelRPM = Conversions.mpsToFalconRPS(Math.sqrt(vx * vx + vy * vy), ShooterConstants.WHEEL_CIRCUMFERENCE, 1.0) * 60.0; // rpm
 
-        return new ShootState(launchAngle, 0.0, launchVel);
-    }
-    
-    /* public Rotation2d calculateAngle(double distance){
-        double x = distance + (9.0/12.0);
-        double y = (78.75/12.0)-(16.5/12.0);
-        return Rotation2d.fromRadians(Math.atan2(y, x));
+        return new ShootState(launchAngle, 0.0, launchVelRPM);
     }
 
-    public OptionalDouble getDistanceToSpeaker(){
-        return Vision.getDistanceToTarget(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER);
-    } */
+    public static double getPivotDistanceFromLens(double elevatorHeight){
+         return pivotDistanceInterpolator.interpolate(PivotConstants.AXLE_DISTANCE_FROM_LENS_HOME, PivotConstants.AXLE_DISTANCE_FROM_LENS_TOP, elevatorHeight / ElevatorConstants.MAX_HEIGHT);
+    }
 }

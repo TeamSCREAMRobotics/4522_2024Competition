@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
-import frc2024.Constants.ElevatorPivotPosition;
+import frc2024.Constants.SuperstructureState;
 import frc2024.Constants.IntakeConstants;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.ShooterConstants;

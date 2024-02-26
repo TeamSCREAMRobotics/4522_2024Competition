@@ -29,7 +29,7 @@ public class AutoZero extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elevator.voltageCommand(ElevatorConstants.AUTO_ZERO_VOLTAGE);
+    elevator.voltageCommand(ElevatorConstants.REHOME_VOLTAGE);
     pivot.dutyCycleCommand(PivotConstants.AUTO_ZERO_OUTPUT);
   }
 

@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.Constants.ConveyorConstants;
-import frc2024.Constants.ElevatorPivotPosition;
+import frc2024.Constants.SuperstructureState;
 import frc2024.Constants.Ports;
 
 public class Conveyor extends SubsystemBase{
@@ -77,24 +77,25 @@ public class Conveyor extends SubsystemBase{
         return Commands.runOnce(() -> stop(), this);
     }
 
-    public Command scoreCommand(Supplier<ElevatorPivotPosition> position){
-        Runnable runnable;
+    public Command scoreCommand(Supplier<SuperstructureState> position){
+        Command command;
         switch (position.get()) {
             case AMP:
             case TRAP_CHAIN:
-                runnable = () -> setConveyorOutput(ConveyorConstants.AMP_TRAP_OUTPUT);
+                command = outputCommand(ConveyorConstants.AMP_TRAP_OUTPUT);
                 break;
             case CHAIN:
             case PODIUM_DEFENDED:
             case PODIUM:
             case SUBWOOFER:
             case SUBWOOFER_DEFENDED:
-                runnable = () -> setConveyorOutput(ConveyorConstants.SHOOT_SPEED);
+            case AUTO_FIRE:
+                command = outputCommand(ConveyorConstants.SHOOT_SPEED);
                 break;
             default:
-                runnable = () -> stop();
+                command = stopCommand();
                 break;
         }
-        return run(runnable);
+        return command;
     }
 }

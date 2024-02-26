@@ -8,6 +8,7 @@ import org.photonvision.PhotonUtils;
 
 import com.team4522.lib.util.AllianceFlippable;
 import com.team4522.lib.util.LimelightHelpers;
+import com.team4522.lib.util.RunOnce;
 import com.team4522.lib.util.ScreamUtil;
 
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -31,14 +32,20 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.Constants.FieldConstants;
 import frc2024.Constants.VisionConstants;
 
-public class Vision {
+public class Vision extends SubsystemBase{
 
-    static MedianFilter test = new MedianFilter(5);
-    
+    private static final LinearFilter txFilter = LinearFilter.movingAverage(8);
+    private static final LinearFilter tyFilter = LinearFilter.movingAverage(8);
+    private static final LinearFilter taFilter = LinearFilter.movingAverage(8);
+    private static final LinearFilter distanceFilter = LinearFilter.movingAverage(5);
+
+    private static final RunOnce filterReset = new RunOnce();
+
     public enum Limelight{
         TRAP("limelight-trap", new Pose3d()), 
         SHOOTER("limelight-shooter", new Pose3d(0.286, -0.162, 0.233, new Rotation3d(0, Math.toRadians(27.0), Math.toRadians(180.0)))), // z: 0.220615
@@ -90,15 +97,15 @@ public class Vision {
     }
 
     public static double getTX(Limelight limelight){
-        return LimelightHelpers.getTX(limelight.name);
+        return txFilter.calculate(LimelightHelpers.getTX(limelight.name));
     }
 
     public static double getTY(Limelight limelight){
-        return LimelightHelpers.getTY(limelight.name);
+        return tyFilter.calculate(LimelightHelpers.getTY(limelight.name));
     }
 
     public static double getTA(Limelight limelight){
-        return LimelightHelpers.getTA(limelight.name);
+        return taFilter.calculate(LimelightHelpers.getTA(limelight.name));
     }
 
     public static boolean getTV(Limelight limelight){
@@ -130,10 +137,14 @@ public class Vision {
     }
 
     public static OptionalDouble getDistanceToTargetMeters(double targetHeight, Limelight limelight){
+        if(LimelightHelpers.getTY(Limelight.SHOOTER.name) == 0.0 || !getTV(Limelight.SHOOTER)){
+            return OptionalDouble.empty();
+        }
+
         double goal_theta = limelight.mountPose.getRotation().getY() + Math.toRadians(getTY(Limelight.SHOOTER));
         double height_diff = targetHeight - limelight.mountPose.getZ();
 
-        return OptionalDouble.of(height_diff / Math.tan(goal_theta));
+        return OptionalDouble.of(distanceFilter.calculate(height_diff / Math.tan(goal_theta)));
     }
 
     public static double getFusedDistanceToSpeaker(Limelight limelight, Pose2d currentPose){
@@ -144,7 +155,6 @@ public class Vision {
             return sum / 2;
         }
         return sum;
-        //TODO look into Kalman filter
     }
 
     public static TimestampedVisionMeasurement getTimestampedVisionMeasurement(Limelight limelight){
@@ -190,6 +200,21 @@ public class Vision {
 
     public static void setPipeline(BackPipeline pipeline){
         setPipeline(Limelight.TRAP, pipeline.index);
+    }
+
+    @Override
+    public void periodic() {
+        if(!getTV(Limelight.SHOOTER)){
+            filterReset.runOnce(
+                () -> {
+                    txFilter.reset();
+                    tyFilter.reset();
+                    taFilter.reset();
+                    distanceFilter.reset();
+                });
+        } else {
+            filterReset.reset();
+        }
     }
 
     public Command intakePipelineCommand(IntakePipeline pipeline){
