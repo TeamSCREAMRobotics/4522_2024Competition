@@ -10,12 +10,12 @@ import frc2024.Constants.PivotConstants;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Pivot;
 
-public class AutoZero extends Command {
+public class RehomeSuperstructure extends Command {
 
   Elevator elevator;
   Pivot pivot;
 
-  public AutoZero(Elevator elevator, Pivot pivot) {
+  public RehomeSuperstructure(Elevator elevator, Pivot pivot) {
     addRequirements(elevator, pivot);
 
     this.elevator = elevator;

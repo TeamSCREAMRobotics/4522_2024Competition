@@ -6,6 +6,8 @@ package frc2024.commands.intake;
 
 import java.util.function.BooleanSupplier;
 
+import com.team4522.lib.util.COTSFalconSwerveConstants.driveGearRatios;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,8 +40,8 @@ public class IntakeFloor extends SequentialCommandGroup {
               () -> {
                 intake.stop();
                 conveyor.stop();
-              }
-            )
+              })
+            .andThen(Controlboard.driverRumbleCommand(RumbleType.kBothRumble, 0.5, 0.2))
       );
   }
 }

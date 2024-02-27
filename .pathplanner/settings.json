@@ -3,20 +3,19 @@
   "robotLength": 0.97,
   "holonomicMode": true,
   "pathFolders": [
-    "2Amp",
-    "AmpSide3",
-    "AmpSide6",
-    "AmpSide7",
+    "3AmpSide_Center",
+    "5AmpSide_Center",
+    "6AmpSide_Center",
+    "7AmpSide_Center",
+    "4AmpSide_Close",
     "CenterPiecePathfinding",
-    "Close4",
-    "AmpSide5",
-    "SourceSide4",
-    "Sweep"
+    "2ScoreAmp_Center",
+    "4Source_Center"
   ],
   "autoFolders": [],
   "defaultMaxVel": 4.98,
   "defaultMaxAccel": 4.9,
   "defaultMaxAngVel": 570.0,
-  "defaultMaxAngAccel": 480.0,
-  "maxModuleSpeed": 3.0
+  "defaultMaxAngAccel": 500.0,
+  "maxModuleSpeed": 4.98
 }

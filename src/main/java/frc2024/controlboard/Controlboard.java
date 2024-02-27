@@ -10,8 +10,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc2024.Constants.SwerveConstants;
@@ -35,12 +37,16 @@ public class Controlboard{
 
     private static boolean fieldCentric = true;
 
-    public static void setDriverRumble(RumbleType type, double value){
-        driverController.setRumble(type, value);
+    public static Command driverRumbleCommand(RumbleType type, double value, double time){
+        return new RunCommand(() -> driverController.setRumble(type, value))
+            .withTimeout(time)
+            .andThen(() -> driverController.setRumble(type, 0.0));
     }
 
-    public static void setOperatorRumble(RumbleType type, double value){
-        operatorController.setRumble(type, value);
+    public static Command operatorRumbleCommand(RumbleType type, double value, double time){
+        return new RunCommand(() -> operatorController.setRumble(type, value))
+            .withTimeout(time)
+            .andThen(() -> operatorController.setRumble(type, 0.0));
     }
 
     /**
@@ -140,7 +146,7 @@ public class Controlboard{
         return new Trigger(() -> buttonBoard.getRawButton(2));
     }
 
-    public static final Trigger autoZero(){
+    public static final Trigger rehome(){
         return new Trigger(() -> buttonBoard.getRawButton(3));
     }
 
@@ -151,7 +157,6 @@ public class Controlboard{
     /* Climber */
     public static final DoubleSupplier getManualClimberOutput(){
         return () -> -buttonBoard.getBigSwitchY();
-        //(operatorController_Command.getLeftTriggerAxis() - operatorController_Command.getRightTriggerAxis()); //Up POV on the button board
     }
 
     /* Shooter/Conveyor */

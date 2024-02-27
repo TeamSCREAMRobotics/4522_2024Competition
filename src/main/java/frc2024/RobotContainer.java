@@ -42,7 +42,7 @@ import frc2024.auto.Autonomous;
 import frc2024.auto.Autonomous.PPEvent;
 import frc2024.auto.Routines;
 import frc2024.commands.AutoFire;
-import frc2024.commands.AutoZero;
+import frc2024.commands.RehomeSuperstructure;
 import frc2024.commands.FeedForwardCharacterization;
 import frc2024.commands.SuperstructureToPosition;
 import frc2024.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
@@ -187,9 +187,9 @@ public class RobotContainer {
                 new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
                     .until((() -> superstructureAtTarget())).alongWith(m_shooter.idleCommand().alongWith(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()))));
 
-        Controlboard.autoZero()
+        Controlboard.rehome()
             .whileTrue(
-                new AutoZero(m_elevator, m_pivot)
+                new RehomeSuperstructure(m_elevator, m_pivot)
             );
 
         /* Intake */

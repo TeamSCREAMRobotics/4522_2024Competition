@@ -3,50 +3,34 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.5202357965343594,
-        "y": 6.827417706190619
+        "x": 1.36086297850199,
+        "y": 5.539225686154654
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.5202357965343594,
-        "y": 6.827417706190619
-      },
-      "isLocked": false,
-      "linkedName": "Amp3_1End"
-    },
-    {
-      "anchor": {
-        "x": 8.094593992326358,
-        "y": 7.412959533479694
-      },
-      "prevControl": {
-        "x": 7.094593992326358,
-        "y": 7.412959533479694
-      },
-      "nextControl": {
-        "x": 9.094593992326358,
-        "y": 7.412959533479694
+        "x": 1.9932481519741916,
+        "y": 4.883418839590889
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.171463749489552,
-        "y": 6.827417706190619
+        "x": 2.496814123442796,
+        "y": 4.286166175756032
       },
       "prevControl": {
-        "x": 5.23714987515567,
-        "y": 7.131899456380938
+        "x": 2.1103565174320065,
+        "y": 4.66091294522104
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Amp3_2End"
+      "linkedName": "Close4_1End"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1,
+      "waypointRelativePos": 0.1,
       "rotationDegrees": 0,
       "rotateFast": false
     }
@@ -55,7 +39,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.65,
+      "waypointRelativePos": 0.15,
       "command": {
         "type": "parallel",
         "data": {
@@ -75,15 +59,15 @@
     "maxVelocity": 4.98,
     "maxAcceleration": 4.9,
     "maxAngularVelocity": 570.0,
-    "maxAngularAcceleration": 480.0
+    "maxAngularAcceleration": 500.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 13.39249775375108,
+    "rotation": -27.0,
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "AmpSide3",
+  "folder": "4AmpSide_Close",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

@@ -3,6 +3,7 @@ package frc2024.commands;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import org.opencv.core.Mat.Tuple4;
 
@@ -39,7 +40,7 @@ import frc2024.subsystems.swerve.Swerve;
 
 public class AutoFire extends SequentialCommandGroup{
 
-    public static final double GRAVITY = 9.802; 
+    public static final double GRAVITY = 9.80665; 
     public static final Interpolator<Double> pivotDistanceInterpolator = Interpolator.forDouble();
 
     /* public AutoFire(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, BooleanSupplier defense){
@@ -61,10 +62,10 @@ public class AutoFire extends SequentialCommandGroup{
     public AutoFire(Shooter shooter, Elevator elevator, Pivot pivot, BooleanSupplier defense){
         RobotContainer.currentState = SuperstructureState.AUTO_FIRE;
         addCommands(
-            shooter.velocityCommand(() -> calculateShotTrajectory(elevator.getElevatorHeight()).velocityRPM())
+            shooter.velocityCommand(() -> calculateShotTrajectory(() -> elevator.getElevatorHeight()).velocityRPM())
 /*                 .alongWith(elevator.heightCommand(
                     () -> defense.getAsBoolean() ? ElevatorConstants.MAX_HEIGHT : ElevatorConstants.MIN_HEIGHT)) */
-                .alongWith(pivot.angleCommand(() -> calculateShotTrajectory(elevator.getElevatorHeight()).pivotAngle()))
+                .alongWith(pivot.angleCommand(() -> calculateShotTrajectory(() -> elevator.getElevatorHeight()).pivotAngle()))
             .onlyWhile(() -> Vision.getTV(Limelight.SHOOTER))
         );
     }
@@ -76,9 +77,9 @@ public class AutoFire extends SequentialCommandGroup{
     // From FRC 1757 Wolverines 
     // https://github.com/1757WestwoodRobotics/2024-Crescendo/blob/main/commands/shooter/alignandaim.py
 
-    public static ShootState calculateShotTrajectory(double elevatorHeight) {
+    public static ShootState calculateShotTrajectory(DoubleSupplier elevatorHeight) {
         double distanceToTarget = getDistanceToSpeaker() + getPivotDistanceFromLens(elevatorHeight);
-        double absoluteElevatorHeight = Units.inchesToMeters(elevatorHeight) + Units.inchesToMeters(26.553805 - 6.5);// + ElevatorConstants.HOME_HEIGHT_FROM_FLOOR;
+        double absoluteElevatorHeight = Units.inchesToMeters(elevatorHeight.getAsDouble()) + Units.inchesToMeters(20.0);// + ElevatorConstants.HOME_HEIGHT_FROM_FLOOR;
         double shooterDistance = PivotConstants.AXLE_DISTANCE_FROM_ELEVATOR_TOP - PivotConstants.SHOOTER_DISTANCE_FROM_AXLE;
 
         double extraYVel = Conversions.falconRPSToMechanismMPS(ShooterConstants.TRAJECTORY_VELOCITY_EXTRA / 60.0, ShooterConstants.WHEEL_CIRCUMFERENCE, 1.0);
@@ -87,6 +88,7 @@ public class AutoFire extends SequentialCommandGroup{
                 extraYVel * extraYVel
                 + (FieldConstants.SPEAKER_OPENING_HEIGHT - (absoluteElevatorHeight - shooterDistance)) * 2 * GRAVITY
         );
+        
         double airtime = (vy - extraYVel) / GRAVITY;
         double vx = distanceToTarget / airtime;
 
@@ -97,7 +99,7 @@ public class AutoFire extends SequentialCommandGroup{
         return new ShootState(launchAngle, 0.0, launchVelRPM);
     }
 
-    public static double getPivotDistanceFromLens(double elevatorHeight){
-         return pivotDistanceInterpolator.interpolate(PivotConstants.AXLE_DISTANCE_FROM_LENS_HOME, PivotConstants.AXLE_DISTANCE_FROM_LENS_TOP, elevatorHeight / ElevatorConstants.MAX_HEIGHT);
+    public static double getPivotDistanceFromLens(DoubleSupplier elevatorHeight){
+         return pivotDistanceInterpolator.interpolate(PivotConstants.AXLE_DISTANCE_FROM_LENS_HOME, PivotConstants.AXLE_DISTANCE_FROM_LENS_TOP, elevatorHeight.getAsDouble() / ElevatorConstants.MAX_HEIGHT);
     }
 }

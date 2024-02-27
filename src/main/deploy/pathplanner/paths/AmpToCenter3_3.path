@@ -3,53 +3,59 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.496814123442796,
-        "y": 4.286166175756032
+        "x": 4.171463749489552,
+        "y": 6.827417706190619
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0784990722523817,
-        "y": 4.707590884108322
+        "x": 5.171463749489552,
+        "y": 6.827417706190619
       },
       "isLocked": false,
-      "linkedName": "Close4_1End"
+      "linkedName": "Amp3_2End"
     },
     {
       "anchor": {
-        "x": 1.8644289499705946,
-        "y": 5.550936522700434
+        "x": 8.071172319234796,
+        "y": 5.808574926707628
       },
       "prevControl": {
-        "x": 1.6025666840730313,
-        "y": 5.550936522700434
+        "x": 7.239702924484309,
+        "y": 6.066213330714821
       },
       "nextControl": {
-        "x": 2.086934844340443,
-        "y": 5.550936522700434
+        "x": 8.902641713985282,
+        "y": 5.550936522700435
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.883271729453586,
-        "y": 5.550936522700434
+        "x": 4.171463749489552,
+        "y": 6.581490138729208
       },
       "prevControl": {
-        "x": 2.613922488900612,
-        "y": 5.539225686154653
+        "x": 5.939800067902559,
+        "y": 6.640044321458116
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Close4_2End"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": -4.76364169072614,
+      "rotateFast": true
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.65,
+      "waypointRelativePos": 0.55,
       "command": {
         "type": "parallel",
         "data": {
@@ -69,17 +75,17 @@
     "maxVelocity": 4.98,
     "maxAcceleration": 4.9,
     "maxAngularVelocity": 570.0,
-    "maxAngularAcceleration": 480.0
+    "maxAngularAcceleration": 500.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 22.011283197919333,
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "Close4",
+  "folder": "3AmpSide_Center",
   "previewStartingState": {
-    "rotation": -27.0,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true
