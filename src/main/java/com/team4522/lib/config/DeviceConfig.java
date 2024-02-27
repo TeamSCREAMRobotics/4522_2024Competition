@@ -212,6 +212,8 @@ public class DeviceConfig {
                     fx.getRotorPosition().setUpdateFrequency(updateFrequencyHz),
                     fx.getRotorVelocity().setUpdateFrequency(updateFrequencyHz),
                     fx.getSupplyCurrent().setUpdateFrequency(updateFrequencyHz),
+                    fx.getFault_ReverseHardLimit().setUpdateFrequency(updateFrequencyHz),
+                    fx.getFault_ForwardHardLimit().setUpdateFrequency(updateFrequencyHz),
                     fx.optimizeBusUtilization());
             }
         };
@@ -325,7 +327,7 @@ public class DeviceConfig {
         config.ForwardLimitAutosetPositionEnable = forwardEnable;
         config.ReverseLimitAutosetPositionEnable = reverseEnable;
         config.ForwardLimitAutosetPositionValue = forwardPosition;
-        config.ReverseLimitAutosetPositionValue = reversePosition;
+        //config.ReverseLimitAutosetPositionValue = reversePosition;
         return config;
     }
 

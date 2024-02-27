@@ -99,7 +99,7 @@ public class RobotContainer {
         Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, new Rotation2d()))));
 
         /* Conveyor */
-        Controlboard.ejectThroughShooter().whileTrue(m_conveyor.outputCommand(-0.85)).onFalse(m_conveyor.stopCommand());
+        Controlboard.ejectThroughIntake().whileTrue(m_conveyor.outputCommand(-0.85)).onFalse(m_conveyor.stopCommand());
         
         Controlboard.manuallyShoot().whileTrue(m_conveyor.outputCommand(0.45)).onFalse(m_conveyor.stopCommand());
 
@@ -171,7 +171,7 @@ public class RobotContainer {
                     .until((() ->  superstructureAtTarget())));
 
         /* Shooter */        
-        Controlboard.ejectThroughShooter()
+        Controlboard.ejectThroughIntake()
             .whileTrue(
                 m_shooter.dutyCycleCommand(ShooterConstants.EJECT_OUTPUT))
             .onFalse(m_shooter.stopCommand());
@@ -211,6 +211,12 @@ public class RobotContainer {
                 )
                     .onFalse(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()));
         
+        Controlboard.ejectThroughIntake()
+            .whileTrue(
+                m_intake.outputCommand(IntakeConstants.EJECT_OUTPUT)
+                    .alongWith(m_conveyor.outputCommand(ConveyorConstants.AMP_TRAP_OUTPUT)))
+            .onFalse(m_intake.stopCommand().alongWith(m_conveyor.stopCommand()));
+
         Controlboard.score()
             .whileTrue(m_conveyor.scoreCommand(getCurrentPosition()))
                 .onFalse(m_conveyor.stopCommand());
@@ -251,19 +257,14 @@ public class RobotContainer {
                 m_intake.outputCommand(IntakeConstants.INTAKE_OUTPUT)
                 .alongWith(m_conveyor.outputCommand(ConveyorConstants.TRANSFER_OUTPUT))
                 .until(m_conveyor.hasPiece())
-                .finallyDo(() -> {
-                        m_intake.stop();
-                        m_conveyor.stop();
+                .finallyDo((interrupted) -> {
+                        if(!interrupted){
+                            m_intake.stop();
+                            m_conveyor.stop();
+                        }
                 })),
             new PPEvent("StopIntake", m_intake.stopCommand().alongWith(m_conveyor.stopCommand())),
-            new PPEvent("StartAutoFire", 
-                new AutoFire(m_shooter, m_elevator, m_pivot, () -> false)
-                    .alongWith(new FaceVisionTarget(m_swerve, new DoubleSupplier[2], SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))),
-            new PPEvent("StopAutoFire", 
-                m_shooter.stopCommand()
-                    .alongWith(m_conveyor.stopCommand())
-                    .alongWith(m_intake.stopCommand())
-                    .alongWith(new InstantCommand(() -> m_swerve.getCurrentCommand().cancel())))
+            new PPEvent("RunShooterHigh", m_shooter.velocityCommand(4500))
         );
 
         Autonomous.addRoutines(

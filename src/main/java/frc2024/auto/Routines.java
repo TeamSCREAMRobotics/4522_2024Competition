@@ -85,8 +85,8 @@ public class Routines {
         return new SequentialCommandGroup(
             startTimer(),
             swerve.resetPoseCommand(Close4.getStartingPose()),
-            new ShootSequence(swerve, pivot, shooter, elevator, conveyor)
-                .andThen(Close4.getStart())
+            //new ShootSequence(swerve, pivot, shooter, elevator, conveyor)
+                Close4.getStart()
                 .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor))
                 .andThen(Close4.getNext())
                 .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor))

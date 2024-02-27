@@ -9,8 +9,9 @@
     "AmpSide7",
     "CenterPiecePathfinding",
     "Close4",
-    "Sweep",
-    "SourceSide4"
+    "AmpSide5",
+    "SourceSide4",
+    "Sweep"
   ],
   "autoFolders": [],
   "defaultMaxVel": 4.98,
