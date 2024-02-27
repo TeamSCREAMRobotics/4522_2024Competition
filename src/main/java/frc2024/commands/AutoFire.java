@@ -10,6 +10,8 @@ import com.team4522.lib.math.Conversions;
 import com.team4522.lib.util.AllianceFlippable;
 import com.team4522.lib.util.ScreamUtil;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -57,33 +59,33 @@ public class AutoFire extends SequentialCommandGroup{
     } */
 
     public AutoFire(Shooter shooter, Elevator elevator, Pivot pivot, BooleanSupplier defense){
-        RobotContainer.currentPosition = SuperstructureState.AUTO_FIRE;
+        RobotContainer.currentState = SuperstructureState.AUTO_FIRE;
         addCommands(
             shooter.velocityCommand(() -> calculateShotTrajectory(elevator.getElevatorHeight()).velocityRPM())
 /*                 .alongWith(elevator.heightCommand(
                     () -> defense.getAsBoolean() ? ElevatorConstants.MAX_HEIGHT : ElevatorConstants.MIN_HEIGHT)) */
                 .alongWith(pivot.angleCommand(() -> calculateShotTrajectory(elevator.getElevatorHeight()).pivotAngle()))
-            .onlyWhile(() -> getDistanceToSpeaker().isPresent())
+            .onlyWhile(() -> Vision.getTV(Limelight.SHOOTER))
         );
     }
 
-    public static OptionalDouble getDistanceToSpeaker(){
+    public static double getDistanceToSpeaker(){
         return Vision.getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER);
     }
 
-    // From FRC 1757 Westwood Robotics 
+    // From FRC 1757 Wolverines 
     // https://github.com/1757WestwoodRobotics/2024-Crescendo/blob/main/commands/shooter/alignandaim.py
 
     public static ShootState calculateShotTrajectory(double elevatorHeight) {
-        double distanceToTarget = getDistanceToSpeaker().getAsDouble() + getPivotDistanceFromLens(elevatorHeight);
-        double absoluteElevatorHeight = elevatorHeight + ElevatorConstants.HOME_HEIGHT_FROM_FLOOR;
+        double distanceToTarget = getDistanceToSpeaker() + getPivotDistanceFromLens(elevatorHeight);
+        double absoluteElevatorHeight = Units.inchesToMeters(elevatorHeight) + Units.inchesToMeters(26.553805 - 6.5);// + ElevatorConstants.HOME_HEIGHT_FROM_FLOOR;
         double shooterDistance = PivotConstants.AXLE_DISTANCE_FROM_ELEVATOR_TOP - PivotConstants.SHOOTER_DISTANCE_FROM_AXLE;
 
         double extraYVel = Conversions.falconRPSToMechanismMPS(ShooterConstants.TRAJECTORY_VELOCITY_EXTRA / 60.0, ShooterConstants.WHEEL_CIRCUMFERENCE, 1.0);
 
         double vy = Math.sqrt(
                 extraYVel * extraYVel
-                + (FieldConstants.SPEAKER_OPENING_HEIGHT - (Units.inchesToMeters(absoluteElevatorHeight) - shooterDistance)) * 2 * GRAVITY
+                + (FieldConstants.SPEAKER_OPENING_HEIGHT - (absoluteElevatorHeight - shooterDistance)) * 2 * GRAVITY
         );
         double airtime = (vy - extraYVel) / GRAVITY;
         double vx = distanceToTarget / airtime;

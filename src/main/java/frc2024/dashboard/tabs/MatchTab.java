@@ -58,8 +58,8 @@ public class MatchTab extends ShuffleboardTabBase {
     @Override
     public void periodic() {
         /* Neutral Modes */
-        pivot.setNeutralMode(m_pivotCoast.getBoolean(false) ? NeutralModeValue.Coast : NeutralModeValue.Brake);
-        elevator.setNeutralMode(m_elevatorCoast.getBoolean(false) ? NeutralModeValue.Coast : NeutralModeValue.Brake);
+        //pivot.setNeutralMode(m_pivotCoast.getBoolean(false) ? NeutralModeValue.Coast : NeutralModeValue.Brake);
+        //elevator.setNeutralMode(m_elevatorCoast.getBoolean(false) ? NeutralModeValue.Coast : NeutralModeValue.Brake);
 
         //m_field2d.setRobotPose(swerve.getPose());
 

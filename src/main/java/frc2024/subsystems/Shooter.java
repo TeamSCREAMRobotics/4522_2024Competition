@@ -110,6 +110,10 @@ public class Shooter extends SubsystemBase{
         return run(() -> setTargetVelocity(velocityRPM.getAsDouble()));
     }
 
+    public Command idleCommand(){
+        return velocityCommand(ShooterConstants.IDLE_VELOCITY);
+    }
+
     public Command stopCommand(){
         return Commands.runOnce(() -> stop(), this);
     }

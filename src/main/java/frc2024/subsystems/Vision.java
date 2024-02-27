@@ -136,22 +136,18 @@ public class Vision extends SubsystemBase{
         return LimelightHelpers.getBotPose3d_TargetSpace(limelight.name);
     }
 
-    public static OptionalDouble getDistanceToTargetMeters(double targetHeight, Limelight limelight){
-        if(LimelightHelpers.getTY(Limelight.SHOOTER.name) == 0.0 || !getTV(Limelight.SHOOTER)){
-            return OptionalDouble.empty();
-        }
-
+    public static double getDistanceToTargetMeters(double targetHeight, Limelight limelight){
         double goal_theta = limelight.mountPose.getRotation().getY() + Math.toRadians(getTY(Limelight.SHOOTER));
         double height_diff = targetHeight - limelight.mountPose.getZ();
 
-        return OptionalDouble.of(distanceFilter.calculate(height_diff / Math.tan(goal_theta)));
+        return distanceFilter.calculate(height_diff / Math.tan(goal_theta));
     }
 
     public static double getFusedDistanceToSpeaker(Limelight limelight, Pose2d currentPose){
         double sum;
         sum = ScreamUtil.calculateDistanceToTranslation(currentPose.getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation());
         if(getTV(limelight)){
-            sum += getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, limelight).getAsDouble();
+            sum += getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, limelight);
             return sum / 2;
         }
         return sum;

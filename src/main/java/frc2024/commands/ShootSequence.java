@@ -26,7 +26,7 @@ public class ShootSequence extends SequentialCommandGroup{
                 new ParallelCommandGroup(
                     new AutoFire(shooter, elevator, pivot, () -> false),
                     new FaceVisionTarget(swerve, SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))
-                .until(() -> shooter.getShooterAtTarget())
+                .until(() -> shooter.getShooterAtTarget() && pivot.getPivotAtTarget())
                 .andThen(conveyor.outputCommand(ConveyorConstants.SHOOT_SPEED).until(() -> !conveyor.hasPiece().getAsBoolean()))
                 .andThen(conveyor.stopCommand().alongWith(shooter.stopCommand()))
             );

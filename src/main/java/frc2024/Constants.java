@@ -25,6 +25,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc2024.subsystems.Pivot;
 
 /**
@@ -93,7 +94,7 @@ public final class Constants{
         /* For updating values like PID from Shuffleboard */
         public static final boolean UPDATE_SWERVE = false;
         public static final boolean UPDATE_INTAKE = false;
-        public static final boolean UPDATE_SHOOTER = true;
+        public static final boolean UPDATE_SHOOTER = false;
         public static final boolean UPDATE_ELEVATOR = false;
         public static final boolean UPDATE_CONVEYOR = false;
         public static final boolean UPDATE_CLIMBER = false;
@@ -366,7 +367,7 @@ public final class Constants{
         public static final double TRAJECTORY_VELOCITY_EXTRA = 1700.0;
 
         public static final double SHOOT_OUTPUT = 0.8;
-        public static final double EJECT_OUTPUT = 0.35;//0.5;
+        public static final double EJECT_OUTPUT = 0.25;//0.5;
 
         //I believe it is actually the time it takes for it to leave the shooter,
             //not the time it takes for the note to reach the speaker, from 1706
@@ -433,7 +434,7 @@ public final class Constants{
         public static final double AUTO_ZERO_OUTPUT = 0.0;
 
         public static final Rotation2d ABSOLUTE_ENCODER_OFFSET = Rotation2d.fromRotations(-0.207275390625);
-        public static final Rotation2d RELATIVE_ENCODER_TO_HORIZONTAL = Rotation2d.fromDegrees(52.07); // TODO RE-MEASURE
+        public static final Rotation2d RELATIVE_ENCODER_TO_HORIZONTAL = Rotation2d.fromDegrees(44.824); // TODO RE-MEASURE
 
         public static final double AXLE_HEIGHT_HOME = Units.inchesToMeters(16.640069);
         public static final double AXLE_HEIGHT_TOP = Units.inchesToMeters(38.059638);
@@ -480,7 +481,7 @@ public final class Constants{
         public static final double MIN_HEIGHT = 0.0; // inches
         public static final double ENCODER_MAX = 3.05; // relative
         public static final double ENCODER_MIN = 0.0; // relative
-        public static final double HOME_HEIGHT_FROM_FLOOR = 26.553805;
+        public static final double HOME_HEIGHT_FROM_FLOOR = Units.inchesToMeters(26.553805);
 
         public static final double HOME_HEIGHT = 0.0;
         public static final double HOME_HEIGHT_ENDGAME = 0.0;
@@ -506,12 +507,12 @@ public final class Constants{
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
         
         /* Current Limits */
-        public static final int SUPPLY_CURRENT_LIMIT = 25;
+        public static final int SUPPLY_CURRENT_LIMIT = 20;
         public static final int SUPPLY_CURRENT_THRESHOLD = 40;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
 
-        public static final double INTAKE_OUTPUT = 0.65;
+        public static final double INTAKE_OUTPUT = 0.8;
         public static final double EJECT_OUTPUT = -0.5;
     }
 
@@ -575,7 +576,6 @@ public final class Constants{
         public static final double SHOOT_STATE_MAP_ELEVATOR_OFFSET = 0.0;
         public static final double SHOOT_STATE_MAP_VELOCITY_OFFSET = 0.0;
 
-
         public static final ShootStateInterpolatingTreeMap SHOOT_STATE_MAP = new ShootStateInterpolatingTreeMap();
         static{
             SHOOT_STATE_MAP.put(3.9103, new ShootState(PivotConstants.SUBWOOFER_ANGLE, ElevatorConstants.SUBWOOFER_HEIGHT, ShooterConstants.SUBWOOFER_VELOCITY));
@@ -614,7 +614,7 @@ public final class Constants{
 
     public static final class FieldConstants{
 
-        public static final Translation2d FIELD_DIMENSIONS = new Translation2d(Units.inchesToMeters(648.2708), Units.inchesToMeters(312.9375));
+        public static final Translation2d FIELD_DIMENSIONS = new Translation2d(16.541, 8.211);
         
         // Numbered from amp station wall
         public static final Translation2d CENTER_PIECE_1 = new Translation2d(8.256, 7.456);
@@ -652,7 +652,7 @@ public final class Constants{
         public static final Translation2d BLUE_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(7).get().getTranslation().toTranslation2d();
         public static final Translation2d RED_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(4).get().getTranslation().toTranslation2d();
 
-        public static final double SPEAKER_OPENING_HEIGHT = Units.inchesToMeters(80.567496);
+        public static final double SPEAKER_OPENING_HEIGHT = Units.inchesToMeters(80.567496); // 80.567496
 
         public static final double SPEAKER_TAG_HEIGHT = 1.468864;
         public static final double STAGE_TAG_HEIGHT = 1.320884;

@@ -158,8 +158,8 @@ public class Controlboard{
     public static final Trigger manuallyShoot(){
         return new Trigger(() -> buttonBoard.getRawButton(1));
     }
-    public static final Trigger ejectThroughShooter(){
-        return operatorController_Command.povDown();
+    public static final Trigger eject(){
+        return driverController_Command.leftBumper();
     }
 
     public static final Trigger stopFlywheel(){
@@ -193,7 +193,7 @@ public class Controlboard{
         return new Trigger(() -> buttonBoard.getRawButton(9)).and(new Trigger(endGameMode()).negate());
     }
     
-    public static final Trigger goToHomePosition_EndGame(){
+    public static final Trigger goToHomePositionEndgame(){
         return new Trigger(() -> buttonBoard.getRawButton(9)).and(new Trigger(endGameMode()));
     }
     

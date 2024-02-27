@@ -1,0 +1,68 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.799270029353182,
+        "y": 6.417538427088266
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.799270029353182,
+        "y": 6.417538427088266
+      },
+      "isLocked": false,
+      "linkedName": "AmpSide5_1End"
+    },
+    {
+      "anchor": {
+        "x": 7.855844942459117,
+        "y": 5.782028487133897
+      },
+      "prevControl": {
+        "x": 6.855844942459117,
+        "y": 5.782028487133897
+      },
+      "nextControl": {
+        "x": 8.855844942459118,
+        "y": 5.782028487133897
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.799270029353182,
+        "y": 6.417538427088266
+      },
+      "prevControl": {
+        "x": 7.3204986102718825,
+        "y": 6.096862785736983
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.98,
+    "maxAcceleration": 4.9,
+    "maxAngularVelocity": 570.0,
+    "maxAngularAcceleration": 480.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 10.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "AmpSide5",
+  "previewStartingState": {
+    "rotation": 10.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}
