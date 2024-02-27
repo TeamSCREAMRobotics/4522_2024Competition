@@ -367,7 +367,7 @@ public final class Constants{
         public static final double TRAJECTORY_VELOCITY_EXTRA = 1700.0;
 
         public static final double SHOOT_OUTPUT = 0.8;
-        public static final double EJECT_OUTPUT = 0.35;//0.5;
+        public static final double EJECT_OUTPUT = 0.25;//0.5;
 
         //I believe it is actually the time it takes for it to leave the shooter,
             //not the time it takes for the note to reach the speaker, from 1706
@@ -575,7 +575,6 @@ public final class Constants{
         public static final Rotation2d SHOOT_STATE_MAP_ANGLE_OFFSET = Rotation2d.fromDegrees(0.0);
         public static final double SHOOT_STATE_MAP_ELEVATOR_OFFSET = 0.0;
         public static final double SHOOT_STATE_MAP_VELOCITY_OFFSET = 0.0;
-
 
         public static final ShootStateInterpolatingTreeMap SHOOT_STATE_MAP = new ShootStateInterpolatingTreeMap();
         static{

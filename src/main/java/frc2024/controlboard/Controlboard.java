@@ -193,7 +193,7 @@ public class Controlboard{
         return new Trigger(() -> buttonBoard.getRawButton(9)).and(new Trigger(endGameMode()).negate());
     }
     
-    public static final Trigger goToHomePosition_EndGame(){
+    public static final Trigger goToHomePositionEndgame(){
         return new Trigger(() -> buttonBoard.getRawButton(9)).and(new Trigger(endGameMode()));
     }
     

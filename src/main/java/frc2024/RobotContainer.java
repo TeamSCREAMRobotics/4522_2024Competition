@@ -79,7 +79,7 @@ public class RobotContainer {
 
     private static Alliance m_alliance;
 
-    public static SuperstructureState currentPosition = SuperstructureState.HOME;
+    public static SuperstructureState currentState = SuperstructureState.HOME;
     
     /**
      * Configures the basic robot systems, such as Shuffleboard, autonomous, default commands, and button bindings.
@@ -118,7 +118,7 @@ public class RobotContainer {
                 new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
                     .until(() -> superstructureAtTarget()));
                     
-        Controlboard.goToHomePosition()
+        Controlboard.goToHomePositionEndgame()
             .whileTrue(
                 new SuperstructureToPosition(SuperstructureState.HOME_ENDGAME, m_elevator, m_pivot)
                     .until(() -> superstructureAtTarget()));
@@ -129,14 +129,14 @@ public class RobotContainer {
                     .alongWith(m_shooter.velocityCommand(ShooterConstants.SUBWOOFER_VELOCITY)))
             .onFalse(
                 new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
-                    .until((() -> superstructureAtTarget())));
+                    .until((() -> superstructureAtTarget())).alongWith(m_shooter.idleCommand()));
 
         Controlboard.goToAmpPosition()
             .whileTrue(
                 new SuperstructureToPosition(SuperstructureState.AMP, m_elevator, m_pivot))
             .onFalse(
                 new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
-                    .until((() ->  superstructureAtTarget())));
+                    .until((() ->  superstructureAtTarget())).alongWith(m_shooter.idleCommand()));
 
         Controlboard.goToPodiumPosition()
             .whileTrue(
@@ -144,7 +144,7 @@ public class RobotContainer {
                     .alongWith(m_shooter.velocityCommand(ShooterConstants.SUBWOOFER_VELOCITY)))
             .onFalse(
                 new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
-                    .until((() ->  superstructureAtTarget())));
+                    .until((() ->  superstructureAtTarget())).alongWith(m_shooter.idleCommand()));
 
         Controlboard.goToChainPosition()
             .whileTrue(
@@ -152,7 +152,7 @@ public class RobotContainer {
                     .alongWith(m_shooter.velocityCommand(ShooterConstants.CHAIN_VELOCITY)))
             .onFalse(
                 new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
-                    .until((() ->  superstructureAtTarget())));
+                    .until((() ->  superstructureAtTarget())).alongWith(m_shooter.idleCommand()));
 
         Controlboard.goToSubwooferPositionDefended()
             .whileTrue(
@@ -160,7 +160,7 @@ public class RobotContainer {
                     .alongWith(m_shooter.velocityCommand(ShooterConstants.SUBWOOFER_VELOCITY)))
             .onFalse(
                 new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
-                    .until((() -> superstructureAtTarget())));
+                    .until((() -> superstructureAtTarget())).alongWith(m_shooter.idleCommand()));
 
         Controlboard.goToPodiumPositionDefended()
             .whileTrue(
@@ -182,19 +182,14 @@ public class RobotContainer {
         Controlboard.autoFire()
             .toggleOnTrue(
                 new AutoFire(m_shooter, m_elevator, m_pivot, Controlboard.defendedMode())
-                    .alongWith(new FaceVisionTarget(m_swerve, Controlboard.getTranslation(), SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))
-                .onlyIf(() -> Vision.getTV(Limelight.SHOOTER)))
+                    .alongWith(new FaceVisionTarget(m_swerve, Controlboard.getTranslation(), SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER)))
             .onFalse(
                 new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
-                    .until((() -> superstructureAtTarget())).alongWith(m_shooter.velocityCommand(ShooterConstants.IDLE_VELOCITY).alongWith(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()))));
+                    .until((() -> superstructureAtTarget())).alongWith(m_shooter.idleCommand().alongWith(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()))));
 
         Controlboard.autoZero()
             .whileTrue(
                 new AutoZero(m_elevator, m_pivot)
-            )
-            .onFalse(
-                new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
-                    .until((() -> superstructureAtTarget())).alongWith(m_shooter.velocityCommand(ShooterConstants.IDLE_VELOCITY).alongWith(m_conveyor.stopCommand().alongWith(m_intake.stopCommand())))
             );
 
         /* Intake */
@@ -218,7 +213,7 @@ public class RobotContainer {
             .onFalse(m_intake.stopCommand().alongWith(m_conveyor.stopCommand()));
 
         Controlboard.score()
-            .whileTrue(m_conveyor.scoreCommand(getCurrentPosition()))
+            .whileTrue(m_conveyor.scoreCommand(getCurrentState()))
                 .onFalse(m_conveyor.stopCommand());
 
         /* Controlboard.autoPickupFromFloor()
@@ -336,8 +331,8 @@ public class RobotContainer {
         return m_elevator.getElevatorAtTarget() && m_pivot.getPivotAtTarget();
     }
 
-    public static Supplier<SuperstructureState> getCurrentPosition(){
-        return () -> currentPosition;
+    public static Supplier<SuperstructureState> getCurrentState(){
+        return () -> currentState;
     }
 
     public static void stopAll(){
