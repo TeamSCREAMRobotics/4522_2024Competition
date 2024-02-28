@@ -18,25 +18,25 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AmpToCenter5_1"
+                  "pathName": "Amp5Center#1"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AmpToCenter5_2"
+                  "pathName": "Amp5Center#2"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AmpToCenter5_3"
+                  "pathName": "Amp5Center#3"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AmpToCenter5_4"
+                  "pathName": "Amp5Center#4"
                 }
               }
             ]

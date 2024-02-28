@@ -3,14 +3,14 @@
   "robotLength": 0.97,
   "holonomicMode": true,
   "pathFolders": [
-    "3AmpSide_Center",
-    "5AmpSide_Center",
-    "6AmpSide_Center",
-    "7AmpSide_Center",
-    "4AmpSide_Close",
+    "Source4_Center",
+    "ScoreAmp2_Center",
+    "Amp4_Center",
     "CenterPiecePathfinding",
-    "2ScoreAmp_Center",
-    "4Source_Center"
+    "Amp7_Center",
+    "Amp6_Center",
+    "Amp5_Center",
+    "Amp4_Close"
   ],
   "autoFolders": [],
   "defaultMaxVel": 2.0,

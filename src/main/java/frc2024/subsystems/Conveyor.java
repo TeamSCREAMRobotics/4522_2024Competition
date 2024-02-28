@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
@@ -40,6 +41,7 @@ public class Conveyor extends SubsystemBase{
     
     private void configShooterMotors() {
         DeviceConfig.configureTalonFX("Conveyor Motor", m_conveyorMotor, DeviceConfig.conveyorFXConfig(), Constants.DEVICE_LOOP_TIME_HZ);
+        ParentDevice.optimizeBusUtilizationForAll(m_conveyorMotor);
     }
     
     public void setNeutralMode(NeutralModeValue mode){
@@ -69,7 +71,7 @@ public class Conveyor extends SubsystemBase{
     @Override
     public void periodic() {}
 
-    public Command outputCommand(double output){
+    public Command dutyCycleCommand(double output){
         return run(() -> setConveyorOutput(output));
     }
 
@@ -78,11 +80,12 @@ public class Conveyor extends SubsystemBase{
     }
 
     public Command scoreCommand(Supplier<SuperstructureState> position){
+        System.out.println(position.get());
         Command command;
         switch (position.get()) {
             case AMP:
             case TRAP_CHAIN:
-                command = outputCommand(ConveyorConstants.AMP_TRAP_OUTPUT);
+                command = dutyCycleCommand(ConveyorConstants.AMP_TRAP_OUTPUT);
                 break;
             case CHAIN:
             case PODIUM_DEFENDED:
@@ -90,7 +93,7 @@ public class Conveyor extends SubsystemBase{
             case SUBWOOFER:
             case SUBWOOFER_DEFENDED:
             case AUTO_FIRE:
-                command = outputCommand(ConveyorConstants.SHOOT_SPEED);
+                command = dutyCycleCommand(ConveyorConstants.SHOOT_SPEED);
                 break;
             default:
                 command = stopCommand();

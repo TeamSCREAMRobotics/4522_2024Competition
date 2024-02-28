@@ -11,9 +11,6 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.pid.ScreamPIDConstants;
 import com.team4522.lib.util.AllianceFlippable;
-import com.team4522.lib.util.ScreamUtil;
-import com.team6328.PoseEstimator;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.LinearFilter;
@@ -24,22 +21,18 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.RobotContainer;
-import frc2024.Constants.FieldConstants;
 import frc2024.Constants.Ports;
 import frc2024.Constants.SwerveConstants;
 import frc2024.Constants.VisionConstants;
 import frc2024.Constants.SwerveConstants.ModuleConstants;
 import frc2024.Constants.SwerveConstants.ModuleConstants.ModuleLocation;
-import frc2024.controlboard.Controlboard;
 import frc2024.subsystems.Vision;
 import frc2024.subsystems.Vision.Limelight;
 import frc2024.subsystems.Vision.TimestampedVisionMeasurement;
@@ -85,7 +78,7 @@ public class Swerve extends SubsystemBase {
         m_modulePositions = new SwerveModulePosition[4];
         
         /**
-         * Configures the odometry, which requires the kinematics, gyro reading, and module positions.
+         * Configures the pose estimator, which requires the kinematics, gyro reading, and module positions.
          * It uses these values to estimate the robot's position on the field.
          */
         m_poseEstimator = new SwerveDrivePoseEstimator(
@@ -322,7 +315,8 @@ public class Swerve extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        for(TimestampedVisionMeasurement measurement : Vision.getBotPoses()){
+        if(Vision.getTimestampedVisionMeasurement(Limelight.SHOOTER).isPresent()){
+            TimestampedVisionMeasurement measurement = Vision.getTimestampedVisionMeasurement(Limelight.SHOOTER).get();
             m_poseEstimator.addVisionMeasurement(measurement.pose(), measurement.timestamp());
         }
         if(DriverStation.isEnabled()){

@@ -81,7 +81,7 @@ public class RobotContainer {
 
     private static Alliance m_alliance;
 
-    public static SuperstructureState currentState = SuperstructureState.HOME;
+    public static SuperstructureState currentState = SuperstructureState.AMP;
     
     /**
      * Configures the basic robot systems, such as Shuffleboard, autonomous, default commands, and button bindings.
@@ -101,9 +101,9 @@ public class RobotContainer {
         Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, new Rotation2d()))));
 
         /* Conveyor */
-        Controlboard.ejectThroughIntake().whileTrue(m_conveyor.outputCommand(-0.85)).onFalse(m_conveyor.stopCommand());
+        Controlboard.ejectThroughIntake().whileTrue(m_conveyor.dutyCycleCommand(-0.85)).onFalse(m_conveyor.stopCommand());
         
-        Controlboard.manuallyShoot().whileTrue(m_conveyor.outputCommand(0.45)).onFalse(m_conveyor.stopCommand());
+        Controlboard.manuallyShoot().whileTrue(m_conveyor.dutyCycleCommand(0.45)).onFalse(m_conveyor.stopCommand());
 
         /* Elevator */
         Controlboard.manualMode().toggleOnTrue(m_elevator.voltageCommand(Controlboard.getManualElevatorOutput()));
@@ -208,14 +208,14 @@ public class RobotContainer {
                 )
                     .onFalse(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()));
         
-        Controlboard.intakeOverride().whileTrue(m_conveyor.outputCommand(-ConveyorConstants.TRANSFER_OUTPUT)
-        .alongWith(m_intake.outputCommand(IntakeConstants.INTAKE_OUTPUT)))
+        Controlboard.intakeOverride().whileTrue(m_conveyor.dutyCycleCommand(-ConveyorConstants.TRANSFER_OUTPUT)
+        .alongWith(m_intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT)))
             .onFalse(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()));
 
         Controlboard.ejectThroughIntake()
             .whileTrue(
-                m_intake.outputCommand(IntakeConstants.EJECT_OUTPUT)
-                    .alongWith(m_conveyor.outputCommand(ConveyorConstants.AMP_TRAP_OUTPUT)))
+                m_intake.dutyCycleCommand(IntakeConstants.EJECT_OUTPUT)
+                    .alongWith(m_conveyor.dutyCycleCommand(ConveyorConstants.AMP_TRAP_OUTPUT)))
             .onFalse(m_intake.stopCommand().alongWith(m_conveyor.stopCommand()));
 
         Controlboard.score()
@@ -255,8 +255,8 @@ public class RobotContainer {
         Autonomous.configure(
             Commands.none().withName("Do Nothing"),
             new PPEvent("StartIntake", 
-                m_intake.outputCommand(IntakeConstants.INTAKE_OUTPUT)
-                .alongWith(m_conveyor.outputCommand(ConveyorConstants.TRANSFER_OUTPUT))
+                m_intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT)
+                .alongWith(m_conveyor.dutyCycleCommand(ConveyorConstants.TRANSFER_OUTPUT))
                 .until(m_conveyor.hasPiece())
                 .finallyDo((interrupted) -> {
                         if(!interrupted){
@@ -269,12 +269,12 @@ public class RobotContainer {
         );
 
         Autonomous.addRoutines(
-            Routines.Close4(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake).withName("Close4"),
-            Routines.AmpSide6(m_swerve, m_elevator, m_pivot, m_intake, m_conveyor).withName("AmpSide6"),
-            Routines.SourceSide4(m_swerve).withName("SourceSide4"),
-            Routines.AmpSide3(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake).withName("AmpSide3"),
-            Routines.Sweep(m_swerve, m_pivot, m_shooter, m_conveyor, m_intake).withName("Sweep"),
-            Routines.AmpSide5ToCenter(m_swerve).withName("AmpSide5ToCenter"),
+            Routines.Amp4Close(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake).withName("Amp4Close"),
+            Routines.Amp6Center(m_swerve, m_elevator, m_pivot, m_intake, m_conveyor).withName("Amp6Center"),
+            Routines.Source4Center(m_swerve).withName("Source4Center"),
+            Routines.Amp4Center(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake).withName("Amp4Center"),
+            Routines.SweepCenter(m_swerve, m_pivot, m_shooter, m_conveyor, m_intake).withName("SweepCenter"),
+            Routines.Amp5Center_2(m_swerve).withName("Amp5Center_2"),
             Routines.testAuto(m_swerve)
         );
     }

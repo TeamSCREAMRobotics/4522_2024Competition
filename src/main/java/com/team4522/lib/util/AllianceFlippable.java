@@ -1,5 +1,6 @@
 package com.team4522.lib.util;
 
+import com.fasterxml.jackson.databind.node.POJONode;
 import com.team4522.lib.math.Conversions;
 import com.team4522.lib.util.PathSequence.Side;
 
@@ -30,6 +31,13 @@ public final class AllianceFlippable {
 
     public static Pose2d getTargetSpeaker(){
         return Pose2d(new Pose2d(FieldConstants.BLUE_SPEAKER, getForwardRotation()), new Pose2d(FieldConstants.RED_SPEAKER, getForwardRotation()));
+    }
+
+    public static Pose2d MirrorPoseForField2d(Pose2d pose){
+        double x = pose.getX();
+        double y = FieldConstants.FIELD_DIMENSIONS.getY() - pose.getY();
+        Rotation2d z = pose.getRotation().unaryMinus();
+        return new Pose2d(x, y, z);
     }
 
     public static IntakePipeline getIntakePipeline(Side side){

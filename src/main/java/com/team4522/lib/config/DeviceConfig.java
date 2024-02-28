@@ -208,15 +208,13 @@ public class DeviceConfig {
                 return ErrorChecker.hasConfiguredWithoutErrors(
                     fx.getConfigurator().apply(config),
                     fx.getConfigurator().setPosition(0.0),
-                    fx.getDutyCycle().setUpdateFrequency(updateFrequencyHz),
-                    fx.getPosition().setUpdateFrequency(updateFrequencyHz),
                     fx.getVelocity().setUpdateFrequency(updateFrequencyHz),
-                    fx.getRotorPosition().setUpdateFrequency(updateFrequencyHz),
-                    fx.getRotorVelocity().setUpdateFrequency(updateFrequencyHz),
+                    fx.getAcceleration().setUpdateFrequency(updateFrequencyHz),
+                    fx.getPosition().setUpdateFrequency(updateFrequencyHz),
+                    fx.getSupplyVoltage().setUpdateFrequency(updateFrequencyHz),
+                    fx.getStatorCurrent().setUpdateFrequency(updateFrequencyHz),
                     fx.getSupplyCurrent().setUpdateFrequency(updateFrequencyHz),
-                    fx.getFault_ReverseHardLimit().setUpdateFrequency(updateFrequencyHz),
-                    fx.getFault_ForwardHardLimit().setUpdateFrequency(updateFrequencyHz),
-                    fx.optimizeBusUtilization());
+                    fx.getTorqueCurrent().setUpdateFrequency(updateFrequencyHz));
             }
         };
         ErrorChecker.configureDevice(deviceConfig, name + " " + fx.getDeviceID() + " version " + fx.getVersion(), true);
@@ -228,11 +226,11 @@ public class DeviceConfig {
             public boolean configureSettings(){
                 return ErrorChecker.hasConfiguredWithoutErrors(
                     encoder.getConfigurator().apply(config),
+                    encoder.getVelocity().setUpdateFrequency(updateFrequencyHz),
                     encoder.getPosition().setUpdateFrequency(updateFrequencyHz),
-                    encoder.getAbsolutePosition().setUpdateFrequency(updateFrequencyHz),
-                    encoder.optimizeBusUtilization()
-                    );
-            }
+                    encoder.getSupplyVoltage().setUpdateFrequency(updateFrequencyHz),
+                    encoder.getAbsolutePosition().setUpdateFrequency(updateFrequencyHz));
+                }
         };
         ErrorChecker.configureDevice(deviceConfig, name + " " + encoder.getDeviceID() + " version " + encoder.getVersion(), true);
     }
@@ -247,9 +245,7 @@ public class DeviceConfig {
                     pigeon.getYaw().setUpdateFrequency(updateFrequencyHz),
                     pigeon.getPitch().setUpdateFrequency(updateFrequencyHz),
                     pigeon.getRoll().setUpdateFrequency(updateFrequencyHz),
-                    pigeon.getAngularVelocityZDevice().setUpdateFrequency(updateFrequencyHz),
-                    pigeon.optimizeBusUtilization()
-                    );
+                    pigeon.getSupplyVoltage().setUpdateFrequency(updateFrequencyHz));
             }
         };
         ErrorChecker.configureDevice(deviceConfig, name + " " + pigeon.getDeviceID() + " version " + pigeon.getVersion(), true);

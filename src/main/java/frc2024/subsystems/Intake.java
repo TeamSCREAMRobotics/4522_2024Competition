@@ -5,6 +5,7 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.mechanisms.DifferentialMechanism;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -41,6 +42,7 @@ public class Intake extends SubsystemBase{
 
     public void configIntakeMotors(){
         DeviceConfig.configureTalonFX("Intake Motor", m_intakeMotor, DeviceConfig.intakeFXConfig(), Constants.DEVICE_LOOP_TIME_HZ);
+        ParentDevice.optimizeBusUtilizationForAll(m_intakeMotor);
     }
 
     public void setNeutralMode(NeutralModeValue mode){
@@ -63,7 +65,7 @@ public class Intake extends SubsystemBase{
         m_intakeMotor.stopMotor();
     }
 
-    public Command outputCommand(double output){
+    public Command dutyCycleCommand(double output){
         return run(() -> setIntakeOutput(output));
     }
 

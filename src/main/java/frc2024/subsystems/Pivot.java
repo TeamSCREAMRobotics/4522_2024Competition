@@ -3,11 +3,14 @@ package frc2024.subsystems;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
@@ -48,6 +51,7 @@ public class Pivot extends SubsystemBase{
     private void configureDevices() {
         DeviceConfig.configureCANcoder("Pivot Encoder", m_encoder, DeviceConfig.pivotEncoderConfig(), Constants.DEVICE_LOOP_TIME_HZ);
         DeviceConfig.configureTalonFX("Pivot Motor", m_pivotMotor, DeviceConfig.pivotFXConfig(), Constants.DEVICE_LOOP_TIME_HZ);
+        ParentDevice.optimizeBusUtilizationForAll(m_pivotMotor, m_encoder);
     }
 
     public void configPID(ScreamPIDConstants constants){
@@ -97,21 +101,36 @@ public class Pivot extends SubsystemBase{
     }
 
     @Override
-    public void periodic() {}
+    public void periodic() {
+        logOutputs();
+    }
+
+    public void logOutputs(){
+        Logger.recordOutput("Pivot/Measured/Angle", getPivotAngle());
+        Logger.recordOutput("Pivot/Measured/Rotations", m_pivotMotor.getPosition().getValueAsDouble());
+        Logger.recordOutput("Pivot/Measured/ErrorDegrees", getPivotError());
+        Logger.recordOutput("Pivot/Setpoint/Angle", m_targetAngle);
+        Logger.recordOutput("Pivot/Setpoint/Rotations", m_targetAngle.getRotations());
+        Logger.recordOutput("Pivot/Setpoint/AtTarget", getPivotAtTarget());
+        Logger.recordOutput("Pivot/Power/StatorCurrent", m_pivotMotor.getStatorCurrent().getValueAsDouble());
+        Logger.recordOutput("Pivot/Power/SupplyCurrent", m_pivotMotor.getSupplyCurrent().getValueAsDouble());
+        Logger.recordOutput("Pivot/Power/Voltage", m_pivotMotor.getSupplyVoltage().getValueAsDouble());
+        //Logger.recordOutput("Pivot/CurrentCommand", getCurrentCommand().getName());
+    }
 
     public Command dutyCycleCommand(DoubleSupplier dutyCycle){
-        return run(() -> setPivotOutput(dutyCycle.getAsDouble()));
+        return run(() -> setPivotOutput(dutyCycle.getAsDouble())).withName("DutyCycleCommand[Supplier]");
     }
 
     public Command dutyCycleCommand(double dutyCycle){
-        return run(() -> setPivotOutput(dutyCycle));
+        return run(() -> setPivotOutput(dutyCycle)).withName("DutyCycleCommand");
     }
 
     public Command angleCommand(Rotation2d angle){
-        return run(() -> setTargetAngle(angle));
+        return run(() -> setTargetAngle(angle)).withName("AngleCommand");
     }
 
     public Command angleCommand(Supplier<Rotation2d> angle){
-        return run(() -> setTargetAngle(angle.get()));
+        return run(() -> setTargetAngle(angle.get())).withName("AngleCommand[Supplier]");
     }
 }

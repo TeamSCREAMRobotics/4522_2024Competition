@@ -153,16 +153,18 @@ public class Vision extends SubsystemBase{
         return sum;
     }
 
-    public static TimestampedVisionMeasurement getTimestampedVisionMeasurement(Limelight limelight){
-        return new TimestampedVisionMeasurement(LimelightHelpers.getBotPoseEstimate_wpiBlue(limelight.name).pose, Timer.getFPGATimestamp() - LimelightHelpers.getBotPose(limelight.name)[6]);
+    public static Optional<TimestampedVisionMeasurement> getTimestampedVisionMeasurement(Limelight limelight){
+        if(LimelightHelpers.getBotPose(limelight.name).length == 0){
+            return Optional.empty();
+        }
+        return Optional.of(new TimestampedVisionMeasurement(LimelightHelpers.getBotPoseEstimate_wpiBlue(limelight.name).pose, Timer.getFPGATimestamp() - LimelightHelpers.getBotPose(limelight.name)[6]));
     }
 
-    public static TimestampedVisionMeasurement[] getBotPoses(){
-        return new TimestampedVisionMeasurement[] {
-            getTimestampedVisionMeasurement(Limelight.SHOOTER),
-            //getTimestampedVisionMeasurement(Limelight.TRAP)
+    /* public static Optional<TimestampedVisionMeasurement>[] getBotPoses(){
+        return new Optional<TimestampedVisionMeasurement>[] {
+            getTimestampedVisionMeasurement(Limelight.SHOOTER)
         };
-    }
+    } */
 
     public static int getCurrentPipeline(Limelight limelight){
         return (int) LimelightHelpers.getCurrentPipelineIndex(limelight.name);

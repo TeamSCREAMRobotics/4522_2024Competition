@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.024328973051844,
-        "y": 0.7963368851069427
+        "x": 2.883271729453586,
+        "y": 5.550936522700434
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.220860145001316,
-        "y": 0.9485777602083012
+        "x": 2.4265491041681075,
+        "y": 6.12476751344373
       },
       "isLocked": false,
-      "linkedName": "Far_Center4_1End"
+      "linkedName": "Close4_2End"
     },
     {
       "anchor": {
-        "x": 5.108330673152073,
-        "y": 1.8971555204166035
+        "x": 2.2274648828898216,
+        "y": 6.581490138729208
       },
       "prevControl": {
-        "x": 6.220860145001316,
-        "y": 0.9485777602083012
+        "x": 1.6887664017838722,
+        "y": 6.21845420580998
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Far_Center4_2End"
+      "linkedName": "Close4_3End"
     }
   ],
   "rotationTargets": [],
@@ -38,12 +38,15 @@
     "maxAngularAcceleration": 440.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -35.89737751170805,
-    "rotateFast": false
+    "velocity": 2.0,
+    "rotation": 36.688292663996044,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": "4Source_Center",
-  "previewStartingState": null,
+  "folder": "Amp6_Center",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
   "useDefaultConstraints": false
 }

@@ -8,6 +8,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
@@ -68,15 +69,14 @@ public class SwerveModule {
 
         /* Angle Encoder Config */
         m_angleEncoder = new CANcoder(constants.encoderID(), Ports.CANIVORE_NAME);
-        configAngleEncoder();
 
         /* Steer Motor Config */
         m_steerMotor = new TalonFX(constants.steerMotorID(), Ports.CANIVORE_NAME);
-        configSteerMotor();
 
         /* Drive Motor Config */
         m_driveMotor = new TalonFX(constants.driveMotorID(), Ports.CANIVORE_NAME);
-        configDriveMotor();
+        
+        configureDevices();
 
         m_drivePosition = m_driveMotor.getPosition();
         m_driveVelocity = m_driveMotor.getVelocity();
@@ -191,28 +191,11 @@ public class SwerveModule {
         return Rotation2d.fromRotations(m_angleEncoder.getAbsolutePosition().refresh().getValue());
     }
 
-    /**
-     * Configures the angle encoder.
-     * See DeviceConfig for more information.
-     */
-    private void configAngleEncoder() {
+    private void configureDevices(){
         DeviceConfig.configureCANcoder(m_modLocation + " Angle Encoder", m_angleEncoder, DeviceConfig.swerveEncoderConfig(m_angleOffset), Constants.DEVICE_LOOP_TIME_HZ);
-    }
-
-    /**
-     * Configures the steer motor.
-     * See DeviceConfig for more information.
-     */
-    private void configSteerMotor() {
         DeviceConfig.configureTalonFX(m_modLocation + " Steer Motor", m_steerMotor, DeviceConfig.steerFXConfig(m_angleEncoder.getDeviceID()), Constants.DEVICE_LOOP_TIME_HZ);
-    }
-
-    /**
-     * Configures the drive motor.
-     * See DeviceConfig for more information.
-     */
-    private void configDriveMotor() {
         DeviceConfig.configureTalonFX(m_modLocation + " Drive Motor", m_driveMotor, DeviceConfig.driveFXConfig(), Constants.DEVICE_LOOP_TIME_HZ);
+        ParentDevice.optimizeBusUtilizationForAll(m_driveMotor, m_steerMotor, m_angleEncoder);
     }
 
     /**

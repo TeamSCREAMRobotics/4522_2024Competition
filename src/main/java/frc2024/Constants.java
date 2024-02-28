@@ -42,6 +42,11 @@ public final class Constants{
             this(0, 0, 0, 0, GravityTypeValue.Elevator_Static);
         }
     }
+    public enum Mode{
+        REAL, REPLAY, SIM;
+    }
+
+    public static final Mode MODE = Mode.SIM;
 
     /* Robot loop time */
     public static final double LOOP_TIME_SEC = 0.02;

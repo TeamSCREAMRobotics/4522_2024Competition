@@ -34,8 +34,8 @@ public class IntakeFloor extends SequentialCommandGroup {
     addCommands(
         elevator.heightCommand(endGame.getAsBoolean() ? ElevatorConstants.HOME_HEIGHT_ENDGAME : ElevatorConstants.HOME_HEIGHT)
             .alongWith(pivot.angleCommand(endGame.getAsBoolean() ? PivotConstants.HOME_ANGLE_ENDGAME : PivotConstants.HOME_ANGLE))
-            .alongWith(intake.outputCommand(IntakeConstants.INTAKE_OUTPUT))
-            .alongWith(conveyor.outputCommand(ConveyorConstants.TRANSFER_OUTPUT))
+            .alongWith(intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT))
+            .alongWith(conveyor.dutyCycleCommand(ConveyorConstants.TRANSFER_OUTPUT))
             .finallyDo(
               () -> {
                 intake.stop();

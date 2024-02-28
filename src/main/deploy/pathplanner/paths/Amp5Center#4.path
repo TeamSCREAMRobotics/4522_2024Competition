@@ -3,49 +3,49 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4194171612308972,
-        "y": 4.1
+        "x": 4.475945499679871,
+        "y": 4.871708003045107
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.2885721149473675,
-        "y": 1.346746202764874
+        "x": 4.38225880731362,
+        "y": 5.258165609055897
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "AmpSide_3End"
     },
     {
       "anchor": {
-        "x": 8.024328973051844,
-        "y": 0.7963368851069427
+        "x": 3.023801768002964,
+        "y": 6.768863523461712
       },
       "prevControl": {
-        "x": 6.17401679881819,
-        "y": 0.8431802312962678
+        "x": 4.124620403306426,
+        "y": 6.031080821077477
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Far_Center4_1End"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.98,
+    "maxVelocity": 2.25,
     "maxAcceleration": 4.9,
     "maxAngularVelocity": 570.0,
-    "maxAngularAcceleration": 440.0
+    "maxAngularAcceleration": 520.0
   },
   "goalEndState": {
-    "velocity": 2.0,
-    "rotation": 6.189829938378578e-10,
-    "rotateFast": false
+    "velocity": 0,
+    "rotation": 124.04593735660168,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": "4Source_Center",
+  "folder": "Amp5_Center",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -9.0,
     "velocity": 0
   },
   "useDefaultConstraints": false

@@ -14,37 +14,37 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SourceSide4_1"
+            "pathName": "Source4Center#1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SourceSide4_2"
+            "pathName": "Source4Center#2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SourceSide4_3"
+            "pathName": "Source4Center#3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SourceSide4_4"
+            "pathName": "Source4Center#4"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SourceSide4_5"
+            "pathName": "Source4Center#5"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SourceSide4_6"
+            "pathName": "Source4Center#6"
           }
         }
       ]

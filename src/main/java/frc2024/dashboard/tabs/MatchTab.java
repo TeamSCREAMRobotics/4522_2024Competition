@@ -2,10 +2,12 @@
 package frc2024.dashboard.tabs;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.team4522.lib.util.AllianceFlippable;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
@@ -15,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc2024.RobotContainer;
 import frc2024.Constants.FieldConstants;
+import frc2024.auto.Routines;
 import frc2024.dashboard.ShuffleboardTabBase;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Pivot;
@@ -48,7 +51,7 @@ public class MatchTab extends ShuffleboardTabBase {
         m_tab = Shuffleboard.getTab("Match");
 
         m_autoChooserEntry = createSendableEntry("Auto Chooser", m_autoChooser, new EntryProperties(0, 0, 4, 2));
-        m_field = createSendableEntry("Field", m_field2d, new EntryProperties(7, 0, 17, 10));
+        m_field = createSendableEntry("Auto Start Position", m_field2d, new EntryProperties(7, 0, 17, 10));
         m_matchTime = createNumberEntry("Match Time", 0, new EntryProperties(0, 2, 8, 4));
         
         m_elevatorCoast = createBooleanEntry("Elevator Coast", false, new EntryProperties(2, 1, 2, 1));
@@ -61,7 +64,7 @@ public class MatchTab extends ShuffleboardTabBase {
         //pivot.setNeutralMode(m_pivotCoast.getBoolean(false) ? NeutralModeValue.Coast : NeutralModeValue.Brake);
         //elevator.setNeutralMode(m_elevatorCoast.getBoolean(false) ? NeutralModeValue.Coast : NeutralModeValue.Brake);
 
-        //m_field2d.setRobotPose(swerve.getPose());
+        m_field2d.setRobotPose(AllianceFlippable.MirrorPoseForField2d(Routines.getSequenceFromAutoName(m_autoChooser.getSelected().getName()).getStartingPose()));
 
         m_matchTime.setDouble(DriverStation.getMatchTime());
     }

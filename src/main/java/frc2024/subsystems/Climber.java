@@ -8,6 +8,7 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
@@ -23,7 +24,6 @@ import frc2024.Constants.Ports;
 public class Climber extends SubsystemBase{
 
   private TalonFX m_climberMotor;
-  //private TalonFX m_leftClimberMotor;
 
   private PositionVoltage m_positionRequest = new PositionVoltage(0);
   private DutyCycleOut m_dutyCycleRequest = new DutyCycleOut(0);
@@ -40,6 +40,7 @@ public class Climber extends SubsystemBase{
     
     private void configClimberMotors() {
         DeviceConfig.configureTalonFX("Climber Motor", m_climberMotor, DeviceConfig.climberFXConfig(), Constants.DEVICE_LOOP_TIME_HZ);
+        ParentDevice.optimizeBusUtilizationForAll(m_climberMotor);
     }
 
     public void configPID(ScreamPIDConstants constants){

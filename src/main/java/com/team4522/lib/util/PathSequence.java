@@ -1,8 +1,11 @@
 package com.team4522.lib.util;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.PathPoint;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -21,9 +24,14 @@ public class PathSequence {
     public PathSequence(Side side, String... pathNames){
         this.pathNames = pathNames;
         this.side = side;
-        for(String pathName : pathNames){
-            list.add(getPath(pathName));
+        if(pathNames.length == 0){
+            list.add(PathPlannerPath.fromPathFile("DoNothing"));
+        } else {
+            for(String pathName : pathNames){
+                list.add(getPath(pathName));
+            }
         }
+        
     }
 
     public enum Side{
@@ -63,13 +71,13 @@ public class PathSequence {
     }
 
     public Command getNext(){
-        index ++;
-        if(index > list.size()-1){
+        try {
+            index ++;
+            return getPathCommand(list.get(index-1));
+        } catch (IndexOutOfBoundsException e) {
             DriverStation.reportWarning("[Auto] No additional paths. Last supplied path: " + pathNames[pathNames.length-1], true);
-            return Commands.none();
+            return new InstantCommand();
         }
-
-        return getPathCommand(list.get(index));
     }
 
     public Command getAll(){
@@ -81,11 +89,21 @@ public class PathSequence {
     }
 
     public Command getIndex(int index){
-        if(index > list.size()-1){
-            DriverStation.reportWarning("[Auto] No path at index: " + index, true);
-            return Commands.none();
+        try {
+            return getPathCommand(list.get(index-1));
+        } catch (IndexOutOfBoundsException e) {
+            DriverStation.reportWarning("[Auto] No path at specified index " + index + ". Last supplied path: " + pathNames[pathNames.length-1], null);
+            return new InstantCommand();
         }
-        return getPathCommand(list.get(index));
+    }
+
+    public PathPlannerPath getPath(int index){
+        try {
+            return list.get(index);
+        } catch (IndexOutOfBoundsException e) {
+            DriverStation.reportWarning("[Auto] No path at specified index " + index + ". Last supplied path: " + pathNames[pathNames.length-1], null);
+            return PathPlannerPath.fromPathFile("DoNothing");
+        }
     }
 
     public PathSequence withAdditional(String... pathNames){

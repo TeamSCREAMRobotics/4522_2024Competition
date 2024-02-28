@@ -46,13 +46,13 @@ public class Routines {
 
     private static final Timer autoTimer = new Timer();
     private static PathSequence currentSequence;
-    private static final PathSequence Close4 = new PathSequence(Side.AMP, "Close4_1", "Close4_2", "Close4_3");
-    private static final PathSequence AmpSide5 = new PathSequence(Side.AMP, "Close4_1", "Close4_2", "Amp6_0", "Amp6_1", "Amp6_2");
-    private static final PathSequence AmpSide6 = new PathSequence(Side.AMP, "Close4_1", "Close4_2", "Amp6_0", "Amp6_1", "Amp6_2", "Amp6_3", "Amp6_4");
-    private static final PathSequence SourceSide4 = new PathSequence(Side.SOURCE, "SourceSide4_1", "SourceSide4_2", "SourceSide4_3", "SourceSide4_4", "SourceSide4_5", "SourceSide4_6");
-    private static final PathSequence AmpSide3 = new PathSequence(Side.AMP, "Amp3_1", "Amp3_2", "Amp3_3");
-    private static final PathSequence Sweep = new PathSequence(Side.SOURCE, "Sweep");
-    private static final PathSequence AmpSide5ToCenter = new PathSequence(Side.AMP, "AmpToCenter5_1", "AmpToCenter5_2", "AmpToCenter5_3", "AmpToCenter5_3");
+    private static final PathSequence Amp4Close = new PathSequence(Side.AMP, "Amp4Close#1", "Amp4Close#2", "Amp4Close#3");
+    private static final PathSequence Amp5Center = new PathSequence(Side.AMP, "Amp4Close#1", "Amp4Close#2", "Amp6Center#0", "Amp6Center#1", "Amp6Center#2");
+    private static final PathSequence Amp6Center = new PathSequence(Side.AMP, "Amp4Close#1", "Amp4Close#1", "Amp6Center#0", "Amp6Center#1", "Amp6Center#2", "Amp6Center#3", "Amp6Center#4");
+    private static final PathSequence Source4Center = new PathSequence(Side.SOURCE, "Source4Center#1", "Source4Center#2", "Source4Center#3", "Source4Center#4", "Source4Center#5", "Source4Center#6");
+    private static final PathSequence Amp4Center = new PathSequence(Side.AMP, "Amp4Center#1", "Amp4Center#2", "Amp4Center#3");
+    private static final PathSequence SweepCenter = new PathSequence(Side.SOURCE, "SweepCenter");
+    private static final PathSequence Amp5Center_2 = new PathSequence(Side.AMP, "Amp5Center#1", "Amp5Center#2", "Amp5Center#3", "Amp5Center#4");
 
     private static Command startTimer(){
         return Commands.runOnce(
@@ -73,6 +73,27 @@ public class Routines {
         return currentSequence;
     }
 
+    public static PathSequence getSequenceFromAutoName(String autoName){
+        switch (autoName) {
+            case "Amp4Close":
+            return Amp4Close;
+            case "Amp5Center":
+            return Amp5Center;
+            case "Amp6Center":
+            return Amp6Center;
+            case "Source4Center":
+            return Source4Center;
+            case "Amp4Center":
+            return Amp4Center;
+            case "SweepCenter":
+            return SweepCenter;
+            case "Amp5Center_2":
+            return Amp5Center_2;
+            default:
+            return new PathSequence(Side.CENTER);
+        }
+    }
+
     public static Command testAuto(Swerve swerve){
         PathPlannerPath path = PathPlannerPath.fromPathFile("Test");
         return new SequentialCommandGroup(
@@ -81,120 +102,121 @@ public class Routines {
         );
     }
  
-    public static Command Close4(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake){
-        currentSequence = Close4;
+    public static Command Amp4Close(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake){
+        currentSequence = Amp4Close;
 
         return new SequentialCommandGroup(
             startTimer(),
-            swerve.resetPoseCommand(Close4.getStartingPose()),
+            swerve.resetPoseCommand(Amp4Close.getStartingPose()),
             //new ShootSequence(swerve, pivot, shooter, elevator, conveyor)
-                Close4.getStart()
+                Amp4Close.getStart()
                 .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor))
-                .andThen(Close4.getNext())
+                .andThen(Amp4Close.getNext())
                 .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor))
-                .andThen(Close4.getEnd())
+                .andThen(Amp4Close.getEnd())
                 .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor)),
             printTimer()
         );
     }
 
-    public static Command AmpSide3(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake){
-        currentSequence = AmpSide3;
+    public static Command Amp4Center(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake){
+        currentSequence = Amp4Center;
         
         return new SequentialCommandGroup(
             startTimer(),
-            swerve.resetPoseCommand(AmpSide3.getStartingPose()),
+            swerve.resetPoseCommand(Amp4Center.getStartingPose()),
             //new ShootSequence(swerve, pivot, shooter, elevator, conveyor))
-                AmpSide3.getStart().alongWith(Commands.run(() -> intake.setIntakeOutput(IntakeConstants.INTAKE_OUTPUT))).withTimeout(3)
+                Amp4Center.getStart().alongWith(Commands.run(() -> intake.setIntakeOutput(IntakeConstants.INTAKE_OUTPUT))).withTimeout(3)
                 .finallyDo(() -> intake.stop())
                 .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor))
-                .andThen(AmpSide3.getNext())
+                .andThen(Amp4Center.getNext())
                 .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor))
-                .andThen(AmpSide3.getEnd())
+                .andThen(Amp4Center.getEnd())
                 .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor)),
             printTimer()
         );
     }
 
-    public static Command AmpSide6(Swerve swerve, Elevator elevator, Pivot pivot, Intake intake, Conveyor conveyor){
-        currentSequence = AmpSide6;
+    public static Command Amp6Center(Swerve swerve, Elevator elevator, Pivot pivot, Intake intake, Conveyor conveyor){
+        currentSequence = Amp6Center;
         return new SequentialCommandGroup(
             startTimer(),
-            swerve.resetPoseCommand(AmpSide6.getStartingPose()),
-            AmpSide6.getStart(),
+            swerve.resetPoseCommand(Amp6Center.getStartingPose()),
+            Amp6Center.getStart(),
             new WaitCommand(0.5),
-            AmpSide6.getNext(),
+            Amp6Center.getNext(),
             new WaitCommand(0.5),
-            AmpSide6.getNext(),
+            Amp6Center.getNext(),
             new WaitCommand(0.5),
-            AmpSide6.getNext(),
+            Amp6Center.getNext(),
             //new AutoIntakeFloor(swerve, elevator, pivot, intake, conveyor),
-            AmpSide6.getNext(),
+            Amp6Center.getNext(),
             new WaitCommand(0.5),
-            AmpSide6.getNext(),
+            Amp6Center.getNext(),
             //new AutoIntakeFloor(swerve, elevator, pivot, intake, conveyor),
-            AmpSide6.getEnd(),
+            Amp6Center.getEnd(),
             printTimer()
         );
     }
 
-    public static Command SourceSide4(Swerve swerve){
-        currentSequence = SourceSide4;
+    public static Command Source4Center(Swerve swerve){
+        currentSequence = Source4Center;
         return new SequentialCommandGroup(
             startTimer(),
-            swerve.resetPoseCommand(SourceSide4.getStartingPose()),
-            SourceSide4.getStart(),
+            swerve.resetPoseCommand(Source4Center.getStartingPose()),
+            Source4Center.getStart(),
             // new WaitCommand(0.75),
-            SourceSide4.getNext(),
-            SourceSide4.getNext(),
+            Source4Center.getNext(),
+            Source4Center.getNext(),
             // new WaitCommand(0.75),
-            SourceSide4.getNext(),
-            SourceSide4.getNext(),
+            Source4Center.getNext(),
+            Source4Center.getNext(),
             // new WaitCommand(0.75),
-            SourceSide4.getEnd(),
+            Source4Center.getEnd(),
             printTimer()
         );
     }
 
-    public static Command AmpSide5(Swerve swerve){
+    public static Command Amp5Center(Swerve swerve){
+        currentSequence = Amp5Center;
         return new SequentialCommandGroup(
         startTimer(),
-        swerve.resetPoseCommand(AmpSide6.getStartingPose()),
-        AmpSide6.getStart(),
+        swerve.resetPoseCommand(Amp6Center.getStartingPose()),
+        Amp6Center.getStart(),
         new WaitCommand(0.5),
-        AmpSide6.getNext(),
+        Amp6Center.getNext(),
         new WaitCommand(0.5),
-        AmpSide6.getNext(),
+        Amp6Center.getNext(),
         new WaitCommand(0.5),
-        AmpSide6.getNext(),
-        AmpSide6.getEnd(),
+        Amp6Center.getNext(),
+        Amp6Center.getEnd(),
         new WaitCommand(0.5),
         printTimer()
         );
     }
 
-    public static Command AmpSide5ToCenter(Swerve swerve){
-        currentSequence = AmpSide5ToCenter;
+    public static Command Amp5Center_2(Swerve swerve){
+        currentSequence = Amp5Center_2;
         return new SequentialCommandGroup(
             startTimer(),
-            swerve.resetPoseCommand(AmpSide5ToCenter.getStartingPose()),
-            AmpSide5ToCenter.getStart(),
-            AmpSide5ToCenter.getNext(),
-            AmpSide5ToCenter.getNext(),
-            AmpSide5ToCenter.getEnd(),
+            swerve.resetPoseCommand(Amp5Center_2.getStartingPose()),
+            Amp5Center_2.getStart(),
+            Amp5Center_2.getNext(),
+            Amp5Center_2.getNext(),
+            Amp5Center_2.getEnd(),
             printTimer()
         );
     }
 
-    public static Command Sweep(Swerve swerve, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake){
-        currentSequence = Sweep;
+    public static Command SweepCenter(Swerve swerve, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake){
+        currentSequence = SweepCenter;
         return new ParallelCommandGroup(
-            swerve.resetPoseCommand(Sweep.getStartingPose()),
+            swerve.resetPoseCommand(SweepCenter.getStartingPose()),
             pivot.angleCommand(PivotConstants.HOME_ANGLE),
             shooter.dutyCycleCommand(0.2),
-            conveyor.outputCommand(1.0),
-            intake.outputCommand(IntakeConstants.INTAKE_OUTPUT),
-            Sweep.getAll()
+            conveyor.dutyCycleCommand(1.0),
+            intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT),
+            SweepCenter.getAll()
         );
     }
 }
