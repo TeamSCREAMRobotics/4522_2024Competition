@@ -48,6 +48,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     robotContainer = new RobotContainer();
+    Vision.setPriorityTagID((int) AllianceFlippable.Number(7, 4), Limelight.SHOOTER);
   }
 
   @Override

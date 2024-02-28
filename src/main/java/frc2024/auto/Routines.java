@@ -3,8 +3,11 @@ package frc2024.auto;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.PathPlannerLogging;
+import com.team4522.lib.util.AllianceFlippable;
 import com.team4522.lib.util.PathSequence;
 import com.team4522.lib.util.PathSequence.Side;
 
@@ -49,6 +52,7 @@ public class Routines {
     private static final PathSequence SourceSide4 = new PathSequence(Side.SOURCE, "SourceSide4_1", "SourceSide4_2", "SourceSide4_3", "SourceSide4_4", "SourceSide4_5", "SourceSide4_6");
     private static final PathSequence AmpSide3 = new PathSequence(Side.AMP, "Amp3_1", "Amp3_2", "Amp3_3");
     private static final PathSequence Sweep = new PathSequence(Side.SOURCE, "Sweep");
+    private static final PathSequence AmpSide5ToCenter = new PathSequence(Side.AMP, "AmpToCenter5_1", "AmpToCenter5_2", "AmpToCenter5_3", "AmpToCenter5_3");
 
     private static Command startTimer(){
         return Commands.runOnce(
@@ -69,15 +73,13 @@ public class Routines {
         return currentSequence;
     }
 
-    /* public static Command testAuto(Swerve swerve){
-        correctionHelper = new PathCorrectionHelper();
+    public static Command testAuto(Swerve swerve){
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Test");
         return new SequentialCommandGroup(
-            resetPoseCommand(swerve, "Close4_1"),
-            new SequentialCommandGroup(
-                correctionHelper.getCommand(0)
-            )
+            swerve.resetPoseCommand(AllianceFlippable.MirroredPose2d(path.getPreviewStartingHolonomicPose())),
+            AutoBuilder.followPath(path)
         );
-    } */
+    }
  
     public static Command Close4(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake){
         currentSequence = Close4;
@@ -168,6 +170,19 @@ public class Routines {
         AmpSide6.getEnd(),
         new WaitCommand(0.5),
         printTimer()
+        );
+    }
+
+    public static Command AmpSide5ToCenter(Swerve swerve){
+        currentSequence = AmpSide5ToCenter;
+        return new SequentialCommandGroup(
+            startTimer(),
+            swerve.resetPoseCommand(AmpSide5ToCenter.getStartingPose()),
+            AmpSide5ToCenter.getStart(),
+            AmpSide5ToCenter.getNext(),
+            AmpSide5ToCenter.getNext(),
+            AmpSide5ToCenter.getEnd(),
+            printTimer()
         );
     }
 

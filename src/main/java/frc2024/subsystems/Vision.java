@@ -154,7 +154,7 @@ public class Vision extends SubsystemBase{
     }
 
     public static TimestampedVisionMeasurement getTimestampedVisionMeasurement(Limelight limelight){
-        return new TimestampedVisionMeasurement(getBotPose2d(limelight), Timer.getFPGATimestamp() - LimelightHelpers.getBotPose_wpiBlue(limelight.name)[6]);
+        return new TimestampedVisionMeasurement(LimelightHelpers.getBotPoseEstimate_wpiBlue(limelight.name).pose, Timer.getFPGATimestamp() - LimelightHelpers.getBotPose(limelight.name)[6]);
     }
 
     public static TimestampedVisionMeasurement[] getBotPoses(){
@@ -180,6 +180,10 @@ public class Vision extends SubsystemBase{
             LimelightHelpers.setLEDMode_ForceBlink(limelight.name);
             break;
         }
+    }
+
+    public static void setPriorityTagID(int id, Limelight limelight){
+        LimelightHelpers.setPriorityTagID(limelight.name, id);
     }
 
     public static void setPipeline(Limelight limelight, int index){

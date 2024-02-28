@@ -11,6 +11,8 @@ import javax.swing.text.html.Option;
 import org.photonvision.PhotonUtils;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.team4522.lib.util.AllianceFlippable;
 import com.team4522.lib.util.OrchestraUtil;
 import com.team4522.lib.util.ScreamUtil;
@@ -141,7 +143,7 @@ public class RobotContainer {
         Controlboard.goToPodiumPosition()
             .whileTrue(
                 new SuperstructureToPosition(SuperstructureState.PODIUM, m_elevator, m_pivot)
-                    .alongWith(m_shooter.velocityCommand(ShooterConstants.SUBWOOFER_VELOCITY)))
+                    .alongWith(m_shooter.velocityCommand(ShooterConstants.PODIUM_VELOCITY)))
             .onFalse(
                 new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
                     .until((() ->  superstructureAtTarget())).alongWith(m_shooter.idleCommand()));
@@ -200,12 +202,16 @@ public class RobotContainer {
                     .onFalse(m_conveyor.stopCommand().alongWith(m_intake.stopCommand())); */
                     
         Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece()).negate())
-            .or(Controlboard.intakeOverride())
+            /* .or(Controlboard.intakeOverride()) */
                 .whileTrue(
                     new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, Controlboard.endGameMode())
                 )
                     .onFalse(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()));
         
+        Controlboard.intakeOverride().whileTrue(m_conveyor.outputCommand(-ConveyorConstants.TRANSFER_OUTPUT)
+        .alongWith(m_intake.outputCommand(IntakeConstants.INTAKE_OUTPUT)))
+            .onFalse(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()));
+
         Controlboard.ejectThroughIntake()
             .whileTrue(
                 m_intake.outputCommand(IntakeConstants.EJECT_OUTPUT)
@@ -267,7 +273,9 @@ public class RobotContainer {
             Routines.AmpSide6(m_swerve, m_elevator, m_pivot, m_intake, m_conveyor).withName("AmpSide6"),
             Routines.SourceSide4(m_swerve).withName("SourceSide4"),
             Routines.AmpSide3(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake).withName("AmpSide3"),
-            Routines.Sweep(m_swerve, m_pivot, m_shooter, m_conveyor, m_intake).withName("Sweep")
+            Routines.Sweep(m_swerve, m_pivot, m_shooter, m_conveyor, m_intake).withName("Sweep"),
+            Routines.AmpSide5ToCenter(m_swerve).withName("AmpSide5ToCenter"),
+            Routines.testAuto(m_swerve)
         );
     }
 

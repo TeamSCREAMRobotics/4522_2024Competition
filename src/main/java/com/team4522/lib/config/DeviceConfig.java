@@ -51,10 +51,12 @@ public class DeviceConfig {
         config.MotorOutput = FXMotorOutputConfig(DriveConstants.MOTOR_INVERT, DriveConstants.NEUTRAL_MODE);
         config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, DriveConstants.GEAR_RATIO, 1.0, Rotation2d.fromRotations(0));
         config.CurrentLimits = FXCurrentLimitsConfig(
-            DriveConstants.CURRENT_LIMIT_ENABLE, 
+            DriveConstants.SUPPLY_LIMIT_ENABLE, 
             DriveConstants.SUPPLY_CURRENT_LIMIT, 
             DriveConstants.SUPPLY_CURRENT_THRESHOLD, 
-            DriveConstants.SUPPLY_TIME_THRESHOLD);
+            DriveConstants.SUPPLY_TIME_THRESHOLD,
+            DriveConstants.STATOR_LIMIT_ENABLE,
+            DriveConstants.STATOR_CURRENT_LIMIT);
         config.Slot0 = FXPIDConfig(DriveConstants.PID_CONSTANTS);
         config.OpenLoopRamps = FXOpenLoopRampConfig(DriveConstants.OPEN_LOOP_RAMP);
         config.ClosedLoopRamps = FXClosedLoopRampConfig(DriveConstants.CLOSED_LOOP_RAMP);
@@ -67,7 +69,7 @@ public class DeviceConfig {
         config.MotorOutput = FXMotorOutputConfig(SteerConstants.MOTOR_INVERT, SteerConstants.NEUTRAL_MODE);
         config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.FusedCANcoder, remoteSensorID, 1.0, SteerConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
         config.ClosedLoopGeneral = FXClosedLoopGeneralConfig(true);
-        config.CurrentLimits = FXCurrentLimitsConfig(
+        config.CurrentLimits = FXSupplyCurrentLimitsConfig(
             SteerConstants.CURRENT_LIMIT_ENABLE, 
             SteerConstants.SUPPLY_CURRENT_LIMIT, 
             SteerConstants.SUPPLY_CURRENT_THRESHOLD, 
@@ -96,7 +98,7 @@ public class DeviceConfig {
         config.Audio = FXAudioConfigs(false, false, true);
         config.MotorOutput = FXMotorOutputConfig(ConveyorConstants.MOTOR_INVERT, ConveyorConstants.NEUTRAL_MODE);
         config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ConveyorConstants.GEAR_RATIO, 1.0, Rotation2d.fromRotations(0));
-        config.CurrentLimits = FXCurrentLimitsConfig(
+        config.CurrentLimits = FXSupplyCurrentLimitsConfig(
             ConveyorConstants.CURRENT_LIMIT_ENABLE, 
             ConveyorConstants.SUPPLY_CURRENT_LIMIT, 
             ConveyorConstants.SUPPLY_CURRENT_THRESHOLD, 
@@ -110,7 +112,7 @@ public class DeviceConfig {
         config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(ElevatorConstants.SOFTWARE_LIMIT_ENABLE, ElevatorConstants.FORWARD_SOFT_LIMIT, ElevatorConstants.REVERSE_SOFT_LIMIT);
         config.MotorOutput = FXMotorOutputConfig(invert, ElevatorConstants.NEUTRAL_MODE);
         config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ElevatorConstants.ROTOR_TO_SENSOR_RATIO, 1.0, Rotation2d.fromDegrees(0));
-        config.CurrentLimits = FXCurrentLimitsConfig(
+        config.CurrentLimits = FXSupplyCurrentLimitsConfig(
             ElevatorConstants.CURRENT_LIMIT_ENABLE, 
             ElevatorConstants.SUPPLY_CURRENT_LIMIT, 
             ElevatorConstants.SUPPLY_CURRENT_THRESHOLD, 
@@ -132,7 +134,7 @@ public class DeviceConfig {
         config.Audio = FXAudioConfigs(false, false, true);
         config.MotorOutput = FXMotorOutputConfig(IntakeConstants.MOTOR_INVERT, IntakeConstants.NEUTRAL_MODE);
         config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, IntakeConstants.GEAR_RATIO, 1.0, Rotation2d.fromRotations(0));
-        config.CurrentLimits = FXCurrentLimitsConfig(
+        config.CurrentLimits = FXSupplyCurrentLimitsConfig(
             IntakeConstants.CURRENT_LIMIT_ENABLE, 
             IntakeConstants.SUPPLY_CURRENT_LIMIT, 
             IntakeConstants.SUPPLY_CURRENT_THRESHOLD, 
@@ -147,7 +149,7 @@ public class DeviceConfig {
         config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, PivotConstants.TOTAL_GEAR_RATIO, 1.0, Rotation2d.fromDegrees(0.0));
         config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(PivotConstants.SOFTWARE_LIMIT_ENABLE, PivotConstants.FORWARD_SOFT_LIMIT.getRotations(), PivotConstants.REVERSE_SOFT_LIMIT.getRotations());
         config.HardwareLimitSwitch = FXHardwareLimitSwitchConfig(PivotConstants.HARDWARE_LIMIT_ENABLE_FORWARD, PivotConstants.HARDWARE_LIMIT_ENABLE_REVERSE, PivotConstants.HARDWARE_LIMIT_POSITION_FORWARD, PivotConstants.HARDWARE_LIMIT_POSITION_REVERSE);
-        config.CurrentLimits = FXCurrentLimitsConfig(
+        config.CurrentLimits = FXSupplyCurrentLimitsConfig(
             PivotConstants.CURRENT_LIMIT_ENABLE, 
             PivotConstants.SUPPLY_CURRENT_LIMIT, 
             PivotConstants.SUPPLY_CURRENT_THRESHOLD, 
@@ -170,7 +172,7 @@ public class DeviceConfig {
         config.Audio = FXAudioConfigs(false, false, true);
         config.MotorOutput = FXMotorOutputConfig(invertValue, ShooterConstants.NEUTRAL_MODE);
         config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ShooterConstants.GEAR_RATIO, 1.0, Rotation2d.fromRotations(0));
-        config.CurrentLimits = FXCurrentLimitsConfig(
+        config.CurrentLimits = FXSupplyCurrentLimitsConfig(
             ShooterConstants.CURRENT_LIMIT_ENABLE, 
             ShooterConstants.SUPPLY_CURRENT_LIMIT, 
             ShooterConstants.SUPPLY_CURRENT_THRESHOLD, 
@@ -186,7 +188,7 @@ public class DeviceConfig {
         config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(ClimberConstants.SOFTWARE_LIMIT_ENABLE, ClimberConstants.FORWARD_SOFT_LIMIT, ClimberConstants.REVERSE_SOFT_LIMIT);
         config.MotorOutput = FXMotorOutputConfig(ClimberConstants.MOTOR_INVERT, ClimberConstants.NEUTRAL_MODE);
         config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ClimberConstants.GEAR_RATIO, 1.0, Rotation2d.fromRotations(0));
-        config.CurrentLimits = FXCurrentLimitsConfig(
+        config.CurrentLimits = FXSupplyCurrentLimitsConfig(
             ClimberConstants.CURRENT_LIMIT_ENABLE, 
             ClimberConstants.SUPPLY_CURRENT_LIMIT, 
             ClimberConstants.SUPPLY_CURRENT_THRESHOLD, 
@@ -298,12 +300,23 @@ public class DeviceConfig {
         return config;
     }
 
-    public static CurrentLimitsConfigs FXCurrentLimitsConfig(boolean enable, double limit, double currentThreshold, double timeThreshold){
+    public static CurrentLimitsConfigs FXSupplyCurrentLimitsConfig(boolean enable, double limit, double currentThreshold, double timeThreshold){
         CurrentLimitsConfigs config = new CurrentLimitsConfigs();
         config.SupplyCurrentLimitEnable = enable;
         config.SupplyCurrentLimit = limit;
         config.SupplyCurrentThreshold = currentThreshold;
         config.SupplyTimeThreshold = timeThreshold;
+        return config;
+    }
+
+    public static CurrentLimitsConfigs FXCurrentLimitsConfig(boolean supplyEnable, double supplyLimit, double supplyCurrentThreshold, double supplyTimeThreshold, boolean statorEnable, double statorLimit){
+        CurrentLimitsConfigs config = new CurrentLimitsConfigs();
+        config.SupplyCurrentLimitEnable = supplyEnable;
+        config.SupplyCurrentLimit = supplyLimit;
+        config.SupplyCurrentThreshold = supplyCurrentThreshold;
+        config.SupplyTimeThreshold = supplyTimeThreshold;
+        config.StatorCurrentLimitEnable = statorEnable;
+        config.StatorCurrentLimit = statorLimit;
         return config;
     }
 

@@ -50,8 +50,8 @@ public class SwerveModule {
 
     private SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(DriveConstants.KS, DriveConstants.KV, DriveConstants.KA);
 
-    private DutyCycleOut m_driveDutyCyleRequest = new DutyCycleOut(0).withEnableFOC(true);
-    private VelocityVoltage m_driveVelocityRequest = new VelocityVoltage(0).withEnableFOC(true);
+    private DutyCycleOut m_driveDutyCyleRequest = new DutyCycleOut(0);
+    private VelocityVoltage m_driveVelocityRequest = new VelocityVoltage(0).withEnableFOC(false);
     private MotionMagicVoltage m_steerPositionRequest = new MotionMagicVoltage(0);
 
     /**
@@ -154,7 +154,7 @@ public class SwerveModule {
             if(isOpenLoop){
                 m_driveMotor.setControl(m_driveDutyCyleRequest.withOutput(desiredState.speedMetersPerSecond / SwerveConstants.MAX_SPEED));
             } else {
-                double velocity = Conversions.mpsToFalconRPS(desiredState.speedMetersPerSecond, SwerveConstants.MODULE_TYPE.wheelCircumference, 1);
+                double velocity = Conversions.mpsToFalconRPS(desiredState.speedMetersPerSecond, SwerveConstants.MODULE_TYPE.wheelCircumference, 1.0);
                 double feedforward = m_feedforward.calculate(desiredState.speedMetersPerSecond);
                 m_driveMotor.setControl(m_driveVelocityRequest.withVelocity(velocity).withFeedForward(feedforward));
             }
@@ -240,7 +240,7 @@ public class SwerveModule {
         double speedMetersPerSecond = Conversions.falconRPSToMechanismMPS(
             m_driveMotor.getVelocity().getValue(), 
             SwerveConstants.MODULE_TYPE.wheelCircumference, 
-            1);
+            1.0);
 
         Rotation2d angle = Rotation2d.fromRotations(m_steerPosition.getValue());
 

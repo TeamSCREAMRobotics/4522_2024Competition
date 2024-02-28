@@ -87,7 +87,8 @@ public class Elevator extends SubsystemBase{
     }
 
     public void setElevatorVoltage(double voltage){
-        setElevator(m_voltageRequest.withOutput(voltage + ElevatorConstants.KG));
+        double volts = getElevatorHeight() < 0.25 ? voltage : voltage + ElevatorConstants.KG;
+        setElevator(m_voltageRequest.withOutput(volts));
     }
 
     private void setTargetPosition(double positionRotations){

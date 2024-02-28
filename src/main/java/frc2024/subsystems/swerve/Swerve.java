@@ -25,6 +25,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -88,10 +89,10 @@ public class Swerve extends SubsystemBase {
          * It uses these values to estimate the robot's position on the field.
          */
         m_poseEstimator = new SwerveDrivePoseEstimator(
-            SwerveConstants.KINEMATICS, 
+            SwerveConstants.POSE_ESTIMATOR_KINEMATICS, 
             getYaw(), 
             getModulePositions(), 
-            new Pose2d(), 
+            Vision.getBotPose2d(Limelight.SHOOTER), 
             VisionConstants.STATE_STD_DEVS,
             VisionConstants.VISION_STD_DEVS
         );
@@ -158,7 +159,7 @@ public class Swerve extends SubsystemBase {
      */
     public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, boolean isOpenLoop){
         m_currentSpeeds = chassisSpeeds;
-        SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds, new Translation2d());
+        SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
 
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.MAX_SPEED);
         m_currentSpeeds = SwerveConstants.KINEMATICS.toChassisSpeeds(swerveModuleStates);
@@ -209,7 +210,7 @@ public class Swerve extends SubsystemBase {
      * @param pose The new pose to set.
      */
     public void resetPose(Pose2d pose) {
-        m_poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
+        m_poseEstimator.resetPosition(getRotation(), getModulePositions(), pose);
     }
 
     /**
@@ -321,10 +322,12 @@ public class Swerve extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        /* for(TimestampedVisionMeasurement measurement : Vision.getBotPoses()){
+        for(TimestampedVisionMeasurement measurement : Vision.getBotPoses()){
             m_poseEstimator.addVisionMeasurement(measurement.pose(), measurement.timestamp());
-        } */
-        //System.out.println("Rotation: " + getPose().getRotation().getDegrees());
+        }
+        if(DriverStation.isEnabled()){
+            System.out.println(getPose());
+        }
     }
 
     public Command resetPoseCommand(Pose2d pose){

@@ -65,7 +65,7 @@ public class Conversions {
   public static double falconRPSToMechanismMPS(
       double falconRPS, double circumference, double gearRatio) {
     double wheelRPM = falconRPSToMechanismRPM(falconRPS, gearRatio);
-    return (wheelRPM * circumference) / 60;
+    return (wheelRPM * circumference) / 60.0;
   }
 
   /**

@@ -113,7 +113,7 @@ public final class Constants{
 
         /* Swerve Kinematics */
         public static final double SHOOT_WHILE_MOVING_SCALAR = 0.5;
-        public static final double MAX_SPEED = 4.98; // m/s theoretical = 5.7
+        public static final double MAX_SPEED = 4.8; // m/s theoretical = 5.7
         public static final double MAX_ACCELERATION = 4.9; // m/s^2 theoretical
         public static final double MAX_ANGULAR_VELOCITY = 8.0; // rad/s
         public static final double MAX_ANGULAR_ACCELERATION = 7.679;
@@ -123,6 +123,13 @@ public final class Constants{
         public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
                 new Translation2d(WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
                 new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
+                new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
+                new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0)
+        );
+
+        public static final SwerveDriveKinematics POSE_ESTIMATOR_KINEMATICS = new SwerveDriveKinematics(
+                new Translation2d(WHEEL_BASE + Units.inchesToMeters(5 - 2.75) / 2.0, TRACK_WIDTH / 2.0),
+                new Translation2d(WHEEL_BASE + Units.inchesToMeters(5 - 2.75) / 2.0, -TRACK_WIDTH / 2.0),
                 new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
                 new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0)
         );
@@ -175,12 +182,14 @@ public final class Constants{
             public static final int SUPPLY_CURRENT_LIMIT = 40;
             public static final int SUPPLY_CURRENT_THRESHOLD = 70;
             public static final double SUPPLY_TIME_THRESHOLD = 1.0;
-            public static final boolean CURRENT_LIMIT_ENABLE = true;
+            public static final boolean SUPPLY_LIMIT_ENABLE = true;
             public static final double SLIP_CURRENT = 400;
+            public static final int STATOR_CURRENT_LIMIT = 80;
+            public static final boolean STATOR_LIMIT_ENABLE = true;
 
             /* Ramps */
-            public static final double OPEN_LOOP_RAMP = 0.05;
-            public static final double CLOSED_LOOP_RAMP = 0.1;
+            public static final double OPEN_LOOP_RAMP = 0.0;
+            public static final double CLOSED_LOOP_RAMP = 0.0;
 
             /* PID Constants */
             public static final double KP = 0.12; // TODO ROBOT SPECIFIC
@@ -422,13 +431,13 @@ public final class Constants{
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA, GravityTypeValue.Arm_Cosine);
 
         public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(14.0);
-        public static final Rotation2d HOME_ANGLE_ENDGAME = Rotation2d.fromDegrees(0.0);
-        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(-2.8125);
-        public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(18.6328);
-        public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(24.0);
-        public static final Rotation2d CHAIN_ANGLE = Rotation2d.fromDegrees(26.103);
-        public static final Rotation2d PODIUM_ANGLE = Rotation2d.fromDegrees(22.24); //Robot Angle = -154.53 deg
-        public static final Rotation2d PODIUM_DEFENDED_ANGLE = Rotation2d.fromDegrees(33.05); //Robot Angle = -154.53 deg
+        public static final Rotation2d HOME_ANGLE_ENDGAME = Rotation2d.fromDegrees(-13.623);
+        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(-5.3613);
+        public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(16.9629);
+        public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(29.0039);
+        public static final Rotation2d CHAIN_ANGLE = Rotation2d.fromDegrees(22.93945);
+        public static final Rotation2d PODIUM_ANGLE = Rotation2d.fromDegrees(13.7988);
+        public static final Rotation2d PODIUM_DEFENDED_ANGLE = Rotation2d.fromDegrees(24.1699);
         public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(44.0);
 
         public static final double AUTO_ZERO_OUTPUT = 0.0;
@@ -484,9 +493,9 @@ public final class Constants{
         public static final double HOME_HEIGHT_FROM_FLOOR = Units.inchesToMeters(26.553805);
 
         public static final double HOME_HEIGHT = 0.0;
-        public static final double HOME_HEIGHT_ENDGAME = 0.0;
-        public static final double SUBWOOFER_HEIGHT = 4.889; //3.5;
-        public static final double AMP_HEIGHT = MAX_HEIGHT-0.5;
+        public static final double HOME_HEIGHT_ENDGAME = 3.408;
+        public static final double SUBWOOFER_HEIGHT = 3.12684; //3.5;
+        public static final double AMP_HEIGHT = 19.70989;
         public static final double TRAP_CHAIN_HEIGHT = MAX_HEIGHT;
 
         public static final double REHOME_VOLTAGE = -5.0;
@@ -564,8 +573,8 @@ public final class Constants{
     public static record ShootState(Rotation2d pivotAngle, double elevatorHeightInches, double velocityRPM){}
 
     public static final class VisionConstants {
-        public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.03, 0.03, 0.001);
-        public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
+        public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.003, 0.003, 0.001);
+        public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(0.7, 0.7, 0.7);
 
         public static final double DETECTOR_TARGET_Y = 0.0;
         public static final double DETECTOR_TARGET_X = 0.0;
