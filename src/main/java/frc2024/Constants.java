@@ -358,7 +358,7 @@ public final class Constants{
         public static final double ACCELERATION = 5;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.34, 0.0, 0.0);
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.34, 0.0001, 0.0);
 
         public static final double KS = 0.0;
         public static final double KV = 0.12;
@@ -366,7 +366,7 @@ public final class Constants{
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
 
-        public static final double TARGET_THRESHOLD = 100.0; // rpm
+        public static final double TARGET_THRESHOLD = 50.0; // rpm
 
         public static final double AUTO_SHOOT_VELOCITY_THRESHOLD = 4800; // rpm
         public static final double AUTO_SHOOT_DISTANCE_THRESHOLD = 6.5; // meters
@@ -382,15 +382,6 @@ public final class Constants{
 
         public static final double SHOOT_OUTPUT = 0.8;
         public static final double EJECT_OUTPUT = 0.25;//0.5;
-
-        //I believe it is actually the time it takes for it to leave the shooter,
-            //not the time it takes for the note to reach the speaker, from 1706
-                //1706 values ranged from .78 - .83 and was changing based on the angle they shot at
-        public static final InterpolatingDoubleTreeMap TIME_TO_GOAL_MAP = new InterpolatingDoubleTreeMap();
-        static{
-            // (angle to target, time (seconds))
-            TIME_TO_GOAL_MAP.put(0.0, 0.0);
-        }
     }
     
     public static final class PivotConstants { //TODO all values

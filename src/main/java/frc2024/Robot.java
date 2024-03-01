@@ -122,9 +122,10 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledExit() {
-    RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Brake, NeutralModeValue.Brake);
     CommandScheduler.getInstance().cancelAll();
+    RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Brake, NeutralModeValue.Brake);
     RobotContainer.stopAll();
+    timeSinceDisabled.stop();
   }
 
   @Override
