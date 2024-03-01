@@ -43,10 +43,10 @@ public final class Constants{
         }
     }
     public enum Mode{
-        REAL, REPLAY, SIM;
+        REAL, REPLAY, SIM, DEV;
     }
 
-    public static final Mode MODE = Mode.SIM;
+    public static final Mode MODE = Mode.DEV;
 
     /* Robot loop time */
     public static final double LOOP_TIME_SEC = 0.02;
@@ -118,7 +118,7 @@ public final class Constants{
 
         /* Swerve Kinematics */
         public static final double SHOOT_WHILE_MOVING_SCALAR = 0.5;
-        public static final double MAX_SPEED = 4.8; // m/s theoretical = 5.7
+        public static final double MAX_SPEED = 4.9; // m/s theoretical = 5.7
         public static final double MAX_ACCELERATION = 4.9; // m/s^2 theoretical
         public static final double MAX_ANGULAR_VELOCITY = 8.0; // rad/s
         public static final double MAX_ANGULAR_ACCELERATION = 7.679;
@@ -154,7 +154,7 @@ public final class Constants{
         public static final ScreamPIDConstants DRIVE_TO_TARGET_CONSTANTS = new ScreamPIDConstants(1.5, 0.0, 0.0);
 
         /* PathPlanner Constants */
-        public static final ScreamPIDConstants PATH_TRANSLATION_CONSTANTS = new ScreamPIDConstants(15.0, 0.0, 0.0);
+        public static final ScreamPIDConstants PATH_TRANSLATION_CONSTANTS = new ScreamPIDConstants(25.0, 0.0, 0.0);
         public static final ScreamPIDConstants PATH_ROTATION_CONSTANTS = new ScreamPIDConstants(10.0, 0.0, 0.0);
 
         public static final HolonomicPathFollowerConfig PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(
@@ -346,11 +346,11 @@ public final class Constants{
         public static final InvertedValue MOTOR_INVERT = InvertedValue.Clockwise_Positive;;
         
         /* Neutral Modes */
-        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Coast;
         
         /* Current Limits */
-        public static final int SUPPLY_CURRENT_LIMIT = 35;
-        public static final int SUPPLY_CURRENT_THRESHOLD = 60;
+        public static final int SUPPLY_CURRENT_LIMIT = 40;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 50;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
 
@@ -358,15 +358,15 @@ public final class Constants{
         public static final double ACCELERATION = 5;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.35, 0.0, 0.0);
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.34, 0.0, 0.0);
 
         public static final double KS = 0.0;
-        public static final double KV = 0.11;
+        public static final double KV = 0.12;
         public static final double KA = 0.0;
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
 
-        public static final double TARGET_THRESHOLD = 75.0; // rpm
+        public static final double TARGET_THRESHOLD = 100.0; // rpm
 
         public static final double AUTO_SHOOT_VELOCITY_THRESHOLD = 4800; // rpm
         public static final double AUTO_SHOOT_DISTANCE_THRESHOLD = 6.5; // meters
@@ -376,7 +376,7 @@ public final class Constants{
         public static final double SUBWOOFER_VELOCITY = 2500.0;
         public static final double CHAIN_VELOCITY = 4000.0;
         public static final double PODIUM_VELOCITY = 3000.0;
-        public static final double IDLE_VELOCITY = 500.0;
+        public static final double IDLE_VELOCITY = 800.0;
 
         public static final double TRAJECTORY_VELOCITY_EXTRA = 1700.0;
 
@@ -421,10 +421,10 @@ public final class Constants{
         public static final double HARDWARE_LIMIT_POSITION_FORWARD = 0.0;
         public static final double HARDWARE_LIMIT_POSITION_REVERSE = 0.0;
 
-        public static final double TARGET_THRESHOLD = 0.50; //Degrees
+        public static final double TARGET_THRESHOLD = 0.4; //Degrees
 
         public static final double CRUISE_VELOCITY = 200;
-        public static final double ACCELERATION = 175;
+        public static final double ACCELERATION = 200;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
         public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(400.0, 0.0, 0.0); //500
@@ -437,13 +437,13 @@ public final class Constants{
 
         public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(14.0);
         public static final Rotation2d HOME_ANGLE_ENDGAME = Rotation2d.fromDegrees(-13.623);
-        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(-5.3613);
+        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(-5.3613).minus(Rotation2d.fromDegrees(1.5));
         public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(16.9629);
         public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(29.0039);
         public static final Rotation2d CHAIN_ANGLE = Rotation2d.fromDegrees(22.93945);
         public static final Rotation2d PODIUM_ANGLE = Rotation2d.fromDegrees(13.7988);
         public static final Rotation2d PODIUM_DEFENDED_ANGLE = Rotation2d.fromDegrees(24.1699);
-        public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(44.0);
+        public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(56.0742);
 
         public static final double AUTO_ZERO_OUTPUT = 0.0;
 
@@ -489,7 +489,7 @@ public final class Constants{
         public static final double KG = 0.415;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA, GravityTypeValue.Elevator_Static);
 
-        public static final double TARGET_THRESHOLD = 0.1; // inches
+        public static final double TARGET_THRESHOLD = 0.75; // inches
 
         public static final double MAX_HEIGHT = 21.75; // inches
         public static final double MIN_HEIGHT = 0.0; // inches
@@ -521,7 +521,7 @@ public final class Constants{
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
         
         /* Current Limits */
-        public static final int SUPPLY_CURRENT_LIMIT = 20;
+        public static final int SUPPLY_CURRENT_LIMIT = 25;
         public static final int SUPPLY_CURRENT_THRESHOLD = 40;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
@@ -578,12 +578,12 @@ public final class Constants{
     public static record ShootState(Rotation2d pivotAngle, double elevatorHeightInches, double velocityRPM){}
 
     public static final class VisionConstants {
-        public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.003, 0.003, 0.001);
-        public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(0.7, 0.7, 0.7);
+        public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.003, 0.003, 0.9);
+        public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(0.9, 0.9, 0.001);
 
         public static final double DETECTOR_TARGET_Y = 0.0;
         public static final double DETECTOR_TARGET_X = 0.0;
-        public static final double AUTO_FIRE_X_THRESHOLD = 0;
+        public static final double AUTO_FIRE_X_THRESHOLD = 0.8;
         public static final double AUTO_INTAKE_Y_THRESHOLD = 0.0;
 
         public static final Rotation2d SHOOT_STATE_MAP_ANGLE_OFFSET = Rotation2d.fromDegrees(0.0);

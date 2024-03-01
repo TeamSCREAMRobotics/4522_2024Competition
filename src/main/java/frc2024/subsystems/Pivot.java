@@ -1,5 +1,6 @@
 package frc2024.subsystems;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -85,11 +86,11 @@ public class Pivot extends SubsystemBase{
     }
 
     public Rotation2d getPivotError(){
-        return m_targetAngle.minus(getPivotAngle());
+        return Rotation2d.fromDegrees(Math.abs(m_targetAngle.getDegrees()) - Math.abs(getPivotAngle().getDegrees()));
     }
 
-    public boolean getPivotAtTarget(){
-        return Math.abs(getPivotError().getDegrees()) < PivotConstants.TARGET_THRESHOLD;
+    public BooleanSupplier getPivotAtTarget(){
+        return () -> Math.abs(getPivotError().getDegrees()) < PivotConstants.TARGET_THRESHOLD;
     }
 
     public double getPivotCurrent(){
@@ -102,7 +103,8 @@ public class Pivot extends SubsystemBase{
 
     @Override
     public void periodic() {
-        logOutputs();
+        System.out.println("Pivot:" + getPivotAtTarget().getAsBoolean());
+        //logOutputs();
     }
 
     public void logOutputs(){
@@ -111,7 +113,7 @@ public class Pivot extends SubsystemBase{
         Logger.recordOutput("Pivot/Measured/ErrorDegrees", getPivotError());
         Logger.recordOutput("Pivot/Setpoint/Angle", m_targetAngle);
         Logger.recordOutput("Pivot/Setpoint/Rotations", m_targetAngle.getRotations());
-        Logger.recordOutput("Pivot/Setpoint/AtTarget", getPivotAtTarget());
+        Logger.recordOutput("Pivot/Setpoint/AtTarget", getPivotAtTarget().getAsBoolean());
         Logger.recordOutput("Pivot/Power/StatorCurrent", m_pivotMotor.getStatorCurrent().getValueAsDouble());
         Logger.recordOutput("Pivot/Power/SupplyCurrent", m_pivotMotor.getSupplyCurrent().getValueAsDouble());
         Logger.recordOutput("Pivot/Power/Voltage", m_pivotMotor.getSupplyVoltage().getValueAsDouble());

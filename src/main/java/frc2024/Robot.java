@@ -56,7 +56,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
-    System.out.println("[Init] Starting AdvantageKit");
+    /* System.out.println("[Init] Starting AdvantageKit");
     Logger.recordMetadata("RuntimeType", getRuntimeType().toString());
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
@@ -89,14 +89,12 @@ public class Robot extends LoggedRobot {
         Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
         Logger.start();
         break;
-      case SIM:
+      case SIM, DEV:
         break;
       default:
         break;
-    }
-
-    // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in the "Understanding Data Flow" page
- // Start logging! No more data receivers, replay sources, or metadata values may be added.
+    } */
+  // Start logging! No more data receivers, replay sources, or metadata values may be added.
 
     robotContainer = new RobotContainer();
     Vision.setPriorityTagID((int) AllianceFlippable.Number(7, 4), Limelight.SHOOTER);
@@ -118,7 +116,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledPeriodic() {
     if(((int) timeSinceDisabled.get()) == 5){
-      RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Coast, NeutralModeValue.Coast);
+      //RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Coast, NeutralModeValue.Coast);
     }
   }
 
@@ -146,14 +144,13 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousExit() {
     RobotContainer.stopAll();
-  }
-
-  @Override
-  public void teleopInit() {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
   }
+
+  @Override
+  public void teleopInit() {}
 
   @Override
   public void teleopPeriodic() {}

@@ -28,7 +28,7 @@ public class Conveyor extends SubsystemBase{
     private DigitalInput m_beam;
 
     private DutyCycleOut m_dutyCycleRequest = new DutyCycleOut(0);
-    private Debouncer m_beamDebouncer = new Debouncer(0.035, DebounceType.kBoth);
+    private Debouncer m_beamDebouncer = new Debouncer(0.1, DebounceType.kBoth);
 
     public Conveyor(){
         m_conveyorMotor = new TalonFX(Ports.CONVEYOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
@@ -69,7 +69,9 @@ public class Conveyor extends SubsystemBase{
     }
 
     @Override
-    public void periodic() {}
+    public void periodic() {
+        // System.out.println(hasPiece().getAsBoolean());
+    }
 
     public Command dutyCycleCommand(double output){
         return run(() -> setConveyorOutput(output));

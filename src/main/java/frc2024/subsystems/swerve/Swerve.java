@@ -85,7 +85,7 @@ public class Swerve extends SubsystemBase {
             SwerveConstants.POSE_ESTIMATOR_KINEMATICS, 
             getYaw(), 
             getModulePositions(), 
-            Vision.getBotPose2d(Limelight.SHOOTER), 
+            new Pose2d(), 
             VisionConstants.STATE_STD_DEVS,
             VisionConstants.VISION_STD_DEVS
         );
@@ -290,6 +290,8 @@ public class Swerve extends SubsystemBase {
      */
     public void configGyro() {
         DeviceConfig.configurePigeon2("Swerve Pigeon", m_pigeon2, DeviceConfig.swervePigeonConfig(), Constants.LOOP_TIME_HZ);
+        m_pigeon2.getAngularVelocityZWorld().setUpdateFrequency(100.0);
+        m_pigeon2.optimizeBusUtilization();
         resetYaw(AllianceFlippable.getForwardRotation());
     }
 
@@ -318,9 +320,6 @@ public class Swerve extends SubsystemBase {
         if(Vision.getTimestampedVisionMeasurement(Limelight.SHOOTER).isPresent()){
             TimestampedVisionMeasurement measurement = Vision.getTimestampedVisionMeasurement(Limelight.SHOOTER).get();
             m_poseEstimator.addVisionMeasurement(measurement.pose(), measurement.timestamp());
-        }
-        if(DriverStation.isEnabled()){
-            System.out.println(getPose());
         }
     }
 

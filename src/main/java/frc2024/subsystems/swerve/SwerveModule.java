@@ -248,7 +248,7 @@ public class SwerveModule {
         double driveRotations = BaseStatusSignal.getLatencyCompensatedValue(m_drivePosition, m_driveVelocity);
         double angleRotations = BaseStatusSignal.getLatencyCompensatedValue(m_steerPosition, m_steerVelocity);
 
-        double distance = Conversions.falconRotationsToMechanismMeters(driveRotations, SwerveConstants.MODULE_TYPE.wheelCircumference, 1);
+        double distance = Conversions.falconRotationsToMechanismMeters(driveRotations - 0.35, SwerveConstants.MODULE_TYPE.wheelCircumference, 1);
         Rotation2d angle = Rotation2d.fromRotations(angleRotations);
 
         m_internalState.distanceMeters = distance;

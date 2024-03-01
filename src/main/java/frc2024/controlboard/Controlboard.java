@@ -29,13 +29,13 @@ public class Controlboard{
     public static final double TRIGGER_DEADBAND = 0.10;
     public static final Rotation2d SNAP_TO_POLE_THRESHOLD = Rotation2d.fromDegrees(7.0);
 
-    private static final CommandXboxController driverController_Command = new CommandXboxController(0);
-    private static final XboxController driverController = new XboxController(0);
-    private static final CommandXboxController operatorController_Command = new CommandXboxController(1);
-    private static final XboxController operatorController = new XboxController(1);
-    private static final Buttonboard buttonBoard = new Buttonboard(2, 3);
+    public static final CommandXboxController driverController_Command = new CommandXboxController(0);
+    public static final XboxController driverController = new XboxController(0);
+    public static final CommandXboxController operatorController_Command = new CommandXboxController(1);
+    public static final XboxController operatorController = new XboxController(1);
+    public static final Buttonboard buttonBoard = new Buttonboard(2, 3);
 
-    private static boolean fieldCentric = true;
+    public static boolean fieldCentric = true;
 
     public static Command driverRumbleCommand(RumbleType type, double value, double time){
         return new RunCommand(() -> driverController.setRumble(type, value))
@@ -156,7 +156,7 @@ public class Controlboard{
 
     /* Climber */
     public static final DoubleSupplier getManualClimberOutput(){
-        return () -> -buttonBoard.getBigSwitchY();
+        return () -> -buttonBoard.getBigSwitchY()/2;
     }
 
     /* Shooter/Conveyor */
@@ -182,7 +182,7 @@ public class Controlboard{
 
     /* Elevator */
     public static final DoubleSupplier getManualElevatorOutput(){
-        return () -> (-MathUtil.applyDeadband(operatorController_Command.getLeftY(), STICK_DEADBAND))*8;
+        return () -> (-MathUtil.applyDeadband(operatorController_Command.getLeftY(), STICK_DEADBAND))*6;
     }
     
     public static final Trigger resetElevatorHeight(){

@@ -195,15 +195,20 @@ public class Routines {
         );
     }
 
-    public static Command Amp5Center_2(Swerve swerve){
+    public static Command Amp5Center_2(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor){
         currentSequence = Amp5Center_2;
         return new SequentialCommandGroup(
             startTimer(),
             swerve.resetPoseCommand(Amp5Center_2.getStartingPose()),
-            Amp5Center_2.getStart(),
-            Amp5Center_2.getNext(),
-            Amp5Center_2.getNext(),
-            Amp5Center_2.getEnd(),
+            new ShootSequence(SuperstructureState.SUBWOOFER, ShooterConstants.SUBWOOFER_VELOCITY + 500.0, pivot, shooter, elevator, conveyor),
+            Amp5Center_2.getIndex(0),
+            new ShootSequence(swerve, pivot, shooter, elevator, conveyor),
+            Amp5Center_2.getIndex(1),
+            new ShootSequence(swerve, pivot, shooter, elevator, conveyor),
+            Amp5Center_2.getIndex(2),
+            new ShootSequence(swerve, pivot, shooter, elevator, conveyor),
+            Amp5Center_2.getIndex(3),
+            new ShootSequence(swerve, pivot, shooter, elevator, conveyor),
             printTimer()
         );
     }
