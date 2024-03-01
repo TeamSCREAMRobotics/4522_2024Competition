@@ -59,6 +59,6 @@ public class AutoClimbCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return elevator.getElevatorAtTarget() && pivot.getPivotAtTarget() && climber.getClimberAtTarget();
+    return elevator.getElevatorAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && climber.getClimberAtTarget();
   }
 }

@@ -32,7 +32,7 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
+    "maxVelocity": 4.9,
     "maxAcceleration": 4.9,
     "maxAngularVelocity": 570.0,
     "maxAngularAcceleration": 500.0
@@ -43,7 +43,7 @@
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "Amp7_Center",
+  "folder": "7AmpSide_Center",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

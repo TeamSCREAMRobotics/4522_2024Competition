@@ -1,5 +1,6 @@
 package frc2024.subsystems;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import org.littletonrobotics.junction.Logger;
@@ -18,6 +19,7 @@ import com.team4522.lib.math.Conversions;
 import com.team4522.lib.util.OrchestraUtil;
 import com.team4522.lib.util.ScreamUtil;
 
+import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -48,6 +50,8 @@ public class Shooter extends SubsystemBase{
     private void configShooterMotors() {
         DeviceConfig.configureTalonFX("Right Shooter Motor", m_rightShooterMotor, DeviceConfig.shooterFXConfig(InvertedValue.Clockwise_Positive), Constants.DEVICE_LOOP_TIME_HZ);
         DeviceConfig.configureTalonFX("Left Shooter Motor", m_leftShooterMotor, DeviceConfig.shooterFXConfig(InvertedValue.Clockwise_Positive), Constants.DEVICE_LOOP_TIME_HZ);
+        m_rightShooterMotor.getRotorVelocity().setUpdateFrequency(50.0);
+        m_leftShooterMotor.getRotorVelocity().setUpdateFrequency(50.0);
         ParentDevice.optimizeBusUtilizationForAll(m_rightShooterMotor, m_leftShooterMotor);
      }
     
@@ -90,8 +94,8 @@ public class Shooter extends SubsystemBase{
         return m_targetVelocity;
     }
 
-    public boolean getShooterAtTarget(){
-        return Math.abs(getShooterError()) < ShooterConstants.TARGET_THRESHOLD;
+    public BooleanSupplier getShooterAtTarget(){
+        return () -> Math.abs(getShooterError()) < ShooterConstants.TARGET_THRESHOLD;
     }
 
     public double getShooterCurrent(){
@@ -109,14 +113,15 @@ public class Shooter extends SubsystemBase{
 
     @Override
     public void periodic() {
-        logOutputs();
+        System.out.println("Shooter: " + getShooterAtTarget().getAsBoolean());
+        //logOutputs();
     }
 
     public void logOutputs(){
         Logger.recordOutput("Shooter/Measured/AverageVelocity", getRPM());
         Logger.recordOutput("Shooter/Measured/AverageError", getShooterError());
         Logger.recordOutput("Shooter/Setpoint/Velocity", m_targetVelocity);
-        Logger.recordOutput("Shooter/Setpoint/AtTarget", getShooterAtTarget());
+        Logger.recordOutput("Shooter/Setpoint/AtTarget", getShooterAtTarget().getAsBoolean());
         Logger.recordOutput("Shooter/Power/Left/SupplyCurrent", m_leftShooterMotor.getSupplyCurrent().getValueAsDouble());
         Logger.recordOutput("Shooter/Power/Left/StatorCurrent", m_leftShooterMotor.getStatorCurrent().getValueAsDouble());
         Logger.recordOutput("Shooter/Power/Left/Voltage", m_leftShooterMotor.getSupplyVoltage().getValueAsDouble());

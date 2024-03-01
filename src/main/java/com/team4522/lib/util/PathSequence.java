@@ -90,7 +90,7 @@ public class PathSequence {
 
     public Command getIndex(int index){
         try {
-            return getPathCommand(list.get(index-1));
+            return getPathCommand(list.get(index));
         } catch (IndexOutOfBoundsException e) {
             DriverStation.reportWarning("[Auto] No path at specified index " + index + ". Last supplied path: " + pathNames[pathNames.length-1], null);
             return new InstantCommand();

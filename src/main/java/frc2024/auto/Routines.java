@@ -31,6 +31,7 @@ import frc2024.Constants.ShooterConstants;
 import frc2024.Constants.SwerveConstants;
 import frc2024.commands.AutoFire;
 import frc2024.commands.ShootSequence;
+import frc2024.commands.ShootSequence2;
 import frc2024.commands.SuperstructureToPosition;
 import frc2024.commands.intake.AutoIntakeFloor;
 import frc2024.commands.swerve.FaceVisionTarget;
@@ -195,15 +196,20 @@ public class Routines {
         );
     }
 
-    public static Command Amp5Center_2(Swerve swerve){
+    public static Command Amp5Center_2(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor){
         currentSequence = Amp5Center_2;
         return new SequentialCommandGroup(
             startTimer(),
             swerve.resetPoseCommand(Amp5Center_2.getStartingPose()),
-            Amp5Center_2.getStart(),
-            Amp5Center_2.getNext(),
-            Amp5Center_2.getNext(),
-            Amp5Center_2.getEnd(),
+            new ShootSequence(SuperstructureState.SUBWOOFER, ShooterConstants.SUBWOOFER_VELOCITY + 500.0, pivot, shooter, elevator, conveyor),
+            Amp5Center_2.getIndex(0),
+            new ShootSequence2(swerve, elevator, pivot, shooter, conveyor),
+            Amp5Center_2.getIndex(1),
+            new ShootSequence2(swerve, elevator, pivot, shooter, conveyor),
+            Amp5Center_2.getIndex(2),
+            new ShootSequence2(swerve, elevator, pivot, shooter, conveyor),
+            Amp5Center_2.getIndex(3),
+            new ShootSequence2(swerve, elevator, pivot, shooter, conveyor),
             printTimer()
         );
     }

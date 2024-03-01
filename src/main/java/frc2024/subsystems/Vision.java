@@ -153,6 +153,10 @@ public class Vision extends SubsystemBase{
         return sum;
     }
 
+    public static boolean getLockedToTarget(Limelight limelight){
+        return Math.abs(getTX(limelight)) <= VisionConstants.AUTO_FIRE_X_THRESHOLD;
+    }
+
     public static Optional<TimestampedVisionMeasurement> getTimestampedVisionMeasurement(Limelight limelight){
         if(LimelightHelpers.getBotPose(limelight.name).length == 0){
             return Optional.empty();

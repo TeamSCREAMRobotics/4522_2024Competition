@@ -67,9 +67,8 @@ public class TeleopDrive extends Command {
             : new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * (fieldRelative ? AllianceFlippable.getDirectionCoefficient() : 1));
         double rotationValue = rotationSup.getAsDouble()*SwerveConstants.MAX_ANGULAR_VELOCITY; //getRotation(rotationSup.getAsDouble());
 
-        //if(Controlboard.zeroGyro().getAsBoolean()) lastAngle = AllianceFlippable.getForwardRotation();
-        //FIXME causes loop overruns
-
+        if(Controlboard.driverController_Command.getHID().getBackButtonPressed()) lastAngle = AllianceFlippable.getForwardRotation();
+        
         swerve.setChassisSpeeds(
             fieldRelative ? swerve.fieldRelativeSpeeds(translationValue, rotationValue) : swerve.robotRelativeSpeeds(translationValue, rotationValue),
             true

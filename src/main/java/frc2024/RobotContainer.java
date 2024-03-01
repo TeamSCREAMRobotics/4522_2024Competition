@@ -81,13 +81,13 @@ public class RobotContainer {
 
     private static Alliance m_alliance;
 
-    public static SuperstructureState currentState = SuperstructureState.AMP;
+    public static SuperstructureState currentState = SuperstructureState.HOME;
     
     /**
      * Configures the basic robot systems, such as Shuffleboard, autonomous, default commands, and button bindings.
      */
     public RobotContainer() {
-        m_shuffleboardTabManager.addTabs(true);
+        m_shuffleboardTabManager.addTabs(false);
         configButtonBindings();
         configDefaultCommands();
         configAuto();
@@ -101,9 +101,9 @@ public class RobotContainer {
         Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, new Rotation2d()))));
 
         /* Conveyor */
-        Controlboard.ejectThroughIntake().whileTrue(m_conveyor.dutyCycleCommand(-0.85)).onFalse(m_conveyor.stopCommand());
+        Controlboard.ejectThroughIntake().whileTrue(m_conveyor.dutyCycleCommand(ConveyorConstants.AMP_TRAP_OUTPUT)).onFalse(m_conveyor.stopCommand());
         
-        Controlboard.manuallyShoot().whileTrue(m_conveyor.dutyCycleCommand(0.45)).onFalse(m_conveyor.stopCommand());
+        Controlboard.manuallyShoot().whileTrue(m_conveyor.dutyCycleCommand(ConveyorConstants.SHOOT_SPEED)).onFalse(m_conveyor.stopCommand());
 
         /* Elevator */
         Controlboard.manualMode().toggleOnTrue(m_elevator.voltageCommand(Controlboard.getManualElevatorOutput()));
@@ -172,6 +172,10 @@ public class RobotContainer {
                 new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
                     .until((() ->  superstructureAtTarget())));
 
+        Controlboard.goToTrapPosition()
+            .toggleOnTrue(
+                new SuperstructureToPosition(SuperstructureState.TRAP_CHAIN, m_elevator, m_pivot));
+
         /* Shooter */        
         Controlboard.ejectThroughIntake()
             .whileTrue(
@@ -207,9 +211,9 @@ public class RobotContainer {
                     new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, Controlboard.endGameMode())
                 )
                     .onFalse(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()));
-        
-        Controlboard.intakeOverride().whileTrue(m_conveyor.dutyCycleCommand(-ConveyorConstants.TRANSFER_OUTPUT)
-        .alongWith(m_intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT)))
+
+        Controlboard.intakeOverride().whileTrue(m_conveyor.dutyCycleCommand(-1.0)
+        .alongWith(m_intake.dutyCycleCommand(1.0)))
             .onFalse(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()));
 
         Controlboard.ejectThroughIntake()
@@ -228,7 +232,7 @@ public class RobotContainer {
                     .until(() -> m_conveyor.hasPiece())); */
 
         /* Climber */
-        Controlboard.manualMode()
+        new Trigger(Controlboard.endGameMode())
             .toggleOnTrue(
                 m_climber.outputCommand(Controlboard.getManualClimberOutput()));
     }
@@ -255,15 +259,13 @@ public class RobotContainer {
         Autonomous.configure(
             Commands.none().withName("Do Nothing"),
             new PPEvent("StartIntake", 
-                m_intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT)
-                .alongWith(m_conveyor.dutyCycleCommand(ConveyorConstants.TRANSFER_OUTPUT))
+            new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, () -> false)
                 .until(m_conveyor.hasPiece())
                 .finallyDo((interrupted) -> {
-                        if(!interrupted){
-                            m_intake.stop();
-                            m_conveyor.stop();
-                        }
-                })),
+                    if(!interrupted){
+                        m_intake.stop();
+                        m_conveyor.stop();
+                    }})),
             new PPEvent("StopIntake", m_intake.stopCommand().alongWith(m_conveyor.stopCommand())),
             new PPEvent("RunShooterHigh", m_shooter.velocityCommand(4500))
         );
@@ -274,7 +276,7 @@ public class RobotContainer {
             Routines.Source4Center(m_swerve).withName("Source4Center"),
             Routines.Amp4Center(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake).withName("Amp4Center"),
             Routines.SweepCenter(m_swerve, m_pivot, m_shooter, m_conveyor, m_intake).withName("SweepCenter"),
-            Routines.Amp5Center_2(m_swerve).withName("Amp5Center_2"),
+            Routines.Amp5Center_2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor).withName("Amp5Center_2"),
             Routines.testAuto(m_swerve)
         );
     }
@@ -336,7 +338,7 @@ public class RobotContainer {
     }
 
     public static boolean superstructureAtTarget(){
-        return m_elevator.getElevatorAtTarget() && m_pivot.getPivotAtTarget();
+        return m_elevator.getElevatorAtTarget().getAsBoolean() && m_pivot.getPivotAtTarget().getAsBoolean();
     }
 
     public static Supplier<SuperstructureState> getCurrentState(){

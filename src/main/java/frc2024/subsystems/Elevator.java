@@ -1,5 +1,6 @@
 package frc2024.subsystems;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.Orchestra;
@@ -110,8 +111,8 @@ public class Elevator extends SubsystemBase{
         return m_targetPosition - getElevatorPosition();
     }
     
-    public boolean getElevatorAtTarget(){
-        return Math.abs(getElevatorError()) < ElevatorConstants.TARGET_THRESHOLD;
+    public BooleanSupplier getElevatorAtTarget(){
+        return () -> Math.abs(getElevatorError()) < ElevatorConstants.TARGET_THRESHOLD;
     }
     
 /*     public double getElevatorTargetHeight(double distance){
@@ -128,7 +129,8 @@ public class Elevator extends SubsystemBase{
     }
 
     @Override
-    public void periodic() {}
+    public void periodic() {
+    }
 
     public double heightInchesToPosition(double inches){
         return ((inches - ElevatorConstants.MIN_HEIGHT) / (ElevatorConstants.MAX_HEIGHT - ElevatorConstants.MIN_HEIGHT)) * (ElevatorConstants.ENCODER_MAX - ElevatorConstants.ENCODER_MIN);
