@@ -150,7 +150,7 @@ public final class Constants{
         public static final ScreamPIDConstants VISION_ROTATION_CONSTANTS = new ScreamPIDConstants(0.16, 0.0, 0.0);
         public static final ScreamPIDConstants VISION_TRANSLATION_X_CONSTANTS = new ScreamPIDConstants(1.0, 0.0, 0.0);
         public static final ScreamPIDConstants VISION_TRANSLATION_Y_CONSTANTS = new ScreamPIDConstants(4.5, 0.0, 0.0);
-        public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(0.1, 0.0, 0.0);
+        public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(0.08, 0.0, 0.0); //0.1
         public static final ScreamPIDConstants DRIVE_TO_TARGET_CONSTANTS = new ScreamPIDConstants(1.5, 0.0, 0.0);
 
         /* PathPlanner Constants */
@@ -326,8 +326,8 @@ public final class Constants{
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
 
-        public static final double CLIMBER_UP_OUTPUT = 0.75;
-        public static final double CLIMBER_DOWN_OUTPUT = -CLIMBER_UP_OUTPUT;
+        public static final double CLIMBER_UP_OUTPUT = -0.5;
+        public static final double CLIMBER_DOWN_OUTPUT = CLIMBER_UP_OUTPUT;
 
         public static final double CLIMBER_TOP = 0.0;
         public static final double CLIMBER_BOTTOM = 0.0;
@@ -358,15 +358,15 @@ public final class Constants{
         public static final double ACCELERATION = 5;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.34, 0.0001, 0.0);
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.38, 0.01, 0.0);
 
         public static final double KS = 0.0;
-        public static final double KV = 0.12;
+        public static final double KV = 0.13;
         public static final double KA = 0.0;
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
 
-        public static final double TARGET_THRESHOLD = 50.0; // rpm
+        public static final double TARGET_THRESHOLD = 100.0; // rpm
 
         public static final double AUTO_SHOOT_VELOCITY_THRESHOLD = 4800; // rpm
         public static final double AUTO_SHOOT_DISTANCE_THRESHOLD = 6.5; // meters
@@ -408,7 +408,7 @@ public final class Constants{
         public static final Rotation2d REVERSE_SOFT_LIMIT = Rotation2d.fromDegrees(-9999);
 
         public static final boolean HARDWARE_LIMIT_ENABLE_FORWARD = true;
-        public static final boolean HARDWARE_LIMIT_ENABLE_REVERSE = true;
+        public static final boolean HARDWARE_LIMIT_ENABLE_REVERSE = false;
         public static final double HARDWARE_LIMIT_POSITION_FORWARD = 0.0;
         public static final double HARDWARE_LIMIT_POSITION_REVERSE = 0.0;
 
@@ -539,7 +539,7 @@ public final class Constants{
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
         public static final double SHOOT_SPEED = 1.00;
-        public static final double AMP_TRAP_OUTPUT = -0.75;
+        public static final double AMP_OUTPUT = -1.0;
         public static final double TRANSFER_OUTPUT = 0.75;
     } 
 

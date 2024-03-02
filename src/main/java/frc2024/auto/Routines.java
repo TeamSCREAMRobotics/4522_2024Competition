@@ -31,7 +31,7 @@ import frc2024.Constants.ShooterConstants;
 import frc2024.Constants.SwerveConstants;
 import frc2024.commands.AutoFire;
 import frc2024.commands.ShootSequence;
-import frc2024.commands.ShootSequence2;
+import frc2024.commands.AutoShootSequence;
 import frc2024.commands.SuperstructureToPosition;
 import frc2024.commands.intake.AutoIntakeFloor;
 import frc2024.commands.swerve.FaceVisionTarget;
@@ -111,11 +111,11 @@ public class Routines {
             swerve.resetPoseCommand(Amp4Close.getStartingPose()),
             //new ShootSequence(swerve, pivot, shooter, elevator, conveyor)
                 Amp4Close.getStart()
-                .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor))
+                .andThen(new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor))
                 .andThen(Amp4Close.getNext())
-                .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor))
+                .andThen(new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor))
                 .andThen(Amp4Close.getEnd())
-                .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor)),
+                .andThen(new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor)),
             printTimer()
         );
     }
@@ -129,11 +129,11 @@ public class Routines {
             //new ShootSequence(swerve, pivot, shooter, elevator, conveyor))
                 Amp4Center.getStart().alongWith(Commands.run(() -> intake.setIntakeOutput(IntakeConstants.INTAKE_OUTPUT))).withTimeout(3)
                 .finallyDo(() -> intake.stop())
-                .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor))
+                .andThen(new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor))
                 .andThen(Amp4Center.getNext())
-                .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor))
+                .andThen(new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor))
                 .andThen(Amp4Center.getEnd())
-                .andThen(new ShootSequence(swerve, pivot, shooter, elevator, conveyor)),
+                .andThen(new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor)),
             printTimer()
         );
     }
@@ -196,20 +196,21 @@ public class Routines {
         );
     }
 
-    public static Command Amp5Center_2(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor){
+    public static Command Amp5Center_2(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake){
         currentSequence = Amp5Center_2;
         return new SequentialCommandGroup(
             startTimer(),
             swerve.resetPoseCommand(Amp5Center_2.getStartingPose()),
-            new ShootSequence(SuperstructureState.SUBWOOFER, ShooterConstants.SUBWOOFER_VELOCITY + 500.0, pivot, shooter, elevator, conveyor),
+            new ShootSequence(SuperstructureState.SUBWOOFER, ShooterConstants.SUBWOOFER_VELOCITY + 500.0, elevator, pivot, shooter, conveyor),
             Amp5Center_2.getIndex(0),
-            new ShootSequence2(swerve, elevator, pivot, shooter, conveyor),
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake),
+            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
             Amp5Center_2.getIndex(1),
-            new ShootSequence2(swerve, elevator, pivot, shooter, conveyor),
+            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
             Amp5Center_2.getIndex(2),
-            new ShootSequence2(swerve, elevator, pivot, shooter, conveyor),
+            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
             Amp5Center_2.getIndex(3),
-            new ShootSequence2(swerve, elevator, pivot, shooter, conveyor),
+            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
             printTimer()
         );
     }

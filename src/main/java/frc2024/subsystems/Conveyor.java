@@ -28,7 +28,7 @@ public class Conveyor extends SubsystemBase{
     private DigitalInput m_beam;
 
     private DutyCycleOut m_dutyCycleRequest = new DutyCycleOut(0);
-    private Debouncer m_beamDebouncer = new Debouncer(0.1, DebounceType.kBoth);
+    private Debouncer m_beamDebouncer = new Debouncer(0.175, DebounceType.kBoth);
 
     public Conveyor(){
         m_conveyorMotor = new TalonFX(Ports.CONVEYOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
@@ -60,8 +60,8 @@ public class Conveyor extends SubsystemBase{
         return m_conveyorMotor.getVelocity().getValueAsDouble()*60;
     }
     
-    public BooleanSupplier hasPiece(){
-        return () -> !m_beam.get();
+    public BooleanSupplier hasPiece(boolean endgame){
+        return endgame ? () -> m_beamDebouncer.calculate(!m_beam.get()) : () -> !m_beam.get();
     }
 
     public void stop(){
@@ -70,7 +70,7 @@ public class Conveyor extends SubsystemBase{
 
     @Override
     public void periodic() {
-        // System.out.println(hasPiece().getAsBoolean());
+        // System.out.println(hasPiece(false).getAsBoolean());
     }
 
     public Command dutyCycleCommand(double output){
@@ -87,7 +87,7 @@ public class Conveyor extends SubsystemBase{
         switch (position.get()) {
             case AMP:
             case TRAP_CHAIN:
-                command = dutyCycleCommand(ConveyorConstants.AMP_TRAP_OUTPUT);
+                command = dutyCycleCommand(ConveyorConstants.AMP_OUTPUT);
                 break;
             case CHAIN:
             case PODIUM_DEFENDED:

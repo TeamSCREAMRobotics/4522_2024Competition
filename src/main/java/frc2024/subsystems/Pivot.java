@@ -103,7 +103,7 @@ public class Pivot extends SubsystemBase{
 
     @Override
     public void periodic() {
-        System.out.println("Pivot:" + getPivotAtTarget().getAsBoolean());
+        //System.out.println("Pivot:" + getPivotAtTarget().getAsBoolean());
         //logOutputs();
     }
 

@@ -35,7 +35,20 @@ import frc2024.subsystems.swerve.Swerve;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoIntakeFloor extends SequentialCommandGroup {
-  public AutoIntakeFloor(DoubleSupplier[] translation, Swerve swerve, Elevator elevator, Pivot pivot, Intake intake, Conveyor conveyor) {
+
+    public AutoIntakeFloor(Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake){
+        addCommands(
+            new IntakeFloor(elevator, pivot, conveyor, intake, () -> false)
+                .until(conveyor.hasPiece(false))
+                .finallyDo((interrupted) -> {
+                    if(!interrupted){
+                        intake.stop();
+                        conveyor.stop();
+                    }
+                })
+        );
+    }
+  /* public AutoIntakeFloor(DoubleSupplier[] translation, Swerve swerve, Elevator elevator, Pivot pivot, Intake intake, Conveyor conveyor) {
     addCommands(
         new FaceVisionTarget(
             swerve, 
@@ -49,10 +62,10 @@ public class AutoIntakeFloor extends SequentialCommandGroup {
                         .onlyWhile(() -> Vision.getTY(Limelight.INTAKE) < VisionConstants.AUTO_INTAKE_Y_THRESHOLD)
                 )
             .finallyDo((interrupted) -> new SuperstructureToPosition(SuperstructureState.HOME, elevator, pivot))
-    );
-  }
+    ); */
+  //}
 
-  public AutoIntakeFloor(Swerve swerve, Elevator elevator, Pivot pivot, Intake intake, Conveyor conveyor) {
+  /* public AutoIntakeFloor(Swerve swerve, Elevator elevator, Pivot pivot, Intake intake, Conveyor conveyor) {
     addCommands(
         new FaceVisionTarget(
             swerve, 
@@ -67,5 +80,5 @@ public class AutoIntakeFloor extends SequentialCommandGroup {
                 )
             .finallyDo((interrupted) -> new SuperstructureToPosition(SuperstructureState.HOME, elevator, pivot))
     );
-  }
+  } */
 }

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ShooterConstants;
+import frc2024.Constants.SuperstructureState;
 import frc2024.Constants.SwerveConstants;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
@@ -17,7 +18,7 @@ import frc2024.subsystems.Vision;
 import frc2024.subsystems.Vision.Limelight;
 import frc2024.subsystems.swerve.Swerve;
 
-public class ShootSequence2 extends Command{
+public class AutoShootSequence extends Command{
 
     Swerve swerve;
     Elevator elevator;
@@ -25,16 +26,18 @@ public class ShootSequence2 extends Command{
     Shooter shooter;
     Conveyor conveyor;
     Timer timeout = new Timer();
+    boolean shouldTimeout;
 
     PIDController rotationController;
 
-    public ShootSequence2(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor){
+    public AutoShootSequence(boolean timeout, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor){
         addRequirements(swerve, elevator, pivot, shooter, conveyor);
         this.swerve = swerve;
         this.elevator = elevator;
         this.pivot = pivot;
         this.shooter = shooter;
         this.conveyor = conveyor;
+        this.shouldTimeout = timeout;
         rotationController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
     }
 
@@ -52,7 +55,7 @@ public class ShootSequence2 extends Command{
         shooter.setTargetVelocity(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).velocityRPM());
         pivot.setTargetAngle(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).pivotAngle());
 
-        if(shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && Vision.getLockedToTarget(Limelight.SHOOTER)){
+        if(shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD){
             conveyor.setConveyorOutput(ConveyorConstants.SHOOT_SPEED);
         }
     }
@@ -66,7 +69,7 @@ public class ShootSequence2 extends Command{
 
     @Override
     public boolean isFinished() {
-        return !conveyor.hasPiece().getAsBoolean() || timeout.hasElapsed(5);
+        return !conveyor.hasPiece(false).getAsBoolean() || (timeout.hasElapsed(5) && shouldTimeout);
     }
     
 }

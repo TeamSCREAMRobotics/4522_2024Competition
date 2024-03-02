@@ -9,6 +9,8 @@ import java.util.function.BooleanSupplier;
 import com.team4522.lib.util.COTSFalconSwerveConstants.driveGearRatios;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -33,11 +35,10 @@ public class IntakeFloor extends SequentialCommandGroup {
   public IntakeFloor(Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake, BooleanSupplier endGame) {
     addCommands(
         elevator.heightCommand(endGame.getAsBoolean() ? ElevatorConstants.HOME_HEIGHT_ENDGAME : ElevatorConstants.HOME_HEIGHT)
-          .alongWith(new PrintCommand("endgame: " + endGame.getAsBoolean()))
             .alongWith(pivot.angleCommand(endGame.getAsBoolean() ? PivotConstants.HOME_ANGLE_ENDGAME : PivotConstants.HOME_ANGLE))
             .alongWith(intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT))
-            .alongWith(conveyor.dutyCycleCommand(ConveyorConstants.TRANSFER_OUTPUT))
-            //.andThen(Controlboard.driverRumbleCommand(RumbleType.kBothRumble, 0.5, 0.2))
+            .alongWith(conveyor.dutyCycleCommand(endGame.getAsBoolean() ? ConveyorConstants.AMP_OUTPUT : ConveyorConstants.TRANSFER_OUTPUT))
+            // .andThen(Controlboard.driverRumbleCommand(RumbleType.kBothRumble, 0.5, 0.2))
       );
   }
 }

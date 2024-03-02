@@ -142,10 +142,6 @@ public class Controlboard{
         return new Trigger(() -> buttonBoard.getRawSwitch(2));
     }
 
-    public static final Trigger autoClimb(){
-        return new Trigger(() -> buttonBoard.getRawButton(2));
-    }
-
     public static final Trigger rehome(){
         return new Trigger(() -> buttonBoard.getRawButton(3));
     }
@@ -218,6 +214,10 @@ public class Controlboard{
     public static final Trigger goToTrapPosition(){
         return new Trigger(() -> buttonBoard.getRawButton(12)).and(new Trigger(endGameMode()));
     }
+
+    public static final Trigger autoClimb(){
+        return new Trigger(() -> buttonBoard.getRawButton(2)).and(new Trigger(endGameMode()));
+    }
     
     public static final Trigger goToSubwooferPositionDefended(){
         return new Trigger(() -> buttonBoard.getRawButton(10)).and(defendedMode());
@@ -230,7 +230,11 @@ public class Controlboard{
 
     /* Intake */
     public static final Trigger intakeFromFloor(){
-        return driverController_Command.rightTrigger(TRIGGER_DEADBAND);
+        return driverController_Command.rightTrigger(TRIGGER_DEADBAND).and(new Trigger(endGameMode()).negate());
+    }
+
+    public static final Trigger intakeFromFloor_Endgame(){
+        return driverController_Command.rightTrigger(TRIGGER_DEADBAND).and(new Trigger(endGameMode()));
     }
 
     public static final Trigger score(){
@@ -242,6 +246,10 @@ public class Controlboard{
     }
 
     public static final Trigger intakeOverride(){
-        return new Trigger(() -> buttonBoard.getRawButton(7));
+        return new Trigger(() -> buttonBoard.getRawButton(7)).and(new Trigger(endGameMode()).negate());
+    }
+
+    public static final Trigger intakeOverrideEndgame(){
+        return new Trigger(() -> buttonBoard.getRawButton(7)).and(endGameMode());
     }
 }
