@@ -1,6 +1,9 @@
 package frc2024.commands;
 
+import java.util.function.DoubleSupplier;
+
 import com.pathplanner.lib.util.PIDConstants;
+import com.team4522.lib.util.AllianceFlippable;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -27,8 +30,21 @@ public class AutoShootSequence extends Command{
     Conveyor conveyor;
     Timer timeout = new Timer();
     boolean shouldTimeout;
+    DoubleSupplier[] translation;
 
     PIDController rotationController;
+
+    public AutoShootSequence(DoubleSupplier[] translationSup, boolean timeout, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor){
+        addRequirements(swerve, elevator, pivot, shooter, conveyor);
+        this.swerve = swerve;
+        this.elevator = elevator;
+        this.pivot = pivot;
+        this.shooter = shooter;
+        this.conveyor = conveyor;
+        this.shouldTimeout = timeout;
+        this.translation = translationSup;
+        rotationController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
+    }
 
     public AutoShootSequence(boolean timeout, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor){
         addRequirements(swerve, elevator, pivot, shooter, conveyor);
@@ -38,6 +54,7 @@ public class AutoShootSequence extends Command{
         this.shooter = shooter;
         this.conveyor = conveyor;
         this.shouldTimeout = timeout;
+        this.translation = null;
         rotationController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
     }
 
@@ -50,7 +67,8 @@ public class AutoShootSequence extends Command{
     @Override
     public void execute() {
         double rotationValue = Math.abs(Vision.getTX(Limelight.SHOOTER)) < 2.0 ? 0 : rotationController.calculate(Vision.getTX(Limelight.SHOOTER), 0.0);
-        swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(new Translation2d(), rotationValue));
+        Translation2d translationValue = translation == null ? new Translation2d() : new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
+        swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(translationValue, rotationValue));
 
         shooter.setTargetVelocity(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).velocityRPM());
         pivot.setTargetAngle(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).pivotAngle());
@@ -69,7 +87,7 @@ public class AutoShootSequence extends Command{
 
     @Override
     public boolean isFinished() {
-        return !conveyor.hasPiece(false).getAsBoolean() || (timeout.hasElapsed(5) && shouldTimeout);
+        return !conveyor.hasPiece(false).getAsBoolean() || (timeout.hasElapsed(2.5) && shouldTimeout);
     }
     
 }

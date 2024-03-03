@@ -142,12 +142,12 @@ public class DeviceConfig {
         return config;
     }
 
-    public static TalonFXConfiguration pivotFXConfig(){
+    public static TalonFXConfiguration pivotFXConfig(boolean softwareLimitEnable, Rotation2d forwardLimit, Rotation2d reverseLimit){
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Audio = FXAudioConfigs(false, false, true);
         config.MotorOutput = FXMotorOutputConfig(PivotConstants.MOTOR_INVERT, PivotConstants.NEUTRAL_MODE);
         config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, PivotConstants.TOTAL_GEAR_RATIO, 1.0, Rotation2d.fromDegrees(0.0));
-        config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(PivotConstants.SOFTWARE_LIMIT_ENABLE, PivotConstants.FORWARD_SOFT_LIMIT.getRotations(), PivotConstants.REVERSE_SOFT_LIMIT.getRotations());
+        config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(softwareLimitEnable, forwardLimit.getRotations(), reverseLimit.getRotations());
         config.HardwareLimitSwitch = FXHardwareLimitSwitchConfig(PivotConstants.HARDWARE_LIMIT_ENABLE_FORWARD, PivotConstants.HARDWARE_LIMIT_ENABLE_REVERSE, PivotConstants.HARDWARE_LIMIT_POSITION_FORWARD, PivotConstants.HARDWARE_LIMIT_POSITION_REVERSE);
         config.CurrentLimits = FXSupplyCurrentLimitsConfig(
             PivotConstants.CURRENT_LIMIT_ENABLE, 

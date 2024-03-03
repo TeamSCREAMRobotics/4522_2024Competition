@@ -64,7 +64,7 @@ public class MatchTab extends ShuffleboardTabBase {
         //pivot.setNeutralMode(m_pivotCoast.getBoolean(false) ? NeutralModeValue.Coast : NeutralModeValue.Brake);
         //elevator.setNeutralMode(m_elevatorCoast.getBoolean(false) ? NeutralModeValue.Coast : NeutralModeValue.Brake);
 
-        m_field2d.setRobotPose(AllianceFlippable.MirrorPoseForField2d(Routines.getSequenceFromAutoName(m_autoChooser.getSelected().getName()).getStartingPose()));
+        //m_field2d.setRobotPose(AllianceFlippable.MirrorPoseForField2d(Routines.getSequenceFromAutoName(m_autoChooser.getSelected().getName()).getStartingPose()));
 
         m_matchTime.setDouble(DriverStation.getMatchTime());
     }

@@ -37,7 +37,7 @@ public class IntakeFloor extends SequentialCommandGroup {
         elevator.heightCommand(endGame.getAsBoolean() ? ElevatorConstants.HOME_HEIGHT_ENDGAME : ElevatorConstants.HOME_HEIGHT)
             .alongWith(pivot.angleCommand(endGame.getAsBoolean() ? PivotConstants.HOME_ANGLE_ENDGAME : PivotConstants.HOME_ANGLE))
             .alongWith(intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT))
-            .alongWith(conveyor.dutyCycleCommand(endGame.getAsBoolean() ? ConveyorConstants.AMP_OUTPUT : ConveyorConstants.TRANSFER_OUTPUT))
+            .alongWith(conveyor.dutyCycleCommand(endGame.getAsBoolean() ? ConveyorConstants.AMP_OUTPUT+0.25 : ConveyorConstants.TRANSFER_OUTPUT))
             // .andThen(Controlboard.driverRumbleCommand(RumbleType.kBothRumble, 0.5, 0.2))
       );
   }

@@ -60,7 +60,6 @@ public class AutoFire extends SequentialCommandGroup{
     } */
 
     public AutoFire(Shooter shooter, Elevator elevator, Pivot pivot, BooleanSupplier defense){
-        RobotContainer.currentState = SuperstructureState.AUTO_FIRE;
         addCommands(
             shooter.velocityCommand(() -> calculateShotTrajectory(() -> elevator.getElevatorHeight()).velocityRPM())
 /*                 .alongWith(elevator.heightCommand(

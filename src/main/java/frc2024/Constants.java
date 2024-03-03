@@ -404,8 +404,11 @@ public final class Constants{
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
         public static final boolean SOFTWARE_LIMIT_ENABLE = false;
+        public static final boolean SOFTWARE_LIMIT_ENABLE_ENDGAME = true;
         public static final Rotation2d FORWARD_SOFT_LIMIT = Rotation2d.fromDegrees(40.0);
         public static final Rotation2d REVERSE_SOFT_LIMIT = Rotation2d.fromDegrees(-9999);
+        public static final Rotation2d FORWARD_SOFT_LIMIT_ENDGAME = Rotation2d.fromDegrees(25.488);
+        public static final Rotation2d REVERSE_SOFT_LIMIT_ENDGAME = Rotation2d.fromDegrees(56.426);
 
         public static final boolean HARDWARE_LIMIT_ENABLE_FORWARD = true;
         public static final boolean HARDWARE_LIMIT_ENABLE_REVERSE = false;
@@ -541,6 +544,7 @@ public final class Constants{
         public static final double SHOOT_SPEED = 1.00;
         public static final double AMP_OUTPUT = -1.0;
         public static final double TRANSFER_OUTPUT = 0.75;
+        public static final double TRAP_SPEED = 0.5;
     } 
 
     public static enum SuperstructureState{

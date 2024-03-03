@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import javax.crypto.spec.DESKeySpec;
 import javax.swing.text.html.Option;
 
 import org.photonvision.PhotonUtils;
@@ -105,78 +106,108 @@ public class RobotContainer {
         /* Conveyor */
         Controlboard.ejectThroughIntake().whileTrue(m_conveyor.dutyCycleCommand(ConveyorConstants.AMP_OUTPUT)).onFalse(m_conveyor.stopCommand());
         
-        Controlboard.manuallyShoot().whileTrue(m_conveyor.dutyCycleCommand(ConveyorConstants.SHOOT_SPEED)).onFalse(m_conveyor.stopCommand());
+        Controlboard.manuallyShoot().whileTrue(m_conveyor.dutyCycleCommand(ConveyorConstants.TRAP_SPEED)).onFalse(m_conveyor.stopCommand());
 
         /* Elevator */
-        Controlboard.manualMode().toggleOnTrue(m_elevator.voltageCommand(Controlboard.getManualElevatorOutput()));
+        Controlboard.manualMode().whileTrue(m_elevator.voltageCommand(Controlboard.getManualElevatorOutput()));
         Controlboard.resetElevatorHeight().onTrue(Commands.runOnce(() -> m_elevator.zeroPosition()).ignoringDisable(true));
 
         /* Pivot */
-        Controlboard.manualMode().toggleOnTrue(m_pivot.dutyCycleCommand(Controlboard.getManualPivotOutput()));
+        Controlboard.manualMode().whileTrue(m_pivot.dutyCycleCommand(Controlboard.getManualPivotOutput()));
         Controlboard.resetPivotAngle().onTrue(Commands.runOnce(() -> m_pivot.zeroPivot()).ignoringDisable(true));
         //Right Y
 
         /* Pivot AND Elevator */
         Controlboard.goToHomePosition()
             .whileTrue(
-                new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
-                    .until(() -> superstructureAtTarget()));
+                new InstantCommand(() -> currentState = SuperstructureState.HOME)
+                    .andThen(
+                        new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
+                            .until(() -> superstructureAtTarget())));
                     
         Controlboard.goToHomePositionEndgame()
             .whileTrue(
-                new SuperstructureToPosition(SuperstructureState.HOME_ENDGAME, m_elevator, m_pivot)
-                    .until(() -> superstructureAtTarget()));
+                new InstantCommand(() -> currentState = SuperstructureState.HOME_ENDGAME)
+                    .andThen(
+                        new SuperstructureToPosition(SuperstructureState.HOME_ENDGAME, m_elevator, m_pivot)
+                            .until(() -> superstructureAtTarget())));
 
         Controlboard.goToSubwooferPosition()
             .whileTrue(
-                new SuperstructureToPosition(SuperstructureState.SUBWOOFER, m_elevator, m_pivot)
-                    .alongWith(m_shooter.velocityCommand(ShooterConstants.SUBWOOFER_VELOCITY)))
+                new InstantCommand(() -> currentState = SuperstructureState.SUBWOOFER)
+                    .andThen(
+                        new SuperstructureToPosition(SuperstructureState.SUBWOOFER, m_elevator, m_pivot)
+                            .alongWith(m_shooter.velocityCommand(ShooterConstants.SUBWOOFER_VELOCITY))))
             .onFalse(
-                new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
-                    .until((() -> superstructureAtTarget())).alongWith(m_shooter.idleCommand()));
+                new InstantCommand(() -> currentState = SuperstructureState.HOME)
+                    .andThen(
+                        new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
+                            .until((() -> superstructureAtTarget())).alongWith(m_shooter.idleCommand())));
 
         Controlboard.goToAmpPosition()
             .whileTrue(
-                new SuperstructureToPosition(SuperstructureState.AMP, m_elevator, m_pivot))
+                new InstantCommand(() -> currentState = SuperstructureState.AMP)
+                    .andThen(
+                        new SuperstructureToPosition(SuperstructureState.AMP, m_elevator, m_pivot)))
             .onFalse(
-                new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
-                    .until((() ->  superstructureAtTarget())).alongWith(m_shooter.idleCommand()));
+                new InstantCommand(() -> currentState = SuperstructureState.HOME)
+                    .andThen(
+                        new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
+                            .until((() -> superstructureAtTarget())).alongWith(m_shooter.idleCommand())));
 
         Controlboard.goToPodiumPosition()
             .whileTrue(
-                new SuperstructureToPosition(SuperstructureState.PODIUM, m_elevator, m_pivot)
-                    .alongWith(m_shooter.velocityCommand(ShooterConstants.PODIUM_VELOCITY)))
+                new InstantCommand(() -> currentState = SuperstructureState.PODIUM)
+                    .andThen(
+                        new SuperstructureToPosition(SuperstructureState.PODIUM, m_elevator, m_pivot)
+                            .alongWith(m_shooter.velocityCommand(ShooterConstants.PODIUM_VELOCITY))))
             .onFalse(
-                new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
-                    .until((() ->  superstructureAtTarget())).alongWith(m_shooter.idleCommand()));
+                new InstantCommand(() -> currentState = SuperstructureState.HOME)
+                    .andThen(
+                        new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
+                            .until((() -> superstructureAtTarget())).alongWith(m_shooter.idleCommand())));
 
         Controlboard.goToChainPosition()
             .whileTrue(
-                new SuperstructureToPosition(SuperstructureState.CHAIN, m_elevator, m_pivot)
-                    .alongWith(m_shooter.velocityCommand(ShooterConstants.CHAIN_VELOCITY)))
+                new InstantCommand(() -> currentState = SuperstructureState.CHAIN)
+                    .andThen(
+                        new SuperstructureToPosition(SuperstructureState.CHAIN, m_elevator, m_pivot)
+                            .alongWith(m_shooter.velocityCommand(ShooterConstants.CHAIN_VELOCITY))))
             .onFalse(
-                new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
-                    .until((() ->  superstructureAtTarget())).alongWith(m_shooter.idleCommand()));
+                new InstantCommand(() -> currentState = SuperstructureState.HOME)
+                    .andThen(
+                        new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
+                            .until((() -> superstructureAtTarget())).alongWith(m_shooter.idleCommand())));
 
         Controlboard.goToSubwooferPositionDefended()
             .whileTrue(
-                new SuperstructureToPosition(SuperstructureState.SUBWOOFER_DEFENDED, m_elevator, m_pivot)
-                    .alongWith(m_shooter.velocityCommand(ShooterConstants.SUBWOOFER_VELOCITY)))
+                new InstantCommand(() -> currentState = SuperstructureState.SUBWOOFER_DEFENDED)
+                    .andThen(
+                        new SuperstructureToPosition(SuperstructureState.SUBWOOFER_DEFENDED, m_elevator, m_pivot)
+                            .alongWith(m_shooter.velocityCommand(ShooterConstants.SUBWOOFER_VELOCITY))))
             .onFalse(
-                new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
-                    .until((() -> superstructureAtTarget())).alongWith(m_shooter.idleCommand()));
+                new InstantCommand(() -> currentState = SuperstructureState.HOME)
+                    .andThen(
+                        new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
+                            .until((() -> superstructureAtTarget())).alongWith(m_shooter.idleCommand())));
 
         Controlboard.goToPodiumPositionDefended()
             .whileTrue(
-                new SuperstructureToPosition(SuperstructureState.PODIUM_DEFENDED, m_elevator, m_pivot)
-                    .alongWith(m_shooter.velocityCommand(ShooterConstants.PODIUM_VELOCITY)))
+                new InstantCommand(() -> currentState = SuperstructureState.PODIUM_DEFENDED)
+                    .andThen(
+                        new SuperstructureToPosition(SuperstructureState.PODIUM_DEFENDED, m_elevator, m_pivot)
+                            .alongWith(m_shooter.velocityCommand(ShooterConstants.PODIUM_VELOCITY))))
             .onFalse(
-                new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
-                    .until((() ->  superstructureAtTarget())));
+                new InstantCommand(() -> currentState = SuperstructureState.HOME)
+                    .andThen(
+                        new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
+                            .until((() -> superstructureAtTarget())).alongWith(m_shooter.idleCommand())));
 
         Controlboard.goToTrapPosition()
             .toggleOnTrue(
-                new SuperstructureToPosition(SuperstructureState.TRAP_CHAIN, m_elevator, m_pivot));
+                new InstantCommand(() -> currentState = SuperstructureState.TRAP_CHAIN)
+                    .andThen(
+                        new SuperstructureToPosition(SuperstructureState.TRAP_CHAIN, m_elevator, m_pivot)));
 
         Controlboard.autoClimb()
             .toggleOnTrue(
@@ -195,29 +226,25 @@ public class RobotContainer {
                 m_shooter.dutyCycleCommand(ShooterConstants.EJECT_OUTPUT))
             .onFalse(m_shooter.stopCommand());
 
-        Controlboard.stopFlywheel().toggleOnTrue(m_shooter.stopCommand());
+        Controlboard.stopFlywheel().onTrue(m_shooter.stopCommand());
 
         /* Automation */
         Controlboard.autoFire()
             .toggleOnTrue(
-                new AutoShootSequence(false, m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor))
+                new InstantCommand(() -> currentState = SuperstructureState.AUTO_FIRE)
+                    .andThen(
+                        new AutoShootSequence(Controlboard.getTranslation(), false, m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor)))
                 /* new AutoFire(m_shooter, m_elevator, m_pivot, Controlboard.defendedMode())
                     .alongWith(new FaceVisionTarget(m_swerve, Controlboard.getTranslation(), SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))) */
             .onFalse(
-                new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
-                    .until((() -> superstructureAtTarget())).alongWith(m_shooter.idleCommand().alongWith(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()))));
+                new InstantCommand(() -> currentState = SuperstructureState.HOME).andThen(
+                    new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
+                        .until((() -> superstructureAtTarget())).alongWith(m_shooter.idleCommand().alongWith(m_conveyor.stopCommand().alongWith(m_intake.stopCommand())))));
 
         Controlboard.rehome()
             .whileTrue(
                 new RehomeSuperstructure(m_elevator, m_pivot)
             );
-
-        /* Intake */
-        /* Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece()).negate())
-            .or(Controlboard.intakeOverride())
-                .whileTrue(m_intake.outputCommand(IntakeConstants.INTAKE_OUTPUT)
-                .alongWith(m_conveyor.outputCommand(ConveyorConstants.AMP_TRAP_OUTPUT)))
-                    .onFalse(m_conveyor.stopCommand().alongWith(m_intake.stopCommand())); */
                     
         Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece(false)).negate())
             /* .or(Controlboard.intakeOverride()) */
@@ -251,7 +278,7 @@ public class RobotContainer {
             .onFalse(m_intake.stopCommand().alongWith(m_conveyor.stopCommand()));
 
         Controlboard.score()
-            .whileTrue(m_conveyor.scoreCommand(getCurrentState()))
+            .whileTrue(m_conveyor.scoreCommand())
                 .onFalse(m_conveyor.stopCommand());
 
         /* Controlboard.autoPickupFromFloor()
@@ -261,7 +288,7 @@ public class RobotContainer {
 
         /* Climber */
         new Trigger(Controlboard.endGameMode())
-            .toggleOnTrue(
+            .whileTrue(
                 m_climber.outputCommand(Controlboard.getManualClimberOutput()));
     }
 
@@ -294,7 +321,7 @@ public class RobotContainer {
         Autonomous.addRoutines(
             Routines.Amp4Close(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake).withName("Amp4Close"),
             Routines.Amp6Center(m_swerve, m_elevator, m_pivot, m_intake, m_conveyor).withName("Amp6Center"),
-            Routines.Source4Center(m_swerve).withName("Source4Center"),
+            Routines.Source4Center(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor).withName("Source4Center"),
             Routines.Amp4Center(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake).withName("Amp4Center"),
             Routines.SweepCenter(m_swerve, m_pivot, m_shooter, m_conveyor, m_intake).withName("SweepCenter"),
             Routines.Amp5Center_2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake).withName("Amp5Center_2"),
@@ -378,11 +405,11 @@ public class RobotContainer {
     }
     
     public static void setAllNeutralModes(NeutralModeValue mode){
-        //m_shooter.setNeutralMode(mode);
-        //m_pivot.setNeutralMode(mode);
-        //m_elevator.setNeutralMode(mode);
-        //m_conveyor.setNeutralMode(mode);
-        //m_intake.setNeutralMode(mode);
-        //m_swerve.setNeutralModes(mode, mode);
+        m_shooter.setNeutralMode(mode);
+        m_pivot.setNeutralMode(mode);
+        m_elevator.setNeutralMode(mode);
+        m_conveyor.setNeutralMode(mode);
+        m_intake.setNeutralMode(mode);
+        m_swerve.setNeutralModes(mode, mode);
     }
 }

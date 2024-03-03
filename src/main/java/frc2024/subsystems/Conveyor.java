@@ -16,8 +16,11 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
+import frc2024.RobotContainer;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.SuperstructureState;
 import frc2024.Constants.Ports;
@@ -28,7 +31,7 @@ public class Conveyor extends SubsystemBase{
     private DigitalInput m_beam;
 
     private DutyCycleOut m_dutyCycleRequest = new DutyCycleOut(0);
-    private Debouncer m_beamDebouncer = new Debouncer(0.175, DebounceType.kBoth);
+    private Debouncer m_beamDebouncer = new Debouncer(0.17, DebounceType.kBoth);
 
     public Conveyor(){
         m_conveyorMotor = new TalonFX(Ports.CONVEYOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
@@ -70,7 +73,7 @@ public class Conveyor extends SubsystemBase{
 
     @Override
     public void periodic() {
-        // System.out.println(hasPiece(false).getAsBoolean());
+        //System.out.println(hasPiece(false).getAsBoolean());
     }
 
     public Command dutyCycleCommand(double output){
@@ -81,10 +84,19 @@ public class Conveyor extends SubsystemBase{
         return Commands.runOnce(() -> stop(), this);
     }
 
-    public Command scoreCommand(Supplier<SuperstructureState> position){
-        System.out.println(position.get());
-        Command command;
-        switch (position.get()) {
+    public Command scoreCommand(){
+        return new ConditionalCommand(
+            dutyCycleCommand(ConveyorConstants.AMP_OUTPUT), 
+            new ConditionalCommand(
+                dutyCycleCommand(ConveyorConstants.SHOOT_SPEED), 
+                stopCommand(), 
+                () -> RobotContainer.getCurrentState().get() != SuperstructureState.HOME
+                && RobotContainer.getCurrentState().get() != SuperstructureState.HOME_ENDGAME
+                && RobotContainer.getCurrentState().get() != SuperstructureState.NONE), 
+            () -> RobotContainer.getCurrentState().get() == SuperstructureState.AMP
+            || RobotContainer.getCurrentState().get() == SuperstructureState.TRAP_CHAIN);
+        /* Command command;
+        switch (RobotContainer.getCurrentState().get()) {
             case AMP:
             case TRAP_CHAIN:
                 command = dutyCycleCommand(ConveyorConstants.AMP_OUTPUT);
@@ -101,6 +113,6 @@ public class Conveyor extends SubsystemBase{
                 command = stopCommand();
                 break;
         }
-        return command;
+        return command; */
     }
 }

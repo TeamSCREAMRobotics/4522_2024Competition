@@ -103,7 +103,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    //System.out.println("(" + RobotContainer.getPivot().getPivotAngle().getDegrees() + ", " + RobotContainer.getElevator().getElevatorHeight() + ", " + RobotContainer.getShooter().getRPM() + ")");
+    // System.out.println("(" + RobotContainer.getPivot().getPivotAngle().getDegrees() + ", " + RobotContainer.getElevator().getElevatorHeight() + ", " + RobotContainer.getShooter().getRPM() + ")");
   }
 
   @Override
@@ -117,13 +117,14 @@ public class Robot extends LoggedRobot {
   public void disabledPeriodic() {
     if(((int) timeSinceDisabled.get()) == 5){
       //RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Coast, NeutralModeValue.Coast);
+      //RobotContainer.getPivot().setNeutralMode(NeutralModeValue.Coast);
     }
   }
 
   @Override
   public void disabledExit() {
     CommandScheduler.getInstance().cancelAll();
-    RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Brake, NeutralModeValue.Brake);
+    RobotContainer.setAllNeutralModes(NeutralModeValue.Brake);
     RobotContainer.stopAll();
     timeSinceDisabled.stop();
   }
@@ -154,7 +155,8 @@ public class Robot extends LoggedRobot {
   public void teleopInit() {}
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
   public void teleopExit() {}

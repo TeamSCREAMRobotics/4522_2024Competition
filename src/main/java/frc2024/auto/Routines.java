@@ -14,12 +14,14 @@ import com.team4522.lib.util.PathSequence.Side;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc2024.Constants.ConveyorConstants;
@@ -34,12 +36,14 @@ import frc2024.commands.ShootSequence;
 import frc2024.commands.AutoShootSequence;
 import frc2024.commands.SuperstructureToPosition;
 import frc2024.commands.intake.AutoIntakeFloor;
+import frc2024.commands.swerve.FacePoint;
 import frc2024.commands.swerve.FaceVisionTarget;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Intake;
 import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Shooter;
+import frc2024.subsystems.Vision;
 import frc2024.subsystems.Vision.Limelight;
 import frc2024.subsystems.swerve.Swerve;
 
@@ -50,7 +54,7 @@ public class Routines {
     private static final PathSequence Amp4Close = new PathSequence(Side.AMP, "Amp4Close#1", "Amp4Close#2", "Amp4Close#3");
     private static final PathSequence Amp5Center = new PathSequence(Side.AMP, "Amp4Close#1", "Amp4Close#2", "Amp6Center#0", "Amp6Center#1", "Amp6Center#2");
     private static final PathSequence Amp6Center = new PathSequence(Side.AMP, "Amp4Close#1", "Amp4Close#1", "Amp6Center#0", "Amp6Center#1", "Amp6Center#2", "Amp6Center#3", "Amp6Center#4");
-    private static final PathSequence Source4Center = new PathSequence(Side.SOURCE, "Source4Center#1", "Source4Center#2", "Source4Center#3", "Source4Center#4", "Source4Center#5", "Source4Center#6");
+    private static final PathSequence Source4Center = new PathSequence(Side.SOURCE, "Source4Center#1", "Source4Center#2", "Source4Center#3", "Source4Center#4");
     private static final PathSequence Amp4Center = new PathSequence(Side.AMP, "Amp4Center#1", "Amp4Center#2", "Amp4Center#3");
     private static final PathSequence SweepCenter = new PathSequence(Side.SOURCE, "SweepCenter");
     private static final PathSequence Amp5Center_2 = new PathSequence(Side.AMP, "Amp5Center#1", "Amp5Center#2", "Amp5Center#3", "Amp5Center#4");
@@ -160,20 +164,21 @@ public class Routines {
         );
     }
 
-    public static Command Source4Center(Swerve swerve){
+    public static Command Source4Center(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor){
         currentSequence = Source4Center;
         return new SequentialCommandGroup(
             startTimer(),
             swerve.resetPoseCommand(Source4Center.getStartingPose()),
-            Source4Center.getStart(),
-            // new WaitCommand(0.75),
-            Source4Center.getNext(),
-            Source4Center.getNext(),
-            // new WaitCommand(0.75),
-            Source4Center.getNext(),
-            Source4Center.getNext(),
-            // new WaitCommand(0.75),
-            Source4Center.getEnd(),
+            new FacePoint(swerve, new DoubleSupplier[]{() -> 0, () -> 0}, AllianceFlippable.getTargetSpeaker().getTranslation(), false, false).withTimeout(0.5),
+            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
+            Source4Center.getIndex(0),
+            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
+            Source4Center.getIndex(1),
+            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
+            Source4Center.getIndex(2),
+            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
+            Source4Center.getIndex(3),
+            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
             printTimer()
         );
     }

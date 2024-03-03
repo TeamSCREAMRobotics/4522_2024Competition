@@ -13,8 +13,8 @@
     "CenterPiecePathfinding"
   ],
   "autoFolders": [],
-  "defaultMaxVel": 4.9,
-  "defaultMaxAccel": 4.9,
+  "defaultMaxVel": 4.98,
+  "defaultMaxAccel": 5.0,
   "defaultMaxAngVel": 570.0,
   "defaultMaxAngAccel": 500.0,
   "maxModuleSpeed": 4.98

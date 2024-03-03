@@ -44,14 +44,14 @@ public class Pivot extends SubsystemBase{
         m_pivotMotor = new TalonFX(Ports.PIVOT_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         m_encoder = new CANcoder(Ports.PIVOT_ENCODER_ID, Ports.RIO_CANBUS_NAME);
          
-        configureDevices();
+        configureDevices(PivotConstants.SOFTWARE_LIMIT_ENABLE, PivotConstants.FORWARD_SOFT_LIMIT, PivotConstants.REVERSE_SOFT_LIMIT);
         
         OrchestraUtil.add(m_pivotMotor);
     }
 
-    private void configureDevices() {
+    public void configureDevices(boolean softwareLimitEnable, Rotation2d forwardLimit, Rotation2d reverselimit) {
         DeviceConfig.configureCANcoder("Pivot Encoder", m_encoder, DeviceConfig.pivotEncoderConfig(), Constants.DEVICE_LOOP_TIME_HZ);
-        DeviceConfig.configureTalonFX("Pivot Motor", m_pivotMotor, DeviceConfig.pivotFXConfig(), Constants.DEVICE_LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Pivot Motor", m_pivotMotor, DeviceConfig.pivotFXConfig(softwareLimitEnable, forwardLimit, reverselimit), Constants.DEVICE_LOOP_TIME_HZ);
         ParentDevice.optimizeBusUtilizationForAll(m_pivotMotor, m_encoder);
     }
 
@@ -78,7 +78,7 @@ public class Pivot extends SubsystemBase{
     }
 
     public void setPivotOutput(double output){
-        setPivot(m_dutyCycleRequest.withOutput(output));
+        setPivot(m_dutyCycleRequest.withOutput(output).withLimitForwardMotion(false));
     }
 
     public Rotation2d getPivotAngle(){
