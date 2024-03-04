@@ -1,5 +1,6 @@
 package frc2024.commands.swerve;
 
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -8,6 +9,7 @@ import com.team4522.lib.util.AllianceFlippable;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc2024.Constants.SwerveConstants;
@@ -24,6 +26,7 @@ public class TeleopDrive extends Command {
     private BooleanSupplier fieldRelativeSup;
     private BooleanSupplier slowModeSup;
     private Rotation2d lastAngle;
+    private Optional<Rotation2d> snapAngle;
     private Timer correctionTimer = new Timer();
 
     /**
@@ -35,7 +38,7 @@ public class TeleopDrive extends Command {
      * @param rotationSup A supplier for the rotation value.
      * @param fieldCentricSup A supplier for the drive mode. Robot centric = false; Field centric = true
      */
-    public TeleopDrive(Swerve swerve, DoubleSupplier[] translationSup, DoubleSupplier rotationSup, BooleanSupplier fieldCentricSup, BooleanSupplier slowMode) {
+    public TeleopDrive(Swerve swerve, DoubleSupplier[] translationSup, DoubleSupplier rotationSup, Supplier<Optional<Rotation2d>> snapAngle, BooleanSupplier fieldCentricSup, BooleanSupplier slowMode) {
         addRequirements(swerve);
 
         this.swerve = swerve;
@@ -43,6 +46,7 @@ public class TeleopDrive extends Command {
         this.rotationSup = rotationSup;
         this.fieldRelativeSup = fieldCentricSup;
         this.slowModeSup = slowMode;
+        this.snapAngle = snapAngle.get();
     }
 
     @Override
@@ -65,14 +69,20 @@ public class TeleopDrive extends Command {
             slowModeSup.getAsBoolean() 
             ? new Translation2d(translationSup[0].getAsDouble()*0.5, translationSup[1].getAsDouble()*0.5).times(SwerveConstants.MAX_SPEED * (fieldRelative ? AllianceFlippable.getDirectionCoefficient() : 1))
             : new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * (fieldRelative ? AllianceFlippable.getDirectionCoefficient() : 1));
-        double rotationValue = rotationSup.getAsDouble()*SwerveConstants.MAX_ANGULAR_VELOCITY; //getRotation(rotationSup.getAsDouble());
+        double rotationValue = getRotation(rotationSup.getAsDouble());
 
         if(Controlboard.driverController_Command.getHID().getBackButtonPressed()) lastAngle = AllianceFlippable.getForwardRotation();
         
-        swerve.setChassisSpeeds(
-            fieldRelative ? swerve.fieldRelativeSpeeds(translationValue, rotationValue) : swerve.robotRelativeSpeeds(translationValue, rotationValue),
-            true
-        );
+        ChassisSpeeds targetSpeeds;
+
+        if(snapAngle.isPresent()){
+            System.out.println(snapAngle.get());
+            targetSpeeds = swerve.snappedFieldRelativeSpeeds(translationValue, snapAngle.get());
+        } else {
+            targetSpeeds = fieldRelative ? swerve.fieldRelativeSpeeds(translationValue, rotationValue) : swerve.robotRelativeSpeeds(translationValue, rotationValue);
+        }
+        
+        swerve.setChassisSpeeds(targetSpeeds, true);
     }
 
     /**

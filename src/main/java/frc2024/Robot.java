@@ -14,10 +14,16 @@ import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import com.ctre.phoenix6.Orchestra;
+import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.util.AllianceFlippable;
 import com.team4522.lib.util.OrchestraUtil;
+import com.team4522.lib.util.RunOnce;
+import com.team4522.lib.util.RunUntil;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -51,12 +57,13 @@ public class Robot extends LoggedRobot {
   private RobotContainer robotContainer;
 
   private Timer timeSinceDisabled = new Timer();
+  private RunOnce autoConfigurator = new RunOnce();
 
   public Robot() {}
 
   @Override
   public void robotInit() {
-    /* System.out.println("[Init] Starting AdvantageKit");
+    System.out.println("[Init] Starting AdvantageKit");
     Logger.recordMetadata("RuntimeType", getRuntimeType().toString());
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
@@ -80,7 +87,9 @@ public class Robot extends LoggedRobot {
         Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
         Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
         new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
+        SignalLogger.setPath("/media/sda1/");
         Logger.start();
+        SignalLogger.enableAutoLogging(true);
         break;
       case REPLAY:
         setUseTiming(false); // Run as fast as possible
@@ -93,8 +102,7 @@ public class Robot extends LoggedRobot {
         break;
       default:
         break;
-    } */
-  // Start logging! No more data receivers, replay sources, or metadata values may be added.
+    }
 
     robotContainer = new RobotContainer();
   }
@@ -114,6 +122,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledPeriodic() {
+    autoConfigurator.runOnceWhen(() -> RobotContainer.configAuto(), DriverStation.getAlliance().isPresent());
     if(((int) timeSinceDisabled.get()) == 5){
       //RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Coast, NeutralModeValue.Coast);
       //RobotContainer.getPivot().setNeutralMode(NeutralModeValue.Coast);
@@ -130,7 +139,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousInit() {
-    RobotContainer.setAlliance(DriverStation.getAlliance().get());
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -176,9 +184,4 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void simulationPeriodic() {}
-
-  @Override
-  public void driverStationConnected() {
-    RobotContainer.setAlliance(DriverStation.getAlliance().get());
-  }
 }

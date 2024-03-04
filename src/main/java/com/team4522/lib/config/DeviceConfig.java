@@ -21,6 +21,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -202,6 +203,9 @@ public class DeviceConfig {
     ////////////////////////////////////// GENERAL CONFIGURATION METHODS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
     public static void configureTalonFX(String name, TalonFX fx, TalonFXConfiguration config, double updateFrequencyHz){
+        AudioConfigs audioConfigs = new AudioConfigs();
+        fx.getConfigurator().refresh(audioConfigs);
+        config.Audio = audioConfigs;
         DeviceConfiguration deviceConfig = new DeviceConfiguration() {
             @Override
             public boolean configureSettings(){

@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "RunUntil",
+      "request": "launch",
+      "mainClass": "com.team4522.lib.util.RunUntil",
+      "projectName": "4522_2024Competition"
+    },
+    {
+      "type": "java",
       "name": "Main",
       "request": "launch",
       "mainClass": "frc2024.Main",

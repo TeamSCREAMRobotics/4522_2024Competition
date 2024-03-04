@@ -12,6 +12,12 @@ public class RunOnce {
         }
     }
 
+    public void runOnceWhen(Runnable runnable, boolean condition) {
+        if (!hasRun.get() && condition && hasRun.compareAndSet(false, true)) {
+            runnable.run();
+        }
+    }
+
     public void reset() {
         hasRun.set(false);
     }

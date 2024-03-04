@@ -55,7 +55,7 @@ public class Routines {
     private static final PathSequence Amp4Close = new PathSequence(Side.AMP, "Amp4Close#1", "Amp4Close#2", "Amp4Close#3");
     private static final PathSequence Amp5_1Center = new PathSequence(Side.AMP,  "Amp5_1Center#1", "Amp5_1Center#2");
     private static final PathSequence Amp6Center = new PathSequence(Side.AMP, "Amp4Close#1", "Amp4Close#1", "Amp6Center#0", "Amp6Center#1", "Amp6Center#2", "Amp6Center#3", "Amp6Center#4");
-    private static final PathSequence Source4Center = new PathSequence(Side.SOURCE, "Source4Center#1", "Source4Center#2", "Source4Center#3", "Source4Center#4");
+    private static final PathSequence Source4Center = new PathSequence(Side.SOURCE, "Source4Center#1", "Source4Center#2", "Source4Center#3");
     private static final PathSequence Amp4Center = new PathSequence(Side.AMP, "Amp4Center#1", "Amp4Center#2", "Amp4Center#3");
     private static final PathSequence SweepCenter = new PathSequence(Side.SOURCE, "SweepCenter");
     private static final PathSequence Amp5Center_2 = new PathSequence(Side.AMP, "Amp5Center#1", "Amp5Center#2", "Amp5Center#3", "Amp5Center#4");
@@ -180,8 +180,8 @@ public class Routines {
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
             Source4Center.getIndex(2),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
-            Source4Center.getIndex(3),
-            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
+/*             Source4Center.getIndex(3),
+            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor), */
             printTimer()
         );
     }

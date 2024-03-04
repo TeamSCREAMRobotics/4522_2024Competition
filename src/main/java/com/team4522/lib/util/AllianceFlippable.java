@@ -22,7 +22,7 @@ import frc2024.subsystems.Vision.IntakePipeline;
 public final class AllianceFlippable {
 
     public static BooleanSupplier shouldFlip(){
-        return () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue;
+        return () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
     }
 
     public static Rotation2d getForwardRotation(){
@@ -61,7 +61,7 @@ public final class AllianceFlippable {
     }
 
     public static Object Object(Object blueValue, Object redValue){
-        return shouldFlip().getAsBoolean() ? blueValue : redValue;
+        return shouldFlip().getAsBoolean() ? redValue : blueValue;
     }
 
     public static double Number(double blueValue, double redValue){
@@ -85,7 +85,7 @@ public final class AllianceFlippable {
     }
 
     public static Rotation3d MirroredRotation3d(Rotation3d blueValue){
-        return blueValue.rotateBy(new Rotation3d(0, 0, Math.PI)); // FIXME
+        return new Rotation3d(blueValue.getX(), blueValue.getY(), MirroredRotation2d(Rotation2d.fromRadians(blueValue.getZ())).getRadians());
     }
 
     public static Translation2d MirroredTranslation2d(Translation2d blueValue){
@@ -93,7 +93,6 @@ public final class AllianceFlippable {
     }
 
     public static Pose2d MirroredPose2d(Pose2d blueValue){
-        System.out.println(shouldFlip());
         return new Pose2d(MirroredTranslation2d(blueValue.getTranslation()), MirroredRotation2d(blueValue.getRotation()));
     }
 

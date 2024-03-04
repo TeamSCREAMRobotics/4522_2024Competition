@@ -1,9 +1,14 @@
 package frc2024.controlboard;
 
 import java.util.DoubleSummaryStatistics;
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+
+import javax.swing.text.html.Option;
+
+import com.team4522.lib.util.AllianceFlippable;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -34,8 +39,6 @@ public class Controlboard{
     public static final CommandXboxController operatorController_Command = new CommandXboxController(1);
     public static final XboxController operatorController = new XboxController(1);
     public static final Buttonboard buttonBoard = new Buttonboard(2, 3);
-
-    public static boolean fieldCentric = true;
 
     public static Command driverRumbleCommand(RumbleType type, double value, double time){
         return new RunCommand(() -> driverController.setRumble(type, value))
@@ -75,8 +78,24 @@ public class Controlboard{
         return translation;
 	}
 
+    public static Supplier<Optional<Rotation2d>> getSnapAngle(){
+        Rotation2d snapAngle;
+        if(driverController_Command.getHID().getYButton()){
+            snapAngle = Rotation2d.fromDegrees(90.0);
+        } else if(driverController_Command.getHID().getAButton()){
+            snapAngle = AllianceFlippable.MirroredRotation2d(Rotation2d.fromDegrees(180.0));
+        } else if(driverController_Command.getHID().getBButton()){
+            snapAngle = AllianceFlippable.Rotation2d(Rotation2d.fromDegrees(60.0), Rotation2d.fromDegrees(-120.0));
+        } else if(driverController_Command.getHID().getXButton()){
+            snapAngle = AllianceFlippable.Rotation2d(Rotation2d.fromDegrees(-60.0), Rotation2d.fromDegrees(120.0));
+        } else {
+            return () -> Optional.empty();
+        }
+        return () -> Optional.of(snapAngle);
+    }
+
     public static BooleanSupplier getSlowMode(){
-        return () -> driverController_Command.leftTrigger(TRIGGER_DEADBAND).getAsBoolean();
+        return () -> driverController_Command.getHID().getLeftTriggerAxis() >= TRIGGER_DEADBAND;
     }
 
     /**
@@ -108,12 +127,7 @@ public class Controlboard{
      */
     public static BooleanSupplier getFieldCentric() {
         /* Toggles field-centric mode between true and false when the start button is pressed */
-        driverController_Command.start().onTrue(Commands.runOnce(() -> fieldCentric =! fieldCentric));
-        return () -> fieldCentric;
-    }
-
-    public static Trigger test(){
-        return driverController_Command.b();
+        return () -> !driverController_Command.getHID().getStartButton();
     }
 
     public static Trigger manualMode(){
@@ -133,12 +147,12 @@ public class Controlboard{
         return new Trigger(() -> buttonBoard.getRawSwitch(4));
     }
 
-    public static final BooleanSupplier defendedMode(){
+    public static final Trigger defendedMode(){
         /* Uses a toggle switch to enable or disable wether we are being defended. This allows us to raise our elevator with auto shots */
         return new Trigger(() -> buttonBoard.getRawSwitch(3));
     }
 
-    public static final BooleanSupplier endGameMode(){
+    public static final Trigger endGameMode(){
         return new Trigger(() -> buttonBoard.getRawSwitch(2));
     }
 
@@ -191,15 +205,15 @@ public class Controlboard{
     }
 
     public static final Trigger goToHomePosition(){
-        return new Trigger(() -> buttonBoard.getRawButton(9)).and(new Trigger(endGameMode()).negate());
+        return new Trigger(() -> buttonBoard.getRawButton(9)).and(endGameMode().negate());
     }
     
     public static final Trigger goToHomePositionEndgame(){
-        return new Trigger(() -> buttonBoard.getRawButton(9)).and(new Trigger(endGameMode()));
+        return new Trigger(() -> buttonBoard.getRawButton(9)).and(endGameMode());
     }
     
     public static final Trigger goToSubwooferPosition(){
-        return new Trigger(() -> buttonBoard.getRawButton(10)).and(new Trigger(defendedMode()).negate());
+        return new Trigger(() -> buttonBoard.getRawButton(10)).and(defendedMode().negate());
     }
     
     public static final Trigger goToAmpPosition(){
@@ -207,16 +221,16 @@ public class Controlboard{
     }
 
     public static final Trigger goToPodiumPosition(){
-        return new Trigger(() -> buttonBoard.getRawButton(12)).and(new Trigger(defendedMode()).negate())
-            .and(new Trigger(endGameMode()).negate());
+        return new Trigger(() -> buttonBoard.getRawButton(12)).and(defendedMode().negate())
+            .and(endGameMode().negate());
     }
 
     public static final Trigger goToTrapPosition(){
-        return new Trigger(() -> buttonBoard.getRawButton(12)).and(new Trigger(endGameMode()));
+        return new Trigger(() -> buttonBoard.getRawButton(12)).and(endGameMode());
     }
 
     public static final Trigger autoClimb(){
-        return new Trigger(() -> buttonBoard.getRawButton(2)).and(new Trigger(endGameMode()));
+        return new Trigger(() -> buttonBoard.getRawButton(2)).and(endGameMode());
     }
     
     public static final Trigger goToSubwooferPositionDefended(){
@@ -225,16 +239,16 @@ public class Controlboard{
 
     public static final Trigger goToPodiumPositionDefended(){
         return new Trigger(() -> buttonBoard.getRawButton(12)).and(defendedMode())
-            .and(new Trigger(endGameMode()).negate());
+            .and(endGameMode().negate());
     }
 
     /* Intake */
     public static final Trigger intakeFromFloor(){
-        return driverController_Command.rightTrigger(TRIGGER_DEADBAND).and(new Trigger(endGameMode()).negate());
+        return driverController_Command.rightTrigger(TRIGGER_DEADBAND).and(endGameMode().negate());
     }
 
     public static final Trigger intakeFromFloor_Endgame(){
-        return driverController_Command.rightTrigger(TRIGGER_DEADBAND).and(new Trigger(endGameMode()));
+        return driverController_Command.rightTrigger(TRIGGER_DEADBAND).and(endGameMode());
     }
 
     public static final Trigger score(){
@@ -246,7 +260,7 @@ public class Controlboard{
     }
 
     public static final Trigger intakeOverride(){
-        return new Trigger(() -> buttonBoard.getRawButton(7)).and(new Trigger(endGameMode()).negate());
+        return new Trigger(() -> buttonBoard.getRawButton(7)).and(endGameMode().negate());
     }
 
     public static final Trigger intakeOverrideEndgame(){

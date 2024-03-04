@@ -38,16 +38,6 @@ public class Autonomous{
     }
 
     public static void addRoutines(Command... routines){
-        /* while (DriverStation.getAlliance().isEmpty()) {
-            RobotContainer.setAlliance(DriverStation.getAlliance().get());
-            if(RobotContainer.getAlliance() == null){
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        } */
         for(Command routine : routines){
             m_autoChooser.addOption(routine.getName(), routine);
         }

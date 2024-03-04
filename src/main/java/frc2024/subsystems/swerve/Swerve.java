@@ -103,7 +103,9 @@ public class Swerve extends SubsystemBase {
             this::getRobotRelativeSpeeds,
             this::setChassisSpeeds,
             SwerveConstants.PATH_FOLLOWER_CONFIG,
-            () -> RobotContainer.getAlliance() == Alliance.Blue ? false : true,
+            () -> {
+                return DriverStation.getAlliance().map(a -> a == DriverStation.Alliance.Red).orElse(false);
+            },
             this
         );
 
@@ -115,6 +117,7 @@ public class Swerve extends SubsystemBase {
      */
     public void resetYaw(Rotation2d rotation) {
         m_pigeon2.setYaw(rotation.getDegrees());
+        m_poseEstimator.resetPosition(rotation, getModulePositions(), getPose());
     }
 
     /**

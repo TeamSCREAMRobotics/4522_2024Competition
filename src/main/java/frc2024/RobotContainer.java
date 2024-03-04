@@ -82,8 +82,6 @@ public class RobotContainer {
 
     private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve, m_climber, m_conveyor, m_elevator, m_intake, m_pivot, m_shooter);
 
-    private static Alliance m_alliance;
-
     public static SuperstructureState currentState = SuperstructureState.HOME;
     
     /**
@@ -93,7 +91,7 @@ public class RobotContainer {
         m_shuffleboardTabManager.addTabs(false);
         configButtonBindings();
         configDefaultCommands();
-        configAuto();
+        //configAuto();
     }
 
     /**
@@ -101,7 +99,7 @@ public class RobotContainer {
      */
     private void configButtonBindings() {
         Controlboard.zeroGyro().onTrue(Commands.runOnce(() -> m_swerve.resetYaw(AllianceFlippable.getForwardRotation())));
-        Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, new Rotation2d()))));
+        //Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, new Rotation2d()))));
 
         /* Conveyor */
         Controlboard.ejectThroughIntake().whileTrue(m_conveyor.dutyCycleCommand(ConveyorConstants.AMP_OUTPUT)).onFalse(m_conveyor.stopCommand());
@@ -299,6 +297,7 @@ public class RobotContainer {
                 m_swerve,
                 Controlboard.getTranslation(),
                 Controlboard.getRotation(),
+                Controlboard.getSnapAngle(),
                 Controlboard.getFieldCentric(),
                 Controlboard.getSlowMode()
             ) 
@@ -310,7 +309,7 @@ public class RobotContainer {
      * Configure default auto and named commands with configure(Command defaultAuto, NamedCommand... namedCommands)<p>
      * Add auto routines with addCommands(Command... commands)
      */
-    private void configAuto() {
+    public static void configAuto() {
         Autonomous.configure(
             Commands.none().withName("Do Nothing"),
             new PPEvent("StartIntake", new AutoIntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake)),
@@ -371,19 +370,6 @@ public class RobotContainer {
 
     public static Intake getIntake(){
         return m_intake;
-    }
-
-    /**
-     * Retrieves the current Alliance as detected by the DriverStation. 
-     * Use this opposed to DriverStation.getAlliance().
-     * @return The current Alliance.
-     */
-    public static Alliance getAlliance(){
-        return m_alliance;
-    }
-
-    public static void setAlliance(Alliance alliance){
-        m_alliance = alliance;
     }
 
     public static boolean superstructureAtTarget(){
