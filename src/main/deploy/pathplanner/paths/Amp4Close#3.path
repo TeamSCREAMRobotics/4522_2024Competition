@@ -3,45 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.883271729453586,
-        "y": 5.550936522700434
+        "x": 2.6607658350837373,
+        "y": 5.738309907432939
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.708684328689853,
-        "y": 5.774219831360753
+        "x": 2.486178434320004,
+        "y": 5.961593216093258
       },
       "isLocked": false,
       "linkedName": "Close4_2End"
     },
     {
       "anchor": {
-        "x": 2.2274648828898216,
-        "y": 6.581490138729208
+        "x": 2.086934844340443,
+        "y": 6.405827590542485
       },
       "prevControl": {
-        "x": 1.6663471888265358,
-        "y": 6.256632526376781
+        "x": 2.020792418861877,
+        "y": 6.022201522766803
       },
       "nextControl": {
-        "x": 2.672476671629519,
-        "y": 6.8391285427364
+        "x": 2.145489027069351,
+        "y": 6.745441850370149
       },
       "isLocked": false,
-      "linkedName": "Close4_3End"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.0120909314571827,
-        "y": 7.038212764014687
+        "x": 2.6607658350837373,
+        "y": 7.049923600560469
       },
       "prevControl": {
-        "x": 2.8012958736331153,
-        "y": 6.90939356201109
+        "x": 2.3679949214391995,
+        "y": 6.862550215827964
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Amp4_3End"
     }
   ],
   "rotationTargets": [],
@@ -66,8 +66,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.98,
-    "maxAcceleration": 5.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.2,
     "maxAngularVelocity": 570.0,
     "maxAngularAcceleration": 500.0
   },
@@ -82,5 +82,5 @@
     "rotation": 0.0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

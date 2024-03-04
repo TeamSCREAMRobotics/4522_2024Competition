@@ -73,7 +73,7 @@ public class PathSequence {
     public Command getNext(){
         try {
             index ++;
-            return getPathCommand(list.get(index-1));
+            return getPathCommand(list.get(index));
         } catch (IndexOutOfBoundsException e) {
             DriverStation.reportWarning("[Auto] No additional paths. Last supplied path: " + pathNames[pathNames.length-1], true);
             return new InstantCommand();
@@ -92,7 +92,7 @@ public class PathSequence {
         try {
             return getPathCommand(list.get(index));
         } catch (IndexOutOfBoundsException e) {
-            DriverStation.reportWarning("[Auto] No path at specified index " + index + ". Last supplied path: " + pathNames[pathNames.length-1], null);
+            DriverStation.reportWarning("[Auto] No path at specified index " + index + ". Last supplied path: " + pathNames[pathNames.length], null);
             return new InstantCommand();
         }
     }
@@ -101,7 +101,7 @@ public class PathSequence {
         try {
             return list.get(index);
         } catch (IndexOutOfBoundsException e) {
-            DriverStation.reportWarning("[Auto] No path at specified index " + index + ". Last supplied path: " + pathNames[pathNames.length-1], null);
+            DriverStation.reportWarning("[Auto] No path at specified index " + index + ". Last supplied path: " + pathNames[pathNames.length], null);
             return PathPlannerPath.fromPathFile("DoNothing");
         }
     }

@@ -216,7 +216,7 @@ public class RobotContainer {
                     m_pivot.angleCommand(PivotConstants.TRAP_CHAIN_ANGLE)
                 )
                 .alongWith(
-                    m_climber.outputCommand(ClimberConstants.CLIMBER_UP_OUTPUT)
+                    m_climber.outputCommand(ClimberConstants.CLIMBER_UP_OUTPUT_FAST)
                 )
             );
 
@@ -320,12 +320,13 @@ public class RobotContainer {
 
         Autonomous.addRoutines(
             Routines.Amp4Close(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake).withName("Amp4Close"),
+            Routines.Amp5_1Center(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake).withName("Amp5_1Center"),
             Routines.Amp6Center(m_swerve, m_elevator, m_pivot, m_intake, m_conveyor).withName("Amp6Center"),
             Routines.Source4Center(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor).withName("Source4Center"),
             Routines.Amp4Center(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake).withName("Amp4Center"),
             Routines.SweepCenter(m_swerve, m_pivot, m_shooter, m_conveyor, m_intake).withName("SweepCenter"),
             Routines.Amp5Center_2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake).withName("Amp5Center_2"),
-            Routines.testAuto(m_swerve)
+            Routines.testAuto(m_swerve).withName("test")
         );
     }
 

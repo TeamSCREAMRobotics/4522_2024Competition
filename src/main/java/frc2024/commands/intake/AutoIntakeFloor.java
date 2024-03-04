@@ -38,7 +38,7 @@ public class AutoIntakeFloor extends SequentialCommandGroup {
 
     public AutoIntakeFloor(Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake){
         addCommands(
-            new IntakeFloor(elevator, pivot, conveyor, intake, () -> false)
+            new IntakeFloor(elevator, pivot, conveyor, intake, () -> false).withTimeout(1.5)
                 .until(conveyor.hasPiece(false))
                 .finallyDo((interrupted) -> {
                     if(!interrupted){

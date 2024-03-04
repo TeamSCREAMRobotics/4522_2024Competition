@@ -1,6 +1,9 @@
 package com.team4522.lib.util;
 
+import java.util.function.BooleanSupplier;
+
 import com.fasterxml.jackson.databind.node.POJONode;
+import com.pathplanner.lib.util.GeometryUtil;
 import com.team4522.lib.math.Conversions;
 import com.team4522.lib.util.PathSequence.Side;
 
@@ -10,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc2024.RobotContainer;
 import frc2024.Constants.FieldConstants;
@@ -17,12 +21,12 @@ import frc2024.subsystems.Vision.IntakePipeline;
 
 public final class AllianceFlippable {
 
-    public static boolean shouldFlip(){
-        return RobotContainer.getAlliance() == Alliance.Blue;
+    public static BooleanSupplier shouldFlip(){
+        return () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue;
     }
 
     public static Rotation2d getForwardRotation(){
-        return shouldFlip() ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180);
+        return shouldFlip().getAsBoolean() ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180);
     }
 
     public static int getDirectionCoefficient(){
@@ -57,7 +61,7 @@ public final class AllianceFlippable {
     }
 
     public static Object Object(Object blueValue, Object redValue){
-        return shouldFlip() ? blueValue : redValue;
+        return shouldFlip().getAsBoolean() ? blueValue : redValue;
     }
 
     public static double Number(double blueValue, double redValue){
@@ -77,19 +81,20 @@ public final class AllianceFlippable {
     }
 
     public static Rotation2d MirroredRotation2d(Rotation2d blueValue){
-        return blueValue.rotateBy(Rotation2d.fromDegrees(180));
+        return new Rotation2d(Math.PI).minus(blueValue);
     }
 
     public static Rotation3d MirroredRotation3d(Rotation3d blueValue){
-        return blueValue.rotateBy(new Rotation3d(0, 0, Math.PI));
+        return blueValue.rotateBy(new Rotation3d(0, 0, Math.PI)); // FIXME
     }
 
     public static Translation2d MirroredTranslation2d(Translation2d blueValue){
-        return new Translation2d(FieldConstants.FIELD_DIMENSIONS.getX() - blueValue.getX(), blueValue.getY());
+        return Translation2d(blueValue, new Translation2d(FieldConstants.FIELD_DIMENSIONS.getX() - blueValue.getX(), blueValue.getY()));
     }
 
     public static Pose2d MirroredPose2d(Pose2d blueValue){
-        return new Pose2d(MirroredTranslation2d(blueValue.getTranslation()), blueValue.getRotation().unaryMinus());
+        System.out.println(shouldFlip());
+        return new Pose2d(MirroredTranslation2d(blueValue.getTranslation()), MirroredRotation2d(blueValue.getRotation()));
     }
 
     public static Translation3d MirroredTranslation3d(Translation3d blueValue){

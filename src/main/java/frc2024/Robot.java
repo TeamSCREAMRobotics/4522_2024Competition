@@ -97,7 +97,6 @@ public class Robot extends LoggedRobot {
   // Start logging! No more data receivers, replay sources, or metadata values may be added.
 
     robotContainer = new RobotContainer();
-    Vision.setPriorityTagID((int) AllianceFlippable.Number(7, 4), Limelight.SHOOTER);
   }
 
   @Override

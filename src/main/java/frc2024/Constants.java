@@ -262,7 +262,7 @@ public final class Constants{
                 1, 
                 0, 
                 0, 
-                Rotation2d.fromRotations(-0.327392578125)
+                Rotation2d.fromRotations(-0.82763671875+0.5)
             );
 
             /* Front Right */
@@ -270,7 +270,7 @@ public final class Constants{
                 3, 
                 2, 
                 1, 
-                Rotation2d.fromRotations(-0.465087890625)
+                Rotation2d.fromRotations(-0.963623046875+0.5)
             );
 
             /* Back Left */
@@ -278,7 +278,7 @@ public final class Constants{
                 5, 
                 4, 
                 2, 
-                Rotation2d.fromRotations(-0.074951171875)
+                Rotation2d.fromRotations(0.23974609375)
             );
 
             /* Back Right */
@@ -286,7 +286,7 @@ public final class Constants{
                 7, 
                 6, 
                 3, 
-                Rotation2d.fromRotations(-0.755859375)
+                Rotation2d.fromRotations(-0.26318359375+0.5)
             );
         }
     }
@@ -328,6 +328,8 @@ public final class Constants{
 
         public static final double CLIMBER_UP_OUTPUT = -0.5;
         public static final double CLIMBER_DOWN_OUTPUT = CLIMBER_UP_OUTPUT;
+        public static final double CLIMBER_UP_OUTPUT_FAST = -0.75;
+        public static final double CLIMBER_DOWN_OUTPUT_FAST = CLIMBER_UP_OUTPUT_FAST;
 
         public static final double CLIMBER_TOP = 0.0;
         public static final double CLIMBER_BOTTOM = 0.0;
@@ -376,7 +378,7 @@ public final class Constants{
         public static final double SUBWOOFER_VELOCITY = 2500.0;
         public static final double CHAIN_VELOCITY = 4000.0;
         public static final double PODIUM_VELOCITY = 3000.0;
-        public static final double IDLE_VELOCITY = 800.0;
+        public static final double IDLE_VELOCITY = 1000.0;
 
         public static final double TRAJECTORY_VELOCITY_EXTRA = 1700.0;
 

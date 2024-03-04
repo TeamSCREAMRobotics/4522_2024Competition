@@ -292,7 +292,7 @@ public class Swerve extends SubsystemBase {
         DeviceConfig.configurePigeon2("Swerve Pigeon", m_pigeon2, DeviceConfig.swervePigeonConfig(), Constants.LOOP_TIME_HZ);
         m_pigeon2.getAngularVelocityZWorld().setUpdateFrequency(100.0);
         m_pigeon2.optimizeBusUtilization();
-        resetYaw(AllianceFlippable.getForwardRotation());
+        //resetYaw(AllianceFlippable.getForwardRotation());
     }
 
    /**

@@ -1,0 +1,101 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.6607658350837373,
+        "y": 7.049923600560469
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.4291021534967445,
+        "y": 7.108477783289376
+      },
+      "isLocked": false,
+      "linkedName": "Amp4_3End"
+    },
+    {
+      "anchor": {
+        "x": 8.235124030875737,
+        "y": 6.253586715447326
+      },
+      "prevControl": {
+        "x": 8.036039809597451,
+        "y": 7.131899456380939
+      },
+      "nextControl": {
+        "x": 8.520454777131437,
+        "y": 4.994774599613353
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.066066220577518,
+        "y": 5.3752739745137115
+      },
+      "prevControl": {
+        "x": 7.403654636125248,
+        "y": 2.845733280624907
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Amp5_1Center1End"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": -30.343248884239408,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.65,
+      "maxWaypointRelativePos": 1.1,
+      "constraints": {
+        "maxVelocity": 3.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 570.0,
+        "maxAngularAcceleration": 500.0
+      }
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.6,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "StartIntake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 4.8,
+    "maxAngularVelocity": 570.0,
+    "maxAngularAcceleration": 500.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0,
+    "rotateFast": true
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}
