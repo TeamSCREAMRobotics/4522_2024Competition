@@ -79,19 +79,17 @@ public class Controlboard{
 	}
 
     public static Supplier<Optional<Rotation2d>> getSnapAngle(){
-        Rotation2d snapAngle;
         if(driverController_Command.getHID().getYButton()){
-            snapAngle = Rotation2d.fromDegrees(90.0);
+            return Rotation2d.fromDegrees(90.0);
         } else if(driverController_Command.getHID().getAButton()){
-            snapAngle = AllianceFlippable.MirroredRotation2d(Rotation2d.fromDegrees(180.0));
+            return AllianceFlippable.MirroredRotation2d(Rotation2d.fromDegrees(180.0));
         } else if(driverController_Command.getHID().getBButton()){
-            snapAngle = AllianceFlippable.Rotation2d(Rotation2d.fromDegrees(60.0), Rotation2d.fromDegrees(-120.0));
+            return AllianceFlippable.Rotation2d(Rotation2d.fromDegrees(60.0), Rotation2d.fromDegrees(-120.0));
         } else if(driverController_Command.getHID().getXButton()){
-            snapAngle = AllianceFlippable.Rotation2d(Rotation2d.fromDegrees(-60.0), Rotation2d.fromDegrees(120.0));
+            return AllianceFlippable.Rotation2d(Rotation2d.fromDegrees(-60.0), Rotation2d.fromDegrees(120.0));
         } else {
             return () -> Optional.empty();
         }
-        return () -> Optional.of(snapAngle);
     }
 
     public static BooleanSupplier getSlowMode(){
