@@ -73,7 +73,7 @@ public class AutoShootSequence extends Command{
         shooter.setTargetVelocity(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).velocityRPM());
         pivot.setTargetAngle(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).pivotAngle());
 
-        if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD) || timeout.hasElapsed(2.0)){
+        if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && Vision.getLockedToTarget(Limelight.SHOOTER)) || timeout.hasElapsed(2.0)){
             conveyor.setConveyorOutput(ConveyorConstants.SHOOT_SPEED);
         }
     }
@@ -87,7 +87,7 @@ public class AutoShootSequence extends Command{
 
     @Override
     public boolean isFinished() {
-        return !conveyor.hasPiece(false).getAsBoolean() || (timeout.hasElapsed(2.0) && shouldTimeout);
+        return !conveyor.hasPiece(false).getAsBoolean() || (timeout.hasElapsed(2.5) && shouldTimeout);
     }
     
 }

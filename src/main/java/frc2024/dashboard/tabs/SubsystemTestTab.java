@@ -22,15 +22,15 @@ import frc2024.subsystems.Shooter;
 /** Add your docs here. */
 public class SubsystemTestTab extends ShuffleboardTabBase{
 
-    private Climber climber;
+    // private Climber climber;
     private Conveyor conveyor;
     private Elevator elevator;
     private Intake intake;
     private Pivot pivot;
     private Shooter shooter;
 
-    public SubsystemTestTab(Climber climber, Conveyor conveyor, Elevator elevator, Intake intake, Pivot pivot, Shooter shooter){
-        this.climber = climber;
+    public SubsystemTestTab(/* Climber climber, */ Conveyor conveyor, Elevator elevator, Intake intake, Pivot pivot, Shooter shooter){
+        // this.climber = climber;
         this.conveyor = conveyor;
         this.elevator = elevator;
         this.intake = intake;
@@ -39,8 +39,8 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
     }
 
     /* Climber */
-    private static GenericEntry m_climberHeight_Target;
-    private GenericEntry m_climberHeight;
+    // private static GenericEntry m_climberHeight_Target;
+    // private GenericEntry m_climberHeight;
 
     /* Conveyor */
     private static GenericEntry m_conveyor_DutyCycle;
@@ -67,17 +67,17 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
         m_tab = Shuffleboard.getTab("Subsytem Testing");
 
         /* Climber */
-        m_climberHeight = createNumberEntry("Climber Height", 0, new EntryProperties(0, 0, 2, 1));
+        /* m_climberHeight = createNumberEntry("Climber Height", 0, new EntryProperties(0, 0, 2, 1));
 
         if(ShuffleboardConstants.UPDATE_CLIMBER){
             m_climberHeight_Target = createNumberEntry("Climber Target Height", 0.0, new EntryProperties(0, 1, 2, 1));
-        }
+        } */
 
         /* Conveyor */
         m_conveyor_MotorVelocity = createNumberEntry("Conveyor Motor RPM", 0, new EntryProperties(1, 0, 2, 1));
 
         if(ShuffleboardConstants.UPDATE_CONVEYOR){
-            m_conveyor_DutyCycle = createNumberEntry("Climber Target Duty Cycle", 0.0, new EntryProperties(1, 1, 2, 1));
+            m_conveyor_DutyCycle = createNumberEntry("Conveyor Target Duty Cycle", 0.0, new EntryProperties(1, 1, 2, 1));
         }
 
         /* Elevator */
@@ -112,9 +112,9 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
     @Override
     public void periodic() {
         /* Climber */
-        if(ShuffleboardConstants.UPDATE_CLIMBER){
+        /* if(ShuffleboardConstants.UPDATE_CLIMBER){
             climber.setTargetPosition(getClimberHeight());
-        }
+        } */
 
         /* Conveyor */
         if(ShuffleboardConstants.UPDATE_CONVEYOR){
@@ -146,14 +146,14 @@ public class SubsystemTestTab extends ShuffleboardTabBase{
         m_intake_MotorVelocity.setDouble(intake.getRPM());
         m_elevatorHeight.setDouble(elevator.getElevatorPosition());
         m_conveyor_MotorVelocity.setDouble(conveyor.getRPM());
-        m_climberHeight.setDouble(climber.getClimberHeight());
+        // m_climberHeight.setDouble(climber.getClimberHeight());
 
     }
 
     /* Climber */
-    public double getClimberHeight(){
+    /* public double getClimberHeight(){
         return m_climberHeight_Target.getDouble(0);
-    }
+    } */
 
     /* Conveyor */
     public double getConveyorDutyCycle(){

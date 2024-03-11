@@ -46,7 +46,7 @@ public final class Constants{
         REAL, REPLAY, SIM, DEV;
     }
 
-    public static final Mode MODE = Mode.DEV;
+    public static final Mode MODE = Mode.REAL;
 
     /* Robot loop time */
     public static final double LOOP_TIME_SEC = 0.02;
@@ -71,8 +71,8 @@ public final class Constants{
         //public static final int RIGHT_CLIMBER_MOTOR_ID = 14; //TODO
 
         /* Shooter */
-        public static final int RIGHT_SHOOTER_MOTOR_ID = 12; //TODO
-        public static final int LEFT_SHOOTER_MOTOR_ID = 11; //TODO
+        public static final int BOTTOM_SHOOTER_MOTOR_ID = 12; //TODO
+        public static final int TOP_SHOOTER_MOTOR_ID = 11; //TODO
 
         /* Pivot */
         public static final int PIVOT_MOTOR_ID = 17; //TODO
@@ -150,7 +150,7 @@ public final class Constants{
         public static final ScreamPIDConstants VISION_ROTATION_CONSTANTS = new ScreamPIDConstants(0.16, 0.0, 0.0);
         public static final ScreamPIDConstants VISION_TRANSLATION_X_CONSTANTS = new ScreamPIDConstants(1.0, 0.0, 0.0);
         public static final ScreamPIDConstants VISION_TRANSLATION_Y_CONSTANTS = new ScreamPIDConstants(4.5, 0.0, 0.0);
-        public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(0.08, 0.0, 0.0); //0.1
+        public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(0.095, 0.0, 0.0); //0.1
         public static final ScreamPIDConstants DRIVE_TO_TARGET_CONSTANTS = new ScreamPIDConstants(1.5, 0.0, 0.0);
 
         /* PathPlanner Constants */
@@ -225,7 +225,9 @@ public final class Constants{
             public static final int SUPPLY_CURRENT_LIMIT = 25;
             public static final int SUPPLY_CURRENT_THRESHOLD = 40;
             public static final double SUPPLY_TIME_THRESHOLD = 0.1;
-            public static final boolean CURRENT_LIMIT_ENABLE = true;        
+            public static final boolean CURRENT_LIMIT_ENABLE = true;   
+            public static final int STATOR_CURRENT_LIMIT = 80;
+            public static final boolean STATOR_LIMIT_ENABLE = true;     
 
             /* PID Constants */
             public static final double KP = MODULE_TYPE.steerKP; 
@@ -262,7 +264,7 @@ public final class Constants{
                 1, 
                 0, 
                 0, 
-                Rotation2d.fromRotations(-0.82763671875+0.5)
+                Rotation2d.fromRotations(-0.319580078125)
             );
 
             /* Front Right */
@@ -270,7 +272,7 @@ public final class Constants{
                 3, 
                 2, 
                 1, 
-                Rotation2d.fromRotations(-0.963623046875+0.5)
+                Rotation2d.fromRotations(-0.0546875)
             );
 
             /* Back Left */
@@ -287,6 +289,20 @@ public final class Constants{
                 6, 
                 3, 
                 Rotation2d.fromRotations(-0.26318359375+0.5)
+            );
+
+            public static final SwerveModuleConstants MODULE_4 = new SwerveModuleConstants(
+                3, 
+                2, 
+                1, 
+                Rotation2d.fromRotations(-0.572998046875)
+            );
+
+            public static final SwerveModuleConstants MODULE_5 = new SwerveModuleConstants(
+                2, 
+                3, 
+                1, 
+                Rotation2d.fromRotations(0.0)
             );
         }
     }
@@ -345,7 +361,7 @@ public final class Constants{
         public static final double WHEEL_CIRCUMFERENCE = 4.0 * Math.PI;
 
         /* Motor Invert */
-        public static final InvertedValue MOTOR_INVERT = InvertedValue.Clockwise_Positive;;
+        public static final InvertedValue MOTOR_INVERT = InvertedValue.Clockwise_Positive;
         
         /* Neutral Modes */
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Coast;
@@ -409,11 +425,11 @@ public final class Constants{
         public static final boolean SOFTWARE_LIMIT_ENABLE_ENDGAME = true;
         public static final Rotation2d FORWARD_SOFT_LIMIT = Rotation2d.fromDegrees(40.0);
         public static final Rotation2d REVERSE_SOFT_LIMIT = Rotation2d.fromDegrees(-9999);
-        public static final Rotation2d FORWARD_SOFT_LIMIT_ENDGAME = Rotation2d.fromDegrees(25.488);
-        public static final Rotation2d REVERSE_SOFT_LIMIT_ENDGAME = Rotation2d.fromDegrees(56.426);
+        public static final Rotation2d FORWARD_SOFT_LIMIT_ENDGAME = Rotation2d.fromDegrees(54.0);
+        public static final Rotation2d REVERSE_SOFT_LIMIT_ENDGAME = Rotation2d.fromDegrees(25.0);
 
-        public static final boolean HARDWARE_LIMIT_ENABLE_FORWARD = true;
-        public static final boolean HARDWARE_LIMIT_ENABLE_REVERSE = false;
+        public static final boolean HARDWARE_AUTO_POSITION_FORWARD_ENABLE = false;
+        public static final boolean HARDWARE_AUTO_POSITION_REVERSE_ENABLE = false;
         public static final double HARDWARE_LIMIT_POSITION_FORWARD = 0.0;
         public static final double HARDWARE_LIMIT_POSITION_REVERSE = 0.0;
 
@@ -580,7 +596,7 @@ public final class Constants{
 
         public static final double DETECTOR_TARGET_Y = 0.0;
         public static final double DETECTOR_TARGET_X = 0.0;
-        public static final double AUTO_FIRE_X_THRESHOLD = 0.8;
+        public static final double AUTO_FIRE_X_THRESHOLD = 2.0;
         public static final double AUTO_INTAKE_Y_THRESHOLD = 0.0;
 
         public static final Rotation2d SHOOT_STATE_MAP_ANGLE_OFFSET = Rotation2d.fromDegrees(0.0);

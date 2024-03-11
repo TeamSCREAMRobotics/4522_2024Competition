@@ -55,10 +55,11 @@ public class Routines {
     private static final PathSequence Amp4Close = new PathSequence(Side.AMP, "Amp4Close#1", "Amp4Close#2", "Amp4Close#3");
     private static final PathSequence Amp5_1Center = new PathSequence(Side.AMP,  "Amp5_1Center#1", "Amp5_1Center#2");
     private static final PathSequence Amp6Center = new PathSequence(Side.AMP, "Amp4Close#1", "Amp4Close#1", "Amp6Center#0", "Amp6Center#1", "Amp6Center#2", "Amp6Center#3", "Amp6Center#4");
-    private static final PathSequence Source4Center = new PathSequence(Side.SOURCE, "Source4Center#1", "Source4Center#2", "Source4Center#3");
+    private static final PathSequence Source4Center = new PathSequence(Side.SOURCE, "Source4Center#1", "Source4Center#3");
     private static final PathSequence Amp4Center = new PathSequence(Side.AMP, "Amp4Center#1", "Amp4Center#2", "Amp4Center#3");
-    private static final PathSequence SweepCenter = new PathSequence(Side.SOURCE, "SweepCenter");
+    private static final PathSequence SweepCenter = new PathSequence(Side.SOURCE, "SweepCenter#1", "SweepCenter#2");
     private static final PathSequence Amp5Center_2 = new PathSequence(Side.AMP, "Amp5Center#1", "Amp5Center#2", "Amp5Center#3", "Amp5Center#4");
+    private static final PathSequence Leave = new PathSequence(Side.SOURCE, "Leave");
 
     private static Command startTimer(){
         return Commands.runOnce(
@@ -94,6 +95,8 @@ public class Routines {
             return SweepCenter;
             case "Amp5Center_2":
             return Amp5Center_2;
+            case "Leave":
+            return Leave;
             default:
             return new PathSequence(Side.CENTER);
         }
@@ -178,8 +181,8 @@ public class Routines {
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
             Source4Center.getIndex(1),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
-            Source4Center.getIndex(2),
-            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
+            //Source4Center.getIndex(2),
+            //new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
 /*             Source4Center.getIndex(3),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor), */
             printTimer()
@@ -195,6 +198,17 @@ public class Routines {
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
             Amp5_1Center.getIndex(1),
             new AutoIntakeFloor(elevator, pivot, conveyor, intake),
+            printTimer()
+        );
+    }
+
+    public static Command Amp5_NoCenter(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake){
+        currentSequence = Amp5_1Center;
+        return new SequentialCommandGroup(
+            startTimer(),
+            Amp4Close(swerve, shooter, elevator, pivot, conveyor, intake),
+            Amp5_1Center.getIndex(0),
+            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
             printTimer()
         );
     }
@@ -225,8 +239,18 @@ public class Routines {
             pivot.angleCommand(PivotConstants.HOME_ANGLE),
             shooter.dutyCycleCommand(0.2),
             conveyor.dutyCycleCommand(1.0),
-            intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT),
-            SweepCenter.getAll()
+            intake.dutyCycleCommand(1.0),
+            SweepCenter.getIndex(0)
+            .andThen(SweepCenter.getIndex(1))
+        );
+    }
+
+    public static Command Leave(Swerve swerve, double delay){
+        currentSequence = Leave;
+        return new SequentialCommandGroup(
+            swerve.resetPoseCommand(Leave.getStartingPose()),
+            new WaitCommand(delay),
+            Leave.getIndex(0)
         );
     }
 }
