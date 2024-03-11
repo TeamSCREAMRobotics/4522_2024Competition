@@ -40,6 +40,8 @@ public class Controlboard{
     public static final XboxController operatorController = new XboxController(1);
     public static final Buttonboard buttonBoard = new Buttonboard(2, 3);
 
+    public static boolean fieldCentric = true;
+
     public static Command driverRumbleCommand(RumbleType type, double value, double time){
         return new RunCommand(() -> driverController.setRumble(type, value))
             .withTimeout(time)
@@ -78,18 +80,20 @@ public class Controlboard{
         return translation;
 	}
 
-    public static Supplier<Optional<Rotation2d>> getSnapAngle(){
-        if(driverController_Command.getHID().getYButton()){
-            return Rotation2d.fromDegrees(90.0);
-        } else if(driverController_Command.getHID().getAButton()){
-            return AllianceFlippable.MirroredRotation2d(Rotation2d.fromDegrees(180.0));
-        } else if(driverController_Command.getHID().getBButton()){
-            return AllianceFlippable.Rotation2d(Rotation2d.fromDegrees(60.0), Rotation2d.fromDegrees(-120.0));
-        } else if(driverController_Command.getHID().getXButton()){
-            return AllianceFlippable.Rotation2d(Rotation2d.fromDegrees(-60.0), Rotation2d.fromDegrees(120.0));
-        } else {
-            return () -> Optional.empty();
-        }
+    public static DoubleSupplier getSnapAngle(){
+        return () -> {
+            if(driverController_Command.getHID().getAButton()){
+                return 90.0;
+            } else if(driverController_Command.getHID().getYButton()){
+                return AllianceFlippable.Number(0.0, 180.0);
+            } else if(driverController_Command.getHID().getBButton()){
+                return AllianceFlippable.Number(60.0, -120.0);
+            } else if(driverController_Command.getHID().getXButton()){
+                return AllianceFlippable.Number(-60.0, 120.0);
+            } else {
+                return -1.0;
+            }
+        };
     }
 
     public static BooleanSupplier getSlowMode(){
@@ -125,7 +129,8 @@ public class Controlboard{
      */
     public static BooleanSupplier getFieldCentric() {
         /* Toggles field-centric mode between true and false when the start button is pressed */
-        return () -> !driverController_Command.getHID().getStartButton();
+        driverController_Command.start().onTrue(Commands.runOnce(() -> fieldCentric =! fieldCentric));
+        return () -> fieldCentric;
     }
 
     public static Trigger manualMode(){
@@ -164,13 +169,18 @@ public class Controlboard{
 
     /* Climber */
     public static final DoubleSupplier getManualClimberOutput(){
-        return () -> -buttonBoard.getBigSwitchY()/2;
+        return () -> -buttonBoard.getBigSwitchY()*0.75;
     }
 
     /* Shooter/Conveyor */
     public static final Trigger manuallyShoot(){
         return new Trigger(() -> buttonBoard.getRawButton(1));
     }
+
+    public static final Trigger shooterIntoConveyor(){
+        return operatorController_Command.leftBumper();
+    }
+
     public static final Trigger ejectThroughIntake(){
         return driverController_Command.leftBumper();
     }
@@ -186,6 +196,14 @@ public class Controlboard{
 
     public static final Trigger resetPivotAngle(){
         return new Trigger(() -> buttonBoard.getRawButton(4));
+    }
+
+    public static final BooleanSupplier increasePivot(){
+        return () -> operatorController_Command.getHID().getPOV() == 0.0;
+    }
+
+    public static final BooleanSupplier decreasePivot(){
+        return () -> operatorController_Command.getHID().getPOV() == 180.0;
     }
 
     /* Elevator */
@@ -255,6 +273,14 @@ public class Controlboard{
 
     public static final Trigger autoPickupFromFloor(){
         return driverController_Command.leftBumper();
+    }
+
+    public static final Trigger trapAdjustDown(){
+        return driverController_Command.povDown().and(endGameMode());
+    }
+
+    public static final Trigger trapAdjustUp(){
+        return driverController_Command.povUp().and(endGameMode());
     }
 
     public static final Trigger intakeOverride(){

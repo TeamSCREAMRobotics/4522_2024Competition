@@ -26,7 +26,7 @@ public final class AllianceFlippable {
     }
 
     public static Rotation2d getForwardRotation(){
-        return shouldFlip().getAsBoolean() ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180);
+        return Rotation2d(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(180));
     }
 
     public static int getDirectionCoefficient(){
@@ -81,7 +81,7 @@ public final class AllianceFlippable {
     }
 
     public static Rotation2d MirroredRotation2d(Rotation2d blueValue){
-        return new Rotation2d(Math.PI).minus(blueValue);
+        return Rotation2d(blueValue, new Rotation2d(Math.PI).minus(blueValue));
     }
 
     public static Rotation3d MirroredRotation3d(Rotation3d blueValue){

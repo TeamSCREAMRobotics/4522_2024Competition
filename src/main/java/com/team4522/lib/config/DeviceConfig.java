@@ -70,11 +70,13 @@ public class DeviceConfig {
         config.MotorOutput = FXMotorOutputConfig(SteerConstants.MOTOR_INVERT, SteerConstants.NEUTRAL_MODE);
         config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.FusedCANcoder, remoteSensorID, 1.0, SteerConstants.GEAR_RATIO, Rotation2d.fromRotations(0));
         config.ClosedLoopGeneral = FXClosedLoopGeneralConfig(true);
-        config.CurrentLimits = FXSupplyCurrentLimitsConfig(
+        config.CurrentLimits = FXCurrentLimitsConfig(
             SteerConstants.CURRENT_LIMIT_ENABLE, 
             SteerConstants.SUPPLY_CURRENT_LIMIT, 
             SteerConstants.SUPPLY_CURRENT_THRESHOLD, 
-            SteerConstants.SUPPLY_TIME_THRESHOLD);
+            SteerConstants.SUPPLY_TIME_THRESHOLD,
+            SteerConstants.STATOR_LIMIT_ENABLE,
+            SteerConstants.STATOR_CURRENT_LIMIT);
         config.MotionMagic = FXMotionMagicConfig(SteerConstants.MOTION_MAGIC_CONSTANTS);
         config.Slot0 = FXPIDConfig(SteerConstants.PID_CONSTANTS);
         return config;
@@ -149,7 +151,7 @@ public class DeviceConfig {
         config.MotorOutput = FXMotorOutputConfig(PivotConstants.MOTOR_INVERT, PivotConstants.NEUTRAL_MODE);
         config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, PivotConstants.TOTAL_GEAR_RATIO, 1.0, Rotation2d.fromDegrees(0.0));
         config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(softwareLimitEnable, forwardLimit.getRotations(), reverseLimit.getRotations());
-        config.HardwareLimitSwitch = FXHardwareLimitSwitchConfig(PivotConstants.HARDWARE_LIMIT_ENABLE_FORWARD, PivotConstants.HARDWARE_LIMIT_ENABLE_REVERSE, PivotConstants.HARDWARE_LIMIT_POSITION_FORWARD, PivotConstants.HARDWARE_LIMIT_POSITION_REVERSE);
+        config.HardwareLimitSwitch = FXHardwareLimitSwitchConfig(PivotConstants.HARDWARE_AUTO_POSITION_FORWARD_ENABLE, PivotConstants.HARDWARE_AUTO_POSITION_REVERSE_ENABLE, PivotConstants.HARDWARE_LIMIT_POSITION_FORWARD, PivotConstants.HARDWARE_LIMIT_POSITION_REVERSE);
         config.CurrentLimits = FXSupplyCurrentLimitsConfig(
             PivotConstants.CURRENT_LIMIT_ENABLE, 
             PivotConstants.SUPPLY_CURRENT_LIMIT, 
@@ -168,10 +170,10 @@ public class DeviceConfig {
         return config;
     }
     
-    public static TalonFXConfiguration shooterFXConfig(InvertedValue invertValue){
+    public static TalonFXConfiguration shooterFXConfig(){
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Audio = FXAudioConfigs(false, false, true);
-        config.MotorOutput = FXMotorOutputConfig(invertValue, ShooterConstants.NEUTRAL_MODE);
+        config.MotorOutput = FXMotorOutputConfig(ShooterConstants.MOTOR_INVERT, ShooterConstants.NEUTRAL_MODE);
         config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ShooterConstants.GEAR_RATIO, 1.0, Rotation2d.fromRotations(0));
         config.CurrentLimits = FXSupplyCurrentLimitsConfig(
             ShooterConstants.CURRENT_LIMIT_ENABLE, 
@@ -203,9 +205,6 @@ public class DeviceConfig {
     ////////////////////////////////////// GENERAL CONFIGURATION METHODS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
     public static void configureTalonFX(String name, TalonFX fx, TalonFXConfiguration config, double updateFrequencyHz){
-        AudioConfigs audioConfigs = new AudioConfigs();
-        fx.getConfigurator().refresh(audioConfigs);
-        config.Audio = audioConfigs;
         DeviceConfiguration deviceConfig = new DeviceConfiguration() {
             @Override
             public boolean configureSettings(){

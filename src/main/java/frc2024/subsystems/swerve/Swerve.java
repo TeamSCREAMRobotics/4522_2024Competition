@@ -21,6 +21,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -28,11 +29,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.RobotContainer;
+import frc2024.Constants.FieldConstants;
 import frc2024.Constants.Ports;
 import frc2024.Constants.SwerveConstants;
 import frc2024.Constants.VisionConstants;
 import frc2024.Constants.SwerveConstants.ModuleConstants;
 import frc2024.Constants.SwerveConstants.ModuleConstants.ModuleLocation;
+import frc2024.controlboard.Controlboard;
 import frc2024.subsystems.Vision;
 import frc2024.subsystems.Vision.Limelight;
 import frc2024.subsystems.Vision.TimestampedVisionMeasurement;
@@ -70,7 +73,7 @@ public class Swerve extends SubsystemBase {
          */
         m_swerveModules = new SwerveModule[] {
                 new SwerveModule(ModuleLocation.FRONT_LEFT, ModuleConstants.MODULE_0),
-                new SwerveModule(ModuleLocation.FRONT_RIGHT, ModuleConstants.MODULE_1),
+                new SwerveModule(ModuleLocation.FRONT_RIGHT, ModuleConstants.MODULE_4),
                 new SwerveModule(ModuleLocation.BACK_LEFT, ModuleConstants.MODULE_2),
                 new SwerveModule(ModuleLocation.BACK_RIGHT, ModuleConstants.MODULE_3)
         };
@@ -93,10 +96,15 @@ public class Swerve extends SubsystemBase {
         m_odometryThread = new OdometryThread();
         m_odometryThread.start();
 
-        /**
-         * Configures the AutoBuilder for holonomic mode.
-         * The AutoBuilder uses methods from this class to follow paths.
-         */
+        m_headingController.enableContinuousInput(-180, 180);
+        m_snapController.enableContinuousInput(-180.0, 180);
+    }
+
+    /**
+     * Configures the AutoBuilder for holonomic mode.
+     * The AutoBuilder uses methods from this class to follow paths.
+     */
+    public void configureAutoBuilder(){
         AutoBuilder.configureHolonomic(
             this::getPose,
             this::resetPose,
@@ -108,8 +116,6 @@ public class Swerve extends SubsystemBase {
             },
             this
         );
-
-        m_headingController.enableContinuousInput(-180, 180);
     }
 
     /**
@@ -117,7 +123,10 @@ public class Swerve extends SubsystemBase {
      */
     public void resetYaw(Rotation2d rotation) {
         m_pigeon2.setYaw(rotation.getDegrees());
-        m_poseEstimator.resetPosition(rotation, getModulePositions(), getPose());
+    }
+
+    public void resetHeading(Rotation2d rotation) {
+        m_poseEstimator.resetPosition(getYaw(), getModulePositions(), new Pose2d(getPose().getTranslation(), rotation));
     }
 
     /**
@@ -320,11 +329,13 @@ public class Swerve extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        if(Vision.getTimestampedVisionMeasurement(Limelight.SHOOTER).isPresent()){
+        /* if(Vision.getTimestampedVisionMeasurement(Limelight.SHOOTER).isPresent()){
             TimestampedVisionMeasurement measurement = Vision.getTimestampedVisionMeasurement(Limelight.SHOOTER).get();
             m_poseEstimator.addVisionMeasurement(measurement.pose(), measurement.timestamp());
-        }
+        } */
+        // System.out.println(Units.metersToInches(Vision.getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER)));
     }
+
 
     public Command resetPoseCommand(Pose2d pose){
         return Commands.runOnce(() -> resetPose(pose));

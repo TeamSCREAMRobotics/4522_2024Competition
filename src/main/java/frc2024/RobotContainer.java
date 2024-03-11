@@ -23,6 +23,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -73,14 +74,14 @@ public class RobotContainer {
     
     /* Subsystems */
     private static final Swerve m_swerve = new Swerve();
-    private static final Climber m_climber = new Climber();
+    // private static final Climber m_climber = new Climber();
     private static final Shooter m_shooter = new Shooter();
     private static final Pivot m_pivot = new Pivot();
     private static final Elevator m_elevator = new Elevator();
     private static final Conveyor m_conveyor = new Conveyor();
     private static final Intake m_intake = new Intake();
 
-    private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve, m_climber, m_conveyor, m_elevator, m_intake, m_pivot, m_shooter);
+    private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve, /* m_climber, */ m_conveyor, m_elevator, m_intake, m_pivot, m_shooter);
 
     public static SuperstructureState currentState = SuperstructureState.HOME;
     
@@ -98,7 +99,7 @@ public class RobotContainer {
      * Configures button bindings from Controlboard.
      */
     private void configButtonBindings() {
-        Controlboard.zeroGyro().onTrue(Commands.runOnce(() -> m_swerve.resetYaw(AllianceFlippable.getForwardRotation())));
+        Controlboard.zeroGyro().onTrue(Commands.runOnce(() -> m_swerve.resetHeading(AllianceFlippable.getForwardRotation())));
         //Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, new Rotation2d()))));
 
         /* Conveyor */
@@ -113,7 +114,7 @@ public class RobotContainer {
         /* Pivot */
         Controlboard.manualMode().whileTrue(m_pivot.dutyCycleCommand(Controlboard.getManualPivotOutput()));
         Controlboard.resetPivotAngle().onTrue(Commands.runOnce(() -> m_pivot.zeroPivot()).ignoringDisable(true));
-        //Right Y
+        
 
         /* Pivot AND Elevator */
         Controlboard.goToHomePosition()
@@ -209,13 +210,16 @@ public class RobotContainer {
 
         Controlboard.autoClimb()
             .toggleOnTrue(
-                m_elevator.heightCommand(ElevatorConstants.TRAP_CHAIN_HEIGHT)
-                .alongWith(
-                    m_pivot.angleCommand(PivotConstants.TRAP_CHAIN_ANGLE)
-                )
-                .alongWith(
-                    m_climber.outputCommand(ClimberConstants.CLIMBER_UP_OUTPUT_FAST)
-                )
+                new InstantCommand(() -> currentState = SuperstructureState.TRAP_CHAIN)
+                    .andThen(
+                        m_elevator.heightCommand(ElevatorConstants.TRAP_CHAIN_HEIGHT))
+                    .alongWith(
+                        m_pivot.angleCommand(PivotConstants.TRAP_CHAIN_ANGLE)
+                    )/* 
+                    .alongWith(
+                        m_climber.outputCommand(ClimberConstants.CLIMBER_UP_OUTPUT_FAST)
+                            .until(() -> m_climber.getClimberAtBottom() || m_climber.getClimberAtTop())
+                    ) */
             );
 
         /* Shooter */        
@@ -224,6 +228,12 @@ public class RobotContainer {
                 m_shooter.dutyCycleCommand(ShooterConstants.EJECT_OUTPUT))
             .onFalse(m_shooter.stopCommand());
 
+        Controlboard.shooterIntoConveyor()
+            .whileTrue(
+                m_shooter.dutyCycleCommand(-ShooterConstants.EJECT_OUTPUT))
+            .onFalse(m_shooter.stopCommand());
+
+
         Controlboard.stopFlywheel().onTrue(m_shooter.stopCommand());
 
         /* Automation */
@@ -231,7 +241,7 @@ public class RobotContainer {
             .toggleOnTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.AUTO_FIRE)
                     .andThen(
-                        new AutoShootSequence(Controlboard.getTranslation(), false, m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor)))
+                        new AutoShootSequence(Controlboard.getTranslation(), false, m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor).onlyIf(() -> Vision.getTV(Limelight.SHOOTER))))
                 /* new AutoFire(m_shooter, m_elevator, m_pivot, Controlboard.defendedMode())
                     .alongWith(new FaceVisionTarget(m_swerve, Controlboard.getTranslation(), SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))) */
             .onFalse(
@@ -250,6 +260,9 @@ public class RobotContainer {
                     new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, () -> false)
                 )
                     .onFalse(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()));
+
+        new Trigger(m_conveyor.hasPiece(false))
+            .onTrue(Controlboard.driverRumbleCommand(RumbleType.kBothRumble, 0.7, 0.2));
 
         Controlboard.intakeFromFloor_Endgame().and(new Trigger(m_conveyor.hasPiece(true)).negate())
             /* .or(Controlboard.intakeOverride()) */
@@ -275,6 +288,16 @@ public class RobotContainer {
                     .alongWith(m_conveyor.dutyCycleCommand(ConveyorConstants.AMP_OUTPUT)))
             .onFalse(m_intake.stopCommand().alongWith(m_conveyor.stopCommand()));
 
+        Controlboard.trapAdjustUp()
+            .whileTrue(
+                m_conveyor.dutyCycleCommand(-0.075))
+            .onFalse(m_conveyor.stopCommand());
+
+        Controlboard.trapAdjustDown()
+            .whileTrue(
+                m_conveyor.dutyCycleCommand(0.075))
+            .onFalse(m_conveyor.stopCommand());
+
         Controlboard.score()
             .whileTrue(m_conveyor.scoreCommand())
                 .onFalse(m_conveyor.stopCommand());
@@ -285,9 +308,9 @@ public class RobotContainer {
                     .until(() -> m_conveyor.hasPiece())); */
 
         /* Climber */
-        new Trigger(Controlboard.endGameMode())
+        /* new Trigger(Controlboard.endGameMode())
             .whileTrue(
-                m_climber.outputCommand(Controlboard.getManualClimberOutput()));
+                m_climber.outputCommand(Controlboard.getManualClimberOutput())); */
     }
 
     private void configDefaultCommands() { 
@@ -325,6 +348,8 @@ public class RobotContainer {
             Routines.Amp4Center(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake).withName("Amp4Center"),
             Routines.SweepCenter(m_swerve, m_pivot, m_shooter, m_conveyor, m_intake).withName("SweepCenter"),
             Routines.Amp5Center_2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake).withName("Amp5Center_2"),
+            Routines.Amp5_NoCenter(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake).withName("Amp5_NoCenter"),
+            Routines.Leave(m_swerve, 2.0).withName("Leave"),
             Routines.testAuto(m_swerve).withName("test")
         );
     }
@@ -348,9 +373,9 @@ public class RobotContainer {
         return m_swerve;
     }
 
-    public static Climber getClimber(){
+    /* public static Climber getClimber(){
         return m_climber;
-    }
+    } */
 
     public static Shooter getShooter(){
         return m_shooter;
@@ -376,12 +401,24 @@ public class RobotContainer {
         return m_elevator.getElevatorAtTarget().getAsBoolean() && m_pivot.getPivotAtTarget().getAsBoolean();
     }
 
+    public static boolean forwardPivotLimit(){
+        boolean elevatorAtMaxHeight = m_elevator.getElevatorHeight() >= ElevatorConstants.MAX_HEIGHT - ElevatorConstants.TARGET_THRESHOLD;
+        boolean pivotAtMaxPivot = m_pivot.getPivotAngle().getDegrees() >= PivotConstants.FORWARD_SOFT_LIMIT_ENDGAME.getDegrees();
+        return elevatorAtMaxHeight && pivotAtMaxPivot;
+    }
+    
+    public static boolean reversePivotLimit(){
+        boolean elevatorAtMaxHeight = m_elevator.getElevatorHeight() >= ElevatorConstants.MAX_HEIGHT - ElevatorConstants.TARGET_THRESHOLD;
+        boolean pivotAtMaxPivot = m_pivot.getPivotAngle().getDegrees() <= PivotConstants.REVERSE_SOFT_LIMIT_ENDGAME.getDegrees();
+        return elevatorAtMaxHeight && pivotAtMaxPivot;
+    }
+
     public static Supplier<SuperstructureState> getCurrentState(){
         return () -> currentState;
     }
 
     public static void stopAll(){
-        m_climber.stop();
+        // m_climber.stop();
         m_shooter.stop();
         m_pivot.stop();
         m_elevator.stop();

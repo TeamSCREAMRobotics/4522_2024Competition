@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -63,7 +64,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
-    System.out.println("[Init] Starting AdvantageKit");
+    /* System.out.println("[Init] Starting AdvantageKit");
     Logger.recordMetadata("RuntimeType", getRuntimeType().toString());
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
@@ -80,37 +81,50 @@ public class Robot extends LoggedRobot {
       default:
         Logger.recordMetadata("GitDirty", "Unknown");
         break;
-    }
+    } */
 
     switch (Constants.MODE) {
       case REAL:
-        Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
-        Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-        new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
+        //Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
+        //Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+        //new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
         SignalLogger.setPath("/media/sda1/");
-        Logger.start();
+        //Logger.start();
         SignalLogger.enableAutoLogging(true);
         break;
       case REPLAY:
-        setUseTiming(false); // Run as fast as possible
-        String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-        Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
-        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
-        Logger.start();
+        //setUseTiming(false); // Run as fast as possible
+        //String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+        //Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
+        //Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+        //Logger.start();
         break;
       case SIM, DEV:
         break;
       default:
         break;
-    }
+    } 
 
     robotContainer = new RobotContainer();
+    timeSinceDisabled.reset();
+    timeSinceDisabled.start();
+
+    RobotContainer.getPivot().setNeutralMode(NeutralModeValue.Coast);
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    // System.out.println("(" + RobotContainer.getPivot().getPivotAngle().getDegrees() + ", " + RobotContainer.getElevator().getElevatorHeight() + ", " + RobotContainer.getShooter().getRPM() + ")");
+    // We have to do this so we can guarantee that the alliance has the correct value before configuring things that require it.
+    autoConfigurator.runOnceWhen(
+      () -> {
+        RobotContainer.getSwerve().configureAutoBuilder();
+        RobotContainer.configAuto();
+        Vision.setPriorityTagID((int) AllianceFlippable.Number(7, 4), Limelight.SHOOTER);
+        System.out.println("Ready To Enable");
+      },
+      DriverStation.getAlliance().isPresent());
+    //System.out.println("(" + RobotContainer.getPivot().getPivotAngle().getDegrees() + ", " + RobotContainer.getElevator().getElevatorHeight() + ", " + RobotContainer.getShooter().getRPM() + ")");
   }
 
   @Override
@@ -122,10 +136,9 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledPeriodic() {
-    autoConfigurator.runOnceWhen(() -> RobotContainer.configAuto(), DriverStation.getAlliance().isPresent());
     if(((int) timeSinceDisabled.get()) == 5){
-      //RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Coast, NeutralModeValue.Coast);
-      //RobotContainer.getPivot().setNeutralMode(NeutralModeValue.Coast);
+      RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Coast, NeutralModeValue.Coast);
+      RobotContainer.getPivot().setNeutralMode(NeutralModeValue.Coast);
     }
   }
 
@@ -135,13 +148,13 @@ public class Robot extends LoggedRobot {
     RobotContainer.setAllNeutralModes(NeutralModeValue.Brake);
     RobotContainer.stopAll();
     timeSinceDisabled.stop();
+    Controlboard.driverController.setRumble(RumbleType.kBothRumble, 0);
   }
 
   @Override
   public void autonomousInit() {
     autonomousCommand = robotContainer.getAutonomousCommand();
 
-    // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }

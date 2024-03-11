@@ -140,7 +140,7 @@ public class Vision extends SubsystemBase{
         double goal_theta = limelight.mountPose.getRotation().getY() + Math.toRadians(getTY(Limelight.SHOOTER));
         double height_diff = targetHeight - limelight.mountPose.getZ();
 
-        return distanceFilter.calculate(height_diff / Math.tan(goal_theta));
+        return height_diff / Math.tan(goal_theta);
     }
 
     public static double getFusedDistanceToSpeaker(Limelight limelight, Pose2d currentPose){

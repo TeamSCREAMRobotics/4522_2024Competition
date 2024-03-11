@@ -30,8 +30,8 @@ import frc2024.dashboard.tabs.SubsystemTestTab;
 
 public class Shooter extends SubsystemBase{
     
-    private TalonFX m_rightShooterMotor;
-    private TalonFX m_leftShooterMotor;
+    private TalonFX m_bottomShooterMotor;
+    private TalonFX m_topShooterMotor;
 
     private DutyCycleOut m_dutyCyleRequest = new DutyCycleOut(0);
     private VelocityVoltage m_velocityRequest = new VelocityVoltage(0);
@@ -39,30 +39,31 @@ public class Shooter extends SubsystemBase{
     private double m_targetVelocity = 0.0;
 
     public Shooter(){
-        m_rightShooterMotor = new TalonFX(Ports.RIGHT_SHOOTER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
-        m_leftShooterMotor = new TalonFX(Ports.LEFT_SHOOTER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        m_bottomShooterMotor = new TalonFX(Ports.BOTTOM_SHOOTER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        m_topShooterMotor = new TalonFX(Ports.TOP_SHOOTER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
 
         configShooterMotors();
         
-        OrchestraUtil.add(m_rightShooterMotor, m_leftShooterMotor);
+        OrchestraUtil.add(m_bottomShooterMotor, m_topShooterMotor);
+        m_bottomShooterMotor.setInverted(true);
     }
     
     private void configShooterMotors() {
-        DeviceConfig.configureTalonFX("Right Shooter Motor", m_rightShooterMotor, DeviceConfig.shooterFXConfig(InvertedValue.Clockwise_Positive), Constants.DEVICE_LOOP_TIME_HZ);
-        DeviceConfig.configureTalonFX("Left Shooter Motor", m_leftShooterMotor, DeviceConfig.shooterFXConfig(InvertedValue.Clockwise_Positive), Constants.DEVICE_LOOP_TIME_HZ);
-        m_rightShooterMotor.getRotorVelocity().setUpdateFrequency(50.0);
-        m_leftShooterMotor.getRotorVelocity().setUpdateFrequency(50.0);
-        ParentDevice.optimizeBusUtilizationForAll(m_rightShooterMotor, m_leftShooterMotor);
+        DeviceConfig.configureTalonFX("Bottom Shooter Motor", m_bottomShooterMotor, DeviceConfig.shooterFXConfig(), Constants.DEVICE_LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Top Shooter Motor", m_topShooterMotor, DeviceConfig.shooterFXConfig(), Constants.DEVICE_LOOP_TIME_HZ);
+        m_bottomShooterMotor.getRotorVelocity().setUpdateFrequency(50.0);
+        m_topShooterMotor.getRotorVelocity().setUpdateFrequency(50.0);
+        ParentDevice.optimizeBusUtilizationForAll(m_bottomShooterMotor, m_topShooterMotor);
      }
     
     public void setNeutralMode(NeutralModeValue shooterMode){
-        m_rightShooterMotor.setNeutralMode(shooterMode);
-        m_leftShooterMotor.setNeutralMode(shooterMode);
+        m_bottomShooterMotor.setNeutralMode(shooterMode);
+        m_topShooterMotor.setNeutralMode(shooterMode);
     }
 
     public void setShooter(ControlRequest control){
-        m_rightShooterMotor.setControl(control);
-        m_leftShooterMotor.setControl(control);
+        m_bottomShooterMotor.setControl(control);
+        m_topShooterMotor.setControl(control);
     }
 
     public void setTargetVelocity(double velocityRPM){
@@ -79,11 +80,11 @@ public class Shooter extends SubsystemBase{
     }
 
     public double getRPM(){
-        return ScreamUtil.average(m_rightShooterMotor.getRotorVelocity().getValueAsDouble(), m_leftShooterMotor.getRotorVelocity().getValueAsDouble())*60;
+        return ScreamUtil.average(m_bottomShooterMotor.getRotorVelocity().getValueAsDouble(), m_topShooterMotor.getRotorVelocity().getValueAsDouble())*60;
     }
 
     public double getMotorVelocity(){
-        return ScreamUtil.average(m_leftShooterMotor.getVelocity().getValueAsDouble(), m_rightShooterMotor.getVelocity().getValueAsDouble());
+        return ScreamUtil.average(m_topShooterMotor.getVelocity().getValueAsDouble(), m_bottomShooterMotor.getVelocity().getValueAsDouble());
     }
 
     public double getShooterError(){
@@ -99,16 +100,16 @@ public class Shooter extends SubsystemBase{
     }
 
     public double getShooterCurrent(){
-        return ScreamUtil.average(m_rightShooterMotor.getSupplyCurrent().getValueAsDouble(), m_leftShooterMotor.getSupplyCurrent().getValueAsDouble());
+        return ScreamUtil.average(m_bottomShooterMotor.getSupplyCurrent().getValueAsDouble(), m_topShooterMotor.getSupplyCurrent().getValueAsDouble());
     }
 
     public double getShooterVoltage(){
-        return ScreamUtil.average(m_rightShooterMotor.getSupplyVoltage().getValueAsDouble(), m_leftShooterMotor.getSupplyCurrent().getValueAsDouble());
+        return ScreamUtil.average(m_bottomShooterMotor.getSupplyVoltage().getValueAsDouble(), m_topShooterMotor.getSupplyCurrent().getValueAsDouble());
     }
 
     public void stop(){
-        m_rightShooterMotor.stopMotor();
-        m_leftShooterMotor.stopMotor();
+        m_bottomShooterMotor.stopMotor();
+        m_topShooterMotor.stopMotor();
     }
 
     @Override
@@ -122,12 +123,12 @@ public class Shooter extends SubsystemBase{
         Logger.recordOutput("Shooter/Measured/AverageError", getShooterError());
         Logger.recordOutput("Shooter/Setpoint/Velocity", m_targetVelocity);
         Logger.recordOutput("Shooter/Setpoint/AtTarget", getShooterAtTarget().getAsBoolean());
-        Logger.recordOutput("Shooter/Power/Left/SupplyCurrent", m_leftShooterMotor.getSupplyCurrent().getValueAsDouble());
-        Logger.recordOutput("Shooter/Power/Left/StatorCurrent", m_leftShooterMotor.getStatorCurrent().getValueAsDouble());
-        Logger.recordOutput("Shooter/Power/Left/Voltage", m_leftShooterMotor.getSupplyVoltage().getValueAsDouble());
-        Logger.recordOutput("Shooter/Power/Right/SupplyCurrent", m_rightShooterMotor.getSupplyCurrent().getValueAsDouble());
-        Logger.recordOutput("Shooter/Power/Right/StatorCurrent", m_rightShooterMotor.getStatorCurrent().getValueAsDouble());
-        Logger.recordOutput("Shooter/Power/Right/Voltage", m_leftShooterMotor.getSupplyVoltage().getValueAsDouble());
+        Logger.recordOutput("Shooter/Power/Left/SupplyCurrent", m_topShooterMotor.getSupplyCurrent().getValueAsDouble());
+        Logger.recordOutput("Shooter/Power/Left/StatorCurrent", m_topShooterMotor.getStatorCurrent().getValueAsDouble());
+        Logger.recordOutput("Shooter/Power/Left/Voltage", m_topShooterMotor.getSupplyVoltage().getValueAsDouble());
+        Logger.recordOutput("Shooter/Power/Right/SupplyCurrent", m_bottomShooterMotor.getSupplyCurrent().getValueAsDouble());
+        Logger.recordOutput("Shooter/Power/Right/StatorCurrent", m_bottomShooterMotor.getStatorCurrent().getValueAsDouble());
+        Logger.recordOutput("Shooter/Power/Right/Voltage", m_topShooterMotor.getSupplyVoltage().getValueAsDouble());
         Logger.recordOutput("Shooter/Power/AverageVoltage", getShooterVoltage());
         Logger.recordOutput("Shooter/Power/AverageCurrent", getShooterCurrent());
         //Logger.recordOutput("Shooter/CurrentCommand", getCurrentCommand().getName());

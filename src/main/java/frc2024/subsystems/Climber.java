@@ -1,5 +1,6 @@
 package frc2024.subsystems;
 
+import java.text.Normalizer.Form;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.controls.ControlRequest;
@@ -10,7 +11,9 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.ReverseLimitValue;
 import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.pid.ScreamPIDConstants;
 import com.team4522.lib.util.OrchestraUtil;
@@ -79,10 +82,21 @@ public class Climber extends SubsystemBase{
     public double getClimberError(){
         return m_targetHeight - getClimberHeight();
     }
+
+    public boolean getClimberAtBottom(){
+        return m_climberMotor.getForwardLimit().getValue() == ForwardLimitValue.ClosedToGround;
+    }
+
+    public boolean getClimberAtTop(){
+        return m_climberMotor.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround;
+    }
     
     public boolean getClimberAtTarget(){
         return Math.abs(getClimberError()) < ClimberConstants.TARGET_THRESHOLD;
     }
+
+    @Override
+    public void periodic() {}
 
     public void stop(){
         m_climberMotor.stopMotor();

@@ -26,9 +26,12 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
+import frc2024.RobotContainer;
 import frc2024.Constants.ClimberConstants;
+import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.Ports;
+import frc2024.controlboard.Controlboard;
 
 public class Pivot extends SubsystemBase{
     
@@ -39,12 +42,13 @@ public class Pivot extends SubsystemBase{
     private DutyCycleOut m_dutyCycleRequest = new DutyCycleOut(0);
 
     private Rotation2d m_targetAngle = Rotation2d.fromDegrees(0);
+    private Rotation2d m_tweakAngle = Rotation2d.fromDegrees(0);
 
     public Pivot(){
         m_pivotMotor = new TalonFX(Ports.PIVOT_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         m_encoder = new CANcoder(Ports.PIVOT_ENCODER_ID, Ports.RIO_CANBUS_NAME);
          
-        configureDevices(PivotConstants.SOFTWARE_LIMIT_ENABLE, PivotConstants.FORWARD_SOFT_LIMIT, PivotConstants.REVERSE_SOFT_LIMIT);
+        configureDevices(PivotConstants.SOFTWARE_LIMIT_ENABLE, PivotConstants.FORWARD_SOFT_LIMIT_ENDGAME, PivotConstants.REVERSE_SOFT_LIMIT_ENDGAME);
         
         OrchestraUtil.add(m_pivotMotor);
     }
@@ -78,7 +82,9 @@ public class Pivot extends SubsystemBase{
     }
 
     public void setPivotOutput(double output){
-        setPivot(m_dutyCycleRequest.withOutput(output).withLimitForwardMotion(false));
+        setPivot(m_dutyCycleRequest.withOutput(output)
+            .withLimitForwardMotion(RobotContainer.forwardPivotLimit())
+            .withLimitReverseMotion(RobotContainer.reversePivotLimit()));
     }
 
     public Rotation2d getPivotAngle(){
@@ -105,6 +111,12 @@ public class Pivot extends SubsystemBase{
     public void periodic() {
         //System.out.println("Pivot:" + getPivotAtTarget().getAsBoolean());
         //logOutputs();
+        /* if(Controlboard.increasePivot().getAsBoolean()){
+            m_tweakAngle = m_tweakAngle.minus(Rotation2d.fromDegrees(1));
+        } else if(Controlboard.decreasePivot().getAsBoolean()){
+            m_tweakAngle = m_tweakAngle.plus(Rotation2d.fromDegrees(1));
+        }
+        System.out.println(Controlboard.operatorController_Command.ge); */
     }
 
     public void logOutputs(){
@@ -129,7 +141,7 @@ public class Pivot extends SubsystemBase{
     }
 
     public Command angleCommand(Rotation2d angle){
-        return run(() -> setTargetAngle(angle)).withName("AngleCommand");
+        return run(() -> setTargetAngle(angle.plus(m_tweakAngle))).withName("AngleCommand");
     }
 
     public Command angleCommand(Supplier<Rotation2d> angle){

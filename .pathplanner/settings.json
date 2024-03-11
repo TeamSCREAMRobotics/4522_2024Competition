@@ -10,7 +10,9 @@
     "5AmpSide_Center",
     "6AmpSide_Center",
     "7AmpSide_Center",
-    "CenterPiecePathfinding"
+    "Amp5_1Center",
+    "CenterPiecePathfinding",
+    "SweepCenter"
   ],
   "autoFolders": [],
   "defaultMaxVel": 4.98,
