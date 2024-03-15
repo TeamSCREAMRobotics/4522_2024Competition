@@ -22,8 +22,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -64,6 +66,7 @@ import frc2024.subsystems.Climber;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Intake;
+import frc2024.subsystems.LED;
 import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Shooter;
 import frc2024.subsystems.Vision;
@@ -80,6 +83,7 @@ public class RobotContainer {
     private static final Elevator m_elevator = new Elevator();
     private static final Conveyor m_conveyor = new Conveyor();
     private static final Intake m_intake = new Intake();
+    private static final LED m_led = new LED();
 
     private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve, /* m_climber, */ m_conveyor, m_elevator, m_intake, m_pivot, m_shooter);
 
@@ -257,22 +261,25 @@ public class RobotContainer {
         Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece(false)).negate())
             /* .or(Controlboard.intakeOverride()) */
                 .whileTrue(
-                    new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, () -> false)
+                    new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, m_led, () -> false)
                 )
                     .onFalse(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()));
 
-        new Trigger(m_conveyor.hasPiece(false))
-            .onTrue(Controlboard.driverRumbleCommand(RumbleType.kBothRumble, 0.7, 0.2));
+        new Trigger(() -> (m_conveyor.hasPiece(false).getAsBoolean() && m_conveyor.hasPiece(true).getAsBoolean()))
+            .and(Controlboard.intakeFromFloor().or(Controlboard.intakeFromFloorEndgame()))
+            .onTrue(
+                Controlboard.driverRumbleCommand(RumbleType.kBothRumble, 0.8, 0.2)
+                    .alongWith(m_led.strobeCommand(Color.kGreen, 0.1).withTimeout(1)));
 
-        Controlboard.intakeFromFloor_Endgame().and(new Trigger(m_conveyor.hasPiece(true)).negate())
+        Controlboard.intakeFromFloorEndgame().and(new Trigger(m_conveyor.hasPiece(true)).negate())
             /* .or(Controlboard.intakeOverride()) */
                 .whileTrue(
-                    new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, () -> true)
+                    new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, m_led, () -> true)
                 )
-                    .onFalse(
-                        new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
-                        .alongWith(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()))
-                    );
+                .onFalse(
+                    new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
+                    .alongWith(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()))
+                );
 
         Controlboard.intakeOverride().whileTrue(m_conveyor.dutyCycleCommand(ConveyorConstants.TRANSFER_OUTPUT)
             .alongWith(m_intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT)))
@@ -302,6 +309,8 @@ public class RobotContainer {
             .whileTrue(m_conveyor.scoreCommand())
                 .onFalse(m_conveyor.stopCommand());
 
+        new Trigger(() -> Timer.getMatchTime() < 20.0).onTrue(m_led.strobeCommand(Color.kWhite, 0.1).withTimeout(1));
+
         /* Controlboard.autoPickupFromFloor()
             .whileTrue(
                 new AutoIntakeFloor(Controlboard.getTranslation(), m_swerve, m_elevator, m_pivot, m_intake, m_conveyor)
@@ -325,6 +334,10 @@ public class RobotContainer {
                 Controlboard.getSlowMode()
             ) 
         );
+
+        m_led.setDefaultCommand(
+            m_led.waveCommand(Color.kYellow, Color.kBlack, 10.0, 3.0)
+        );
     }
 
     /**
@@ -335,20 +348,20 @@ public class RobotContainer {
     public static void configAuto() {
         Autonomous.configure(
             Commands.none().withName("Do Nothing"),
-            new PPEvent("StartIntake", new AutoIntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake)),
+            new PPEvent("StartIntake", new AutoIntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, m_led)),
             new PPEvent("StopIntake", m_intake.stopCommand().alongWith(m_conveyor.stopCommand())),
             new PPEvent("RunShooterHigh", m_shooter.velocityCommand(4500))
         );
 
         Autonomous.addRoutines(
-            Routines.Amp4Close(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake).withName("Amp4Close"),
-            Routines.Amp5_1Center(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake).withName("Amp5_1Center"),
+            Routines.Amp4Close(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("Amp4Close"),
+            Routines.Amp5_1Center(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp5_1Center"),
             Routines.Amp6Center(m_swerve, m_elevator, m_pivot, m_intake, m_conveyor).withName("Amp6Center"),
             Routines.Source4Center(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor).withName("Source4Center"),
             Routines.Amp4Center(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake).withName("Amp4Center"),
             Routines.SweepCenter(m_swerve, m_pivot, m_shooter, m_conveyor, m_intake).withName("SweepCenter"),
-            Routines.Amp5Center_2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake).withName("Amp5Center_2"),
-            Routines.Amp5_NoCenter(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake).withName("Amp5_NoCenter"),
+            Routines.Amp5Center_2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp5Center_2"),
+            Routines.Amp5_NoCenter(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp5_NoCenter"),
             Routines.Leave(m_swerve, 2.0).withName("Leave"),
             Routines.testAuto(m_swerve).withName("test")
         );
@@ -395,6 +408,10 @@ public class RobotContainer {
 
     public static Intake getIntake(){
         return m_intake;
+    }
+
+    public static LED getLED(){
+        return m_led;
     }
 
     public static boolean superstructureAtTarget(){

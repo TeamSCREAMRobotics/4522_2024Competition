@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -28,16 +29,18 @@ import frc2024.controlboard.Controlboard;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Intake;
+import frc2024.subsystems.LED;
 import frc2024.subsystems.Pivot;
 
 public class IntakeFloor extends SequentialCommandGroup {
   
-  public IntakeFloor(Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake, BooleanSupplier endGame) {
+  public IntakeFloor(Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake, LED led, BooleanSupplier endGame) {
     addCommands(
         elevator.heightCommand(endGame.getAsBoolean() ? ElevatorConstants.HOME_HEIGHT_ENDGAME : ElevatorConstants.HOME_HEIGHT)
             .alongWith(pivot.angleCommand(endGame.getAsBoolean() ? PivotConstants.HOME_ANGLE_ENDGAME : PivotConstants.HOME_ANGLE))
             .alongWith(intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT))
             .alongWith(conveyor.dutyCycleCommand(endGame.getAsBoolean() ? ConveyorConstants.AMP_OUTPUT+0.25 : ConveyorConstants.TRANSFER_OUTPUT))
+            .alongWith(led.strobeCommand(Color.kRed, 0.3))
             // .finallyDo((interrupted) -> )
       );
   }

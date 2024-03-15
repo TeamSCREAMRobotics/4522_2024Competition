@@ -1,5 +1,6 @@
 package com.team4522.lib.config;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix6.StatusCode;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -18,6 +19,14 @@ public class ErrorChecker {
         boolean okay = true;
         for(StatusCode statusCode : statusCodes){
             okay = okay && StatusCode.OK == statusCode;
+        }
+        return okay;
+    }
+
+    public static boolean hasConfiguredWithoutErrors(ErrorCode... errorCodes){
+        boolean okay = true;
+        for(ErrorCode errorCode : errorCodes){
+            okay = okay && ErrorCode.OK == errorCode;
         }
         return okay;
     }

@@ -3,6 +3,9 @@ package frc2024.subsystems;
 import java.text.Normalizer.Form;
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
@@ -26,27 +29,49 @@ import frc2024.Constants.Ports;
 
 public class Climber extends SubsystemBase{
 
-  private TalonFX m_climberMotor;
+  //private TalonFX m_climberMotor;
+  private TalonSRX m_barMotor;
 
-  private PositionVoltage m_positionRequest = new PositionVoltage(0);
-  private DutyCycleOut m_dutyCycleRequest = new DutyCycleOut(0);
+  private TalonSRXControlMode m_dutyCycleRequest = TalonSRXControlMode.PercentOutput;
+  private TalonSRXControlMode m_positionRequest = TalonSRXControlMode.Position;
 
-  private double m_targetHeight;
+  //private PositionVoltage m_positionRequest = new PositionVoltage(0);
+  //private DutyCycleOut m_dutyCycleRequest = new DutyCycleOut(0);
+
+  //private double m_targetHeight;
 
   public Climber (){
-        m_climberMotor = new TalonFX(Ports.LEFT_CLIMBER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        //m_climberMotor = new TalonFX(Ports.LEFT_CLIMBER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
+        m_barMotor = new TalonSRX(Ports.BAR_MOTOR_ID);
 
-        configClimberMotors();
+        configureDevices();
         
-        OrchestraUtil.add(m_climberMotor);
+        //OrchestraUtil.add(m_climberMotor);
     }
     
-    private void configClimberMotors() {
-        DeviceConfig.configureTalonFX("Climber Motor", m_climberMotor, DeviceConfig.climberFXConfig(), Constants.DEVICE_LOOP_TIME_HZ);
-        ParentDevice.optimizeBusUtilizationForAll(m_climberMotor);
+    private void configureDevices() {
+        DeviceConfig.configureTalonSRX("Bar Motor", m_barMotor, DeviceConfig.barSRXConfig());
+        //DeviceConfig.configureTalonFX("Climber Motor", m_climberMotor, DeviceConfig.climberFXConfig(), Constants.DEVICE_LOOP_TIME_HZ);
+        //ParentDevice.optimizeBusUtilizationForAll(m_climberMotor);
     }
 
-    public void configPID(ScreamPIDConstants constants){
+    public void setBar(TalonSRXControlMode control, double value){
+        m_barMotor.set(control, value);
+    }
+
+    public double getBarPosition(){
+        return m_barMotor.getSelectedSensorPosition();
+    }
+
+    public Command barPositionCommand(double position){
+        return run(() -> setBar(m_positionRequest, position));
+    }
+
+    public Command barDutyCycleCommand(double dutyCycle){
+        return run(() -> setBar(m_dutyCycleRequest, dutyCycle));
+    }
+
+    /* public void configPID(ScreamPIDConstants constants){
         m_climberMotor.getConfigurator().apply(constants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
     }
 
@@ -112,5 +137,5 @@ public class Climber extends SubsystemBase{
 
     public Command positionCommand(double position){
         return run(() -> setTargetPosition(position));
-    }
+    } */
 }

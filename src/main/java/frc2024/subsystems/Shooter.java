@@ -20,10 +20,12 @@ import com.team4522.lib.util.OrchestraUtil;
 import com.team4522.lib.util.ScreamUtil;
 
 import edu.wpi.first.networktables.BooleanSubscriber;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
+import frc2024.RobotContainer;
 import frc2024.Constants.Ports;
 import frc2024.Constants.ShooterConstants;
 import frc2024.dashboard.tabs.SubsystemTestTab;
@@ -139,15 +141,17 @@ public class Shooter extends SubsystemBase{
     }
 
     public Command velocityCommand(double velocityRPM){
-        return run(() -> setTargetVelocity(velocityRPM)).withName("VelocityCommand");
+        return run(() -> setTargetVelocity(velocityRPM)).withName("VelocityCommand")
+            .alongWith(RobotContainer.getLED().scaledTargetCommand(Color.kAqua, () -> getMotorVelocity(), () -> velocityRPM));
     }
 
     public Command velocityCommand(DoubleSupplier velocityRPM){
-        return run(() -> setTargetVelocity(velocityRPM.getAsDouble())).withName("VelocityCommand[Supplier]");
+        return run(() -> setTargetVelocity(velocityRPM.getAsDouble())).withName("VelocityCommand[Supplier]")
+            .alongWith(RobotContainer.getLED().scaledTargetCommand(Color.kPurple, () -> getMotorVelocity(), velocityRPM));
     }
 
     public Command idleCommand(){
-        return velocityCommand(ShooterConstants.IDLE_VELOCITY).withName("IdleCommand");
+        return run(() -> setTargetVelocity(ShooterConstants.IDLE_VELOCITY)).withName("IdleCommand");
     }
 
     public Command stopCommand(){

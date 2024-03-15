@@ -1,5 +1,8 @@
 package com.team4522.lib.config;
 
+import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
@@ -39,6 +42,7 @@ import frc2024.Constants.PivotConstants;
 import frc2024.Constants.Ports;
 import frc2024.Constants.ShooterConstants;
 import frc2024.Constants.SwerveConstants;
+import frc2024.Constants.ClimberConstants.BarConstants;
 import frc2024.Constants.SwerveConstants.DriveConstants;
 import frc2024.Constants.SwerveConstants.SteerConstants;
 
@@ -201,6 +205,15 @@ public class DeviceConfig {
         return config;
     }
 
+    public static TalonSRXConfiguration barSRXConfig(){
+        TalonSRXConfiguration config = new TalonSRXConfiguration();
+        config.slot0 = SRXSlotConfig(BarConstants.PID_CONSTANTS);
+        config.continuousCurrentLimit = BarConstants.SUPPLY_CURRENT_LIMIT;
+        config.peakCurrentDuration = (int) BarConstants.SUPPLY_TIME_THRESHOLD * 1000;
+        config.peakCurrentLimit = BarConstants.SUPPLY_CURRENT_THRESHOLD;
+        return config;
+    }
+
 
     ////////////////////////////////////// GENERAL CONFIGURATION METHODS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -252,6 +265,17 @@ public class DeviceConfig {
             }
         };
         ErrorChecker.configureDevice(deviceConfig, name + " " + pigeon.getDeviceID() + " version " + pigeon.getVersion(), true);
+    }
+
+    public static void configureTalonSRX(String name, TalonSRX srx, TalonSRXConfiguration config){
+        DeviceConfiguration deviceConfig = new DeviceConfiguration() {
+            @Override
+            public boolean configureSettings(){
+                return ErrorChecker.hasConfiguredWithoutErrors(
+                    srx.configAllSettings(config));
+            }
+        };
+        ErrorChecker.configureDevice(deviceConfig, name + " " + srx.getDeviceID() + " version " + srx.getFirmwareVersion(), true);
     }
 
     public static AudioConfigs FXAudioConfigs(boolean beepOnBoot, boolean beepOnConfig, boolean allowMusicDuringDisabled){
@@ -356,6 +380,17 @@ public class DeviceConfig {
         config.PeakForwardVoltage = peakForwardVoltage;
         config.PeakReverseVoltage = peakReverseVoltage;
         config.SupplyVoltageTimeConstant = supplyVoltageTimeConstant;
+        return config;
+    }
+
+    public static SlotConfiguration SRXSlotConfig(ScreamPIDConstants constants){
+        SlotConfiguration config = new SlotConfiguration();
+        config.kP = constants.kP();
+        config.kI = constants.kI();
+        config.kD = constants.kD();
+        config.kF = constants.kF();
+        config.integralZone = constants.integralZone();
+        config.maxIntegralAccumulator = constants.maxIntegralAccumulator();
         return config;
     }
 }

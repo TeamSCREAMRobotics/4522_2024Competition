@@ -36,7 +36,7 @@ public class AutoClimbCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.setTargetPosition(ClimberConstants.CLIMBER_TOP);
+    //climber.setTargetPosition(ClimberConstants.CLIMBER_TOP);
     elevator.setTargetHeight(ElevatorConstants.TRAP_CHAIN_HEIGHT);
     pivot.setTargetAngle(PivotConstants.TRAP_CHAIN_ANGLE);
   }
@@ -44,7 +44,7 @@ public class AutoClimbCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    climber.setTargetPosition(ClimberConstants.CLIMBER_BOTTOM);
+    //climber.setTargetPosition(ClimberConstants.CLIMBER_BOTTOM);
 
     if(isTrapping){
       elevator.setTargetHeight(ElevatorConstants.TRAP_CHAIN_HEIGHT);
@@ -59,6 +59,6 @@ public class AutoClimbCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return elevator.getElevatorAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && climber.getClimberAtTarget();
+    return elevator.getElevatorAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean();// && climber.getClimberAtTarget();
   }
 }

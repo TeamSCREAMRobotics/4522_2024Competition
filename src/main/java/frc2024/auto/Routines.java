@@ -42,6 +42,7 @@ import frc2024.commands.swerve.FaceVisionTarget;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Intake;
+import frc2024.subsystems.LED;
 import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Shooter;
 import frc2024.subsystems.Vision;
@@ -110,7 +111,7 @@ public class Routines {
         );
     }
  
-    public static Command Amp4Close(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake){
+    public static Command Amp4Close(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake, LED led){
         currentSequence = Amp4Close;
 
         return new SequentialCommandGroup(
@@ -118,13 +119,13 @@ public class Routines {
             swerve.resetPoseCommand(Amp4Close.getStartingPose()),
             new ShootSequence(SuperstructureState.SUBWOOFER, ShooterConstants.SUBWOOFER_VELOCITY, elevator, pivot, shooter, conveyor),
             Amp4Close.getIndex(0),
-            new AutoIntakeFloor(elevator, pivot, conveyor, intake),
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
             Amp4Close.getIndex(1),
-            new AutoIntakeFloor(elevator, pivot, conveyor, intake),
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
             Amp4Close.getIndex(2),
-            new AutoIntakeFloor(elevator, pivot, conveyor, intake),
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
             printTimer()
         );
@@ -189,38 +190,38 @@ public class Routines {
         );
     }
 
-    public static Command Amp5_1Center(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake){
+    public static Command Amp5_1Center(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
         currentSequence = Amp5_1Center;
         return new SequentialCommandGroup(
             startTimer(),
-            Amp4Close(swerve, shooter, elevator, pivot, conveyor, intake),
+            Amp4Close(swerve, shooter, elevator, pivot, conveyor, intake, led),
             Amp5_1Center.getIndex(0),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
             Amp5_1Center.getIndex(1),
-            new AutoIntakeFloor(elevator, pivot, conveyor, intake),
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
             printTimer()
         );
     }
 
-    public static Command Amp5_NoCenter(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake){
+    public static Command Amp5_NoCenter(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
         currentSequence = Amp5_1Center;
         return new SequentialCommandGroup(
             startTimer(),
-            Amp4Close(swerve, shooter, elevator, pivot, conveyor, intake),
+            Amp4Close(swerve, shooter, elevator, pivot, conveyor, intake, led),
             Amp5_1Center.getIndex(0),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
             printTimer()
         );
     }
 
-    public static Command Amp5Center_2(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake){
+    public static Command Amp5Center_2(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
         currentSequence = Amp5Center_2;
         return new SequentialCommandGroup(
             startTimer(),
             swerve.resetPoseCommand(Amp5Center_2.getStartingPose()),
             new ShootSequence(SuperstructureState.SUBWOOFER, ShooterConstants.SUBWOOFER_VELOCITY + 500.0, elevator, pivot, shooter, conveyor),
             Amp5Center_2.getIndex(0),
-            new AutoIntakeFloor(elevator, pivot, conveyor, intake),
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
             Amp5Center_2.getIndex(1),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),

@@ -62,12 +62,15 @@ public final class Constants{
         public static final String CANIVORE_NAME = "canivore"; // TODO ROBOT SPECIFIC
         public static final String RIO_CANBUS_NAME = "rio";
 
+        public static final int LED_ID = 1;
+
         /* Misc */
         public static final int PIGEON_ID = 0; // TODO ROBOT SPECIFIC
         public static final int CANDLE_ID = 0;
         
         /* Elevator */
         public static final int LEFT_CLIMBER_MOTOR_ID = 13; //TODO
+        public static final int BAR_MOTOR_ID = 14;
         //public static final int RIGHT_CLIMBER_MOTOR_ID = 14; //TODO
 
         /* Shooter */
@@ -350,6 +353,15 @@ public final class Constants{
         public static final double CLIMBER_TOP = 0.0;
         public static final double CLIMBER_BOTTOM = 0.0;
         public static final double AUTO_CLIMB_DISTANCE_THRESHOLD = 0.0; //
+
+        public static final class BarConstants{
+            public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.01, 0, 0);
+
+            public static final int SUPPLY_CURRENT_LIMIT = 10;
+            public static final int SUPPLY_CURRENT_THRESHOLD = 15;
+            public static final double SUPPLY_TIME_THRESHOLD = 0.1;
+            public static final boolean CURRENT_LIMIT_ENABLE = true;
+        }
     }
 
     public static final class ShooterConstants { //TODO all values
@@ -637,6 +649,13 @@ public final class Constants{
             SHOOT_STATE_MAP_DEFENDED.put(14.0, new ShootState(Rotation2d.fromDegrees(39.4628), 20.5127, 4100.0));
             SHOOT_STATE_MAP_DEFENDED.put(15.0, new ShootState(Rotation2d.fromDegrees(40.7812), 20.0, 4200.0));
         }
+    }
+
+    public static final class LEDConstants{
+        public static final int STRIP_LENGTH = 20;
+
+        public static final double BREATHE_DURATION = 1.0;
+        public static final double WAVE_EXPONENT = 0.4;
     }
 
     public static final class FieldConstants{

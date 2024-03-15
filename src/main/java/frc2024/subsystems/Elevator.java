@@ -26,10 +26,12 @@ import com.team4522.lib.util.ScreamUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc2024.Constants;
+import frc2024.RobotContainer;
 import frc2024.Constants.ClimberConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.PivotConstants;
@@ -137,11 +139,13 @@ public class Elevator extends SubsystemBase{
     }
 
     public Command voltageCommand(DoubleSupplier voltage){
-        return run(() -> setElevatorVoltage(voltage.getAsDouble()));
+        return run(() -> setElevatorVoltage(voltage.getAsDouble()))
+            .alongWith(RobotContainer.getLED().scaledTargetCommand(Color.kYellow, () -> getElevatorHeight(), () -> ElevatorConstants.MAX_HEIGHT));
     }
 
     public Command voltageCommand(double voltage){
-        return run(() -> setElevatorVoltage(voltage));
+        return run(() -> setElevatorVoltage(voltage))
+            .alongWith(RobotContainer.getLED().scaledTargetCommand(Color.kYellow, () -> getElevatorHeight(), () -> ElevatorConstants.MAX_HEIGHT));
     }
 
     public Command heightCommand(double heightInches){

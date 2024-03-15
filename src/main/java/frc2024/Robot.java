@@ -132,6 +132,7 @@ public class Robot extends LoggedRobot {
     timeSinceDisabled.reset();
     timeSinceDisabled.start();
     RobotContainer.stopAll();
+    Controlboard.driverController.setRumble(RumbleType.kBothRumble, 0);
   }
 
   @Override
@@ -148,7 +149,6 @@ public class Robot extends LoggedRobot {
     RobotContainer.setAllNeutralModes(NeutralModeValue.Brake);
     RobotContainer.stopAll();
     timeSinceDisabled.stop();
-    Controlboard.driverController.setRumble(RumbleType.kBothRumble, 0);
   }
 
   @Override
@@ -176,6 +176,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopPeriodic() {
+
   }
 
   @Override

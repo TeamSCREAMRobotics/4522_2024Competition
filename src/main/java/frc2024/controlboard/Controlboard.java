@@ -263,7 +263,7 @@ public class Controlboard{
         return driverController_Command.rightTrigger(TRIGGER_DEADBAND).and(endGameMode().negate());
     }
 
-    public static final Trigger intakeFromFloor_Endgame(){
+    public static final Trigger intakeFromFloorEndgame(){
         return driverController_Command.rightTrigger(TRIGGER_DEADBAND).and(endGameMode());
     }
 

@@ -24,6 +24,7 @@ import frc2024.commands.swerve.FaceVisionTarget;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Intake;
+import frc2024.subsystems.LED;
 import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Vision;
 import frc2024.subsystems.Vision.IntakePipeline;
@@ -36,9 +37,9 @@ import frc2024.subsystems.swerve.Swerve;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoIntakeFloor extends SequentialCommandGroup {
 
-    public AutoIntakeFloor(Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake){
+    public AutoIntakeFloor(Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake, LED led){
         addCommands(
-            new IntakeFloor(elevator, pivot, conveyor, intake, () -> false).withTimeout(1.5)
+            new IntakeFloor(elevator, pivot, conveyor, intake, led, () -> false).withTimeout(1.5)
                 .until(conveyor.hasPiece(false))
                 .finallyDo((interrupted) -> {
                     if(!interrupted){
