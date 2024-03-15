@@ -51,6 +51,7 @@ import frc2024.auto.Routines;
 import frc2024.commands.AutoFire;
 import frc2024.commands.AutoShootSequence;
 import frc2024.commands.RehomeSuperstructure;
+import frc2024.commands.SmartShootSequence;
 import frc2024.commands.FeedForwardCharacterization;
 import frc2024.commands.SuperstructureToPosition;
 import frc2024.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
@@ -242,10 +243,11 @@ public class RobotContainer {
 
         /* Automation */
         Controlboard.autoFire()
-            .toggleOnTrue(
+            .whileTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.AUTO_FIRE)
                     .andThen(
                         new AutoShootSequence(Controlboard.getTranslation(), false, m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor).onlyIf(() -> Vision.getTV(Limelight.SHOOTER))))
+                        /* new SmartShootSequence(Controlboard.getTranslation(), false, true, m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor).onlyIf(() -> Vision.getTV(Limelight.SHOOTER)))) */
                 /* new AutoFire(m_shooter, m_elevator, m_pivot, Controlboard.defendedMode())
                     .alongWith(new FaceVisionTarget(m_swerve, Controlboard.getTranslation(), SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))) */
             .onFalse(
@@ -253,11 +255,6 @@ public class RobotContainer {
                     new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
                         .until((() -> superstructureAtTarget())).alongWith(m_shooter.idleCommand().alongWith(m_conveyor.stopCommand().alongWith(m_intake.stopCommand())))));
 
-        Controlboard.rehome()
-            .whileTrue(
-                new RehomeSuperstructure(m_elevator, m_pivot)
-            );
-                    
         Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece(false)).negate())
             /* .or(Controlboard.intakeOverride()) */
                 .whileTrue(

@@ -176,7 +176,7 @@ public class Routines {
         return new SequentialCommandGroup(
             startTimer(),
             swerve.resetPoseCommand(Source4Center.getStartingPose()),
-            new FacePoint(swerve, new DoubleSupplier[]{() -> 0, () -> 0}, AllianceFlippable.getTargetSpeaker().getTranslation(), false, false).withTimeout(0.5),
+            new FacePoint(swerve, new DoubleSupplier[]{() -> 0, () -> 0}, AllianceFlippable.getTargetSpeaker().getTranslation(), false).withTimeout(0.5),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
             Source4Center.getIndex(0),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),

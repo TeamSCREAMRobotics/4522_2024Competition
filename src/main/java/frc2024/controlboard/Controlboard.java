@@ -147,21 +147,22 @@ public class Controlboard{
 
     public static final Trigger autoFire(){
         /* Uses a toggle switch to enable or disable automatic firing when requirements are met */
-        return new Trigger(() -> buttonBoard.getRawSwitch(4));
+        /* return new Trigger(() -> buttonBoard.getRawSwitch(4)); */
+        return new Trigger(() -> buttonBoard.getRawButton(3));
     }
 
     public static final Trigger defendedMode(){
         /* Uses a toggle switch to enable or disable wether we are being defended. This allows us to raise our elevator with auto shots */
-        return new Trigger(() -> buttonBoard.getRawSwitch(3));
+        return new Trigger(() -> buttonBoard.getRawSwitch(4));
     }
 
     public static final Trigger endGameMode(){
         return new Trigger(() -> buttonBoard.getRawSwitch(2));
     }
 
-    public static final Trigger rehome(){
+    /* public static final Trigger rehome(){
         return new Trigger(() -> buttonBoard.getRawButton(3));
-    }
+    } */
 
     public static final Trigger snapToSpeaker(){
         return driverController_Command.a();
