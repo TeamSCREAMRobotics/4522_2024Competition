@@ -8,22 +8,22 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc2024.Constants.ClimberConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.PivotConstants;
-import frc2024.subsystems.Climber;
+import frc2024.subsystems.Stabilizers;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Pivot;
 
 public class AutoClimbCommand extends Command {
 
-  Climber climber;
+  Stabilizers stabilizers;
   Elevator elevator;
   Pivot pivot;
 
   boolean isTrapping;
 
-  public AutoClimbCommand(Climber climber, Elevator elevator, Pivot pivot, boolean isTrapping) {
-    addRequirements(climber, elevator, pivot);
+  public AutoClimbCommand(Stabilizers stabilizers, Elevator elevator, Pivot pivot, boolean isTrapping) {
+    addRequirements(stabilizers, elevator, pivot);
 
-    this.climber = climber;
+    this.stabilizers = stabilizers;
     this.elevator = elevator;
     this.pivot = pivot;
     this.isTrapping = isTrapping;

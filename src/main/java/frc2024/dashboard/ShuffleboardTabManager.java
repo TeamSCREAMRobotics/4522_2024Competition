@@ -8,7 +8,7 @@ import frc2024.RobotContainer;
 import frc2024.dashboard.tabs.MatchTab;
 import frc2024.dashboard.tabs.SubsystemTestTab;
 import frc2024.dashboard.tabs.SwerveTab;
-import frc2024.subsystems.Climber;
+import frc2024.subsystems.Stabilizers;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Intake;
@@ -24,16 +24,16 @@ public class ShuffleboardTabManager extends SubsystemBase {
     private static final ArrayList<ShuffleboardTabBase> m_tabs = new ArrayList<ShuffleboardTabBase>();
 
     private Swerve swerve;
-    // private Climber climber;
+    private Stabilizers stabilizers;
     private Conveyor conveyor;
     private Elevator elevator;
     private Intake intake;
     private Pivot pivot;
     private Shooter shooter;
 
-    public ShuffleboardTabManager(Swerve swerve, /* Climber climber, */ Conveyor conveyor, Elevator elevator, Intake intake, Pivot pivot, Shooter shooter){
+    public ShuffleboardTabManager(Swerve swerve, Stabilizers stabilizers, Conveyor conveyor, Elevator elevator, Intake intake, Pivot pivot, Shooter shooter){
         this.swerve = swerve;
-        // this.climber = climber;
+        this.stabilizers = stabilizers;
         this.conveyor = conveyor;
         this.elevator = elevator;
         this.intake = intake;
@@ -51,7 +51,7 @@ public class ShuffleboardTabManager extends SubsystemBase {
             if(swerve != null){
                 m_tabs.add(new SwerveTab(swerve));
             }
-                m_tabs.add(new SubsystemTestTab(/* climber,  */conveyor, elevator, intake, pivot, shooter));
+                m_tabs.add(new SubsystemTestTab(stabilizers, conveyor, elevator, intake, pivot, shooter));
         }
 
         for (ShuffleboardTabBase tab : m_tabs) {

@@ -63,7 +63,7 @@ import frc2024.commands.swerve.FacePoint;
 import frc2024.commands.swerve.FaceVisionTarget;
 import frc2024.controlboard.Controlboard;
 import frc2024.dashboard.ShuffleboardTabManager;
-import frc2024.subsystems.Climber;
+import frc2024.subsystems.Stabilizers;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Intake;
@@ -78,7 +78,7 @@ public class RobotContainer {
     
     /* Subsystems */
     private static final Swerve m_swerve = new Swerve();
-    // private static final Climber m_climber = new Climber();
+    private static final Stabilizers m_stabilizers = new Stabilizers();
     private static final Shooter m_shooter = new Shooter();
     private static final Pivot m_pivot = new Pivot();
     private static final Elevator m_elevator = new Elevator();
@@ -86,7 +86,7 @@ public class RobotContainer {
     private static final Intake m_intake = new Intake();
     private static final LED m_led = new LED();
 
-    private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve, /* m_climber, */ m_conveyor, m_elevator, m_intake, m_pivot, m_shooter);
+    private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve, m_stabilizers, m_conveyor, m_elevator, m_intake, m_pivot, m_shooter);
 
     public static SuperstructureState currentState = SuperstructureState.HOME;
     
@@ -313,10 +313,10 @@ public class RobotContainer {
                 new AutoIntakeFloor(Controlboard.getTranslation(), m_swerve, m_elevator, m_pivot, m_intake, m_conveyor)
                     .until(() -> m_conveyor.hasPiece())); */
 
-        /* Climber */
-        /* new Trigger(Controlboard.endGameMode())
+        /* Stabilizers */
+        new Trigger(Controlboard.endGameMode())
             .whileTrue(
-                m_climber.outputCommand(Controlboard.getManualClimberOutput())); */
+                m_stabilizers.outputCommand(Controlboard.getManualClimberOutput()));
     }
 
     private void configDefaultCommands() { 
@@ -383,9 +383,9 @@ public class RobotContainer {
         return m_swerve;
     }
 
-    /* public static Climber getClimber(){
-        return m_climber;
-    } */
+    public static Stabilizers getStabilizers(){
+        return m_stabilizers;
+    }
 
     public static Shooter getShooter(){
         return m_shooter;
@@ -432,7 +432,7 @@ public class RobotContainer {
     }
 
     public static void stopAll(){
-        // m_climber.stop();
+        m_stabilizers.stop();
         m_shooter.stop();
         m_pivot.stop();
         m_elevator.stop();
@@ -443,6 +443,7 @@ public class RobotContainer {
     }
     
     public static void setAllNeutralModes(NeutralModeValue mode){
+        m_stabilizers.setNeutralMode(mode);
         m_shooter.setNeutralMode(mode);
         m_pivot.setNeutralMode(mode);
         m_elevator.setNeutralMode(mode);

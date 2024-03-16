@@ -170,7 +170,7 @@ public class Controlboard{
 
     /* Climber */
     public static final DoubleSupplier getManualClimberOutput(){
-        return () -> -buttonBoard.getBigSwitchY()*0.75;
+        return () -> -buttonBoard.getBigSwitchY()*0.05;
     }
 
     /* Shooter/Conveyor */
