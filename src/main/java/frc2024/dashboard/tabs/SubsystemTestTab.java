@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc2024.Constants.ClimberConstants;
 import frc2024.Constants.ShuffleboardConstants;
 import frc2024.dashboard.ShuffleboardTabBase;
-import frc2024.subsystems.Climber;
+import frc2024.subsystems.Stabilizers;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Intake;
@@ -22,15 +22,15 @@ import frc2024.subsystems.Shooter;
 /** Add your docs here. */
 public class SubsystemTestTab extends ShuffleboardTabBase{
 
-    // private Climber climber;
+    private Stabilizers stabilizers;
     private Conveyor conveyor;
     private Elevator elevator;
     private Intake intake;
     private Pivot pivot;
     private Shooter shooter;
 
-    public SubsystemTestTab(/* Climber climber, */ Conveyor conveyor, Elevator elevator, Intake intake, Pivot pivot, Shooter shooter){
-        // this.climber = climber;
+    public SubsystemTestTab(Stabilizers stabilizers, Conveyor conveyor, Elevator elevator, Intake intake, Pivot pivot, Shooter shooter){
+        this.stabilizers = stabilizers;
         this.conveyor = conveyor;
         this.elevator = elevator;
         this.intake = intake;

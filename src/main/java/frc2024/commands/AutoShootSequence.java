@@ -13,6 +13,7 @@ import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ShooterConstants;
 import frc2024.Constants.SuperstructureState;
 import frc2024.Constants.SwerveConstants;
+import frc2024.Constants.VisionConstants;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Pivot;
@@ -46,14 +47,14 @@ public class AutoShootSequence extends Command{
         rotationController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
     }
 
-    public AutoShootSequence(boolean timeout, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor){
+    public AutoShootSequence(boolean shouldTimeout, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor){
         addRequirements(swerve, elevator, pivot, shooter, conveyor);
         this.swerve = swerve;
         this.elevator = elevator;
         this.pivot = pivot;
         this.shooter = shooter;
         this.conveyor = conveyor;
-        this.shouldTimeout = timeout;
+        this.shouldTimeout = shouldTimeout;
         this.translation = null;
         rotationController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
     }
@@ -66,7 +67,7 @@ public class AutoShootSequence extends Command{
 
     @Override
     public void execute() {
-        double rotationValue = Math.abs(Vision.getTX(Limelight.SHOOTER)) < 2.0 ? 0 : rotationController.calculate(Vision.getTX(Limelight.SHOOTER), 0.0);
+        double rotationValue = Math.abs(Vision.getTX(Limelight.SHOOTER)) < VisionConstants.AUTO_FIRE_X_THRESHOLD ? 0 : rotationController.calculate(Vision.getTX(Limelight.SHOOTER), 0.0);
         Translation2d translationValue = translation == null ? new Translation2d() : new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
         swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(translationValue, rotationValue));
 

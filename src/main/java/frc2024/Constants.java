@@ -68,9 +68,9 @@ public final class Constants{
         public static final int PIGEON_ID = 0; // TODO ROBOT SPECIFIC
         public static final int CANDLE_ID = 0;
         
-        /* Elevator */
-        public static final int LEFT_CLIMBER_MOTOR_ID = 13; //TODO
-        public static final int BAR_MOTOR_ID = 14;
+        /* Stabilizers */
+        // public static final int LEFT_CLIMBER_MOTOR_ID = 13; //TODO
+        public static final int BAR_MOTOR_ID = 13;
         //public static final int RIGHT_CLIMBER_MOTOR_ID = 14; //TODO
 
         /* Shooter */
@@ -313,7 +313,7 @@ public final class Constants{
     public static final class ClimberConstants { //TODO all values
         
         /* Gear Ratio */
-        public static final double GEAR_RATIO = 36.0;
+        public static final double GEAR_RATIO = 16.0; //36.0;
 
         /* Motor Invert */
         public static final InvertedValue MOTOR_INVERT = InvertedValue.Clockwise_Positive;
@@ -350,18 +350,18 @@ public final class Constants{
         public static final double CLIMBER_UP_OUTPUT_FAST = -0.75;
         public static final double CLIMBER_DOWN_OUTPUT_FAST = CLIMBER_UP_OUTPUT_FAST;
 
-        public static final double CLIMBER_TOP = 0.0;
-        public static final double CLIMBER_BOTTOM = 0.0;
-        public static final double AUTO_CLIMB_DISTANCE_THRESHOLD = 0.0; //
+        public static final double CLIMBER_DOWN = 0.0;
+        public static final double CLIMBER_UP = 0.0;
+        public static final double AUTO_CLIMB_DISTANCE_THRESHOLD = 0.0;
 
-        public static final class BarConstants{
+        /* public static final class BarConstants{
             public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.01, 0, 0);
 
             public static final int SUPPLY_CURRENT_LIMIT = 10;
             public static final int SUPPLY_CURRENT_THRESHOLD = 15;
             public static final double SUPPLY_TIME_THRESHOLD = 0.1;
             public static final boolean CURRENT_LIMIT_ENABLE = true;
-        }
+        } */
     }
 
     public static final class ShooterConstants { //TODO all values
@@ -485,7 +485,7 @@ public final class Constants{
     public static final class ElevatorConstants { //TODO all values
 
         /* Gear Ratio */
-        public static final double ROTOR_TO_SENSOR_RATIO = 6.0;
+        public static final double ROTOR_TO_SENSOR_RATIO = 14.0167; //6.0;
         public static final double SENSOR_TO_MECH_RATIO = 1.0;
         
         /* Neutral Modes */

@@ -42,7 +42,7 @@ import frc2024.Constants.PivotConstants;
 import frc2024.Constants.Ports;
 import frc2024.Constants.ShooterConstants;
 import frc2024.Constants.SwerveConstants;
-import frc2024.Constants.ClimberConstants.BarConstants;
+// import frc2024.Constants.ClimberConstants.BarConstants;
 import frc2024.Constants.SwerveConstants.DriveConstants;
 import frc2024.Constants.SwerveConstants.SteerConstants;
 
@@ -153,7 +153,7 @@ public class DeviceConfig {
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Audio = FXAudioConfigs(false, false, true);
         config.MotorOutput = FXMotorOutputConfig(PivotConstants.MOTOR_INVERT, PivotConstants.NEUTRAL_MODE);
-        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, PivotConstants.TOTAL_GEAR_RATIO, 1.0, Rotation2d.fromDegrees(0.0));
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RemoteCANcoder, 0, PivotConstants.TOTAL_GEAR_RATIO, 1.0, Rotation2d.fromDegrees(0.0));
         config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(softwareLimitEnable, forwardLimit.getRotations(), reverseLimit.getRotations());
         config.HardwareLimitSwitch = FXHardwareLimitSwitchConfig(PivotConstants.HARDWARE_AUTO_POSITION_FORWARD_ENABLE, PivotConstants.HARDWARE_AUTO_POSITION_REVERSE_ENABLE, PivotConstants.HARDWARE_LIMIT_POSITION_FORWARD, PivotConstants.HARDWARE_LIMIT_POSITION_REVERSE);
         config.CurrentLimits = FXSupplyCurrentLimitsConfig(
@@ -205,14 +205,14 @@ public class DeviceConfig {
         return config;
     }
 
-    public static TalonSRXConfiguration barSRXConfig(){
+    /* public static TalonSRXConfiguration barSRXConfig(){
         TalonSRXConfiguration config = new TalonSRXConfiguration();
         config.slot0 = SRXSlotConfig(BarConstants.PID_CONSTANTS);
         config.continuousCurrentLimit = BarConstants.SUPPLY_CURRENT_LIMIT;
         config.peakCurrentDuration = (int) BarConstants.SUPPLY_TIME_THRESHOLD * 1000;
         config.peakCurrentLimit = BarConstants.SUPPLY_CURRENT_THRESHOLD;
         return config;
-    }
+    } */
 
 
     ////////////////////////////////////// GENERAL CONFIGURATION METHODS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\

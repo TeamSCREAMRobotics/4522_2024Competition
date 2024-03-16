@@ -123,9 +123,13 @@ public class LED extends SubsystemBase{
     }
 
     private void scaledTarget(Color color, double currentValue, double targetValue){
-        double mapped = Conversions.mapRange(currentValue, 0, targetValue, 0, length);
-        for(int i = 0; i <= (int) mapped; i++){
+        int mapped = (int) Math.round(Conversions.mapRange(currentValue, 0, targetValue, 0, length));
+        for(int i = 0; i <= mapped; i++){
             buffer.setLED(i, color);
+        }
+        for(int i = mapped + 1; i < length; i++){
+            if(i > length) return;
+            buffer.setLED(i, Color.kBlack);
         }
     }
 
@@ -135,34 +139,34 @@ public class LED extends SubsystemBase{
     }
 
     public Command solidCommand(Color color){
-        return run(() -> solid(color));
+        return run(() -> solid(color)).ignoringDisable(true);
     }
 
     public Command solidCommand(Color color, double percent){
-        return run(() -> solid(percent, color));
+        return run(() -> solid(percent, color)).ignoringDisable(true);
     }
 
     public Command strobeCommand(Color color, double duration){
-        return run(() -> strobe(color, duration));
+        return run(() -> strobe(color, duration)).ignoringDisable(true);
     }
 
     public Command breatheCommand(Color color1, Color color2, double duration){
-        return run(() -> breathe(color1, color2, duration));
+        return run(() -> breathe(color1, color2, duration)).ignoringDisable(true);
     }
 
     public Command rainbowCommand(double cycleLength, double duration){
-        return run(() -> rainbow(cycleLength, duration));
+        return run(() -> rainbow(cycleLength, duration)).ignoringDisable(true);
     }
 
     public Command waveCommand(Color color1, Color color2, double cycleLength, double duration){
-        return run(() -> wave(color1, color2, cycleLength, duration));
+        return run(() -> wave(color1, color2, cycleLength, duration)).ignoringDisable(true);
     }
 
     public Command stripeCommand(List<Color> colors, int length, double duration){
-        return run(() -> stripes(colors, length, duration));
+        return run(() -> stripes(colors, length, duration)).ignoringDisable(true);
     }
 
     public Command scaledTargetCommand(Color color, DoubleSupplier currentValue, DoubleSupplier targetValue){
-        return run(() -> scaledTarget(color, currentValue.getAsDouble(), targetValue.getAsDouble()));
+        return run(() -> scaledTarget(color, currentValue.getAsDouble(), targetValue.getAsDouble())).ignoringDisable(true);
     }
 }

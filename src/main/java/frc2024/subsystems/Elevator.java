@@ -41,7 +41,7 @@ public class Elevator extends SubsystemBase{
     
     private TalonFX m_rightElevatorMotor;
     private TalonFX m_leftElevatorMotor;
-    private CANcoder m_encoder;
+    // private CANcoder m_encoder;
 
     private VoltageOut m_voltageRequest = new VoltageOut(0);
     private MotionMagicVoltage m_positionRequest = new MotionMagicVoltage(0);
@@ -51,7 +51,7 @@ public class Elevator extends SubsystemBase{
     public Elevator(){
         m_rightElevatorMotor = new TalonFX(Ports.RIGHT_ELEVATOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         m_leftElevatorMotor = new TalonFX(Ports.LEFT_ELEVATOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
-        m_encoder = new CANcoder(Ports.ELEVATOR_ENCODER_ID, Ports.RIO_CANBUS_NAME);
+        // m_encoder = new CANcoder(Ports.ELEVATOR_ENCODER_ID, Ports.RIO_CANBUS_NAME);
 
         configureDevices();
 
@@ -59,10 +59,10 @@ public class Elevator extends SubsystemBase{
     }
     
     private void configureDevices() {
-        DeviceConfig.configureCANcoder("Elevator Encoder", m_encoder, DeviceConfig.elevatorEncoderConfig(), Constants.DEVICE_LOOP_TIME_HZ);
+        // DeviceConfig.configureCANcoder("Elevator Encoder", m_encoder, DeviceConfig.elevatorEncoderConfig(), Constants.DEVICE_LOOP_TIME_HZ);
         DeviceConfig.configureTalonFX("Right Elevator Motor", m_rightElevatorMotor, DeviceConfig.elevatorFXConfig(InvertedValue.CounterClockwise_Positive), Constants.DEVICE_LOOP_TIME_HZ);
         DeviceConfig.configureTalonFX("Left Elevator Motor", m_leftElevatorMotor, DeviceConfig.elevatorFXConfig(InvertedValue.Clockwise_Positive), Constants.DEVICE_LOOP_TIME_HZ);
-        ParentDevice.optimizeBusUtilizationForAll(m_leftElevatorMotor, m_rightElevatorMotor, m_encoder);
+        ParentDevice.optimizeBusUtilizationForAll(m_leftElevatorMotor, m_rightElevatorMotor);
         zeroPosition();
     }
 
@@ -79,7 +79,7 @@ public class Elevator extends SubsystemBase{
     public void zeroPosition(){
         m_rightElevatorMotor.setPosition(0.0);
         m_leftElevatorMotor.setPosition(0.0);
-        m_encoder.setPosition(0.0);
+        // m_encoder.setPosition(0.0);
     }
     
     public void setElevator(ControlRequest control){
