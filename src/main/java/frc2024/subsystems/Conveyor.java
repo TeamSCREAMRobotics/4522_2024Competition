@@ -73,7 +73,7 @@ public class Conveyor extends SubsystemBase{
 
     @Override
     public void periodic() {
-        //System.out.println(hasPiece(false).getAsBoolean());
+        //System.out.println(!m_beam.get());
     }
 
     public Command dutyCycleCommand(double output){

@@ -81,18 +81,18 @@ public class Controlboard{
         return translation;
 	}
 
-    public static Supplier<OptionalDouble> getSnapAngle(){
+    public static DoubleSupplier getSnapAngle(){
         return () -> {
             if(driverController_Command.getHID().getAButton()){
-                return OptionalDouble.of(90.0);
+                return 90.0;
             } else if(driverController_Command.getHID().getYButton()){
-                return OptionalDouble.of(AllianceFlippable.Number(0.0, 180.0));
+                return AllianceFlippable.Number(0.0, 180.0);
             } else if(driverController_Command.getHID().getBButton()){
-                return OptionalDouble.of(AllianceFlippable.Number(60.0, -120.0));
+                return AllianceFlippable.Number(60.0, -120.0);
             } else if(driverController_Command.getHID().getXButton()){
-                return OptionalDouble.of(AllianceFlippable.Number(-60.0, 120.0));
+                return AllianceFlippable.Number(-60.0, 120.0);
             } else {
-                return OptionalDouble.empty();
+                return -1.0;
             }
         };
     }
@@ -171,7 +171,7 @@ public class Controlboard{
 
     /* Climber */
     public static final DoubleSupplier getManualClimberOutput(){
-        return () -> -buttonBoard.getBigSwitchY()*0.05;
+        return () -> -buttonBoard.getBigSwitchY()*0.10;
     }
 
     /* Shooter/Conveyor */

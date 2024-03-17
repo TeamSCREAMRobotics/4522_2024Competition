@@ -67,6 +67,10 @@ public class Pivot extends SubsystemBase{
         m_pivotMotor.setPosition(0.0);
         m_encoder.setPosition(0.0);
     }
+
+    public void resetToAbsolute(){
+        m_pivotMotor.setPosition(m_encoder.getPosition().getValueAsDouble());
+    }
     
     public void setNeutralMode(NeutralModeValue mode){
         m_pivotMotor.setNeutralMode(mode);
@@ -109,7 +113,7 @@ public class Pivot extends SubsystemBase{
 
     @Override
     public void periodic() {
-        //System.out.println("Pivot:" + getPivotAtTarget().getAsBoolean());
+        //System.out.println("Pivot:" + m_targetAngle.getDegrees());
         //logOutputs();
         /* if(Controlboard.increasePivot().getAsBoolean()){
             m_tweakAngle = m_tweakAngle.minus(Rotation2d.fromDegrees(1));
@@ -117,6 +121,8 @@ public class Pivot extends SubsystemBase{
             m_tweakAngle = m_tweakAngle.plus(Rotation2d.fromDegrees(1));
         }
         System.out.println(Controlboard.operatorController_Command.ge); */
+        //System.out.println("Encoder: " + getPivotAngle().getDegrees());
+        //System.out.println("Motor: " + Rotation2d.fromRotations(m_pivotMotor.getPosition().refresh().getValue()).getDegrees());
     }
 
     public void logOutputs(){

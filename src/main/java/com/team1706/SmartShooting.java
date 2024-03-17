@@ -52,8 +52,8 @@ public class SmartShooting {
         double virtualGoalX = target.getX() - shotTime * (m_fieldRelVel.vxMetersPerSecond + m_fieldRelAccel.ax * 0.01 /* ShooterConstants.kAccelCompFactor */);
         double virtualGoalY = target.getY() - shotTime * (m_fieldRelVel.vyMetersPerSecond + m_fieldRelAccel.ay * 0.01 /* ShooterConstants.kAccelCompFactor */);
         Translation2d virtualGoalLocation = new Translation2d(virtualGoalX, virtualGoalY);
-        Translation2d toGoalDistance = virtualGoalLocation.minus(currentPose);
-        double virtualDistance = (Math.sqrt(Math.pow(toGoalDistance.getDistance(new Translation2d()), 2) + Math.pow(FieldConstants.SPEAKER_TAG_HEIGHT, 2)));
+        double toGoalDistance = ScreamUtil.calculateDistanceToTranslation(virtualGoalLocation, currentPose);
+        double virtualDistance = (Math.sqrt(Math.pow(toGoalDistance, 2) + Math.pow(FieldConstants.SPEAKER_TAG_HEIGHT, 2)));
         double newShotTime = calculateShotTimeToGoal(pivot, shooter, virtualDistance);
         
         //Used to smooth the angle adjustment of the robot
@@ -61,7 +61,7 @@ public class SmartShooting {
             i = 4;
         }
         if(i == 4){
-            movingGoalLocation = virtualGoalLocation;
+            movingGoalLocation = new Translation2d(virtualGoalLocation.getX(), virtualGoalLocation.getY()-0.5);
         }
         else shotTime = newShotTime;
     }
@@ -136,7 +136,7 @@ public class SmartShooting {
 
   private static PIDController targetController;
 
-  public static double getRoatationToPoint(Swerve swerve, Pivot pivot, Shooter shooter, Translation2d target, boolean virtualCalculation, boolean front){
+  public static double getRotationToPoint(Swerve swerve, Pivot pivot, Shooter shooter, Translation2d target, boolean virtualCalculation, boolean front){
     targetController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
     targetController.enableContinuousInput(-180.0, 180.0);
 

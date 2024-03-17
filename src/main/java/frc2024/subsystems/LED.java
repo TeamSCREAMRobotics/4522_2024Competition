@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.simulation.AddressableLEDSim;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants.LEDConstants;
 import frc2024.Constants.Ports;
@@ -125,6 +126,7 @@ public class LED extends SubsystemBase{
     private void scaledTarget(Color color, double currentValue, double targetValue){
         int mapped = (int) Math.round(Conversions.mapRange(currentValue, 0, targetValue, 0, length));
         for(int i = 0; i <= mapped; i++){
+            if(i > length) return;
             buffer.setLED(i, color);
         }
         for(int i = mapped + 1; i < length; i++){
@@ -136,6 +138,7 @@ public class LED extends SubsystemBase{
     @Override
     public void periodic() {
         leds.setData(buffer);
+        // System.out.println("test");
     }
 
     public Command solidCommand(Color color){

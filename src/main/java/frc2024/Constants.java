@@ -62,7 +62,7 @@ public final class Constants{
         public static final String CANIVORE_NAME = "canivore"; // TODO ROBOT SPECIFIC
         public static final String RIO_CANBUS_NAME = "rio";
 
-        public static final int LED_ID = 1;
+        public static final int LED_ID = 9;
 
         /* Misc */
         public static final int PIGEON_ID = 0; // TODO ROBOT SPECIFIC
@@ -150,7 +150,7 @@ public final class Constants{
         public static final double CORRECTION_TIME_THRESHOLD = 0.2;
 
         /* Swerve Controllers */
-        public static final ScreamPIDConstants VISION_ROTATION_CONSTANTS = new ScreamPIDConstants(0.16, 0.0, 0.0);
+        public static final ScreamPIDConstants VISION_ROTATION_CONSTANTS = new ScreamPIDConstants(0.04, 0.0, 0.0);
         public static final ScreamPIDConstants VISION_TRANSLATION_X_CONSTANTS = new ScreamPIDConstants(1.0, 0.0, 0.0);
         public static final ScreamPIDConstants VISION_TRANSLATION_Y_CONSTANTS = new ScreamPIDConstants(4.5, 0.0, 0.0);
         public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(0.095, 0.0, 0.0); //0.1
@@ -267,7 +267,7 @@ public final class Constants{
                 1, 
                 0, 
                 0, 
-                Rotation2d.fromRotations(-0.319580078125)
+                Rotation2d.fromRotations(-0.211669921875) /* -0.319580078125 */
             );
 
             /* Front Right */
@@ -275,7 +275,7 @@ public final class Constants{
                 3, 
                 2, 
                 1, 
-                Rotation2d.fromRotations(-0.0546875)
+                Rotation2d.fromRotations(-0.578125) /* -0.0546875 */
             );
 
             /* Back Left */
@@ -283,7 +283,7 @@ public final class Constants{
                 5, 
                 4, 
                 2, 
-                Rotation2d.fromRotations(0.23974609375)
+                Rotation2d.fromRotations(-0.073974609375) /* 0.23974609375 */
             );
 
             /* Back Right */
@@ -291,7 +291,7 @@ public final class Constants{
                 7, 
                 6, 
                 3, 
-                Rotation2d.fromRotations(-0.26318359375+0.5)
+                Rotation2d.fromRotations(-0.50439453125) /* -0.26318359375+0.5 */
             );
 
             public static final SwerveModuleConstants MODULE_4 = new SwerveModuleConstants(
@@ -396,19 +396,21 @@ public final class Constants{
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
 
-        public static final double TARGET_THRESHOLD = 100.0; // rpm
+        public static final double TARGET_THRESHOLD = 150.0; // rpm
 
         public static final double AUTO_SHOOT_VELOCITY_THRESHOLD = 4800; // rpm
         public static final double AUTO_SHOOT_DISTANCE_THRESHOLD = 6.5; // meters
 
         public static final double SHOOTER_MAX_VELOCITY = 6100;
         public static final double SHOOTER_TARGET_VELOCITY = 5000;
-        public static final double SUBWOOFER_VELOCITY = 2500.0;
+        public static final double SUBWOOFER_VELOCITY = 2500;
+        public static final double AMP5_CLOSESHOTS = 3250.0;
+        public static final double SUBWOOFER_DEFENDED_VELOCITY = 3000;
         public static final double CHAIN_VELOCITY = 4000.0;
         public static final double PODIUM_VELOCITY = 3000.0;
         public static final double IDLE_VELOCITY = 1000.0;
 
-        public static final double TRAJECTORY_VELOCITY_EXTRA = 1700.0;
+        public static final double TRAJECTORY_VELOCITY_EXTRA = 2000.0;
 
         public static final double SHOOT_OUTPUT = 0.8;
         public static final double EJECT_OUTPUT = 0.25;//0.5;
@@ -445,7 +447,7 @@ public final class Constants{
         public static final double HARDWARE_LIMIT_POSITION_FORWARD = 0.0;
         public static final double HARDWARE_LIMIT_POSITION_REVERSE = 0.0;
 
-        public static final double TARGET_THRESHOLD = 0.4; //Degrees
+        public static final double TARGET_THRESHOLD = 0.2; //Degrees
 
         public static final double CRUISE_VELOCITY = 200;
         public static final double ACCELERATION = 200;
@@ -461,17 +463,18 @@ public final class Constants{
 
         public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(14.0);
         public static final Rotation2d HOME_ANGLE_ENDGAME = Rotation2d.fromDegrees(-13.623);
-        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(-5.3613).minus(Rotation2d.fromDegrees(1.5));
-        public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(16.9629);
+        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(-5.3613-1.5);
+        public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(16.9629+4.25);
         public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(29.0039);
-        public static final Rotation2d CHAIN_ANGLE = Rotation2d.fromDegrees(22.93945);
+        public static final Rotation2d CHAIN_ANGLE = Rotation2d.fromDegrees(22.93945+4.25);
         public static final Rotation2d PODIUM_ANGLE = Rotation2d.fromDegrees(13.7988);
         public static final Rotation2d PODIUM_DEFENDED_ANGLE = Rotation2d.fromDegrees(24.1699);
-        public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(56.0742);
+        public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(48.516 /* 56.0742 */);
+        public static final Rotation2d AMP5_CLOSESHOTS = Rotation2d.fromDegrees(16.25);
 
         public static final double AUTO_ZERO_OUTPUT = 0.0;
 
-        public static final Rotation2d ABSOLUTE_ENCODER_OFFSET = Rotation2d.fromRotations(-0.207275390625);
+        public static final Rotation2d ABSOLUTE_ENCODER_OFFSET = Rotation2d.fromRotations(0.31201171875);
         public static final Rotation2d RELATIVE_ENCODER_TO_HORIZONTAL = Rotation2d.fromDegrees(44.824); // TODO RE-MEASURE
 
         public static final double AXLE_HEIGHT_HOME = Units.inchesToMeters(16.640069);
@@ -486,7 +489,7 @@ public final class Constants{
 
         /* Gear Ratio */
         public static final double ROTOR_TO_SENSOR_RATIO = 14.0167; //6.0;
-        public static final double SENSOR_TO_MECH_RATIO = 1.0;
+        public static final double SENSOR_TO_MECH_RATIO = ROTOR_TO_SENSOR_RATIO/6.0;//1.0;
         
         /* Neutral Modes */
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
@@ -497,27 +500,27 @@ public final class Constants{
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
-        public static final boolean SOFTWARE_LIMIT_ENABLE = false;
-        public static final double FORWARD_SOFT_LIMIT = 3.05;
+        public static final boolean SOFTWARE_LIMIT_ENABLE = true;
+        public static final double FORWARD_SOFT_LIMIT = 3.1;
         public static final double REVERSE_SOFT_LIMIT = 0.0;
 
-        public static final double CRUISE_VELOCITY = 50;
-        public static final double ACCELERATION = 30;
+        public static final double CRUISE_VELOCITY = 50*(ROTOR_TO_SENSOR_RATIO/3.0);
+        public static final double ACCELERATION = 30*(ROTOR_TO_SENSOR_RATIO/9.0);
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(50.0, 0.0, 0.0);//50
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(50.0*(ROTOR_TO_SENSOR_RATIO/9.0), 0.0, 0.0);//50
         
         public static final double KS = 0.0;
         public static final double KV = 0.0;
         public static final double KA = 0.0;
-        public static final double KG = 0.415;
+        public static final double KG = 0.3; //0.415;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA, GravityTypeValue.Elevator_Static);
 
         public static final double TARGET_THRESHOLD = 0.75; // inches
 
         public static final double MAX_HEIGHT = 21.75; // inches
         public static final double MIN_HEIGHT = 0.0; // inches
-        public static final double ENCODER_MAX = 3.05; // relative
+        public static final double ENCODER_MAX = 3.1; // relative
         public static final double ENCODER_MIN = 0.0; // relative
         public static final double HOME_HEIGHT_FROM_FLOOR = Units.inchesToMeters(26.553805);
 
@@ -588,7 +591,8 @@ public final class Constants{
         PODIUM_DEFENDED(ElevatorConstants.MAX_HEIGHT, PivotConstants.PODIUM_DEFENDED_ANGLE),
         TRAP_CHAIN(ElevatorConstants.TRAP_CHAIN_HEIGHT, PivotConstants.TRAP_CHAIN_ANGLE),
         SUBWOOFER_DEFENDED(ElevatorConstants.MAX_HEIGHT, PivotConstants.SUBWOOFER_ANGLE_DEFENDED),
-        AUTO_FIRE(ElevatorConstants.HOME_HEIGHT, PivotConstants.HOME_ANGLE);
+        AUTO_FIRE(ElevatorConstants.HOME_HEIGHT, PivotConstants.HOME_ANGLE),
+        AMP5_CLOSESHOTS(ElevatorConstants.HOME_HEIGHT, PivotConstants.AMP5_CLOSESHOTS);
 
         public double elevatorPosition;
         public Rotation2d pivotAngle;
@@ -608,7 +612,7 @@ public final class Constants{
 
         public static final double DETECTOR_TARGET_Y = 0.0;
         public static final double DETECTOR_TARGET_X = 0.0;
-        public static final double AUTO_FIRE_X_THRESHOLD = 2.0;
+        public static final double AUTO_FIRE_X_THRESHOLD = 0.0;
         public static final double AUTO_INTAKE_Y_THRESHOLD = 0.0;
 
         public static final Rotation2d SHOOT_STATE_MAP_ANGLE_OFFSET = Rotation2d.fromDegrees(0.0);
@@ -652,7 +656,7 @@ public final class Constants{
     }
 
     public static final class LEDConstants{
-        public static final int STRIP_LENGTH = 20;
+        public static final int STRIP_LENGTH = 45;
 
         public static final double BREATHE_DURATION = 1.0;
         public static final double WAVE_EXPONENT = 0.4;

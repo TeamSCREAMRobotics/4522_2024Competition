@@ -119,11 +119,13 @@ public class DeviceConfig {
         config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(ElevatorConstants.SOFTWARE_LIMIT_ENABLE, ElevatorConstants.FORWARD_SOFT_LIMIT, ElevatorConstants.REVERSE_SOFT_LIMIT);
         config.MotorOutput = FXMotorOutputConfig(invert, ElevatorConstants.NEUTRAL_MODE);
         config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ElevatorConstants.ROTOR_TO_SENSOR_RATIO, 1.0, Rotation2d.fromDegrees(0));
-        config.CurrentLimits = FXSupplyCurrentLimitsConfig(
+        config.CurrentLimits = FXCurrentLimitsConfig(
             ElevatorConstants.CURRENT_LIMIT_ENABLE, 
             ElevatorConstants.SUPPLY_CURRENT_LIMIT, 
             ElevatorConstants.SUPPLY_CURRENT_THRESHOLD, 
-            ElevatorConstants.SUPPLY_TIME_THRESHOLD);
+            ElevatorConstants.SUPPLY_TIME_THRESHOLD,
+            true,
+            80);
         config.MotionMagic = FXMotionMagicConfig(ElevatorConstants.MOTION_MAGIC_CONSTANTS);
         config.Slot0 = FXPIDConfig(ElevatorConstants.PID_CONSTANTS, ElevatorConstants.FEEDFORWARD_CONSTANTS);
         return config;
@@ -153,7 +155,7 @@ public class DeviceConfig {
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Audio = FXAudioConfigs(false, false, true);
         config.MotorOutput = FXMotorOutputConfig(PivotConstants.MOTOR_INVERT, PivotConstants.NEUTRAL_MODE);
-        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RemoteCANcoder, 0, PivotConstants.TOTAL_GEAR_RATIO, 1.0, Rotation2d.fromDegrees(0.0));
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.SyncCANcoder, Ports.PIVOT_ENCODER_ID, 1.0, PivotConstants.TOTAL_GEAR_RATIO, Rotation2d.fromDegrees(0.0));
         config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(softwareLimitEnable, forwardLimit.getRotations(), reverseLimit.getRotations());
         config.HardwareLimitSwitch = FXHardwareLimitSwitchConfig(PivotConstants.HARDWARE_AUTO_POSITION_FORWARD_ENABLE, PivotConstants.HARDWARE_AUTO_POSITION_REVERSE_ENABLE, PivotConstants.HARDWARE_LIMIT_POSITION_FORWARD, PivotConstants.HARDWARE_LIMIT_POSITION_REVERSE);
         config.CurrentLimits = FXSupplyCurrentLimitsConfig(
@@ -168,7 +170,7 @@ public class DeviceConfig {
 
     public static CANcoderConfiguration pivotEncoderConfig(){
         CANcoderConfiguration config = new CANcoderConfiguration();
-        config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
+        config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
         config.MagnetSensor.MagnetOffset = PivotConstants.ABSOLUTE_ENCODER_OFFSET.getRotations();
         config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         return config;

@@ -2,6 +2,7 @@ package frc2024;
 
 import java.lang.reflect.Field;
 import java.sql.Driver;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -42,6 +43,7 @@ import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.SuperstructureState;
 import frc2024.Constants.FieldConstants;
 import frc2024.Constants.IntakeConstants;
+import frc2024.Constants.LEDConstants;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.ShooterConstants;
 import frc2024.Constants.SwerveConstants;
@@ -119,7 +121,7 @@ public class RobotContainer {
 
         /* Pivot */
         Controlboard.manualMode().whileTrue(m_pivot.dutyCycleCommand(Controlboard.getManualPivotOutput()));
-        Controlboard.resetPivotAngle().onTrue(Commands.runOnce(() -> m_pivot.zeroPivot()).ignoringDisable(true));
+        Controlboard.resetPivotAngle().onTrue(Commands.runOnce(() -> m_pivot.resetToAbsolute()).ignoringDisable(true));
         
 
         /* Pivot AND Elevator */
@@ -165,7 +167,9 @@ public class RobotContainer {
                 new InstantCommand(() -> currentState = SuperstructureState.PODIUM)
                     .andThen(
                         new SuperstructureToPosition(SuperstructureState.PODIUM, m_elevator, m_pivot)
-                            .alongWith(m_shooter.velocityCommand(ShooterConstants.PODIUM_VELOCITY))))
+                            .alongWith(m_shooter.velocityCommand(ShooterConstants.PODIUM_VELOCITY)))
+                                .alongWith())
+                                // .alongWith(new TeleopDrive(m_swerve, Controlboard.getTranslation(), () -> 0.0, () -> AllianceFlippable.Number(-18.0, 180+18), () -> true, () -> false)))
             .onFalse(
                 new InstantCommand(() -> currentState = SuperstructureState.HOME)
                     .andThen(
@@ -189,7 +193,7 @@ public class RobotContainer {
                 new InstantCommand(() -> currentState = SuperstructureState.SUBWOOFER_DEFENDED)
                     .andThen(
                         new SuperstructureToPosition(SuperstructureState.SUBWOOFER_DEFENDED, m_elevator, m_pivot)
-                            .alongWith(m_shooter.velocityCommand(ShooterConstants.SUBWOOFER_VELOCITY))))
+                            .alongWith(m_shooter.velocityCommand(ShooterConstants.SUBWOOFER_DEFENDED_VELOCITY))))
             .onFalse(
                 new InstantCommand(() -> currentState = SuperstructureState.HOME)
                     .andThen(
@@ -212,7 +216,8 @@ public class RobotContainer {
             .toggleOnTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.TRAP_CHAIN)
                     .andThen(
-                        new SuperstructureToPosition(SuperstructureState.TRAP_CHAIN, m_elevator, m_pivot)));
+                        new SuperstructureToPosition(SuperstructureState.TRAP_CHAIN, m_elevator, m_pivot)
+                            .alongWith(m_shooter.stopCommand())));
 
         Controlboard.autoClimb()
             .toggleOnTrue(
@@ -243,12 +248,12 @@ public class RobotContainer {
         Controlboard.stopFlywheel().onTrue(m_shooter.stopCommand());
 
         /* Automation */
-        Controlboard.autoFire()
+        Controlboard.autoFire().and(m_conveyor.hasPiece(false))
             .whileTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.AUTO_FIRE)
                     .andThen(
-                        new AutoShootSequence(Controlboard.getTranslation(), false, m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor).onlyIf(() -> Vision.getTV(Limelight.SHOOTER))))
-                        /* new SmartShootSequence(Controlboard.getTranslation(), false, true, m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor).onlyIf(() -> Vision.getTV(Limelight.SHOOTER)))) */
+                        //new AutoShootSequence(Controlboard.getTranslation(), false, m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor).onlyIf(() -> Vision.getTV(Limelight.SHOOTER))))
+                        new SmartShootSequence(Controlboard.getTranslation(), false, true, m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor).onlyIf(() -> Vision.getTV(Limelight.SHOOTER))))
                 /* new AutoFire(m_shooter, m_elevator, m_pivot, Controlboard.defendedMode())
                     .alongWith(new FaceVisionTarget(m_swerve, Controlboard.getTranslation(), SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))) */
             .onFalse(
@@ -335,11 +340,11 @@ public class RobotContainer {
                     Controlboard.getTranslation(),
                     Controlboard.getSnapAngle(),
                     Controlboard.getSlowMode()), 
-                () -> Controlboard.getSnapAngle().get().isEmpty())
+                () -> Controlboard.getSnapAngle().getAsDouble() == -1.0)
         );
 
         m_led.setDefaultCommand(
-            m_led.waveCommand(Color.kYellow, Color.kBlack, 10.0, 3.0)
+            m_led.waveCommand(Color.kBlack, Color.kYellow, 2, 2)
         );
     }
 
@@ -365,6 +370,7 @@ public class RobotContainer {
             Routines.SweepCenter(m_swerve, m_pivot, m_shooter, m_conveyor, m_intake).withName("SweepCenter"),
             Routines.Amp5Center_2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp5Center_2"),
             Routines.Amp5_NoCenter(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp5_NoCenter"),
+            Routines.Source3_NoStage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_NoStage"),
             Routines.Leave(m_swerve, 2.0).withName("Leave"),
             Routines.testAuto(m_swerve).withName("test")
         );

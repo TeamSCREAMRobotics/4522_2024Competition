@@ -44,7 +44,7 @@ public class AutoShootSequence extends Command{
         this.conveyor = conveyor;
         this.shouldTimeout = timeout;
         this.translation = translationSup;
-        rotationController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
+        rotationController = SwerveConstants.VISION_ROTATION_CONSTANTS.toPIDController();
     }
 
     public AutoShootSequence(boolean shouldTimeout, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor){
@@ -56,7 +56,7 @@ public class AutoShootSequence extends Command{
         this.conveyor = conveyor;
         this.shouldTimeout = shouldTimeout;
         this.translation = null;
-        rotationController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
+        rotationController = SwerveConstants.VISION_ROTATION_CONSTANTS.toPIDController();
     }
 
     @Override
@@ -67,14 +67,14 @@ public class AutoShootSequence extends Command{
 
     @Override
     public void execute() {
-        double rotationValue = Math.abs(Vision.getTX(Limelight.SHOOTER)) < VisionConstants.AUTO_FIRE_X_THRESHOLD ? 0 : rotationController.calculate(Vision.getTX(Limelight.SHOOTER), 0.0);
+        double rotationValue = Math.abs(Vision.getTX(Limelight.SHOOTER)) < 2.0 ? 0 : rotationController.calculate(Vision.getTX(Limelight.SHOOTER), 0.0);
         Translation2d translationValue = translation == null ? new Translation2d() : new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
         swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(translationValue, rotationValue));
 
         shooter.setTargetVelocity(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).velocityRPM());
         pivot.setTargetAngle(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).pivotAngle());
 
-        if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && Vision.getLockedToTarget(Limelight.SHOOTER)) || timeout.hasElapsed(2.0)){
+        if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD) || timeout.hasElapsed(1.0)){
             conveyor.setConveyorOutput(ConveyorConstants.SHOOT_SPEED);
         }
     }
@@ -88,7 +88,7 @@ public class AutoShootSequence extends Command{
 
     @Override
     public boolean isFinished() {
-        return !conveyor.hasPiece(false).getAsBoolean() || (timeout.hasElapsed(2.5) && shouldTimeout);
+        return !conveyor.hasPiece(false).getAsBoolean() || (timeout.hasElapsed(1.5) && shouldTimeout);
     }
     
 }

@@ -60,8 +60,8 @@ public class Elevator extends SubsystemBase{
     
     private void configureDevices() {
         // DeviceConfig.configureCANcoder("Elevator Encoder", m_encoder, DeviceConfig.elevatorEncoderConfig(), Constants.DEVICE_LOOP_TIME_HZ);
-        DeviceConfig.configureTalonFX("Right Elevator Motor", m_rightElevatorMotor, DeviceConfig.elevatorFXConfig(InvertedValue.CounterClockwise_Positive), Constants.DEVICE_LOOP_TIME_HZ);
-        DeviceConfig.configureTalonFX("Left Elevator Motor", m_leftElevatorMotor, DeviceConfig.elevatorFXConfig(InvertedValue.Clockwise_Positive), Constants.DEVICE_LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Right Elevator Motor", m_rightElevatorMotor, DeviceConfig.elevatorFXConfig(InvertedValue.Clockwise_Positive/* CounterClockwise_Positive */), Constants.DEVICE_LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Left Elevator Motor", m_leftElevatorMotor, DeviceConfig.elevatorFXConfig(InvertedValue.CounterClockwise_Positive/* Clockwise_Positive */), Constants.DEVICE_LOOP_TIME_HZ);
         ParentDevice.optimizeBusUtilizationForAll(m_leftElevatorMotor, m_rightElevatorMotor);
         zeroPosition();
     }
@@ -132,6 +132,7 @@ public class Elevator extends SubsystemBase{
 
     @Override
     public void periodic() {
+        System.out.println(m_targetPosition);
     }
 
     public double heightInchesToPosition(double inches){
@@ -139,8 +140,8 @@ public class Elevator extends SubsystemBase{
     }
 
     public Command voltageCommand(DoubleSupplier voltage){
-        return run(() -> setElevatorVoltage(voltage.getAsDouble()))
-            .alongWith(RobotContainer.getLED().scaledTargetCommand(Color.kYellow, () -> getElevatorHeight(), () -> ElevatorConstants.MAX_HEIGHT));
+        return run(() -> setElevatorVoltage(voltage.getAsDouble()));
+            /* .alongWith(RobotContainer.getLED().scaledTargetCommand(Color.kYellow, () -> getElevatorHeight(), () -> ElevatorConstants.MAX_HEIGHT)); */
     }
 
     public Command voltageCommand(double voltage){

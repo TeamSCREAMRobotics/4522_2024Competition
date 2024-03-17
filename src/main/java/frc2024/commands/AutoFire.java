@@ -78,8 +78,8 @@ public class AutoFire extends SequentialCommandGroup{
 
     public static ShootState calculateShotTrajectory(DoubleSupplier elevatorHeight) {
         double distanceToTarget = getDistanceToSpeaker() + getPivotDistanceFromLens(elevatorHeight);
-        double absoluteElevatorHeight = Units.inchesToMeters(elevatorHeight.getAsDouble()) + ElevatorConstants.HOME_HEIGHT_FROM_FLOOR - Units.inchesToMeters(12.0); // 12.0 // + ElevatorConstants.HOME_HEIGHT_FROM_FLOOR;
-        double shooterDistance = PivotConstants.AXLE_DISTANCE_FROM_ELEVATOR_TOP - PivotConstants.SHOOTER_DISTANCE_FROM_AXLE;
+        double absoluteElevatorHeight = Units.inchesToMeters(elevatorHeight.getAsDouble()) + ElevatorConstants.HOME_HEIGHT_FROM_FLOOR- Units.inchesToMeters(21.0); // 12.0 // + ElevatorConstants.HOME_HEIGHT_FROM_FLOOR;
+        double shooterDistance = PivotConstants.AXLE_DISTANCE_FROM_ELEVATOR_TOP;// - PivotConstants.SHOOTER_DISTANCE_FROM_AXLE;
 
         double extraYVel = Conversions.falconRPSToMechanismMPS(ShooterConstants.TRAJECTORY_VELOCITY_EXTRA / 60.0, ShooterConstants.WHEEL_CIRCUMFERENCE, 1.0);
 

@@ -73,7 +73,7 @@ public class Swerve extends SubsystemBase {
          */
         m_swerveModules = new SwerveModule[] {
                 new SwerveModule(ModuleLocation.FRONT_LEFT, ModuleConstants.MODULE_0),
-                new SwerveModule(ModuleLocation.FRONT_RIGHT, ModuleConstants.MODULE_4),
+                new SwerveModule(ModuleLocation.FRONT_RIGHT, ModuleConstants.MODULE_1),
                 new SwerveModule(ModuleLocation.BACK_LEFT, ModuleConstants.MODULE_2),
                 new SwerveModule(ModuleLocation.BACK_RIGHT, ModuleConstants.MODULE_3)
         };

@@ -29,6 +29,7 @@ import frc2024.RobotContainer;
 import frc2024.Constants.Ports;
 import frc2024.Constants.ShooterConstants;
 import frc2024.dashboard.tabs.SubsystemTestTab;
+import frc2024.subsystems.Vision.Limelight;
 
 public class Shooter extends SubsystemBase{
     

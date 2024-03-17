@@ -60,6 +60,7 @@ public class Routines {
     private static final PathSequence Amp4Center = new PathSequence(Side.AMP, "Amp4Center#1", "Amp4Center#2", "Amp4Center#3");
     private static final PathSequence SweepCenter = new PathSequence(Side.SOURCE, "SweepCenter#1", "SweepCenter#2");
     private static final PathSequence Amp5Center_2 = new PathSequence(Side.AMP, "Amp5Center#1", "Amp5Center#2", "Amp5Center#3", "Amp5Center#4");
+    private static final PathSequence Source3_NoStage = new PathSequence(Side.SOURCE, "Source3#0", "Source3#1", "Source3#2");
     private static final PathSequence Leave = new PathSequence(Side.SOURCE, "Leave");
 
     private static Command startTimer(){
@@ -96,6 +97,8 @@ public class Routines {
             return SweepCenter;
             case "Amp5Center_2":
             return Amp5Center_2;
+            case "Source3_NoStage":
+            return Source3_NoStage;
             case "Leave":
             return Leave;
             default:
@@ -228,6 +231,30 @@ public class Routines {
             Amp5Center_2.getIndex(2),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
             Amp5Center_2.getIndex(3),
+            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
+            printTimer()
+        );
+    }
+
+    public static Command Source3_NoStage(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
+        currentSequence = Source3_NoStage;
+        return new SequentialCommandGroup(
+            /* startTimer(),
+            swerve.resetPoseCommand(Source3_NoStage.getStartingPose()),
+            new FacePoint(swerve, new DoubleSupplier[]{() -> 0, () -> 0}, AllianceFlippable.getTargetSpeaker().getTranslation(), false).withTimeout(0.5),
+            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
+            Source3_NoStage.getIndex(0),
+            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
+            Source3_NoStage.getIndex(1),
+            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
+            printTimer() */
+            startTimer(),
+            swerve.resetPoseCommand(Source3_NoStage.getStartingPose()),
+            Source3_NoStage.getIndex(0),
+            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
+            Source3_NoStage.getIndex(1),
+            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
+            Source3_NoStage.getIndex(2),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
             printTimer()
         );

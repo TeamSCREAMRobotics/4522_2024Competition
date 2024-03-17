@@ -8,6 +8,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -46,7 +47,7 @@ public class AutoIntakeFloor extends SequentialCommandGroup {
                         intake.stop();
                         conveyor.stop();
                     }
-                })
+                }).andThen(led.strobeCommand(Color.kGreen, 0.1).withTimeout(1))
         );
     }
   /* public AutoIntakeFloor(DoubleSupplier[] translation, Swerve swerve, Elevator elevator, Pivot pivot, Intake intake, Conveyor conveyor) {

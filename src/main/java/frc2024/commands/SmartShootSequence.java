@@ -36,7 +36,7 @@ public class SmartShootSequence extends Command{
     PIDController rotationController;
 
     public SmartShootSequence(DoubleSupplier[] translationSup, boolean timeout, boolean virtualCalculation, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor){
-        addRequirements(swerve, elevator, pivot, shooter, conveyor);
+        addRequirements(swerve, elevator, pivot, shooter);
 
         this.swerve = swerve;
         this.elevator = elevator;
@@ -50,7 +50,7 @@ public class SmartShootSequence extends Command{
     }
 
     public SmartShootSequence(boolean timeout, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor){
-        addRequirements(swerve, elevator, pivot, shooter, conveyor);
+        addRequirements(swerve, elevator, pivot, shooter);
 
         this.swerve = swerve;
         this.elevator = elevator;
@@ -77,22 +77,23 @@ public class SmartShootSequence extends Command{
         
         if(virtualCalculation){
             Translation2d physicalTarget = AllianceFlippable.getTargetSpeaker().getTranslation();
-            rotationValue = SmartShooting.getRoatationToPoint(swerve, pivot, shooter, physicalTarget, virtualCalculation, false);
+            rotationValue = SmartShooting.getRotationToPoint(swerve, pivot, shooter, physicalTarget, virtualCalculation, false);
             translationValue.times(SwerveConstants.SHOOT_WHILE_MOVING_SCALAR);
 
             Translation2d virtualTarget = SmartShooting.calculateVirtualTarget(swerve, pivot, shooter, physicalTarget);
 
             shooter.setTargetVelocity(SmartShooting.calculateShotTrajectory(() -> elevator.getElevatorHeight(), SmartShooting.getDistanceToTarget_SHOOTER(swerve, virtualTarget, FieldConstants.SPEAKER_TAG_HEIGHT)).velocityRPM());
+            pivot.setTargetAngle(SmartShooting.calculateShotTrajectory(() -> elevator.getElevatorHeight(), SmartShooting.getDistanceToTarget_SHOOTER(swerve, virtualTarget, FieldConstants.SPEAKER_TAG_HEIGHT)).pivotAngle());
         } else{
             shooter.setTargetVelocity(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).velocityRPM());
+            pivot.setTargetAngle(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).pivotAngle());
         }
 
         swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(translationValue, rotationValue));
-        pivot.setTargetAngle(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).pivotAngle());
 
-        if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && Vision.getLockedToTarget(Limelight.SHOOTER)) || timeout.hasElapsed(2.0)){
+        /* if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && Vision.getLockedToTarget(Limelight.SHOOTER)) || timeout.hasElapsed(2.0)){
             conveyor.setConveyorOutput(ConveyorConstants.SHOOT_SPEED);
-        }
+        } */
     }
 
     @Override

@@ -24,7 +24,7 @@ public class SnappedDrive extends Command {
     private Swerve swerve;
     private DoubleSupplier[] translationSup;
     private BooleanSupplier slowModeSup;
-    private Supplier<OptionalDouble> snapAngleSup;
+    private DoubleSupplier snapAngleSup;
 
     /**
      * Constructs a TeleopSwerve command with the given parameters.
@@ -35,13 +35,18 @@ public class SnappedDrive extends Command {
      * @param rotationSup A supplier for the rotation value.
      * @param fieldCentricSup A supplier for the drive mode. Robot centric = false; Field centric = true
      */
-    public SnappedDrive(Swerve swerve, DoubleSupplier[] translationSup, Supplier<OptionalDouble> snapAngle, BooleanSupplier slowMode) {
+    public SnappedDrive(Swerve swerve, DoubleSupplier[] translationSup, DoubleSupplier snapAngle, BooleanSupplier slowMode) {
         addRequirements(swerve);
 
         this.swerve = swerve;
         this.translationSup = translationSup;
         this.slowModeSup = slowMode;
         this.snapAngleSup = snapAngle;
+    }
+
+    public SnappedDrive(Swerve mSwerve, DoubleSupplier[] translation, Supplier<OptionalDouble> supplier,
+            BooleanSupplier booleanSupplier, Object object) {
+        //TODO Auto-generated constructor stub
     }
 
     @Override
@@ -58,10 +63,9 @@ public class SnappedDrive extends Command {
             slowModeSup.getAsBoolean() 
             ? new Translation2d(translationSup[0].getAsDouble()*0.5, translationSup[1].getAsDouble()*0.5).times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient())
             : new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
-        Rotation2d snapAngle = Rotation2d.fromDegrees(snapAngleSup.get().getAsDouble());
+        Rotation2d snapAngle = Rotation2d.fromDegrees(snapAngleSup.getAsDouble());
         
         ChassisSpeeds targetSpeeds;
-
         targetSpeeds = swerve.snappedFieldRelativeSpeeds(translationValue, snapAngle);
         
         swerve.setChassisSpeeds(targetSpeeds, true);

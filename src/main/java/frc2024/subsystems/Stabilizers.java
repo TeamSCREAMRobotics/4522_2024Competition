@@ -20,25 +20,19 @@ import frc2024.Constants.Ports;
 
 public class Stabilizers extends SubsystemBase{
 
-  //private TalonFX m_climberMotor;
   private TalonFX m_barMotor;
-
-    // private TalonSRXControlMode m_dutyCycleRequest = TalonSRXControlMode.PercentOutput;
-    // private TalonSRXControlMode m_positionRequest = TalonSRXControlMode.Position;
 
   private PositionVoltage m_positionRequest = new PositionVoltage(0);
   private DutyCycleOut m_dutyCycleRequest = new DutyCycleOut(0);
 
-    // private double m_targetHeight;
   private double m_targetRotation;
 
   public Stabilizers (){
-        //m_climberMotor = new TalonFX(Ports.LEFT_CLIMBER_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         m_barMotor = new TalonFX(Ports.BAR_MOTOR_ID);
 
         configureDevices();
         
-        //OrchestraUtil.add(m_climberMotor);
+        OrchestraUtil.add(m_barMotor);
     }
     
     private void configureDevices() {
