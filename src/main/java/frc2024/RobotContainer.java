@@ -61,6 +61,7 @@ import frc2024.commands.swerve.TeleopDrive;
 import frc2024.commands.swerve.DriveToPose;
 import frc2024.commands.swerve.FacePoint;
 import frc2024.commands.swerve.FaceVisionTarget;
+import frc2024.commands.swerve.SnappedDrive;
 import frc2024.controlboard.Controlboard;
 import frc2024.dashboard.ShuffleboardTabManager;
 import frc2024.subsystems.Stabilizers;
@@ -322,14 +323,19 @@ public class RobotContainer {
     private void configDefaultCommands() { 
         /* Sets the default command for the swerve subsystem */
         m_swerve.setDefaultCommand(
-            new TeleopDrive(
-                m_swerve,
-                Controlboard.getTranslation(),
-                Controlboard.getRotation(),
-                Controlboard.getSnapAngle(),
-                Controlboard.getFieldCentric(),
-                Controlboard.getSlowMode()
-            ) 
+            new ConditionalCommand(
+                new TeleopDrive(
+                    m_swerve,
+                    Controlboard.getTranslation(),
+                    Controlboard.getRotation(),
+                    Controlboard.getFieldCentric(),
+                    Controlboard.getSlowMode()), 
+                new SnappedDrive(
+                    m_swerve, 
+                    Controlboard.getTranslation(),
+                    Controlboard.getSnapAngle(),
+                    Controlboard.getSlowMode()), 
+                () -> Controlboard.getSnapAngle().get().isEmpty())
         );
 
         m_led.setDefaultCommand(

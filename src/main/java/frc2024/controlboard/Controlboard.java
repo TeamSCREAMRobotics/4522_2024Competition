@@ -2,6 +2,7 @@ package frc2024.controlboard;
 
 import java.util.DoubleSummaryStatistics;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -80,18 +81,18 @@ public class Controlboard{
         return translation;
 	}
 
-    public static DoubleSupplier getSnapAngle(){
+    public static Supplier<OptionalDouble> getSnapAngle(){
         return () -> {
             if(driverController_Command.getHID().getAButton()){
-                return 90.0;
+                return OptionalDouble.of(90.0);
             } else if(driverController_Command.getHID().getYButton()){
-                return AllianceFlippable.Number(0.0, 180.0);
+                return OptionalDouble.of(AllianceFlippable.Number(0.0, 180.0));
             } else if(driverController_Command.getHID().getBButton()){
-                return AllianceFlippable.Number(60.0, -120.0);
+                return OptionalDouble.of(AllianceFlippable.Number(60.0, -120.0));
             } else if(driverController_Command.getHID().getXButton()){
-                return AllianceFlippable.Number(-60.0, 120.0);
+                return OptionalDouble.of(AllianceFlippable.Number(-60.0, 120.0));
             } else {
-                return -1.0;
+                return OptionalDouble.empty();
             }
         };
     }
