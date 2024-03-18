@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 /**
  *  Various utility methods 
@@ -97,16 +98,11 @@ public class ScreamUtil {
     public static PPHolonomicDriveController createHolonomicDriveController(HolonomicPathFollowerConfig config){
         return new PPHolonomicDriveController(config.translationConstants, config.rotationConstants, config.period, config.maxModuleSpeed, config.driveBaseRadius);
     }
-
-    public static Rotation2d calculateYawToPose(Pose2d current, Pose2d target){
-        Translation2d temp = target.relativeTo(current).getTranslation();
-        return new Rotation2d(temp.getX(), temp.getY());
-    }
     
     public static Rotation2d calculateAngleToPoint(Translation2d current, Translation2d target){
         double targetX = target.getX() - current.getX();
         double targetY = target.getY() - current.getY();
-        return Rotation2d.fromRadians(Math.atan2(targetY, targetX)).plus(Rotation2d.fromRadians(Math.PI));
+        return Rotation2d.fromRadians(Math.atan2(targetY, targetX));
       }
 
     public static double calculateDistanceToTranslation(Translation2d current, Translation2d target){

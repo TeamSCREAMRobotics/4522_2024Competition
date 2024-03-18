@@ -37,6 +37,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc2024.Constants.FieldConstants;
+import frc2024.Constants.RobotMode;
 import frc2024.Constants.VisionConstants;
 import frc2024.commands.AutoFire;
 import frc2024.controlboard.Controlboard;
@@ -84,7 +85,7 @@ public class Robot extends LoggedRobot {
     } */
 
     switch (Constants.MODE) {
-      case REAL:
+      case COMP:
         //Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
         //Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
         //new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
@@ -108,13 +109,10 @@ public class Robot extends LoggedRobot {
     robotContainer = new RobotContainer();
     timeSinceDisabled.reset();
     timeSinceDisabled.start();
-
-    RobotContainer.getPivot().setNeutralMode(NeutralModeValue.Coast);
   }
 
   @Override
   public void robotPeriodic() {
-    System.out.println(Controlboard.getManualClimberOutput().getAsDouble());
     CommandScheduler.getInstance().run();
     // We have to do this so we can guarantee that the alliance has the correct value before configuring things that require it.
     autoConfigurator.runOnceWhen(
@@ -138,18 +136,20 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledPeriodic() {
-    if(((int) timeSinceDisabled.get()) == 5){
+    if(((int) timeSinceDisabled.get()) == 5 && Constants.MODE == RobotMode.DEV){
       RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Coast, NeutralModeValue.Coast);
-      RobotContainer.getPivot().setNeutralMode(NeutralModeValue.Coast);
     }
   }
 
   @Override
   public void disabledExit() {
     CommandScheduler.getInstance().cancelAll();
-    RobotContainer.setAllNeutralModes(NeutralModeValue.Brake);
     RobotContainer.stopAll();
     timeSinceDisabled.stop();
+    
+    if(Constants.MODE == RobotMode.DEV){
+      RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Brake, NeutralModeValue.Brake);
+    }
   }
 
   @Override
@@ -176,9 +176,7 @@ public class Robot extends LoggedRobot {
   public void teleopInit() {}
 
   @Override
-  public void teleopPeriodic() {
-
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void teleopExit() {}

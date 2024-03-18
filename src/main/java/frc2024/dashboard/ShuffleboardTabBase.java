@@ -117,9 +117,12 @@ public abstract class ShuffleboardTabBase {
         }
     }
 
-    public record Widget(WidgetType type, Map<String, Object> propertyMap){
-        public Widget(WidgetType type) {
+    public record Widget(String type, Map<String, Object> propertyMap){
+        public Widget(String type){
             this(type, null);
+        }
+        public Widget(WidgetType type) {
+            this(type.getWidgetName(), null);
         }
         private Widget(){
             this(null, null);

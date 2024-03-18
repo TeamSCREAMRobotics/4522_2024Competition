@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc2024.Constants;
 import frc2024.RobotContainer;
-import frc2024.Constants.ClimberConstants;
+import frc2024.Constants.StabilizerConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.Ports;
@@ -67,8 +67,8 @@ public class Elevator extends SubsystemBase{
     }
 
     public void configPID(ScreamPIDConstants constants){
-        m_rightElevatorMotor.getConfigurator().apply(constants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
-        m_leftElevatorMotor.getConfigurator().apply(constants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
+        m_rightElevatorMotor.getConfigurator().apply(constants.toSlot0Configs(ElevatorConstants.FEEDFORWARD_CONSTANTS));
+        m_leftElevatorMotor.getConfigurator().apply(constants.toSlot0Configs(ElevatorConstants.FEEDFORWARD_CONSTANTS));
     }
 
     public void setNeutralMode(NeutralModeValue mode){
@@ -116,10 +116,6 @@ public class Elevator extends SubsystemBase{
     public BooleanSupplier getElevatorAtTarget(){
         return () -> Math.abs(getElevatorError()) < ElevatorConstants.TARGET_THRESHOLD;
     }
-    
-/*     public double getElevatorTargetHeight(double distance){
-        return ElevatorConstants.HEIGHT_MAP.get(distance);
-    } */
 
     public double getElevatorCurrent(){
         return ScreamUtil.average(m_rightElevatorMotor.getSupplyCurrent().getValueAsDouble(), m_leftElevatorMotor.getSupplyCurrent().getValueAsDouble());

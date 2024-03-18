@@ -9,7 +9,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import frc2024.Constants.ClimberConstants;
+import frc2024.Constants.StabilizerConstants;
 import frc2024.Constants.ShuffleboardConstants;
 import frc2024.dashboard.ShuffleboardTabBase;
 import frc2024.subsystems.Stabilizers;

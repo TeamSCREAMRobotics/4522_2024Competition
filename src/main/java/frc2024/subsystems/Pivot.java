@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.RobotContainer;
-import frc2024.Constants.ClimberConstants;
+import frc2024.Constants.StabilizerConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.Ports;
@@ -60,7 +60,7 @@ public class Pivot extends SubsystemBase{
     }
 
     public void configPID(ScreamPIDConstants constants){
-        m_pivotMotor.getConfigurator().apply(constants.toSlot0Configs(ClimberConstants.FEEDFORWARD_CONSTANTS));
+        m_pivotMotor.getConfigurator().apply(constants.toSlot0Configs(PivotConstants.FEEDFORWARD_CONSTANTS));
     }
 
     public void zeroPivot(){
@@ -122,7 +122,7 @@ public class Pivot extends SubsystemBase{
         }
         System.out.println(Controlboard.operatorController_Command.ge); */
         //System.out.println("Encoder: " + getPivotAngle().getDegrees());
-        System.out.println("Motor: " + Rotation2d.fromRotations(m_pivotMotor.getPosition().refresh().getValue()).getDegrees());
+        //System.out.println("Motor: " + Rotation2d.fromRotations(m_pivotMotor.getPosition().refresh().getValue()).getDegrees());
     }
 
     public void logOutputs(){

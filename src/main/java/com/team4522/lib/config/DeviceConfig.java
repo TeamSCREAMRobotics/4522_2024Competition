@@ -32,7 +32,7 @@ import com.team4522.lib.config.ErrorChecker.DeviceConfiguration;
 import com.team4522.lib.pid.ScreamPIDConstants;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc2024.Constants.ClimberConstants;
+import frc2024.Constants.StabilizerConstants;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.FeedforwardConstants;
@@ -194,16 +194,13 @@ public class DeviceConfig {
     public static TalonFXConfiguration climberFXConfig(){
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Audio = FXAudioConfigs(false, false, true);
-        config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(ClimberConstants.SOFTWARE_LIMIT_ENABLE, ClimberConstants.FORWARD_SOFT_LIMIT, ClimberConstants.REVERSE_SOFT_LIMIT);
-        config.MotorOutput = FXMotorOutputConfig(ClimberConstants.MOTOR_INVERT, ClimberConstants.NEUTRAL_MODE);
-        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ClimberConstants.GEAR_RATIO, 1.0, Rotation2d.fromRotations(0));
+        config.MotorOutput = FXMotorOutputConfig(StabilizerConstants.MOTOR_INVERT, StabilizerConstants.NEUTRAL_MODE);
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, StabilizerConstants.GEAR_RATIO, 1.0, Rotation2d.fromRotations(0));
         config.CurrentLimits = FXSupplyCurrentLimitsConfig(
-            ClimberConstants.CURRENT_LIMIT_ENABLE, 
-            ClimberConstants.SUPPLY_CURRENT_LIMIT, 
-            ClimberConstants.SUPPLY_CURRENT_THRESHOLD, 
-            ClimberConstants.SUPPLY_TIME_THRESHOLD);
-        config.MotionMagic = FXMotionMagicConfig(ClimberConstants.MOTION_MAGIC_CONSTANTS);
-        config.Slot0 = FXPIDConfig(ClimberConstants.PID_CONSTANTS, ClimberConstants.FEEDFORWARD_CONSTANTS);
+            StabilizerConstants.CURRENT_LIMIT_ENABLE, 
+            StabilizerConstants.SUPPLY_CURRENT_LIMIT, 
+            StabilizerConstants.SUPPLY_CURRENT_THRESHOLD, 
+            StabilizerConstants.SUPPLY_TIME_THRESHOLD);
         return config;
     }
 

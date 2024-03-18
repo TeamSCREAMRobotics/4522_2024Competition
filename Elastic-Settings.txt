@@ -1,0 +1,9 @@
+Team Number: 4522
+Show Grid: false
+Grid Size: 64
+Corner Radius: 10.0
+Remember Window Position: true
+Lock Layout: false
+IP Address Mode: Driver Station
+Default Period: 0.06
+Default Graph Period: 0.033

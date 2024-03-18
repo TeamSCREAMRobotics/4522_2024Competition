@@ -193,7 +193,7 @@ public class Controlboard{
     }
 
     public static final Trigger ejectThroughIntake(){
-        return driverController_Command.leftBumper();
+        return driverController_Command.povRight();
     }
 
     public static final Trigger stopFlywheel(){

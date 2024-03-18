@@ -50,37 +50,4 @@ public class AutoIntakeFloor extends SequentialCommandGroup {
                 }).andThen(led.strobeCommand(Color.kGreen, 0.1).withTimeout(1))
         );
     }
-  /* public AutoIntakeFloor(DoubleSupplier[] translation, Swerve swerve, Elevator elevator, Pivot pivot, Intake intake, Conveyor conveyor) {
-    addCommands(
-        new FaceVisionTarget(
-            swerve, 
-            Vision.getTV(Limelight.INTAKE) 
-                ? new DoubleSupplier[]{() -> 0, () -> 0} 
-                : translation, 
-            SwerveConstants.VISION_ROTATION_CONSTANTS, 
-            Limelight.INTAKE)
-                .alongWith(
-                    new IntakeFloor(elevator, pivot, conveyor, intake, () -> false)
-                        .onlyWhile(() -> Vision.getTY(Limelight.INTAKE) < VisionConstants.AUTO_INTAKE_Y_THRESHOLD)
-                )
-            .finallyDo((interrupted) -> new SuperstructureToPosition(SuperstructureState.HOME, elevator, pivot))
-    ); */
-  //}
-
-  /* public AutoIntakeFloor(Swerve swerve, Elevator elevator, Pivot pivot, Intake intake, Conveyor conveyor) {
-    addCommands(
-        new FaceVisionTarget(
-            swerve, 
-            Vision.getTV(Limelight.INTAKE) 
-                ? new DoubleSupplier[]{() -> 0, () -> 3} 
-                : new DoubleSupplier[]{() -> 0, () -> 0}, 
-            SwerveConstants.VISION_ROTATION_CONSTANTS, 
-            Limelight.INTAKE)
-                .alongWith(
-                    new IntakeFloor(elevator, pivot, conveyor, intake, () -> false)
-                        .onlyWhile(() -> Vision.getTY(Limelight.INTAKE) < VisionConstants.AUTO_INTAKE_Y_THRESHOLD)
-                )
-            .finallyDo((interrupted) -> new SuperstructureToPosition(SuperstructureState.HOME, elevator, pivot))
-    );
-  } */
 }

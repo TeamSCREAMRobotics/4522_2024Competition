@@ -145,8 +145,8 @@ public class SmartShooting {
     }
 
     Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(Vision.getBotPose2d(Limelight.SHOOTER).getTranslation(), target);
-    /* Substract PI if the robot should face the point with the front of the robot */
-    if(front) targetAngle = targetAngle.minus(Rotation2d.fromRadians(Math.PI));
+    /* Substract PI if the robot should face the point with the back of the robot */
+    if(!front) targetAngle = targetAngle.minus(Rotation2d.fromRadians(Math.PI));
 
     double targetValue = targetController.calculate(swerve.getRotation().getDegrees(), targetAngle.getDegrees());
 

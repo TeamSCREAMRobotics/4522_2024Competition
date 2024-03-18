@@ -37,7 +37,7 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc2024.Constants.ClimberConstants;
+import frc2024.Constants.StabilizerConstants;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.SuperstructureState;
@@ -100,7 +100,6 @@ public class RobotContainer {
         m_shuffleboardTabManager.addTabs(false);
         configButtonBindings();
         configDefaultCommands();
-        //configAuto();
     }
 
     /**
@@ -120,8 +119,6 @@ public class RobotContainer {
             );
 
         /* Conveyor */
-        /* Controlboard.ejectThroughIntake().whileTrue(m_conveyor.dutyCycleCommand(ConveyorConstants.AMP_OUTPUT)).onFalse(m_conveyor.stopCommand()); */
-        
         Controlboard.manuallyShoot().whileTrue(m_conveyor.dutyCycleCommand(ConveyorConstants.TRAP_SPEED)).onFalse(m_conveyor.stopCommand());
 
         /* Elevator */
@@ -169,8 +166,7 @@ public class RobotContainer {
                     .andThen(
                         new SuperstructureToPosition(SuperstructureState.PODIUM, m_elevator, m_pivot)
                             .alongWith(m_shooter.velocityCommand(ShooterConstants.PODIUM_VELOCITY)))
-                                .alongWith())
-                                // .alongWith(new TeleopDrive(m_swerve, Controlboard.getTranslation(), () -> 0.0, () -> AllianceFlippable.Number(-18.0, 180+18), () -> true, () -> false)))
+                                .alongWith(new SnappedDrive(m_swerve, Controlboard.getTranslation(), () -> AllianceFlippable.Number(-18.0, -162.0), Controlboard.getSlowMode())))
             .onFalse(goHome("Podium"));
 
         Controlboard.goToChainPosition()
@@ -212,22 +208,16 @@ public class RobotContainer {
                     .alongWith(
                         m_pivot.angleCommand(PivotConstants.HOME_ANGLE))
                     .alongWith(
-                        m_stabilizers.outputCommand(ClimberConstants.CLIMBER_UP_OUTPUT)
+                        m_stabilizers.outputCommand(StabilizerConstants.OUT_OUTPUT)
                             .withTimeout(1)
                             .andThen(m_stabilizers.stopCommand()))
             );
 
         /* Shooter */        
-        /* Controlboard.ejectThroughIntake()
-            .whileTrue(
-                m_shooter.dutyCycleCommand(ShooterConstants.EJECT_OUTPUT))
-            .onFalse(m_shooter.stopCommand()); */
-
         Controlboard.shooterIntoConveyor()
             .whileTrue(
                 m_shooter.dutyCycleCommand(-ShooterConstants.EJECT_OUTPUT))
             .onFalse(m_shooter.stopCommand());
-
 
         Controlboard.stopFlywheel().onTrue(m_shooter.stopCommand());
 
@@ -242,9 +232,6 @@ public class RobotContainer {
                 new InstantCommand(() -> currentState = SuperstructureState.AUTO_FIRE)
                     .andThen(
                         new AutoShootSequence(Controlboard.getTranslation(), false, m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_led).onlyIf(() -> Vision.getTV(Limelight.SHOOTER))))
-                        //new SmartShootSequence(Controlboard.getTranslation(), false, true, m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor).onlyIf(() -> Vision.getTV(Limelight.SHOOTER))))
-                /* new AutoFire(m_shooter, m_elevator, m_pivot, Controlboard.defendedMode())
-                    .alongWith(new FaceVisionTarget(m_swerve, Controlboard.getTranslation(), SwerveConstants.SNAP_CONSTANTS, Limelight.SHOOTER))) */
             .onFalse(goHome("AutoFire"));
 
         Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece(false)).negate())
@@ -278,11 +265,12 @@ public class RobotContainer {
             .alongWith(m_intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT)))
                 .onFalse(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()));
 
-        /* Controlboard.ejectThroughIntake()
+        Controlboard.ejectThroughIntake()
             .whileTrue(
                 m_intake.dutyCycleCommand(IntakeConstants.EJECT_OUTPUT)
-                    .alongWith(m_conveyor.dutyCycleCommand(ConveyorConstants.AMP_OUTPUT)))
-            .onFalse(m_intake.stopCommand().alongWith(m_conveyor.stopCommand())); */
+                    .alongWith(m_conveyor.dutyCycleCommand(ConveyorConstants.AMP_OUTPUT))
+                    .alongWith(m_shooter.dutyCycleCommand(ShooterConstants.EJECT_OUTPUT)))
+            .onFalse(m_intake.stopCommand().alongWith(m_conveyor.stopCommand()));
 
         Controlboard.trapAdjustUp()
             .whileTrue(
@@ -339,21 +327,21 @@ public class RobotContainer {
     public static void configAuto() {
         Autonomous.configure(
             Commands.none().withName("Do Nothing"),
-            new PPEvent("StartIntake", new AutoIntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, m_led)),
+            new PPEvent("StartIntake", new PrintCommand("PATHPLANNER INTAKE EVENT COMMENTED FIX ME")),//new AutoIntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, m_led)),
             new PPEvent("StopIntake", m_intake.stopCommand().alongWith(m_conveyor.stopCommand())),
             new PPEvent("RunShooterHigh", m_shooter.velocityCommand(4500))
         );
 
         Autonomous.addRoutines(
-            Routines.Amp4Close(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("Amp4Close"),
-            Routines.Amp5_1Center(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp5_1Center"),
-            Routines.Amp6Center(m_swerve, m_elevator, m_pivot, m_intake, m_conveyor).withName("Amp6Center"),
-            Routines.Source4Center(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_led).withName("Source4Center"),
-            Routines.Amp4Center(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("Amp4Center"),
-            Routines.SweepCenter(m_swerve, m_pivot, m_shooter, m_conveyor, m_intake).withName("SweepCenter"),
-            Routines.Amp5Center_2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp5Center_2"),
-            Routines.Amp5_NoCenter(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp5_NoCenter"),
-            Routines.Source3_NoStage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_NoStage"),
+            Routines.Amp4Close(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("Amp_4_Close"),
+            Routines.Amp5_1Center(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_5.5_Close&Center"),
+            Routines.Amp6Center(m_swerve, m_elevator, m_pivot, m_intake, m_conveyor).withName("Amp_6_Close&Center"),
+            Routines.Source4Center(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_led).withName("Source_4_Center&Stage"),
+            Routines.Amp4Center(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("AmpLine_4_Center"),
+            Routines.SweepSource(m_swerve, m_pivot, m_shooter, m_conveyor, m_intake).withName("SweepSource"),
+            Routines.Amp5Center_2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("SubSide_4_1Close&Center"),
+            Routines.Amp5_NoCenter(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_5_Close&Center"),
+            Routines.Source3_NoStage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Center&NoStage"),
             Routines.Leave(m_swerve, 2.0).withName("Leave"),
             Routines.testAuto(m_swerve).withName("test")
         );

@@ -3,14 +3,18 @@ package frc2024.dashboard.tabs;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.util.AllianceFlippable;
+import com.team4522.lib.util.RunOnce;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -41,32 +45,36 @@ public class MatchTab extends ShuffleboardTabBase {
     private ComplexWidget m_autoChooserEntry;
     private ComplexWidget m_field;
     private Field2d m_field2d = new Field2d();
-    private GenericEntry m_matchTime;
+    private GenericEntry m_matchTimeEntry;
     
     private static GenericEntry m_elevatorCoast;
-    private static GenericEntry m_pivotCoast;
+    private static boolean m_lastNeutralMode;
+    private static RunOnce m_neutralModeChanger = new RunOnce();
 
     @Override
     public void createEntries() {
         m_tab = Shuffleboard.getTab("Match");
 
         m_autoChooserEntry = createSendableEntry("Auto Chooser", m_autoChooser, new EntryProperties(0, 0, 4, 2));
-        m_field = createSendableEntry("Auto Start Position", m_field2d, new EntryProperties(7, 0, 17, 10));
-        m_matchTime = createNumberEntry("Match Time", 0, new EntryProperties(0, 2, 8, 4));
+        m_matchTimeEntry = createNumberEntry("Match Time", 0.0, new EntryProperties(4, 0, 19, 8), new Widget(BuiltInWidgets.kTextView));
         
-        m_elevatorCoast = createBooleanEntry("Elevator Coast", false, new EntryProperties(2, 1, 2, 1));
-        m_pivotCoast = createBooleanEntry("Pivot Coast", false, new EntryProperties(2, 2, 2, 1));
+        m_elevatorCoast = createBooleanEntry("Elevator Coast", false, new EntryProperties(0, 2, 4, 4), new Widget(BuiltInWidgets.kToggleSwitch));
     }
 
     @Override
     public void periodic() {
         /* Neutral Modes */
-        //pivot.setNeutralMode(m_pivotCoast.getBoolean(false) ? NeutralModeValue.Coast : NeutralModeValue.Brake);
-        //elevator.setNeutralMode(m_elevatorCoast.getBoolean(false) ? NeutralModeValue.Coast : NeutralModeValue.Brake);
+        if(m_elevatorCoast.getBoolean(false) != m_lastNeutralMode){
+            m_neutralModeChanger.reset();
+        }
 
-        //m_field2d.setRobotPose(AllianceFlippable.MirrorPoseForField2d(Routines.getSequenceFromAutoName(m_autoChooser.getSelected().getName()).getStartingPose()));
+        m_neutralModeChanger.runOnce(
+            () -> elevator.setNeutralMode(m_elevatorCoast.getBoolean(false) ? NeutralModeValue.Coast : NeutralModeValue.Brake)
+        );
+        
+        m_lastNeutralMode = m_elevatorCoast.getBoolean(false);
 
-        m_matchTime.setDouble(DriverStation.getMatchTime());
+        m_matchTimeEntry.setDouble(DriverStation.getMatchTime());
     }
 
     public static SendableChooser<Command> getAutoChooser(){

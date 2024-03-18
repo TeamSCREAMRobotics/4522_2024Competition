@@ -42,11 +42,11 @@ public final class Constants{
             this(0, 0, 0, 0, GravityTypeValue.Elevator_Static);
         }
     }
-    public enum Mode{
-        REAL, REPLAY, SIM, DEV;
+    public enum RobotMode{
+        COMP, REPLAY, SIM, DEV;
     }
 
-    public static final Mode MODE = Mode.REAL;
+    public static final RobotMode MODE = RobotMode.DEV;
 
     /* Robot loop time */
     public static final double LOOP_TIME_SEC = 0.02;
@@ -310,10 +310,10 @@ public final class Constants{
         }
     }
 
-    public static final class ClimberConstants { //TODO all values
+    public static final class StabilizerConstants { //TODO all values
         
         /* Gear Ratio */
-        public static final double GEAR_RATIO = 16.0; //36.0;
+        public static final double GEAR_RATIO = 16.0;
 
         /* Motor Invert */
         public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;
@@ -326,38 +326,12 @@ public final class Constants{
         public static final int SUPPLY_CURRENT_THRESHOLD = 10;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
-        
-        public static final boolean SOFTWARE_LIMIT_ENABLE = false;
-        public static final double FORWARD_SOFT_LIMIT = 0.0;
-        public static final double REVERSE_SOFT_LIMIT = 0.0;
 
-        public static final double TARGET_THRESHOLD = 0.50; //m
-
-        public static final double CRUISE_VELOCITY = 40;
-        public static final double ACCELERATION = 10;
-
-        public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(15, 0.0, 0.0);
-
-        public static final double KS = 0.0;
-        public static final double KV = 0.0;
-        public static final double KA = 0.0;
-        public static final double KG = 0.0;
-        public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
-
-        public static final double CLIMBER_UP_OUTPUT = 0.1;
-
-        /* public static final class BarConstants{
-            public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.01, 0, 0);
-
-            public static final int SUPPLY_CURRENT_LIMIT = 10;
-            public static final int SUPPLY_CURRENT_THRESHOLD = 15;
-            public static final double SUPPLY_TIME_THRESHOLD = 0.1;
-            public static final boolean CURRENT_LIMIT_ENABLE = true;
-        } */
+        public static final double OUT_OUTPUT = 0.1;
+        public static final double IN_OUTPUT = -0.1;
     }
 
-    public static final class ShooterConstants { //TODO all values
+    public static final class ShooterConstants {
         
         /* Gear Ratio */
         public static final double GEAR_RATIO = 1.0;
@@ -409,7 +383,7 @@ public final class Constants{
         public static final double EJECT_OUTPUT = 0.25;//0.5;
     }
     
-    public static final class PivotConstants { //TODO all values
+    public static final class PivotConstants {
         
         /* Gear Ratio */
         public static final double ROTOR_TO_SENSOR_RATIO = 125.0;
@@ -420,7 +394,7 @@ public final class Constants{
         public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;
         
         /* Neutral Modes */
-        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Coast;
         
         /* Current Limits */
         public static final int SUPPLY_CURRENT_LIMIT = 35;
@@ -478,7 +452,7 @@ public final class Constants{
         public static final double SHOOTER_DISTANCE_FROM_AXLE = Units.inchesToMeters(3.100600);
     }
 
-    public static final class ElevatorConstants { //TODO all values
+    public static final class ElevatorConstants {
 
         /* Gear Ratio */
         public static final double ROTOR_TO_SENSOR_RATIO = 14.0167; //6.0;
@@ -529,7 +503,7 @@ public final class Constants{
         public static final Rotation2d ENCODER_OFFSET = Rotation2d.fromRotations(-0.400634765625);
     }
 
-    public static final class IntakeConstants { //TODO all values
+    public static final class IntakeConstants {
 
         /* Gear Ratio */
         public static final double GEAR_RATIO = 3.0;
@@ -550,7 +524,7 @@ public final class Constants{
         public static final double EJECT_OUTPUT = -0.5;
     }
 
-    public static final class ConveyorConstants {//TODO all values
+    public static final class ConveyorConstants {
         
         /* Gear Ratio */
         public static final double GEAR_RATIO = 4.0;

@@ -1,6 +1,7 @@
 package frc2024.subsystems.swerve;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.Utils;
@@ -341,12 +342,12 @@ public class Swerve extends SubsystemBase {
         return Commands.runOnce(() -> resetPose(pose));
     }
 
-    public Command overrideRotationTargetCommand(Rotation2d rotation){
+    public Command overrideRotationTargetCommand(Supplier<Rotation2d> rotation){
         Command command;
         if(rotation == null){ 
-            command = Commands.runOnce(() -> PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.empty()));
+            command = Commands.run(() -> PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.empty()));
         } else {
-            command = Commands.runOnce(() -> PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.of(rotation)));
+            command = Commands.run(() -> PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.of(rotation.get())));
         }
         return command;
     }
