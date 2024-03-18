@@ -6,6 +6,7 @@ package frc2024.subsystems;
 
 import java.util.List;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
@@ -123,14 +124,14 @@ public class LED extends SubsystemBase{
         }
     }
 
-    private void scaledTarget(Color color, double currentValue, double targetValue){
+    public void scaledTarget(Color color, double currentValue, double targetValue){
         int mapped = (int) Math.round(Conversions.mapRange(currentValue, 0, targetValue, 0, length));
-        for(int i = 0; i <= mapped; i++){
-            if(i > length) return;
+        for(int i = 0; i < mapped; i++){
+            if(i >= length) return;
             buffer.setLED(i, color);
         }
-        for(int i = mapped + 1; i < length; i++){
-            if(i > length) return;
+        for(int i = mapped; i < length; i++){
+            if(i >= length) return;
             buffer.setLED(i, Color.kBlack);
         }
     }
@@ -163,6 +164,10 @@ public class LED extends SubsystemBase{
 
     public Command waveCommand(Color color1, Color color2, double cycleLength, double duration){
         return run(() -> wave(color1, color2, cycleLength, duration)).ignoringDisable(true);
+    }
+
+    public Command waveCommand(Supplier<Color> color1, Supplier<Color> color2, double cycleLength, double duration){
+        return run(() -> wave(color1.get(), color2.get(), cycleLength, duration)).ignoringDisable(true);
     }
 
     public Command stripeCommand(List<Color> colors, int length, double duration){

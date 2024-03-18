@@ -143,12 +143,12 @@ public class Shooter extends SubsystemBase{
 
     public Command velocityCommand(double velocityRPM){
         return run(() -> setTargetVelocity(velocityRPM)).withName("VelocityCommand")
-            .alongWith(RobotContainer.getLED().scaledTargetCommand(Color.kAqua, () -> getMotorVelocity(), () -> velocityRPM));
+            .alongWith(RobotContainer.getLED().scaledTargetCommand(Color.kOrange, () -> getRPM(), () -> velocityRPM));
     }
 
     public Command velocityCommand(DoubleSupplier velocityRPM){
         return run(() -> setTargetVelocity(velocityRPM.getAsDouble())).withName("VelocityCommand[Supplier]")
-            .alongWith(RobotContainer.getLED().scaledTargetCommand(Color.kPurple, () -> getMotorVelocity(), velocityRPM));
+            .alongWith(RobotContainer.getLED().scaledTargetCommand(Color.kOrange, () -> getRPM(), velocityRPM));
     }
 
     public Command idleCommand(){

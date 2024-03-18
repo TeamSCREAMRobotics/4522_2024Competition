@@ -316,14 +316,14 @@ public final class Constants{
         public static final double GEAR_RATIO = 16.0; //36.0;
 
         /* Motor Invert */
-        public static final InvertedValue MOTOR_INVERT = InvertedValue.Clockwise_Positive;
+        public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;
         
         /* Neutral Modes */
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
         
         /* Current Limits */
-        public static final int SUPPLY_CURRENT_LIMIT = 30;
-        public static final int SUPPLY_CURRENT_THRESHOLD = 40;
+        public static final int SUPPLY_CURRENT_LIMIT = 10;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 10;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
@@ -345,14 +345,7 @@ public final class Constants{
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
 
-        public static final double CLIMBER_UP_OUTPUT = -0.5;
-        public static final double CLIMBER_DOWN_OUTPUT = CLIMBER_UP_OUTPUT;
-        public static final double CLIMBER_UP_OUTPUT_FAST = -0.75;
-        public static final double CLIMBER_DOWN_OUTPUT_FAST = CLIMBER_UP_OUTPUT_FAST;
-
-        public static final double CLIMBER_DOWN = 0.0;
-        public static final double CLIMBER_UP = 0.0;
-        public static final double AUTO_CLIMB_DISTANCE_THRESHOLD = 0.0;
+        public static final double CLIMBER_UP_OUTPUT = 0.1;
 
         /* public static final class BarConstants{
             public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.01, 0, 0);
@@ -464,9 +457,9 @@ public final class Constants{
         public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(14.0);
         public static final Rotation2d HOME_ANGLE_ENDGAME = Rotation2d.fromDegrees(-13.623);
         public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(-5.3613-1.5);
-        public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(16.9629+4.25);
+        public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(16.9629); //+4.25
         public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(29.0039);
-        public static final Rotation2d CHAIN_ANGLE = Rotation2d.fromDegrees(22.93945+4.25);
+        public static final Rotation2d CHAIN_ANGLE = Rotation2d.fromDegrees(22.93945); //+4.25
         public static final Rotation2d PODIUM_ANGLE = Rotation2d.fromDegrees(13.7988);
         public static final Rotation2d PODIUM_DEFENDED_ANGLE = Rotation2d.fromDegrees(24.1699);
         public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(48.516 /* 56.0742 */);

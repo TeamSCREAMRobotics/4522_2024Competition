@@ -97,6 +97,10 @@ public class Controlboard{
         };
     }
 
+    public static Trigger snapAnglePresent(){
+        return new Trigger(() -> getSnapAngle().getAsDouble() != -1.0);
+    }
+
     public static BooleanSupplier getSlowMode(){
         return () -> driverController_Command.getHID().getLeftTriggerAxis() >= TRIGGER_DEADBAND;
     }
@@ -143,18 +147,23 @@ public class Controlboard{
     /* Automation */
     public static final Trigger prepShot(){
         /* Uses a toggle switch to enable or disable automatic prep shooting */
-        return new Trigger(() -> false);
+        return new Trigger(() -> buttonBoard.getRawButton(3));
     }
 
     public static final Trigger autoFire(){
         /* Uses a toggle switch to enable or disable automatic firing when requirements are met */
         /* return new Trigger(() -> buttonBoard.getRawSwitch(4)); */
-        return new Trigger(() -> buttonBoard.getRawButton(3));
+        return driverController_Command.leftBumper();
+        //return new Trigger(() -> buttonBoard.getRawButton(3));
     }
 
     public static final Trigger defendedMode(){
         /* Uses a toggle switch to enable or disable wether we are being defended. This allows us to raise our elevator with auto shots */
         return new Trigger(() -> buttonBoard.getRawSwitch(4));
+    }
+
+    public static final Trigger virtualAutoFire(){
+        return new Trigger(() -> buttonBoard.getRawSwitch(3));
     }
 
     public static final Trigger endGameMode(){
@@ -171,7 +180,7 @@ public class Controlboard{
 
     /* Climber */
     public static final DoubleSupplier getManualClimberOutput(){
-        return () -> -buttonBoard.getBigSwitchY()*0.10;
+        return () -> buttonBoard.getBigSwitchY()*0.10;
     }
 
     /* Shooter/Conveyor */

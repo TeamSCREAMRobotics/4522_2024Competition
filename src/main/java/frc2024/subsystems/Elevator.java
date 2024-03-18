@@ -131,9 +131,7 @@ public class Elevator extends SubsystemBase{
     }
 
     @Override
-    public void periodic() {
-        System.out.println(m_targetPosition);
-    }
+    public void periodic() {}
 
     public double heightInchesToPosition(double inches){
         return ((inches - ElevatorConstants.MIN_HEIGHT) / (ElevatorConstants.MAX_HEIGHT - ElevatorConstants.MIN_HEIGHT)) * (ElevatorConstants.ENCODER_MAX - ElevatorConstants.ENCODER_MIN);

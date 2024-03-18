@@ -8,7 +8,9 @@ import com.team4522.lib.util.AllianceFlippable;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ShooterConstants;
 import frc2024.Constants.SuperstructureState;
@@ -16,6 +18,7 @@ import frc2024.Constants.SwerveConstants;
 import frc2024.Constants.VisionConstants;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
+import frc2024.subsystems.LED;
 import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Shooter;
 import frc2024.subsystems.Vision;
@@ -29,31 +32,34 @@ public class AutoShootSequence extends Command{
     Pivot pivot;
     Shooter shooter;
     Conveyor conveyor;
+    LED led;
     Timer timeout = new Timer();
     boolean shouldTimeout;
     DoubleSupplier[] translation;
 
     PIDController rotationController;
 
-    public AutoShootSequence(DoubleSupplier[] translationSup, boolean timeout, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor){
-        addRequirements(swerve, elevator, pivot, shooter, conveyor);
+    public AutoShootSequence(DoubleSupplier[] translationSup, boolean timeout, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, LED led){
+        addRequirements(swerve, elevator, pivot, shooter);
         this.swerve = swerve;
         this.elevator = elevator;
         this.pivot = pivot;
         this.shooter = shooter;
         this.conveyor = conveyor;
+        this.led = led;
         this.shouldTimeout = timeout;
         this.translation = translationSup;
         rotationController = SwerveConstants.VISION_ROTATION_CONSTANTS.toPIDController();
     }
 
-    public AutoShootSequence(boolean shouldTimeout, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor){
-        addRequirements(swerve, elevator, pivot, shooter, conveyor);
+    public AutoShootSequence(boolean shouldTimeout, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, LED led){
+        addRequirements(swerve, elevator, pivot, shooter);
         this.swerve = swerve;
         this.elevator = elevator;
         this.pivot = pivot;
         this.shooter = shooter;
         this.conveyor = conveyor;
+        this.led = led;
         this.shouldTimeout = shouldTimeout;
         this.translation = null;
         rotationController = SwerveConstants.VISION_ROTATION_CONSTANTS.toPIDController();
@@ -74,9 +80,11 @@ public class AutoShootSequence extends Command{
         shooter.setTargetVelocity(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).velocityRPM());
         pivot.setTargetAngle(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).pivotAngle());
 
-        if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD) || timeout.hasElapsed(1.0)){
+        led.scaledTarget(Color.kGoldenrod, shooter.getRPM(), shooter.getTargetVelocity());
+
+        /* if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD) || timeout.hasElapsed(1.0)){
             conveyor.setConveyorOutput(ConveyorConstants.SHOOT_SPEED);
-        }
+        } */
     }
 
     @Override
@@ -90,5 +98,4 @@ public class AutoShootSequence extends Command{
     public boolean isFinished() {
         return !conveyor.hasPiece(false).getAsBoolean() || (timeout.hasElapsed(1.5) && shouldTimeout);
     }
-    
 }

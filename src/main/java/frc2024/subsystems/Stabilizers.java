@@ -125,4 +125,8 @@ public class Stabilizers extends SubsystemBase{
     public Command positionCommand(double position){
         return run(() -> setTargetPosition(position));
     }
+
+    public Command stopCommand(){
+        return runOnce(() -> stop());
+    }
 }
