@@ -149,12 +149,12 @@ public class Swerve extends SubsystemBase {
      * @return The calculated ChassisSpeeds.
      */
     public ChassisSpeeds fieldRelativeSpeeds(Translation2d translation, double angularVel){
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(translation.getX(), translation.getY(), angularVel, getRotation());
+        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(translation.getX(), translation.getY(), angularVel, getHeading());
         return ChassisSpeeds.discretize(speeds, Constants.LOOP_TIME_SEC);
     }
 
     public ChassisSpeeds snappedFieldRelativeSpeeds(Translation2d translation, Rotation2d angle){
-        return fieldRelativeSpeeds(translation, m_snapController.calculate(getRotation().getDegrees(), angle.getDegrees()));
+        return fieldRelativeSpeeds(translation, m_snapController.calculate(getHeading().getDegrees(), angle.getDegrees()));
     }
 
     /**
@@ -163,9 +163,9 @@ public class Swerve extends SubsystemBase {
      * @param chassisSpeeds The ChassisSpeeds to generate states for.
      * @param isOpenLoop Whether the ChassisSpeeds is open loop (Tele-Op driving), or closed loop (Autonomous driving).
      */
-    public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, boolean isOpenLoop){
+    public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, Translation2d centerOfRotationMeters, boolean isOpenLoop){
         m_currentSpeeds = chassisSpeeds;
-        SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+        SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds, centerOfRotationMeters);
 
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.MAX_SPEED);
         m_currentSpeeds = SwerveConstants.KINEMATICS.toChassisSpeeds(swerveModuleStates);
@@ -173,6 +173,10 @@ public class Swerve extends SubsystemBase {
         for (SwerveModule mod : m_swerveModules) {
             mod.set(swerveModuleStates[mod.getModuleNumber()], isOpenLoop);
         }
+    }
+
+    public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, boolean isOpenLoop){
+        setChassisSpeeds(chassisSpeeds, new Translation2d(), isOpenLoop);
     }
 
     /**
@@ -216,7 +220,8 @@ public class Swerve extends SubsystemBase {
      * @param pose The new pose to set.
      */
     public void resetPose(Pose2d pose) {
-        m_poseEstimator.resetPosition(getRotation(), getModulePositions(), pose);
+        resetModulePositions();
+        m_poseEstimator.resetPosition(pose.getRotation(), getModulePositions(), pose);
     }
 
     /**
@@ -263,6 +268,12 @@ public class Swerve extends SubsystemBase {
         return positions;
     }
 
+    public void resetModulePositions(){
+        for(SwerveModule mod : m_swerveModules) {
+            mod.resetModulePosition();
+        }
+    }
+
     /**
      * Returns the current robot-centric ChassisSpeeds.<p>
      * Used by AutoBuilder.
@@ -278,7 +289,7 @@ public class Swerve extends SubsystemBase {
      *
      * @return The odometry rotation as a Rotation2d.
      */
-    public Rotation2d getRotation() {
+    public Rotation2d getHeading() {
         return m_poseEstimator.getEstimatedPosition().getRotation();
     }
 
@@ -353,7 +364,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Command driveCommand(ChassisSpeeds speeds, boolean fieldRelative){
-        return run(() -> setChassisSpeeds(speeds, fieldRelative));
+        return run(() -> setChassisSpeeds(speeds, new Translation2d(), fieldRelative));
     }
 
     private class OdometryThread extends Thread {

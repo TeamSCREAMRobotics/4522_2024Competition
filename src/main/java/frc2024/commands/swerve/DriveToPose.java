@@ -38,7 +38,7 @@ public class DriveToPose extends Command {
   @Override
   public void execute() {
     Translation2d translationValue = new Translation2d(driveController.calculate(swerve.getPose().getX(), targetPose.getX()), driveController.calculate(swerve.getPose().getY(), targetPose.getY()));
-    double rotationValue = rotationController.calculate(swerve.getRotation().getDegrees(), targetPose.getRotation().getDegrees());
+    double rotationValue = rotationController.calculate(swerve.getHeading().getDegrees(), targetPose.getRotation().getDegrees());
 
     swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(translationValue, rotationValue));
   }

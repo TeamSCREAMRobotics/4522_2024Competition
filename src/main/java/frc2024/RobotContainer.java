@@ -61,6 +61,8 @@ import frc2024.commands.FeedForwardCharacterization.FeedForwardCharacterizationD
 import frc2024.commands.intake.AutoIntakeFloor;
 import frc2024.commands.intake.IntakeFloor;
 import frc2024.commands.swerve.TeleopDrive;
+import frc2024.commands.swerve.DodgeDrive.DodgeDirection;
+import frc2024.commands.swerve.DodgeDrive;
 import frc2024.commands.swerve.DriveToPose;
 import frc2024.commands.swerve.FacePoint;
 import frc2024.commands.swerve.FaceVisionTarget;
@@ -116,6 +118,24 @@ public class RobotContainer {
                     m_swerve, 
                     Controlboard.getTranslation(), 
                     Controlboard.getSnapAngle(), 
+                    Controlboard.getSlowMode())
+            );
+        
+        Controlboard.dodgeLeft()
+            .whileTrue(
+                new DodgeDrive(m_swerve, 
+                    Controlboard.getTranslation(), 
+                    Controlboard.getSnapAngle(), 
+                    DodgeDirection.LEFT,
+                    Controlboard.getSlowMode())
+            );
+
+        Controlboard.dodgeRight()
+            .whileTrue(
+                new DodgeDrive(m_swerve, 
+                    Controlboard.getTranslation(), 
+                    Controlboard.getSnapAngle(), 
+                    DodgeDirection.RIGHT,
                     Controlboard.getSlowMode())
             );
 
@@ -245,7 +265,7 @@ public class RobotContainer {
             .whileTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.AUTO_FIRE)
                     .andThen(
-                        new AutoFire(Controlboard.getTranslation(), m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_led).onlyIf(() -> Vision.getTV(Limelight.SHOOTER))))
+                        new AutoFire(Controlboard.getTranslation(), m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_led)))
             .onFalse(goHome("AutoFire"));
 
         Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece(false)).negate())

@@ -82,7 +82,7 @@ public class FacePoint extends Command {
     /* Substract PI if the robot should face the point with the back of the robot */
     if(!front) targetAngle = targetAngle.minus(Rotation2d.fromRadians(Math.PI));
 
-    swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(drivingTranslation, targetController.calculate(swerve.getRotation().getDegrees(), targetAngle.getDegrees())));
+    swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(drivingTranslation, targetController.calculate(swerve.getHeading().getDegrees(), targetAngle.getDegrees())));
   }
 
   // Called once the command ends or is interrupted.

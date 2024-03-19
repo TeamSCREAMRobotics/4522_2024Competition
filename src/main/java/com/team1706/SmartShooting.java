@@ -40,7 +40,7 @@ public class SmartShooting {
     Translation2d currentPose = Vision.getBotPose2d(Limelight.SHOOTER).getTranslation(); /* swerve.getPose().getTranslation() */
 
     /* Sets the field relative speed variables */
-    ChassisSpeeds m_fieldRelVel = ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotRelativeSpeeds(), swerve.getRotation());
+    ChassisSpeeds m_fieldRelVel = ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotRelativeSpeeds(), swerve.getHeading());
     ChassisSpeeds m_lastFieldRelVel = m_fieldRelVel;
     FieldRelativeAccel m_fieldRelAccel = new FieldRelativeAccel(m_fieldRelVel, m_lastFieldRelVel, Constants.LOOP_TIME_SEC);
 
@@ -153,7 +153,7 @@ public class SmartShooting {
     /* Substract PI if the robot should face the point with the back of the robot */
     if(!front) targetAngle = targetAngle.minus(Rotation2d.fromRadians(Math.PI));
 
-    double targetValue = targetController.calculate(swerve.getRotation().getDegrees(), targetAngle.getDegrees());
+    double targetValue = targetController.calculate(swerve.getHeading().getDegrees(), targetAngle.getDegrees());
 
     return targetValue;
   }

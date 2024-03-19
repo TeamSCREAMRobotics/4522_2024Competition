@@ -118,4 +118,8 @@ public class ScreamUtil {
         }
         return sum / nums.length;
     }
+
+    public static boolean valueBetween(double value, double upper, double lower){
+        return value < upper && value > lower;
+    }
 }

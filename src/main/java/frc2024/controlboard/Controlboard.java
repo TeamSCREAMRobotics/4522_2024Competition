@@ -36,23 +36,21 @@ public class Controlboard{
     public static final Rotation2d SNAP_TO_POLE_THRESHOLD = Rotation2d.fromDegrees(7.0);
 
     public static final CommandXboxController driverController_Command = new CommandXboxController(0);
-    public static final XboxController driverController = new XboxController(0);
     public static final CommandXboxController operatorController_Command = new CommandXboxController(1);
-    public static final XboxController operatorController = new XboxController(1);
     public static final Buttonboard buttonBoard = new Buttonboard(2, 3);
 
     public static boolean fieldCentric = true;
 
     public static Command driverRumbleCommand(RumbleType type, double value, double time){
-        return new RunCommand(() -> driverController.setRumble(type, value))
+        return new RunCommand(() -> driverController_Command.getHID().setRumble(type, value))
             .withTimeout(time)
-            .andThen(() -> driverController.setRumble(type, 0.0));
+            .andThen(() -> driverController_Command.getHID().setRumble(type, 0.0));
     }
 
     public static Command operatorRumbleCommand(RumbleType type, double value, double time){
-        return new RunCommand(() -> operatorController.setRumble(type, value))
+        return new RunCommand(() -> operatorController_Command.getHID().setRumble(type, value))
             .withTimeout(time)
-            .andThen(() -> operatorController.setRumble(type, 0.0));
+            .andThen(() -> operatorController_Command.getHID().setRumble(type, 0.0));
     }
 
     /**
@@ -112,6 +110,14 @@ public class Controlboard{
      */
     public static DoubleSupplier getRotation() {
         return () -> -MathUtil.applyDeadband(driverController_Command.getRightX(), STICK_DEADBAND);
+    }
+
+    public static Trigger dodgeRight(){
+        return driverController_Command.rightStick();
+    }
+
+    public static Trigger dodgeLeft(){
+        return driverController_Command.leftStick();
     }
 
     /**

@@ -78,7 +78,6 @@ public class AutoFire extends Command{
     public void end(boolean interrupted) {
         shooter.setTargetVelocity(ShooterConstants.IDLE_VELOCITY);
         pivot.stop();
-        conveyor.stop();
     }
 
     @Override
@@ -115,10 +114,6 @@ public class AutoFire extends Command{
 
         return new ShootState(launchAngle, 0.0, launchVelRPM);
     } 
-
-    /* public static ShootState calculateShotTrajectory(){
-
-    } */
 
     public static double getPivotDistanceFromLens(DoubleSupplier elevatorHeight){
          return pivotDistanceInterpolator.interpolate(PivotConstants.AXLE_DISTANCE_FROM_LENS_HOME, PivotConstants.AXLE_DISTANCE_FROM_LENS_TOP, elevatorHeight.getAsDouble() / ElevatorConstants.MAX_HEIGHT);

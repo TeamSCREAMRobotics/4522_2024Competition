@@ -207,6 +207,10 @@ public class SwerveModule {
         m_driveMotor.getConfigurator().apply(constants.toSlot0Configs(DriveConstants.FEEDFORWARD_CONSTANTS));
     }
 
+    public void resetModulePosition(){
+        m_driveMotor.setPosition(0.0);
+    }
+
     /**
      * Retrieves the current state of the swerve module.
      *

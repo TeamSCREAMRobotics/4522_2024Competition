@@ -26,6 +26,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import frc2024.Constants.SwerveConstants.ModuleConstants.ModuleLocation;
 import frc2024.subsystems.Pivot;
 
 /**
@@ -129,10 +130,10 @@ public final class Constants{
         /* Swerve Kinematics */
         // No need to ever change this unless there are more than four modules.
         public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
-                new Translation2d(WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
-                new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
-                new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
-                new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0)
+                ModuleLocation.FRONT_LEFT.translation,
+                ModuleLocation.FRONT_RIGHT.translation,
+                ModuleLocation.BACK_LEFT.translation,
+                ModuleLocation.BACK_RIGHT.translation
         );
 
         public static final SwerveDriveKinematics POSE_ESTIMATOR_KINEMATICS = new SwerveDriveKinematics(
@@ -251,15 +252,17 @@ public final class Constants{
             public record SwerveModuleConstants(int driveMotorID, int steerMotorID, int encoderID, Rotation2d angleOffset){}
 
             public enum ModuleLocation{
-                FRONT_LEFT(0),
-                FRONT_RIGHT(1),
-                BACK_LEFT(2),
-                BACK_RIGHT(3);
+                FRONT_LEFT(0, new Translation2d(WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0)),
+                FRONT_RIGHT(1, new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0)),
+                BACK_LEFT(2, new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0)),
+                BACK_RIGHT(3, new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0));
 
                 public int number;
+                public Translation2d translation;
 
-                private ModuleLocation(int number){
+                private ModuleLocation(int number, Translation2d translation){
                     this.number = number;
+                    this.translation = translation;
                 }
             }
 

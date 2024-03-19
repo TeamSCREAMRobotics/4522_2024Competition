@@ -26,7 +26,6 @@ public class TeleopDrive extends Command {
     private BooleanSupplier fieldRelativeSup;
     private BooleanSupplier slowModeSup;
     private Rotation2d lastAngle;
-    private DoubleSupplier snapAngleSup;
     private Timer correctionTimer = new Timer();
 
     /**
@@ -52,7 +51,7 @@ public class TeleopDrive extends Command {
     public void initialize() {
         correctionTimer.stop();
         correctionTimer.reset();
-        lastAngle = swerve.getRotation();
+        lastAngle = swerve.getHeading();
     } 
 
     /**
@@ -94,11 +93,11 @@ public class TeleopDrive extends Command {
         correctionTimer.start();
 
         if(correctionTimer.get() <= SwerveConstants.CORRECTION_TIME_THRESHOLD){
-            lastAngle = swerve.getRotation();
+            lastAngle = swerve.getHeading();
         }
 
         if(correctionTimer.hasElapsed(SwerveConstants.CORRECTION_TIME_THRESHOLD)){
-            return swerve.calculateHeadingCorrection(swerve.getRotation().getDegrees(), lastAngle.getDegrees());
+            return swerve.calculateHeadingCorrection(swerve.getHeading().getDegrees(), lastAngle.getDegrees());
         }
 
         return currentValue * SwerveConstants.MAX_ANGULAR_VELOCITY;

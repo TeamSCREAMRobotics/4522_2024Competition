@@ -132,7 +132,7 @@ public class Robot extends LoggedRobot {
     timeSinceDisabled.reset();
     timeSinceDisabled.start();
     RobotContainer.stopAll();
-    Controlboard.driverController.setRumble(RumbleType.kBothRumble, 0);
+    Controlboard.driverController_Command.getHID().setRumble(RumbleType.kBothRumble, 0);
   }
 
   @Override

@@ -44,14 +44,6 @@ public class SnappedDrive extends Command {
         this.snapAngleSup = snapAngle;
     }
 
-    public SnappedDrive(Swerve mSwerve, DoubleSupplier[] translation, Supplier<OptionalDouble> supplier,
-            BooleanSupplier booleanSupplier, Object object) {
-        //TODO Auto-generated constructor stub
-    }
-
-    @Override
-    public void initialize() {} 
-
     /**
      * Executes the swerve drive command.
      * <p>This method applies a deadband to the translation, strafe, and rotation values
