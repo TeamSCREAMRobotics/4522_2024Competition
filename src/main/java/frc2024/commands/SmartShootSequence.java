@@ -8,6 +8,7 @@ import com.team4522.lib.util.AllianceFlippable;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.FieldConstants;
@@ -15,6 +16,7 @@ import frc2024.Constants.ShooterConstants;
 import frc2024.Constants.SwerveConstants;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
+import frc2024.subsystems.LED;
 import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Shooter;
 import frc2024.subsystems.Vision;
@@ -28,6 +30,8 @@ public class SmartShootSequence extends Command{
     Pivot pivot;
     Shooter shooter;
     Conveyor conveyor;
+    LED led;
+
     Timer timeout = new Timer();
     boolean shouldTimeout;
     DoubleSupplier[] translation;
@@ -35,7 +39,7 @@ public class SmartShootSequence extends Command{
 
     PIDController rotationController;
 
-    public SmartShootSequence(DoubleSupplier[] translationSup, boolean timeout, boolean virtualCalculation, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor){
+    public SmartShootSequence(DoubleSupplier[] translationSup, boolean timeout, boolean virtualCalculation, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, LED led){
         addRequirements(swerve, elevator, pivot, shooter);
 
         this.swerve = swerve;
@@ -43,13 +47,14 @@ public class SmartShootSequence extends Command{
         this.pivot = pivot;
         this.shooter = shooter;
         this.conveyor = conveyor;
+        this.led = led;
         this.shouldTimeout = timeout;
         this.virtualCalculation = virtualCalculation;
         this.translation = translationSup;
-        rotationController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
+        rotationController = SwerveConstants.VISION_MOVING_ROTATION_CONSTANTS.toPIDController(); //SwerveConstants.SNAP_CONSTANTS.toPIDController();
     }
 
-    public SmartShootSequence(boolean timeout, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor){
+    public SmartShootSequence(boolean timeout, boolean virtualCalculation, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, LED led){
         addRequirements(swerve, elevator, pivot, shooter);
 
         this.swerve = swerve;
@@ -57,10 +62,11 @@ public class SmartShootSequence extends Command{
         this.pivot = pivot;
         this.shooter = shooter;
         this.conveyor = conveyor;
+        this.led = led;
         this.shouldTimeout = timeout;
-        this.virtualCalculation = false;
+        this.virtualCalculation = virtualCalculation;
         this.translation = null;
-        rotationController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
+        rotationController = SwerveConstants.VISION_MOVING_ROTATION_CONSTANTS.toPIDController(); //SwerveConstants.SNAP_CONSTANTS.toPIDController();
     }
 
     @Override
@@ -77,7 +83,7 @@ public class SmartShootSequence extends Command{
         
         if(virtualCalculation){
             Translation2d physicalTarget = AllianceFlippable.getTargetSpeaker().getTranslation();
-            rotationValue = SmartShooting.getRotationToPoint(swerve, pivot, shooter, physicalTarget, virtualCalculation, false);
+            rotationValue = SmartShooting.getRotationToPoint(swerve, pivot, shooter, physicalTarget, virtualCalculation, false, rotationController);
             translationValue.times(SwerveConstants.SHOOT_WHILE_MOVING_SCALAR);
 
             Translation2d virtualTarget = SmartShooting.calculateVirtualTarget(swerve, pivot, shooter, physicalTarget);
@@ -90,10 +96,11 @@ public class SmartShootSequence extends Command{
         }
 
         swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(translationValue, rotationValue));
+        led.scaledTarget(Color.kGoldenrod, shooter.getRPM(), shooter.getTargetVelocity());
 
-        /* if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && Vision.getLockedToTarget(Limelight.SHOOTER)) || timeout.hasElapsed(2.0)){
+        if(((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && Vision.getLockedToTarget(Limelight.SHOOTER)) || timeout.hasElapsed(2.0)) && shouldTimeout){
             conveyor.setConveyorOutput(ConveyorConstants.SHOOT_SPEED);
-        } */
+        }
     }
 
     @Override

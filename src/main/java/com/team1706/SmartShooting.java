@@ -3,6 +3,7 @@ package com.team1706;
 import java.util.function.DoubleSupplier;
 
 import com.team4522.lib.math.Conversions;
+import com.team4522.lib.util.AllianceFlippable;
 import com.team4522.lib.util.ScreamUtil;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -29,6 +30,9 @@ import frc2024.subsystems.swerve.Swerve;
 public class SmartShooting {
 
   public static final double GRAVITY = 9.80665;
+  public static final double xOffset = AllianceFlippable.Number(0.0, -0.0);
+  public static final double yOffset = AllianceFlippable.Number(0.35, -0.35);
+  public static final double shotTimeOffset = 0.2;
 
   //1706 mock-up, shoot while moving from Rapid React 2022 Season
   public static Translation2d calculateVirtualTarget(Swerve swerve, Pivot pivot, Shooter shooter, Translation2d target){
@@ -61,11 +65,12 @@ public class SmartShooting {
             i = 4;
         }
         if(i == 4){
-            movingGoalLocation = new Translation2d(virtualGoalLocation.getX(), virtualGoalLocation.getY()-0.5);
+            movingGoalLocation = new Translation2d(virtualGoalLocation.getX()+xOffset, virtualGoalLocation.getY()+yOffset);
         }
         else shotTime = newShotTime;
     }
 
+    System.out.println("Virtual location: " + movingGoalLocation + "\n" + "Shot Time: " + shotTime + "\n" + "Pose: " + currentPose);
     return movingGoalLocation;
   }
 
@@ -99,7 +104,7 @@ public class SmartShooting {
     // Calculate time of flight using the total vertical height
     double timeToGoal = Math.sqrt(2 * totalVerticalHeight / GRAVITY) + timeToHorizontalDistance;
 
-    return timeToGoal;
+    return timeToGoal-shotTimeOffset;
   }
 
   //** Calculates the distance to a specified target based on the shooter side limelight */
@@ -136,8 +141,8 @@ public class SmartShooting {
 
   private static PIDController targetController;
 
-  public static double getRotationToPoint(Swerve swerve, Pivot pivot, Shooter shooter, Translation2d target, boolean virtualCalculation, boolean front){
-    targetController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
+  public static double getRotationToPoint(Swerve swerve, Pivot pivot, Shooter shooter, Translation2d target, boolean virtualCalculation, boolean front, PIDController PIDController){
+    targetController = PIDController;
     targetController.enableContinuousInput(-180.0, 180.0);
 
     if(virtualCalculation){

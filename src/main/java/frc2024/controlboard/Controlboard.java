@@ -184,7 +184,7 @@ public class Controlboard{
     }
 
     /* Shooter/Conveyor */
-    public static final Trigger manuallyShoot(){
+    public static final Trigger clearNote(){
         return new Trigger(() -> buttonBoard.getRawButton(1));
     }
 
@@ -192,7 +192,7 @@ public class Controlboard{
         return operatorController_Command.leftBumper();
     }
 
-    public static final Trigger ejectThroughIntake(){
+    public static final Trigger eject(){
         return driverController_Command.povRight();
     }
 

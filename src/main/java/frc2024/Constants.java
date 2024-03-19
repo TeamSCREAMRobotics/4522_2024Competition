@@ -151,6 +151,7 @@ public final class Constants{
 
         /* Swerve Controllers */
         public static final ScreamPIDConstants VISION_ROTATION_CONSTANTS = new ScreamPIDConstants(0.04, 0.0, 0.0);
+        public static final ScreamPIDConstants VISION_MOVING_ROTATION_CONSTANTS = new ScreamPIDConstants(0.04, 0.0, 0.0);
         public static final ScreamPIDConstants VISION_TRANSLATION_X_CONSTANTS = new ScreamPIDConstants(1.0, 0.0, 0.0);
         public static final ScreamPIDConstants VISION_TRANSLATION_Y_CONSTANTS = new ScreamPIDConstants(4.5, 0.0, 0.0);
         public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(0.095, 0.0, 0.0); //0.1
@@ -377,7 +378,7 @@ public final class Constants{
         public static final double PODIUM_VELOCITY = 3000.0;
         public static final double IDLE_VELOCITY = 1000.0;
 
-        public static final double TRAJECTORY_VELOCITY_EXTRA = 2000.0;
+        public static final double TRAJECTORY_VELOCITY_EXTRA = 1800; //2000.0;
 
         public static final double SHOOT_OUTPUT = 0.8;
         public static final double EJECT_OUTPUT = 0.25;//0.5;
@@ -438,6 +439,7 @@ public final class Constants{
         public static final Rotation2d PODIUM_DEFENDED_ANGLE = Rotation2d.fromDegrees(24.1699);
         public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(48.516 /* 56.0742 */);
         public static final Rotation2d AMP5_CLOSESHOTS = Rotation2d.fromDegrees(16.25);
+        public static final Rotation2d EJECT_ANGLE = CHAIN_ANGLE;
 
         public static final double AUTO_ZERO_OUTPUT = 0.0;
 
@@ -496,6 +498,7 @@ public final class Constants{
         public static final double SUBWOOFER_HEIGHT = 3.12684; //3.5;
         public static final double AMP_HEIGHT = 19.70989;
         public static final double TRAP_CHAIN_HEIGHT = MAX_HEIGHT;
+        public static final double EJECT_HEIGHT = MAX_HEIGHT/3.0;
 
         public static final double REHOME_VOLTAGE = -5.0;
         public static final double REHOME_CURRENT_THRESHOLD = 0.0;
@@ -559,7 +562,8 @@ public final class Constants{
         TRAP_CHAIN(ElevatorConstants.TRAP_CHAIN_HEIGHT, PivotConstants.TRAP_CHAIN_ANGLE),
         SUBWOOFER_DEFENDED(ElevatorConstants.MAX_HEIGHT, PivotConstants.SUBWOOFER_ANGLE_DEFENDED),
         AUTO_FIRE(ElevatorConstants.HOME_HEIGHT, PivotConstants.HOME_ANGLE),
-        AMP5_CLOSESHOTS(ElevatorConstants.HOME_HEIGHT, PivotConstants.AMP5_CLOSESHOTS);
+        AMP5_CLOSESHOTS(ElevatorConstants.HOME_HEIGHT, PivotConstants.AMP5_CLOSESHOTS),
+        EJECT(ElevatorConstants.EJECT_HEIGHT, PivotConstants.EJECT_ANGLE);
 
         public double elevatorPosition;
         public Rotation2d pivotAngle;

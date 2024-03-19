@@ -155,7 +155,7 @@ public class DeviceConfig {
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Audio = FXAudioConfigs(false, false, true);
         config.MotorOutput = FXMotorOutputConfig(PivotConstants.MOTOR_INVERT, PivotConstants.NEUTRAL_MODE);
-        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.SyncCANcoder, Ports.PIVOT_ENCODER_ID, 1.0, PivotConstants.TOTAL_GEAR_RATIO, Rotation2d.fromDegrees(0.0));
+        config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.FusedCANcoder, Ports.PIVOT_ENCODER_ID, 1.0, PivotConstants.TOTAL_GEAR_RATIO, Rotation2d.fromDegrees(0.0));
         config.SoftwareLimitSwitch = FXSoftwareLimitSwitchConfig(softwareLimitEnable, forwardLimit.getRotations(), reverseLimit.getRotations());
         config.HardwareLimitSwitch = FXHardwareLimitSwitchConfig(PivotConstants.HARDWARE_AUTO_POSITION_FORWARD_ENABLE, PivotConstants.HARDWARE_AUTO_POSITION_REVERSE_ENABLE, PivotConstants.HARDWARE_LIMIT_POSITION_FORWARD, PivotConstants.HARDWARE_LIMIT_POSITION_REVERSE);
         config.CurrentLimits = FXSupplyCurrentLimitsConfig(

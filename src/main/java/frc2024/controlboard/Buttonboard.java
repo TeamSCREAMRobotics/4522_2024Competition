@@ -58,6 +58,7 @@ public class Buttonboard {
         switchMap.put(2, new ButtonboardPort(1, 1));
         switchMap.put(3, new ButtonboardPort(1, 2));
         switchMap.put(4, new ButtonboardPort(1, 3));
+        switchMap.put(5, new ButtonboardPort(1, 5));
 
         joystickXAxis = 0;
         joystickYAxis = 1;

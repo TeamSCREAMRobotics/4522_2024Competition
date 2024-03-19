@@ -125,6 +125,7 @@ public class LED extends SubsystemBase{
     }
 
     public void scaledTarget(Color color, double currentValue, double targetValue){
+        if(targetValue == 0) return;
         int mapped = (int) Math.round(Conversions.mapRange(currentValue, 0, targetValue, 0, length));
         for(int i = 0; i < mapped; i++){
             if(i >= length) return;

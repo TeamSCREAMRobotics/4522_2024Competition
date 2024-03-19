@@ -37,7 +37,7 @@ import frc2024.Constants;
 import frc2024.Constants.FieldConstants;
 import frc2024.Constants.VisionConstants;
 
-public class Vision extends SubsystemBase{
+public class Vision{
 
     private static final LinearFilter txFilter = LinearFilter.movingAverage(8);
     private static final LinearFilter tyFilter = LinearFilter.movingAverage(8);
@@ -48,7 +48,7 @@ public class Vision extends SubsystemBase{
 
     public enum Limelight{
         TRAP("limelight-trap", new Pose3d()), 
-        SHOOTER("limelight-shooter", new Pose3d(0.286, -0.162, 0.233, new Rotation3d(0, Math.toRadians(27.0), Math.toRadians(180.0)))), // z: 0.220615
+        SHOOTER("limelight-shooter", new Pose3d(0.286, -0.162, 0.233, new Rotation3d(0, Math.toRadians(29), Math.toRadians(180.0)))), // z: 0.220615
         INTAKE("limelight-intake", new Pose3d());
 
         String name;
@@ -208,8 +208,7 @@ public class Vision extends SubsystemBase{
         setPipeline(Limelight.TRAP, pipeline.index);
     }
 
-    @Override
-    public void periodic() {
+    public static void periodic() {
         if(!getTV(Limelight.SHOOTER)){
             filterReset.runOnce(
                 () -> {
@@ -221,6 +220,7 @@ public class Vision extends SubsystemBase{
         } else {
             filterReset.reset();
         }
+        // System.out.println(Units.metersToInches(getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER)));
     }
 
     public Command intakePipelineCommand(IntakePipeline pipeline){

@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -34,6 +35,7 @@ import frc2024.Constants.ShooterConstants;
 import frc2024.Constants.SwerveConstants;
 import frc2024.commands.AutoFire;
 import frc2024.commands.ShootSequence;
+import frc2024.commands.SmartShootSequence;
 import frc2024.commands.AutoShootSequence;
 import frc2024.commands.SuperstructureToPosition;
 import frc2024.commands.intake.AutoIntakeFloor;
@@ -60,6 +62,7 @@ public class Routines {
     private static final PathSequence Source4Center = new PathSequence(Side.SOURCE, "Source4Center#1", "Source4Center#3");
     private static final PathSequence Amp4Center = new PathSequence(Side.AMP, "Amp4Center#1", "Amp4Center#2", "Amp4Center#3");
     private static final PathSequence SweepCenter = new PathSequence(Side.SOURCE, "SweepCenter#1", "SweepCenter#2");
+    private static final PathSequence Sweep3_Source = new PathSequence(Side.SOURCE, "SweepCenter#1", "3Sweep#1", "3Sweep#2");
     private static final PathSequence Amp5Center_2 = new PathSequence(Side.AMP, "Amp5Center#1", "Amp5Center#2", "Amp5Center#3", "Amp5Center#4");
     private static final PathSequence Source3_NoStage = new PathSequence(Side.SOURCE, "Source3#0", "Source3#1", "Source3#2");
     private static final PathSequence Leave = new PathSequence(Side.SOURCE, "Leave");
@@ -116,19 +119,25 @@ public class Routines {
         return new SequentialCommandGroup(
             startTimer(),
             swerve.resetPoseCommand(Amp4Close.getStartingPose()),
-            new ShootSequence(SuperstructureState.SUBWOOFER, ShooterConstants.SUBWOOFER_VELOCITY, elevator, pivot, shooter, conveyor),
-            Amp4Close.getIndex(0),
-            Amp4Close.getIndex(1),
-            Amp4Close.getIndex(2),
-            printTimer())
-                .alongWith(
-                    swerve.overrideRotationTargetCommand(
-                        () -> ScreamUtil.calculateAngleToPoint(
-                            swerve.getPose().getTranslation(), 
-                            AllianceFlippable.getTargetSpeaker().getTranslation())))
-                .alongWith(intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT))
-                .alongWith(shooter.velocityCommand(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).velocityRPM()))
-                .alongWith(pivot.angleCommand(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).pivotAngle()));
+            new ShootSequence(SuperstructureState.SUBWOOFER, ShooterConstants.SUBWOOFER_VELOCITY, elevator, pivot, shooter, conveyor))
+            .andThen(
+                new SequentialCommandGroup(
+                Amp4Close.getIndex(0),
+                new WaitCommand(0.5),
+                Amp4Close.getIndex(1),
+                new WaitCommand(0.5),
+                Amp4Close.getIndex(2),
+                printTimer())
+                    .alongWith(
+                        swerve.overrideRotationTargetCommand(
+                            () -> ScreamUtil.calculateAngleToPoint(
+                                swerve.getPose().getTranslation(), 
+                                AllianceFlippable.getTargetSpeaker().getTranslation()).plus(new Rotation2d(Math.PI))))
+                    .alongWith(elevator.heightCommand(ElevatorConstants.HOME_HEIGHT))
+                    .alongWith(intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT))
+                    .alongWith(conveyor.dutyCycleCommand(ConveyorConstants.TRANSFER_OUTPUT))
+                    .alongWith(shooter.velocityCommand(() -> AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).velocityRPM()))
+                    .alongWith(pivot.angleCommand(() -> AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).pivotAngle())));
     }
 
     public static Command Amp4Center(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake, LED led){
@@ -236,15 +245,6 @@ public class Routines {
     public static Command Source3_NoStage(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
         currentSequence = Source3_NoStage;
         return new SequentialCommandGroup(
-            /* startTimer(),
-            swerve.resetPoseCommand(Source3_NoStage.getStartingPose()),
-            new FacePoint(swerve, new DoubleSupplier[]{() -> 0, () -> 0}, AllianceFlippable.getTargetSpeaker().getTranslation(), false).withTimeout(0.5),
-            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
-            Source3_NoStage.getIndex(0),
-            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
-            Source3_NoStage.getIndex(1),
-            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor),
-            printTimer() */
             startTimer(),
             swerve.resetPoseCommand(Source3_NoStage.getStartingPose()),
             Source3_NoStage.getIndex(0),
@@ -254,6 +254,15 @@ public class Routines {
             Source3_NoStage.getIndex(2),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor, led),
             printTimer()
+            /* startTimer(),
+            swerve.resetPoseCommand(Source3_NoStage.getStartingPose()),
+            Source3_NoStage.getIndex(0),
+            new SmartShootSequence(true, true, swerve, elevator, pivot, shooter, conveyor, led),
+            Source3_NoStage.getIndex(1),
+            new SmartShootSequence(true, true, swerve, elevator, pivot, shooter, conveyor, led),
+            Source3_NoStage.getIndex(2),
+            new SmartShootSequence(true, true, swerve, elevator, pivot, shooter, conveyor, led),
+            printTimer() */
         );
     }
 
@@ -267,6 +276,27 @@ public class Routines {
             intake.dutyCycleCommand(1.0),
             SweepCenter.getIndex(0)
             .andThen(SweepCenter.getIndex(1))
+        );
+    }
+
+    public static Command Sweep3_Source(Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
+        currentSequence = Sweep3_Source;
+        return new SequentialCommandGroup(
+            startTimer(),
+            swerve.resetPoseCommand(Sweep3_Source.getStartingPose()),
+            new ParallelRaceGroup(
+                intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT),
+                pivot.angleCommand(PivotConstants.HOME_ANGLE),
+                elevator.heightCommand(ElevatorConstants.HOME_HEIGHT),
+                shooter.dutyCycleCommand(0.2),
+                conveyor.dutyCycleCommand(1.0),
+                Sweep3_Source.getIndex(0).andThen(Sweep3_Source.getIndex(1))
+                .andThen(new WaitCommand(0.5))
+            ),
+            shooter.stopCommand().alongWith(conveyor.stopCommand()),
+            Sweep3_Source.getIndex(2),
+            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor, led),
+            printTimer()
         );
     }
 

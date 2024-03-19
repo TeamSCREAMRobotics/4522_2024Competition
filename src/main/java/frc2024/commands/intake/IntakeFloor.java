@@ -40,7 +40,7 @@ public class IntakeFloor extends SequentialCommandGroup {
             .alongWith(pivot.angleCommand(endGame.getAsBoolean() ? PivotConstants.HOME_ANGLE_ENDGAME : PivotConstants.HOME_ANGLE))
             .alongWith(intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT))
             .alongWith(conveyor.dutyCycleCommand(endGame.getAsBoolean() ? ConveyorConstants.AMP_OUTPUT+0.25 : ConveyorConstants.TRANSFER_OUTPUT))
-            .alongWith(led.solidCommand(Color.kRed))
+            .alongWith(led.strobeCommand(Color.kRed, 0.5))
       );
   }
 }

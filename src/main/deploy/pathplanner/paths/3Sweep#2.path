@@ -1,0 +1,124 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.211702357784173,
+        "y": 2.435854001522554
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 8.363943232879333,
+        "y": 3.3024559059103855
+      },
+      "isLocked": false,
+      "linkedName": "3Sweep_1End"
+    },
+    {
+      "anchor": {
+        "x": 8.094593992326358,
+        "y": 4.075371117931965
+      },
+      "prevControl": {
+        "x": 8.389959444577938,
+        "y": 3.644629833398406
+      },
+      "nextControl": {
+        "x": 7.8135339152276035,
+        "y": 4.485250397034318
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.2677034911844425,
+        "y": 4.438407050851191
+      },
+      "prevControl": {
+        "x": 6.7712694626530485,
+        "y": 4.450117887396973
+      },
+      "nextControl": {
+        "x": 5.657892275596084,
+        "y": 4.424225394674716
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.85069226914488,
+        "y": 3.9582627524741496
+      },
+      "prevControl": {
+        "x": 5.295704057884577,
+        "y": 4.309587848847594
+      },
+      "nextControl": {
+        "x": 4.5246806844376835,
+        "y": 3.7008851856000464
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.8481392198162414,
+        "y": 3.0916608480863177
+      },
+      "prevControl": {
+        "x": 3.820138653116107,
+        "y": 3.021395828811629
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.4,
+      "rotationDegrees": 85.0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.4,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "StartIntake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.98,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 570.0,
+    "maxAngularAcceleration": 500.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -37.76307797403195,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "3Sweep_Source",
+  "previewStartingState": {
+    "rotation": 83.88449643371456,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

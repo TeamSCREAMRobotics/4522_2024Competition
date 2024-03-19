@@ -134,8 +134,8 @@ public class Elevator extends SubsystemBase{
     }
 
     public Command voltageCommand(DoubleSupplier voltage){
-        return run(() -> setElevatorVoltage(voltage.getAsDouble()));
-            /* .alongWith(RobotContainer.getLED().scaledTargetCommand(Color.kYellow, () -> getElevatorHeight(), () -> ElevatorConstants.MAX_HEIGHT)); */
+        return run(() -> setElevatorVoltage(voltage.getAsDouble()))
+            .alongWith(RobotContainer.getLED().scaledTargetCommand(Color.kRed, () -> getElevatorHeight(), () -> ElevatorConstants.MAX_HEIGHT));
     }
 
     public Command voltageCommand(double voltage){

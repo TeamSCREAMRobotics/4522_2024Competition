@@ -35,22 +35,8 @@ public class AutoShootSequence extends Command{
     LED led;
     Timer timeout = new Timer();
     boolean shouldTimeout;
-    DoubleSupplier[] translation;
 
     PIDController rotationController;
-
-    public AutoShootSequence(DoubleSupplier[] translationSup, boolean timeout, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, LED led){
-        addRequirements(swerve, elevator, pivot, shooter);
-        this.swerve = swerve;
-        this.elevator = elevator;
-        this.pivot = pivot;
-        this.shooter = shooter;
-        this.conveyor = conveyor;
-        this.led = led;
-        this.shouldTimeout = timeout;
-        this.translation = translationSup;
-        rotationController = SwerveConstants.VISION_ROTATION_CONSTANTS.toPIDController();
-    }
 
     public AutoShootSequence(boolean shouldTimeout, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, LED led){
         addRequirements(swerve, elevator, pivot, shooter);
@@ -61,7 +47,6 @@ public class AutoShootSequence extends Command{
         this.conveyor = conveyor;
         this.led = led;
         this.shouldTimeout = shouldTimeout;
-        this.translation = null;
         rotationController = SwerveConstants.VISION_ROTATION_CONSTANTS.toPIDController();
     }
 
@@ -74,17 +59,17 @@ public class AutoShootSequence extends Command{
     @Override
     public void execute() {
         double rotationValue = Math.abs(Vision.getTX(Limelight.SHOOTER)) < 2.0 ? 0 : rotationController.calculate(Vision.getTX(Limelight.SHOOTER), 0.0);
-        Translation2d translationValue = translation == null ? new Translation2d() : new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
-        swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(translationValue, rotationValue));
+        swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(new Translation2d(), rotationValue));
 
-        shooter.setTargetVelocity(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).velocityRPM());
-        pivot.setTargetAngle(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).pivotAngle());
+        if(Vision.getTV(Limelight.SHOOTER)){
+            shooter.setTargetVelocity(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).velocityRPM());
+            pivot.setTargetAngle(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).pivotAngle());
+            led.scaledTarget(Color.kGoldenrod, shooter.getRPM(), shooter.getTargetVelocity());
+        }
 
-        led.scaledTarget(Color.kGoldenrod, shooter.getRPM(), shooter.getTargetVelocity());
-
-        /* if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD) || timeout.hasElapsed(1.0)){
+        if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD) || (timeout.hasElapsed(2) && shouldTimeout)){
             conveyor.setConveyorOutput(ConveyorConstants.SHOOT_SPEED);
-        } */
+        }
     }
 
     @Override
@@ -96,6 +81,6 @@ public class AutoShootSequence extends Command{
 
     @Override
     public boolean isFinished() {
-        return !conveyor.hasPiece(false).getAsBoolean() || (timeout.hasElapsed(1.5) && shouldTimeout);
+        return !conveyor.hasPiece(false).getAsBoolean() || (timeout.hasElapsed(2.5) && shouldTimeout);
     }
 }
