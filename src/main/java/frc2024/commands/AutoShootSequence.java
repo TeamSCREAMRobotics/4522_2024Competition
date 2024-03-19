@@ -67,7 +67,7 @@ public class AutoShootSequence extends Command{
             led.scaledTarget(Color.kGoldenrod, shooter.getRPM(), shooter.getTargetVelocity());
         }
 
-        if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD) || (timeout.hasElapsed(2) && shouldTimeout)){
+        if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && Vision.getTV(Limelight.SHOOTER)) || (timeout.hasElapsed(2) && shouldTimeout)){
             conveyor.setConveyorOutput(ConveyorConstants.SHOOT_SPEED);
         }
     }

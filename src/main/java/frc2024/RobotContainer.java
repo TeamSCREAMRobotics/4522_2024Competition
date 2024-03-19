@@ -121,11 +121,11 @@ public class RobotContainer {
                     Controlboard.getSlowMode())
             );
         
-        Controlboard.dodgeLeft()
+        /* Controlboard.dodgeLeft()
             .whileTrue(
                 new DodgeDrive(m_swerve, 
                     Controlboard.getTranslation(), 
-                    Controlboard.getSnapAngle(), 
+                    Controlboard.getRotation(), 
                     DodgeDirection.LEFT,
                     Controlboard.getSlowMode())
             );
@@ -134,20 +134,22 @@ public class RobotContainer {
             .whileTrue(
                 new DodgeDrive(m_swerve, 
                     Controlboard.getTranslation(), 
-                    Controlboard.getSnapAngle(), 
+                    Controlboard.getRotation(), 
                     DodgeDirection.RIGHT,
                     Controlboard.getSlowMode())
-            );
+            ); */
 
         /* Conveyor */
         Controlboard.clearNote()
             .whileTrue(
                 new SuperstructureToPosition(SuperstructureState.EJECT, m_elevator, m_pivot)
-                .alongWith(m_stabilizers.outputCommand(StabilizerConstants.OUT_OUTPUT).withTimeout(1).andThen(m_stabilizers.stopCommand())))
+                    .alongWith(m_stabilizers.positionCommand(StabilizerConstants.DOWN_POSITION)))
+                // .alongWith(m_stabilizers.outputCommand(StabilizerConstants.OUT_OUTPUT).withTimeout(1).andThen(m_stabilizers.stopCommand())))
             .onFalse(
                 new WaitCommand(0.4).andThen(goHome("ClearNote"))
-                    .alongWith(
-                        m_stabilizers.outputCommand(StabilizerConstants.IN_OUTPUT).withTimeout(1).andThen(m_stabilizers.stopCommand())));
+                    .alongWith(m_stabilizers.positionCommand(StabilizerConstants.UP_POSITION)));
+                    /* .alongWith(
+                        m_stabilizers.outputCommand(StabilizerConstants.IN_OUTPUT).withTimeout(1).andThen(m_stabilizers.stopCommand()))); */
 
         /* Elevator */
         Controlboard.manualMode().whileTrue(m_elevator.voltageCommand(Controlboard.getManualElevatorOutput()));
@@ -189,7 +191,7 @@ public class RobotContainer {
                 new InstantCommand(() -> currentState = SuperstructureState.AMP)
                     .andThen(
                         new SuperstructureToPosition(SuperstructureState.AMP, m_elevator, m_pivot)
-                    .alongWith(new ConditionalCommand(m_led.strobeCommand(Color.kGreen, 0.5), m_led.strobeCommand(Color.kRed, 0.5), m_conveyor.hasPiece(false)))))
+                    .alongWith()))
             .onFalse(goHome("Amp"));
 
         Controlboard.goToPodiumPosition()
@@ -367,8 +369,8 @@ public class RobotContainer {
     public static void configAuto() {
         Autonomous.configure(
             Commands.none().withName("Do Nothing"),
-            new PPEvent("StartIntake", new PrintCommand("PATHPLANNER INTAKE EVENT COMMENTED FIX ME")),
-                //new AutoIntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, m_led)),
+            new PPEvent("StartIntake", //, new PrintCommand("PATHPLANNER INTAKE EVENT COMMENTED FIX ME")),
+                new AutoIntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, m_led)),
             new PPEvent("StopIntake", m_intake.stopCommand().alongWith(m_conveyor.stopCommand())),
             new PPEvent("RunShooterHigh", m_shooter.velocityCommand(4500))
         );
@@ -385,8 +387,8 @@ public class RobotContainer {
             Routines.Amp5_NoCenter(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_5_Close&Center"),
             Routines.Source3_NoStage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Center&NoStage"),
             Routines.Leave(m_swerve, 2.0).withName("Leave"),
-            Routines.testAuto(m_swerve).withName("test"),
-            Routines.Amp4Close_FastShootTest(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("4CloseTest")
+            Routines.testAuto(m_swerve).withName("test")
+            //Routines.Amp4Close_FastShootTest(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("4CloseTest")
         );
     }
 

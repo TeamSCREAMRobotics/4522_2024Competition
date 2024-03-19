@@ -191,7 +191,7 @@ public class DeviceConfig {
         return config;
     }
 
-    public static TalonFXConfiguration climberFXConfig(){
+    public static TalonFXConfiguration stabilizerFXConfig(){
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.Audio = FXAudioConfigs(false, false, true);
         config.MotorOutput = FXMotorOutputConfig(StabilizerConstants.MOTOR_INVERT, StabilizerConstants.NEUTRAL_MODE);
@@ -201,6 +201,8 @@ public class DeviceConfig {
             StabilizerConstants.SUPPLY_CURRENT_LIMIT, 
             StabilizerConstants.SUPPLY_CURRENT_THRESHOLD, 
             StabilizerConstants.SUPPLY_TIME_THRESHOLD);
+        config.Slot0 = FXPIDConfig(StabilizerConstants.PID_CONSTANTS);
+        config.MotionMagic = FXMotionMagicConfig(StabilizerConstants.MOTION_MAGIC_CONSTANTS);
         return config;
     }
 

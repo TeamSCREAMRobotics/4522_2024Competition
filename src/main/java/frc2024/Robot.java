@@ -124,7 +124,7 @@ public class Robot extends LoggedRobot {
       },
       DriverStation.getAlliance().isPresent());
     //System.out.println("(" + RobotContainer.getPivot().getPivotAngle().getDegrees() + ", " + RobotContainer.getElevator().getElevatorHeight() + ", " + RobotContainer.getShooter().getRPM() + ")");
-    // Vision.periodic();
+    Vision.periodic();
   }
 
   @Override
@@ -133,6 +133,10 @@ public class Robot extends LoggedRobot {
     timeSinceDisabled.start();
     RobotContainer.stopAll();
     Controlboard.driverController_Command.getHID().setRumble(RumbleType.kBothRumble, 0);
+
+    if(Constants.MODE == RobotMode.COMP){
+      autoConfigurator.reset();
+    }
   }
 
   @Override

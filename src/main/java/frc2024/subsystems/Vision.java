@@ -48,7 +48,7 @@ public class Vision{
 
     public enum Limelight{
         TRAP("limelight-trap", new Pose3d()), 
-        SHOOTER("limelight-shooter", new Pose3d(0.286, -0.162, 0.233, new Rotation3d(0, Math.toRadians(29), Math.toRadians(180.0)))), // z: 0.220615
+        SHOOTER("limelight-shooter", new Pose3d(0.286, -0.162, 0.233, new Rotation3d(0, Math.toRadians(27), Math.toRadians(180.0)))), // z: 0.220615
         INTAKE("limelight-intake", new Pose3d());
 
         String name;

@@ -59,7 +59,7 @@ public class AutoFire extends Command{
         this.translation = translationSup;
         rotationController = SwerveConstants.VISION_ROTATION_CONSTANTS.toPIDController();
     }
-
+    
     @Override
     public void execute() {
         double rotationValue = Math.abs(Vision.getTX(Limelight.SHOOTER)) < 2.0 ? 0 : rotationController.calculate(Vision.getTX(Limelight.SHOOTER), 0.0);

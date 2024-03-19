@@ -1,0 +1,120 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.323704624584711,
+        "y": 6.136478349989511
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.764137519715837,
+        "y": 6.768863523461712
+      },
+      "isLocked": false,
+      "linkedName": "Amp5_NoStage1End"
+    },
+    {
+      "anchor": {
+        "x": 8.188280684692609,
+        "y": 5.831996599799192
+      },
+      "prevControl": {
+        "x": 7.4622088188541555,
+        "y": 6.183321696172636
+      },
+      "nextControl": {
+        "x": 8.434377231510485,
+        "y": 5.712917625532478
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.513631058645855,
+        "y": 6.780574360007493
+      },
+      "prevControl": {
+        "x": 7.216281251392744,
+        "y": 6.558068465637644
+      },
+      "nextControl": {
+        "x": 5.92012818335544,
+        "y": 6.968516937182791
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.323704624584711,
+        "y": 6.405827590542485
+      },
+      "prevControl": {
+        "x": 5.237149875155669,
+        "y": 6.850839379282182
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.2000000000000002,
+      "rotationDegrees": -20.440083535612363,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.15000000000000002,
+      "constraints": {
+        "maxVelocity": 2.5,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 570.0,
+        "maxAngularAcceleration": 500.0
+      }
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.6000000000000001,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "StartIntake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.98,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 570.0,
+    "maxAngularAcceleration": 500.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 14.534455080540154,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "6AmpSide_NoStage",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

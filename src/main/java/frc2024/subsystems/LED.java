@@ -155,6 +155,10 @@ public class LED extends SubsystemBase{
         return run(() -> strobe(color, duration)).ignoringDisable(true);
     }
 
+    public Command strobeCommand(Supplier<Color> color, double duration){
+        return run(() -> strobe(color.get(), duration)).ignoringDisable(true);
+    }
+
     public Command breatheCommand(Color color1, Color color2, double duration){
         return run(() -> breathe(color1, color2, duration)).ignoringDisable(true);
     }

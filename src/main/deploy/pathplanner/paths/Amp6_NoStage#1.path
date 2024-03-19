@@ -1,0 +1,98 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.192332373252477,
+        "y": 6.394116753996703
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.8904036723907955,
+        "y": 6.733731013824367
+      },
+      "isLocked": false,
+      "linkedName": "Close4_3End"
+    },
+    {
+      "anchor": {
+        "x": 8.281967377058862,
+        "y": 7.3544053507507865
+      },
+      "prevControl": {
+        "x": 7.938837867837012,
+        "y": 7.697534859972634
+      },
+      "nextControl": {
+        "x": 8.609870800340746,
+        "y": 7.026501927468906
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.323704624584711,
+        "y": 6.136478349989511
+      },
+      "prevControl": {
+        "x": 5.365969077159265,
+        "y": 6.2887192250846695
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Amp5_NoStage1End"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 0.25,
+      "constraints": {
+        "maxVelocity": 2.5,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 570.0,
+        "maxAngularAcceleration": 500.0
+      }
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.65,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "StartIntake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.98,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 570.0,
+    "maxAngularAcceleration": 500.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 3.7313969991604634,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "6AmpSide_NoStage",
+  "previewStartingState": {
+    "rotation": 0.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

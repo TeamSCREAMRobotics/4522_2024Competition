@@ -47,7 +47,7 @@ public class AutoIntakeFloor extends SequentialCommandGroup {
                         intake.stop();
                         conveyor.stop();
                     }
-                }).andThen(led.strobeCommand(Color.kGreen, 0.1).withTimeout(1))
+                })
         );
     }
 }

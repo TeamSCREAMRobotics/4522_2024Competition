@@ -330,6 +330,15 @@ public final class Constants{
         public static final int SUPPLY_CURRENT_THRESHOLD = 10;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
+        
+        public static final double CRUISE_VELOCITY = 15;
+        public static final double ACCELERATION = 5;
+
+        public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(10, 0.0, 0.0);
+
+        public static final double DOWN_POSITION = 0.1235;
+        public static final double UP_POSITION = 0.0;
 
         public static final double OUT_OUTPUT = 0.1;
         public static final double IN_OUTPUT = -0.1;
@@ -378,7 +387,7 @@ public final class Constants{
         public static final double AMP5_CLOSESHOTS = 3250.0;
         public static final double SUBWOOFER_DEFENDED_VELOCITY = 3000;
         public static final double CHAIN_VELOCITY = 4000.0;
-        public static final double PODIUM_VELOCITY = 3000.0;
+        public static final double PODIUM_VELOCITY = 3500.0;
         public static final double IDLE_VELOCITY = 1000.0;
 
         public static final double TRAJECTORY_VELOCITY_EXTRA = 1800; //2000.0;
@@ -592,6 +601,10 @@ public final class Constants{
         public static final Rotation2d SHOOT_STATE_MAP_ANGLE_OFFSET = Rotation2d.fromDegrees(0.0);
         public static final double SHOOT_STATE_MAP_ELEVATOR_OFFSET = 0.0;
         public static final double SHOOT_STATE_MAP_VELOCITY_OFFSET = 0.0;
+
+        // Center Sub: tx: +11.49° ty: +14.05° ta: +0.394% Distance: ~53.353 inches
+        // Flat and Center Against Podium: tx: -19.78° ty: -5.76° ta: +0.164% Distance: ~117.163 inches
+        // Centered with Sub Against Truss: tx: +5.92° ty: -16.69° ta: +0.065% Distance : ~236.77 inches
 
         public static final ShootStateInterpolatingTreeMap SHOOT_STATE_MAP = new ShootStateInterpolatingTreeMap();
         static{

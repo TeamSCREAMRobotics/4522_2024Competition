@@ -37,7 +37,7 @@ public class Stabilizers extends SubsystemBase{
     }
     
     private void configureDevices() {
-        DeviceConfig.configureTalonFX("Bar Motor", m_stabilizerMotor, DeviceConfig.climberFXConfig(), Constants.DEVICE_LOOP_TIME_HZ);
+        DeviceConfig.configureTalonFX("Bar Motor", m_stabilizerMotor, DeviceConfig.stabilizerFXConfig(), Constants.DEVICE_LOOP_TIME_HZ);
         ParentDevice.optimizeBusUtilizationForAll(m_stabilizerMotor);
     }
 
