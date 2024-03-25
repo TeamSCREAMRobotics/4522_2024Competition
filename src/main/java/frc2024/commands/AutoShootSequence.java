@@ -3,7 +3,7 @@ package frc2024.commands;
 import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.util.PIDConstants;
-import com.team4522.lib.util.AllianceFlippable;
+import com.team4522.lib.util.AllianceFlipUtil;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -58,16 +58,16 @@ public class AutoShootSequence extends Command{
 
     @Override
     public void execute() {
-        double rotationValue = Math.abs(Vision.getTX(Limelight.SHOOTER)) < 2.0 ? 0 : rotationController.calculate(Vision.getTX(Limelight.SHOOTER), 0.0);
+        double rotationValue = Math.abs(Vision.getTX(Limelight.SHOOT_SIDE)) < 2.0 ? 0 : rotationController.calculate(Vision.getTX(Limelight.SHOOT_SIDE), 0.0);
         swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(new Translation2d(), rotationValue));
 
-        if(Vision.getTV(Limelight.SHOOTER)){
+        if(Vision.getTV(Limelight.SHOOT_SIDE)){
             shooter.setTargetVelocity(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).velocityRPM());
             pivot.setTargetAngle(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).pivotAngle());
             led.scaledTarget(Color.kGoldenrod, shooter.getRPM(), shooter.getTargetVelocity());
         }
 
-        if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && Vision.getTV(Limelight.SHOOTER)) || (timeout.hasElapsed(2) && shouldTimeout)){
+        if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && Vision.getTV(Limelight.SHOOT_SIDE)) || (timeout.hasElapsed(2) && shouldTimeout)){
             conveyor.setConveyorOutput(ConveyorConstants.SHOOT_SPEED);
         }
     }

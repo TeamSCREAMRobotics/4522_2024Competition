@@ -6,7 +6,7 @@ import java.util.OptionalDouble;
 
 import org.photonvision.PhotonUtils;
 
-import com.team4522.lib.util.AllianceFlippable;
+import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.LimelightHelpers;
 import com.team4522.lib.util.RunOnce;
 import com.team4522.lib.util.ScreamUtil;
@@ -39,17 +39,10 @@ import frc2024.Constants.VisionConstants;
 
 public class Vision{
 
-    private static final LinearFilter txFilter = LinearFilter.movingAverage(8);
-    private static final LinearFilter tyFilter = LinearFilter.movingAverage(8);
-    private static final LinearFilter taFilter = LinearFilter.movingAverage(8);
-    private static final LinearFilter distanceFilter = LinearFilter.movingAverage(5);
-
-    private static final RunOnce filterReset = new RunOnce();
-
     public enum Limelight{
         TRAP("limelight-trap", new Pose3d()), 
-        SHOOTER("limelight-shooter", new Pose3d(0.286, -0.162, 0.233, new Rotation3d(0, Math.toRadians(27), Math.toRadians(180.0)))), // z: 0.220615
-        INTAKE("limelight-intake", new Pose3d());
+        SHOOT_SIDE("limelight-shooter", new Pose3d(0.286, -0.162, 0.233, new Rotation3d(0, Math.toRadians(27), Math.toRadians(180.0)))), // z: 0.220615
+        INTAKE_SIDE("limelight-intake", new Pose3d());
 
         String name;
         Pose3d mountPose;
@@ -97,15 +90,15 @@ public class Vision{
     }
 
     public static double getTX(Limelight limelight){
-        return txFilter.calculate(LimelightHelpers.getTX(limelight.name));
+        return LimelightHelpers.getTX(limelight.name);
     }
 
     public static double getTY(Limelight limelight){
-        return tyFilter.calculate(LimelightHelpers.getTY(limelight.name));
+        return LimelightHelpers.getTY(limelight.name);
     }
 
     public static double getTA(Limelight limelight){
-        return taFilter.calculate(LimelightHelpers.getTA(limelight.name));
+        return LimelightHelpers.getTA(limelight.name);
     }
 
     public static boolean getTV(Limelight limelight){
@@ -137,7 +130,7 @@ public class Vision{
     }
 
     public static double getDistanceToTargetMeters(double targetHeight, Limelight limelight){
-        double goal_theta = limelight.mountPose.getRotation().getY() + Math.toRadians(getTY(Limelight.SHOOTER));
+        double goal_theta = limelight.mountPose.getRotation().getY() + Math.toRadians(getTY(Limelight.SHOOT_SIDE));
         double height_diff = targetHeight - limelight.mountPose.getZ();
 
         return height_diff / Math.tan(goal_theta);
@@ -145,7 +138,7 @@ public class Vision{
 
     public static double getFusedDistanceToSpeaker(Limelight limelight, Pose2d currentPose){
         double sum;
-        sum = ScreamUtil.calculateDistanceToTranslation(currentPose.getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation());
+        sum = ScreamUtil.calculateDistanceToTranslation(currentPose.getTranslation(), AllianceFlipUtil.getTargetSpeaker().getTranslation());
         if(getTV(limelight)){
             sum += getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, limelight);
             return sum / 2;
@@ -197,11 +190,11 @@ public class Vision{
     }
 
     public static void setPipeline(IntakePipeline pipeline){
-        setPipeline(Limelight.INTAKE, pipeline.index);
+        setPipeline(Limelight.INTAKE_SIDE, pipeline.index);
     }
 
     public static void setPipeline(FrontPipeline pipeline){
-        setPipeline(Limelight.SHOOTER, pipeline.index);
+        setPipeline(Limelight.SHOOT_SIDE, pipeline.index);
     }
 
     public static void setPipeline(BackPipeline pipeline){
@@ -209,17 +202,6 @@ public class Vision{
     }
 
     public static void periodic() {
-        if(!getTV(Limelight.SHOOTER)){
-            filterReset.runOnce(
-                () -> {
-                    txFilter.reset();
-                    tyFilter.reset();
-                    taFilter.reset();
-                    distanceFilter.reset();
-                });
-        } else {
-            filterReset.reset();
-        }
         // System.out.println(Units.metersToInches(getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER)));
     }
 

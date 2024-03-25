@@ -3,7 +3,7 @@ package frc2024.commands;
 import java.util.function.DoubleSupplier;
 
 import com.team1706.SmartShooting;
-import com.team4522.lib.util.AllianceFlippable;
+import com.team4522.lib.util.AllianceFlipUtil;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -77,12 +77,12 @@ public class SmartShootSequence extends Command{
 
     @Override
     public void execute() {
-        double rotationValue = Math.abs(Vision.getTX(Limelight.SHOOTER)) < 2.0 ? 0 : rotationController.calculate(Vision.getTX(Limelight.SHOOTER), 0.0);
+        double rotationValue = Math.abs(Vision.getTX(Limelight.SHOOT_SIDE)) < 2.0 ? 0 : rotationController.calculate(Vision.getTX(Limelight.SHOOT_SIDE), 0.0);
 
-        Translation2d translationValue = translation == null ? new Translation2d() : new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
+        Translation2d translationValue = translation == null ? new Translation2d() : new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlipUtil.getDirectionCoefficient());
         
         if(virtualCalculation){
-            Translation2d physicalTarget = AllianceFlippable.getTargetSpeaker().getTranslation();
+            Translation2d physicalTarget = AllianceFlipUtil.getTargetSpeaker().getTranslation();
             rotationValue = SmartShooting.getRotationToPoint(swerve, pivot, shooter, physicalTarget, virtualCalculation, false, rotationController);
             translationValue.times(SwerveConstants.SHOOT_WHILE_MOVING_SCALAR);
 
@@ -98,7 +98,7 @@ public class SmartShootSequence extends Command{
         swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(translationValue, rotationValue));
         led.scaledTarget(Color.kGoldenrod, shooter.getRPM(), shooter.getTargetVelocity());
 
-        if(((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && Vision.getLockedToTarget(Limelight.SHOOTER)) || timeout.hasElapsed(2.0)) && shouldTimeout){
+        if(((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && Vision.getLockedToTarget(Limelight.SHOOT_SIDE)) || timeout.hasElapsed(2.0)) && shouldTimeout){
             conveyor.setConveyorOutput(ConveyorConstants.SHOOT_SPEED);
         }
     }

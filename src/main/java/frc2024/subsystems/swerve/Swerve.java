@@ -11,7 +11,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.pid.ScreamPIDConstants;
-import com.team4522.lib.util.AllianceFlippable;
+import com.team4522.lib.util.AllianceFlipUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.LinearFilter;
@@ -53,7 +53,6 @@ public class Swerve extends SubsystemBase {
     private SwerveDrivePoseEstimator m_poseEstimator;
     //private PoseEstimator m_poseEstimator;
     private OdometryThread m_odometryThread;
-    private ChassisSpeeds m_currentSpeeds = new ChassisSpeeds();
 
     private PIDController m_headingController = SwerveConstants.HEADING_CONSTANTS.toPIDController();
     private PIDController m_snapController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
@@ -86,7 +85,7 @@ public class Swerve extends SubsystemBase {
          * It uses these values to estimate the robot's position on the field.
          */
         m_poseEstimator = new SwerveDrivePoseEstimator(
-            SwerveConstants.POSE_ESTIMATOR_KINEMATICS, 
+            SwerveConstants.KINEMATICS, 
             getYaw(), 
             getModulePositions(), 
             new Pose2d(), 
@@ -164,11 +163,9 @@ public class Swerve extends SubsystemBase {
      * @param isOpenLoop Whether the ChassisSpeeds is open loop (Tele-Op driving), or closed loop (Autonomous driving).
      */
     public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, Translation2d centerOfRotationMeters, boolean isOpenLoop){
-        m_currentSpeeds = chassisSpeeds;
         SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds, centerOfRotationMeters);
 
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.MAX_SPEED);
-        m_currentSpeeds = SwerveConstants.KINEMATICS.toChassisSpeeds(swerveModuleStates);
 
         for (SwerveModule mod : m_swerveModules) {
             mod.set(swerveModuleStates[mod.getModuleNumber()], isOpenLoop);
@@ -220,6 +217,7 @@ public class Swerve extends SubsystemBase {
      * @param pose The new pose to set.
      */
     public void resetPose(Pose2d pose) {
+        resetYaw(Rotation2d.fromDegrees(0.0)); //TODO needs testing
         resetModulePositions();
         m_poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
     }
@@ -284,6 +282,10 @@ public class Swerve extends SubsystemBase {
         return SwerveConstants.KINEMATICS.toChassisSpeeds(getModuleStates());
     }
 
+    public ChassisSpeeds getFieldRelativeSpeeds(){
+        return ChassisSpeeds.fromRobotRelativeSpeeds(getRobotRelativeSpeeds(), getYaw());
+    }
+
     /**
      * Returns the odometry rotation in degrees.
      *
@@ -341,10 +343,14 @@ public class Swerve extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        /* if(Vision.getTimestampedVisionMeasurement(Limelight.SHOOTER).isPresent()){
-            TimestampedVisionMeasurement measurement = Vision.getTimestampedVisionMeasurement(Limelight.SHOOTER).get();
+        if(Vision.getTimestampedVisionMeasurement(Limelight.SHOOT_SIDE).isPresent()){
+            TimestampedVisionMeasurement measurement = Vision.getTimestampedVisionMeasurement(Limelight.SHOOT_SIDE).get();
             m_poseEstimator.addVisionMeasurement(measurement.pose(), measurement.timestamp());
-        } */
+        }
+        if(Vision.getTimestampedVisionMeasurement(Limelight.INTAKE_SIDE).isPresent()){
+            TimestampedVisionMeasurement measurement = Vision.getTimestampedVisionMeasurement(Limelight.SHOOT_SIDE).get();
+            m_poseEstimator.addVisionMeasurement(measurement.pose(), measurement.timestamp());
+        }
         // System.out.println(Units.metersToInches(Vision.getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER)));
     }
 

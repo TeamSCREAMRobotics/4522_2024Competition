@@ -19,7 +19,7 @@ import frc2024.RobotContainer;
 import frc2024.Constants.FieldConstants;
 import frc2024.subsystems.Vision.IntakePipeline;
 
-public final class AllianceFlippable {
+public final class AllianceFlipUtil {
 
     public static BooleanSupplier shouldFlip(){
         return () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;

@@ -24,6 +24,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.RobotContainer;
@@ -146,11 +149,25 @@ public class Pivot extends SubsystemBase{
         return run(() -> setPivotOutput(dutyCycle)).withName("DutyCycleCommand");
     }
 
+    public Command angleCommand(Supplier<Rotation2d> angle, boolean springyMode){
+        return run(() -> setTargetAngle(angle.get()))
+            .beforeStarting(
+                new ConditionalCommand(
+                    new InstantCommand(() ->  m_pivotMotor.getConfigurator().apply(PivotConstants.SPRINGY_CURRENT_CONFIG)), 
+                    new InstantCommand(() ->  m_pivotMotor.getConfigurator().apply(PivotConstants.DEFAULT_CURRENT_CONFIG)), 
+                    () -> springyMode))
+            .withName("AngleCommand | Springy: " + springyMode);
+    }
+
+    public Command angleCommand(Rotation2d angle, boolean springyMode){
+        return angleCommand(() -> angle, springyMode);
+    }
+
     public Command angleCommand(Rotation2d angle){
-        return run(() -> setTargetAngle(angle.plus(m_tweakAngle))).withName("AngleCommand");
+        return angleCommand(() -> angle, false);
     }
 
     public Command angleCommand(Supplier<Rotation2d> angle){
-        return run(() -> setTargetAngle(angle.get())).withName("AngleCommand[Supplier]");
+        return angleCommand(angle, false);
     }
 }

@@ -3,7 +3,7 @@ package com.team1706;
 import java.util.function.DoubleSupplier;
 
 import com.team4522.lib.math.Conversions;
-import com.team4522.lib.util.AllianceFlippable;
+import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.ScreamUtil;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -30,14 +30,14 @@ import frc2024.subsystems.swerve.Swerve;
 public class SmartShooting {
 
   public static final double GRAVITY = 9.80665;
-  public static final double xOffset = AllianceFlippable.Number(0.0, -0.0);
-  public static final double yOffset = AllianceFlippable.Number(0.35, -0.35);
+  public static final double xOffset = AllianceFlipUtil.Number(0.0, -0.0);
+  public static final double yOffset = AllianceFlipUtil.Number(0.35, -0.35);
   public static final double shotTimeOffset = 0.2;
 
   //1706 mock-up, shoot while moving from Rapid React 2022 Season
   public static Translation2d calculateVirtualTarget(Swerve swerve, Pivot pivot, Shooter shooter, Translation2d target){
     /* Uses the position only based on the AprilTags to match using the AprilTags to aim */
-    Translation2d currentPose = Vision.getBotPose2d(Limelight.SHOOTER).getTranslation(); /* swerve.getPose().getTranslation() */
+    Translation2d currentPose = Vision.getBotPose2d(Limelight.SHOOT_SIDE).getTranslation(); /* swerve.getPose().getTranslation() */
 
     /* Sets the field relative speed variables */
     ChassisSpeeds m_fieldRelVel = ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotRelativeSpeeds(), swerve.getHeading());
@@ -110,7 +110,7 @@ public class SmartShooting {
   //** Calculates the distance to a specified target based on the shooter side limelight */
   public static double getDistanceToTarget_SHOOTER(Swerve swerve, Translation2d target, double targetHeight){
     double pivotHeight = PivotConstants.AXLE_HEIGHT_HOME;
-    Translation2d currentPosition = Vision.getBotPose2d(Limelight.SHOOTER).getTranslation();
+    Translation2d currentPosition = Vision.getBotPose2d(Limelight.SHOOT_SIDE).getTranslation();
 
     double height_diff = targetHeight - pivotHeight;
     double horizontalDistance = currentPosition.getDistance(target);
@@ -149,7 +149,7 @@ public class SmartShooting {
       target = SmartShooting.calculateVirtualTarget(swerve, pivot, shooter, target);
     }
 
-    Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(Vision.getBotPose2d(Limelight.SHOOTER).getTranslation(), target);
+    Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(Vision.getBotPose2d(Limelight.SHOOT_SIDE).getTranslation(), target);
     /* Substract PI if the robot should face the point with the back of the robot */
     if(!front) targetAngle = targetAngle.minus(Rotation2d.fromRadians(Math.PI));
 

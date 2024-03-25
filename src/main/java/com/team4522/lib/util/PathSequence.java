@@ -39,7 +39,7 @@ public class PathSequence {
     }
 
     public IntakePipeline getIntakePipeline(){
-        return AllianceFlippable.getIntakePipeline(side);
+        return AllianceFlipUtil.getIntakePipeline(side);
     }
 
     private static PathPlannerPath getPath(String pathName){
@@ -51,7 +51,7 @@ public class PathSequence {
     }
 
     private static Pose2d getPathStartingPose(PathPlannerPath path){
-        return AllianceFlippable.MirroredPose2d(path.getPreviewStartingHolonomicPose());
+        return AllianceFlipUtil.MirroredPose2d(path.getPreviewStartingHolonomicPose());
     }
 
     public Pose2d getStartingPose(){

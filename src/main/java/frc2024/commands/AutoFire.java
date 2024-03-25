@@ -5,7 +5,7 @@ import java.util.function.DoubleSupplier;
 import com.pathplanner.lib.util.PIDConstants;
 import com.team1706.SmartShooting;
 import com.team4522.lib.math.Conversions;
-import com.team4522.lib.util.AllianceFlippable;
+import com.team4522.lib.util.AllianceFlipUtil;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -62,11 +62,11 @@ public class AutoFire extends Command{
     
     @Override
     public void execute() {
-        double rotationValue = Math.abs(Vision.getTX(Limelight.SHOOTER)) < 2.0 ? 0 : rotationController.calculate(Vision.getTX(Limelight.SHOOTER), 0.0);
-        Translation2d translationValue = translation == null ? new Translation2d() : new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
+        double rotationValue = Math.abs(Vision.getTX(Limelight.SHOOT_SIDE)) < 2.0 ? 0 : rotationController.calculate(Vision.getTX(Limelight.SHOOT_SIDE), 0.0);
+        Translation2d translationValue = translation == null ? new Translation2d() : new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlipUtil.getDirectionCoefficient());
         swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(translationValue, rotationValue));
 
-        if(Vision.getTV(Limelight.SHOOTER)){
+        if(Vision.getTV(Limelight.SHOOT_SIDE)){
             shooter.setTargetVelocity(calculateShotTrajectory(() -> elevator.getElevatorHeight()).velocityRPM());
             pivot.setTargetAngle(calculateShotTrajectory(() -> elevator.getElevatorHeight()).pivotAngle());
         }
@@ -87,7 +87,7 @@ public class AutoFire extends Command{
 
 
     public static double getDistanceToSpeaker(){
-        return Vision.getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER);
+        return Vision.getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOT_SIDE);
     }
 
     // From FRC 1757 Wolverines 
