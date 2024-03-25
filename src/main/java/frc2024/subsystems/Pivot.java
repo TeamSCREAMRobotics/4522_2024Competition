@@ -121,7 +121,7 @@ public class Pivot extends SubsystemBase{
             m_tweakAngle = m_tweakAngle.plus(Rotation2d.fromDegrees(1));
         }
         System.out.println(Controlboard.operatorController_Command.ge); */
-        //System.out.println("Encoder: " + getPivotAngle().getDegrees());
+        // System.out.println("Encoder: " + getPivotAngle().getDegrees());
         // System.out.println("Motor: " + Rotation2d.fromRotations(m_pivotMotor.getPosition().refresh().getValue()).getDegrees());
     }
 

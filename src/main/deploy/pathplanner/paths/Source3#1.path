@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.719320017812645,
-        "y": 3.103371684632099
+        "x": 3.0940667872776535,
+        "y": 3.1502150308152252
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8552711627534504,
-        "y": 1.7917579915045696
+        "x": 4.230017932218459,
+        "y": 1.8386013376876957
       },
       "isLocked": false,
       "linkedName": "Source3_0End"
     },
     {
       "anchor": {
-        "x": 8.27025654051308,
-        "y": 0.8666019043878308
+        "x": 8.281967377058862,
+        "y": 0.9602885967540827
       },
       "prevControl": {
-        "x": 8.281967377058862,
-        "y": 0.5738309907432926
+        "x": 8.293678213604645,
+        "y": 0.6675176831095445
       },
       "nextControl": {
-        "x": 8.255724076047894,
-        "y": 1.2299135160174497
+        "x": 8.267434912593677,
+        "y": 1.3236002083837017
       },
       "isLocked": false,
       "linkedName": null
@@ -48,12 +48,12 @@
     },
     {
       "anchor": {
-        "x": 2.543657469625922,
-        "y": 3.2087692135441324
+        "x": 3.0940667872776535,
+        "y": 3.583515983009141
       },
       "prevControl": {
-        "x": 3.8318494896618915,
-        "y": 2.2016372706069225
+        "x": 4.382258807313621,
+        "y": 2.576384040071931
       },
       "nextControl": null,
       "isLocked": false,
@@ -67,11 +67,23 @@
       "rotateFast": true
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.75,
+      "maxWaypointRelativePos": 1.2000000000000002,
+      "constraints": {
+        "maxVelocity": 3.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 570.0,
+        "maxAngularAcceleration": 500.0
+      }
+    }
+  ],
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.8,
+      "waypointRelativePos": 0.75,
       "command": {
         "type": "parallel",
         "data": {

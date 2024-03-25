@@ -214,14 +214,14 @@ public class Controlboard{
     public static final Trigger resetPivotAngle(){
         return new Trigger(() -> buttonBoard.getRawButton(4));
     }
-
+/* 
     public static final BooleanSupplier increasePivot(){
         return () -> operatorController_Command.getHID().getPOV() == 0.0;
     }
 
     public static final BooleanSupplier decreasePivot(){
         return () -> operatorController_Command.getHID().getPOV() == 180.0;
-    }
+    } */
 
     /* Elevator */
     public static final DoubleSupplier getManualElevatorOutput(){
@@ -230,6 +230,10 @@ public class Controlboard{
     
     public static final Trigger resetElevatorHeight(){
         return new Trigger(() -> buttonBoard.getRawButton(6));
+    }
+
+    public static final Trigger elevatorDown_MAX(){
+        return operatorController_Command.a();
     }
 
     /* Elevator AND Pivot */    

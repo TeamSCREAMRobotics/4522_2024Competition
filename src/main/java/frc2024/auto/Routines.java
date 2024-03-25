@@ -62,6 +62,7 @@ public class Routines {
     private static final PathSequence Source4Center = new PathSequence(Side.SOURCE, "Source4Center#1", "Source4Center#3");
     private static final PathSequence Amp4Center = new PathSequence(Side.AMP, "Amp4Center#1", "Amp4Center#2", "Amp4Center#3");
     private static final PathSequence SweepCenter = new PathSequence(Side.SOURCE, "SweepCenter#1", "SweepCenter#2");
+    private static final PathSequence Sweep2_Source = new PathSequence(Side.SOURCE, "Sweep2#1", "3Sweep#2");
     private static final PathSequence Sweep3_Source = new PathSequence(Side.SOURCE, "SweepCenter#1", "3Sweep#1", "3Sweep#2");
     private static final PathSequence Amp5Center_2 = new PathSequence(Side.AMP, "Amp5Center#1", "Amp5Center#2", "Amp5Center#3", "Amp5Center#4");
     private static final PathSequence Source3_NoStage = new PathSequence(Side.SOURCE, "Source3#0", "Source3#1", "Source3#2");
@@ -295,6 +296,27 @@ public class Routines {
             ),
             shooter.stopCommand().alongWith(conveyor.stopCommand()),
             Sweep3_Source.getIndex(2),
+            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor, led),
+            printTimer()
+        );
+    }
+
+    public static Command Sweep2_Source(Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
+        currentSequence = Sweep2_Source;
+        return new SequentialCommandGroup(
+            startTimer(),
+            swerve.resetPoseCommand(Sweep2_Source.getStartingPose()),
+            new ParallelRaceGroup(
+                intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT),
+                pivot.angleCommand(PivotConstants.HOME_ANGLE),
+                elevator.heightCommand(ElevatorConstants.HOME_HEIGHT),
+                shooter.dutyCycleCommand(0.2),
+                conveyor.dutyCycleCommand(1.0),
+                Sweep2_Source.getIndex(0)
+                .andThen(new WaitCommand(0.5))
+            ),
+            shooter.stopCommand().alongWith(conveyor.stopCommand()),
+            Sweep2_Source.getIndex(1),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor, led),
             printTimer()
         );

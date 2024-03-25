@@ -95,16 +95,16 @@ public class Robot extends LoggedRobot {
         break;
       case REPLAY:
         //setUseTiming(false); // Run as fast as possible
-        //String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-        //Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
-        //Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
-        //Logger.start();
+        /* String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+        Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
+        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+        Logger.start(); */
         break;
       case SIM, DEV:
         break;
       default:
         break;
-    } 
+    }
 
     robotContainer = new RobotContainer();
     timeSinceDisabled.reset();

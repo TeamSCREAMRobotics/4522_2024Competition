@@ -10,10 +10,11 @@
     "4AmpSide_Close",
     "4Source_Center",
     "4SubSide_Center",
-    "6AmpSide_NoStage",
     "6AmpSide_Center",
+    "6AmpSide_NoStage",
     "7AmpSide_Center",
-    "CenterPiecePathfinding"
+    "CenterPiecePathfinding",
+    "2Sweep_Source"
   ],
   "autoFolders": [],
   "defaultMaxVel": 4.98,

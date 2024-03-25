@@ -47,7 +47,7 @@ public final class Constants{
         COMP, REPLAY, SIM, DEV;
     }
 
-    public static final RobotMode MODE = RobotMode.DEV;
+    public static final RobotMode MODE = RobotMode.COMP;
 
     /* Robot loop time */
     public static final double LOOP_TIME_SEC = 0.02;
@@ -448,7 +448,7 @@ public final class Constants{
         public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(29.0039);
         public static final Rotation2d CHAIN_ANGLE = Rotation2d.fromDegrees(22.93945); //+4.25
         public static final Rotation2d PODIUM_ANGLE = Rotation2d.fromDegrees(13.7988);
-        public static final Rotation2d PODIUM_DEFENDED_ANGLE = Rotation2d.fromDegrees(24.1699);
+        public static final Rotation2d PODIUM_DEFENDED_ANGLE = Rotation2d.fromDegrees(24.1699 + 2.25);
         public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(48.516 /* 56.0742 */);
         public static final Rotation2d AMP5_CLOSESHOTS = Rotation2d.fromDegrees(16.25);
         public static final Rotation2d EJECT_ANGLE = CHAIN_ANGLE;
