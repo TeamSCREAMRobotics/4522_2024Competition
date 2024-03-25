@@ -5,7 +5,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-import com.team4522.lib.util.AllianceFlippable;
+import com.team4522.lib.util.AllianceFlipUtil;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -65,8 +65,8 @@ public class TeleopDrive extends Command {
         boolean fieldRelative = fieldRelativeSup.getAsBoolean();
         Translation2d translationValue = 
             slowModeSup.getAsBoolean() 
-            ? new Translation2d(translationSup[0].getAsDouble()*0.5, translationSup[1].getAsDouble()*0.5).times(SwerveConstants.MAX_SPEED * (fieldRelative ? AllianceFlippable.getDirectionCoefficient() : 1))
-            : new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * (fieldRelative ? AllianceFlippable.getDirectionCoefficient() : 1));
+            ? new Translation2d(translationSup[0].getAsDouble()*0.5, translationSup[1].getAsDouble()*0.5).times(SwerveConstants.MAX_SPEED * (fieldRelative ? AllianceFlipUtil.getDirectionCoefficient() : 1))
+            : new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * (fieldRelative ? AllianceFlipUtil.getDirectionCoefficient() : 1));
         double rotationValue = rotationSup.getAsDouble() * SwerveConstants.MAX_ANGULAR_VELOCITY;//getRotation(rotationSup.getAsDouble());
 
         //if(Controlboard.driverController_Command.getHID().getBackButtonPressed()) lastAngle = AllianceFlippable.getForwardRotation();

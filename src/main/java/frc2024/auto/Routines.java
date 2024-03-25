@@ -7,7 +7,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.PathPlannerLogging;
-import com.team4522.lib.util.AllianceFlippable;
+import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.PathSequence;
 import com.team4522.lib.util.ScreamUtil;
 import com.team4522.lib.util.PathSequence.Side;
@@ -88,7 +88,7 @@ public class Routines {
     public static Command testAuto(Swerve swerve){
         PathPlannerPath path = PathPlannerPath.fromPathFile("Test");
         return new SequentialCommandGroup(
-            swerve.resetPoseCommand(AllianceFlippable.MirroredPose2d(path.getPreviewStartingHolonomicPose())),
+            swerve.resetPoseCommand(AllianceFlipUtil.MirroredPose2d(path.getPreviewStartingHolonomicPose())),
             AutoBuilder.followPath(path)
         );
     }
@@ -132,7 +132,7 @@ public class Routines {
                         swerve.overrideRotationTargetCommand(
                             () -> ScreamUtil.calculateAngleToPoint(
                                 swerve.getPose().getTranslation(), 
-                                AllianceFlippable.getTargetSpeaker().getTranslation()).plus(new Rotation2d(Math.PI))))
+                                AllianceFlipUtil.getTargetSpeaker().getTranslation()).plus(new Rotation2d(Math.PI))))
                     .alongWith(elevator.heightCommand(ElevatorConstants.HOME_HEIGHT))
                     .alongWith(intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT))
                     .alongWith(conveyor.dutyCycleCommand(ConveyorConstants.TRANSFER_OUTPUT))
@@ -185,7 +185,7 @@ public class Routines {
         return new SequentialCommandGroup(
             startTimer(),
             swerve.resetPoseCommand(Source4Center.getStartingPose()),
-            new FacePoint(swerve, new DoubleSupplier[]{() -> 0, () -> 0}, AllianceFlippable.getTargetSpeaker().getTranslation(), false).withTimeout(0.5),
+            new FacePoint(swerve, new DoubleSupplier[]{() -> 0, () -> 0}, AllianceFlipUtil.getTargetSpeaker().getTranslation(), false).withTimeout(0.5),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor, led),
             Source4Center.getIndex(0),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor, led),

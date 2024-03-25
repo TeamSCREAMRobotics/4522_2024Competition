@@ -20,7 +20,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.team4522.lib.config.DeviceConfig;
-import com.team4522.lib.util.AllianceFlippable;
+import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.OrchestraUtil;
 import com.team4522.lib.util.RunOnce;
 import com.team4522.lib.util.RunUntil;
@@ -119,7 +119,7 @@ public class Robot extends LoggedRobot {
       () -> {
         RobotContainer.getSwerve().configureAutoBuilder();
         RobotContainer.configAuto();
-        Vision.setPriorityTagID((int) AllianceFlippable.Number(7, 4), Limelight.SHOOTER);
+        Vision.setPriorityTagID((int) AllianceFlipUtil.Number(7, 4), Limelight.SHOOT_SIDE);
         System.out.println("Ready To Enable");
       },
       DriverStation.getAlliance().isPresent());

@@ -1,14 +1,18 @@
 package frc2024;
 
+import javax.swing.Spring;
+
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 import com.team4522.lib.pid.ScreamPIDConstants;
-import com.team4522.lib.util.AllianceFlippable;
+import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.COTSFalconSwerveConstants;
 import com.team4522.lib.util.ScreamUtil;
 import com.team4522.lib.util.ShootStateInterpolatingTreeMap;
@@ -53,6 +57,8 @@ public final class Constants{
     public static final double LOOP_TIME_SEC = 0.02;
     public static final double LOOP_TIME_HZ = 1 / LOOP_TIME_SEC;
     public static final double DEVICE_LOOP_TIME_HZ = 100.0;
+
+    public static final double GRAVITY = 9.80665;
 
     public static final class Ports {
         /** Possible CAN bus strings are:
@@ -329,7 +335,7 @@ public final class Constants{
         public static final int SUPPLY_CURRENT_LIMIT = 10;
         public static final int SUPPLY_CURRENT_THRESHOLD = 10;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
-        public static final boolean CURRENT_LIMIT_ENABLE = true;
+        public static final boolean CURRENT_LIMIT_ENABLE = false;
         
         public static final double CRUISE_VELOCITY = 15;
         public static final double ACCELERATION = 5;
@@ -362,7 +368,7 @@ public final class Constants{
         public static final int SUPPLY_CURRENT_LIMIT = 40;
         public static final int SUPPLY_CURRENT_THRESHOLD = 50;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
-        public static final boolean CURRENT_LIMIT_ENABLE = true;
+        public static final boolean CURRENT_LIMIT_ENABLE = false;
 
         public static final double CRUISE_VELOCITY = 10;
         public static final double ACCELERATION = 5;
@@ -413,7 +419,23 @@ public final class Constants{
         public static final int SUPPLY_CURRENT_LIMIT = 35;
         public static final int SUPPLY_CURRENT_THRESHOLD = 60;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
-        public static final boolean CURRENT_LIMIT_ENABLE = true;
+        public static final boolean CURRENT_LIMIT_ENABLE = false;
+
+        public static final CurrentLimitsConfigs DEFAULT_CURRENT_CONFIG = new CurrentLimitsConfigs();
+        static{
+            DEFAULT_CURRENT_CONFIG.SupplyCurrentLimitEnable = true;
+            DEFAULT_CURRENT_CONFIG.SupplyCurrentLimit = SUPPLY_CURRENT_LIMIT;
+            DEFAULT_CURRENT_CONFIG.SupplyCurrentThreshold = SUPPLY_CURRENT_THRESHOLD;
+            DEFAULT_CURRENT_CONFIG.SupplyTimeThreshold = SUPPLY_TIME_THRESHOLD;
+        }
+
+        public static final CurrentLimitsConfigs SPRINGY_CURRENT_CONFIG = new CurrentLimitsConfigs();
+        static{
+            SPRINGY_CURRENT_CONFIG.StatorCurrentLimitEnable = true;
+            SPRINGY_CURRENT_CONFIG.SupplyCurrentLimitEnable = true;
+            SPRINGY_CURRENT_CONFIG.StatorCurrentLimit = 20;
+            SPRINGY_CURRENT_CONFIG.SupplyCurrentLimit = 5;
+        }
         
         public static final boolean SOFTWARE_LIMIT_ENABLE = false;
         public static final boolean SOFTWARE_LIMIT_ENABLE_ENDGAME = true;
@@ -463,6 +485,8 @@ public final class Constants{
         public static final double AXLE_DISTANCE_FROM_ELEVATOR_TOP = Units.inchesToMeters(9.975600);
         public static final double AXLE_DISTANCE_FROM_LENS_HOME = Units.inchesToMeters(9.189772);
         public static final double AXLE_DISTANCE_FROM_LENS_TOP = Units.inchesToMeters(12.966620);
+        public static final double AXLE_DISTANCE_FROM_ROBOT_CENTER_HOME = Units.inchesToMeters(2.840333);
+        public static final double AXLE_DISTANCE_FROM_ROBOT_CENTER_TOP = Units.inchesToMeters(6.617781);
         public static final double SHOOTER_DISTANCE_FROM_AXLE = Units.inchesToMeters(3.100600);
     }
 
@@ -479,7 +503,7 @@ public final class Constants{
         public static final int SUPPLY_CURRENT_LIMIT = 35;
         public static final int SUPPLY_CURRENT_THRESHOLD = 50;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
-        public static final boolean CURRENT_LIMIT_ENABLE = true;
+        public static final boolean CURRENT_LIMIT_ENABLE = false;
         
         public static final boolean SOFTWARE_LIMIT_ENABLE = true;
         public static final double FORWARD_SOFT_LIMIT = 3.1;
@@ -530,9 +554,9 @@ public final class Constants{
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
         
         /* Current Limits */
-        public static final int SUPPLY_CURRENT_LIMIT = 25;
-        public static final int SUPPLY_CURRENT_THRESHOLD = 40;
-        public static final double SUPPLY_TIME_THRESHOLD = 0.1;
+        public static final int SUPPLY_CURRENT_LIMIT = 30;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 0;
+        public static final double SUPPLY_TIME_THRESHOLD = 0;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
 
         public static final double INTAKE_OUTPUT = 0.8;
@@ -551,9 +575,9 @@ public final class Constants{
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
         
         /* Current Limits */
-        public static final int SUPPLY_CURRENT_LIMIT = 35;
-        public static final int SUPPLY_CURRENT_THRESHOLD = 60;
-        public static final double SUPPLY_TIME_THRESHOLD = 0.1;
+        public static final int SUPPLY_CURRENT_LIMIT = 30;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 0;
+        public static final double SUPPLY_TIME_THRESHOLD = 0;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
         public static final double SHOOT_SPEED = 1.00;
@@ -605,6 +629,12 @@ public final class Constants{
         // Center Sub: tx: +11.49° ty: +14.05° ta: +0.394% Distance: ~53.353 inches
         // Flat and Center Against Podium: tx: -19.78° ty: -5.76° ta: +0.164% Distance: ~117.163 inches
         // Centered with Sub Against Truss: tx: +5.92° ty: -16.69° ta: +0.065% Distance : ~236.77 inches
+
+        public static final InterpolatingDoubleTreeMap ELEVATOR_HEIGHT_MAP = new InterpolatingDoubleTreeMap();
+        static{
+            ELEVATOR_HEIGHT_MAP.put(3.9103, ElevatorConstants.SUBWOOFER_HEIGHT);
+            ELEVATOR_HEIGHT_MAP.put(4.9169, 0.0);
+        }
 
         public static final ShootStateInterpolatingTreeMap SHOOT_STATE_MAP = new ShootStateInterpolatingTreeMap();
         static{
@@ -677,14 +707,14 @@ public final class Constants{
         };
 
         public static final Translation2d BLUE_PODIUM = new Translation2d(2.737, 4.131913);
-        public static final Translation2d RED_PODIUM = AllianceFlippable.MirroredTranslation2d(BLUE_PODIUM);
+        public static final Translation2d RED_PODIUM = AllianceFlipUtil.MirroredTranslation2d(BLUE_PODIUM);
         
         public static final Translation2d BLUE_STAGE_LEFT = new Translation2d(4.65, 3.73);
         public static final Translation2d BLUE_STAGE_MID = new Translation2d(5.33, 4.19);
         public static final Translation2d BLUE_STAGE_RIGHT = new Translation2d(4.65, 4.51);
-        public static final Translation2d RED_STAGE_LEFT = AllianceFlippable.MirroredTranslation2d(BLUE_STAGE_LEFT);
-        public static final Translation2d RED_STAGE_MID = AllianceFlippable.MirroredTranslation2d(BLUE_STAGE_MID);
-        public static final Translation2d RED_STAGE_RIGHT = AllianceFlippable.MirroredTranslation2d(BLUE_STAGE_RIGHT);
+        public static final Translation2d RED_STAGE_LEFT = AllianceFlipUtil.MirroredTranslation2d(BLUE_STAGE_LEFT);
+        public static final Translation2d RED_STAGE_MID = AllianceFlipUtil.MirroredTranslation2d(BLUE_STAGE_MID);
+        public static final Translation2d RED_STAGE_RIGHT = AllianceFlipUtil.MirroredTranslation2d(BLUE_STAGE_RIGHT);
 
         public static final Translation2d BLUE_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(7).get().getTranslation().toTranslation2d();
         public static final Translation2d RED_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(4).get().getTranslation().toTranslation2d();

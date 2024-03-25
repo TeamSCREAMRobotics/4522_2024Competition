@@ -10,7 +10,7 @@ import org.photonvision.PhotonUtils;
 
 import com.team1706.FieldRelativeAccel;
 import com.team1706.SmartShooting;
-import com.team4522.lib.util.AllianceFlippable;
+import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.ScreamUtil;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -76,7 +76,7 @@ public class FacePoint extends Command {
       target = SmartShooting.calculateVirtualTarget(swerve, pivot, shooter, target);
     }
 
-    Translation2d drivingTranslation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
+    Translation2d drivingTranslation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlipUtil.getDirectionCoefficient());
 
     targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getPose().getTranslation(), target);
     /* Substract PI if the robot should face the point with the back of the robot */

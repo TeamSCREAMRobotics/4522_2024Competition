@@ -2,7 +2,7 @@
 package frc2024.dashboard.tabs;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.team4522.lib.util.AllianceFlippable;
+import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.RunOnce;
 
 import edu.wpi.first.networktables.GenericEntry;

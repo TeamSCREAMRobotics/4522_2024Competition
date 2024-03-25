@@ -8,7 +8,7 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import com.team4522.lib.pid.ScreamPIDConstants;
-import com.team4522.lib.util.AllianceFlippable;
+import com.team4522.lib.util.AllianceFlipUtil;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -50,7 +50,7 @@ public class FaceVisionTarget extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() { 
-    Translation2d translationValue = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
+    Translation2d translationValue = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlipUtil.getDirectionCoefficient());
     double rotationValue = Math.abs(Vision.getTX(limelight)) < 2.0 ? 0 : rotController.calculate(Vision.getTX(limelight), 0.0);
 
     swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(translationValue, rotationValue));

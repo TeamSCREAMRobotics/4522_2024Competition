@@ -15,7 +15,7 @@ import org.photonvision.PhotonUtils;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.team4522.lib.util.AllianceFlippable;
+import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.OrchestraUtil;
 import com.team4522.lib.util.ScreamUtil;
 
@@ -56,6 +56,7 @@ import frc2024.commands.AutoShootSequence;
 import frc2024.commands.RehomeSuperstructure;
 import frc2024.commands.SmartShootSequence;
 import frc2024.commands.FeedForwardCharacterization;
+import frc2024.commands.PoseAutoFire;
 import frc2024.commands.SuperstructureToPosition;
 import frc2024.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import frc2024.commands.intake.AutoIntakeFloor;
@@ -109,7 +110,7 @@ public class RobotContainer {
      * Configures button bindings from Controlboard.
      */
     private void configButtonBindings() {
-        Controlboard.zeroGyro().onTrue(Commands.runOnce(() -> m_swerve.resetHeading(AllianceFlippable.getForwardRotation())));
+        Controlboard.zeroGyro().onTrue(Commands.runOnce(() -> m_swerve.resetHeading(AllianceFlipUtil.getForwardRotation())));
         //Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, new Rotation2d()))));
 
         Controlboard.snapAnglePresent()
@@ -190,8 +191,7 @@ public class RobotContainer {
             .whileTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.AMP)
                     .andThen(
-                        new SuperstructureToPosition(SuperstructureState.AMP, m_elevator, m_pivot)
-                    .alongWith()))
+                        new SuperstructureToPosition(SuperstructureState.AMP, true, m_elevator, m_pivot)))
             .onFalse(goHome("Amp"));
 
         Controlboard.goToPodiumPosition()
@@ -200,7 +200,7 @@ public class RobotContainer {
                     .andThen(
                         new SuperstructureToPosition(SuperstructureState.PODIUM, m_elevator, m_pivot)
                             .alongWith(m_shooter.velocityCommand(ShooterConstants.PODIUM_VELOCITY)))
-                                .alongWith(new SnappedDrive(m_swerve, Controlboard.getTranslation(), () -> AllianceFlippable.Number(-18.0, -162.0), Controlboard.getSlowMode())))
+                                .alongWith(new SnappedDrive(m_swerve, Controlboard.getTranslation(), () -> AllianceFlipUtil.Number(-18.0, -162.0), Controlboard.getSlowMode())))
             .onFalse(goHome("Podium"));
 
         Controlboard.goToChainPosition()
@@ -240,7 +240,7 @@ public class RobotContainer {
                     .andThen(
                         m_elevator.heightCommand(ElevatorConstants.TRAP_CHAIN_HEIGHT))
                     .alongWith(
-                        m_pivot.angleCommand(PivotConstants.HOME_ANGLE))
+                        m_pivot.angleCommand(PivotConstants.HOME_ANGLE, true))
                     .alongWith(
                         m_stabilizers.outputCommand(StabilizerConstants.OUT_OUTPUT)
                             .withTimeout(1)
@@ -260,14 +260,14 @@ public class RobotContainer {
             .whileTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.AUTO_FIRE)
                     .andThen(
-                        new SmartShootSequence(Controlboard.getTranslation(), false, true, m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_led).onlyIf(() -> Vision.getTV(Limelight.SHOOTER))))
+                        new SmartShootSequence(Controlboard.getTranslation(), false, true, m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_led).onlyIf(() -> Vision.getTV(Limelight.SHOOT_SIDE))))
             .onFalse(goHome("AutoFire"));
 
         Controlboard.autoFire().and(m_conveyor.hasPiece(false)).and(Controlboard.virtualAutoFire().negate())
             .whileTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.AUTO_FIRE)
                     .andThen(
-                        new AutoFire(Controlboard.getTranslation(), m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_led)))
+                        new PoseAutoFire(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led)))
             .onFalse(goHome("AutoFire"));
 
         Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece(false)).negate())
@@ -277,7 +277,7 @@ public class RobotContainer {
                 )
                     .onFalse(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()));
 
-        new Trigger(() -> (m_conveyor.hasPiece(false).getAsBoolean() || m_conveyor.hasPiece(true).getAsBoolean()))
+        new Trigger(m_conveyor.hasPiece(false))
             .and(Controlboard.intakeFromFloor().or(Controlboard.intakeFromFloorEndgame()))
             .onTrue(
                 Controlboard.driverRumbleCommand(RumbleType.kBothRumble, 0.8, 0.2)
@@ -324,8 +324,6 @@ public class RobotContainer {
             .whileTrue(m_conveyor.scoreCommand())
                 .onFalse(m_conveyor.stopCommand());
 
-        new Trigger(() -> Timer.getMatchTime() < 20.0).onTrue(m_led.strobeCommand(Color.kWhite, 0.1).withTimeout(1));
-
         Controlboard.prepShot()
             .whileTrue(m_shooter.velocityCommand(3000))
             .onFalse(m_shooter.idleCommand());
@@ -341,8 +339,15 @@ public class RobotContainer {
                 m_stabilizers.outputCommand(Controlboard.getManualClimberOutput()))
             .onTrue(new InstantCommand(() -> m_led.setDefaultCommand(m_led.rainbowCommand(10, 1.5)))
                 .andThen(m_led.rainbowCommand(10, 1.5)))
-            .onFalse(new InstantCommand(() -> m_led.setDefaultCommand(m_led.waveCommand(() -> (Color) AllianceFlippable.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, 22, 2)))
-                .andThen(m_led.waveCommand(() -> (Color) AllianceFlippable.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, 22, 2)));
+            .onFalse(new InstantCommand(() -> m_led.setDefaultCommand(m_led.waveCommand(() -> (Color) AllianceFlipUtil.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, 22, 2)))
+                .andThen(m_led.waveCommand(() -> (Color) AllianceFlipUtil.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, 22, 2)));
+
+        new Trigger(() -> Timer.getMatchTime() < 20.0).onTrue(m_led.strobeCommand(Color.kWhite, 0.1).withTimeout(1));
+
+        new Trigger(() -> ScreamUtil.calculateDistanceToTranslation(m_swerve.getPose().getTranslation(), AllianceFlipUtil.getTargetSpeaker().getTranslation()) < 6.0)
+            .and(m_conveyor.hasPiece(false))
+            .and(Controlboard.endGameMode().negate())
+            .whileTrue(m_shooter.velocityCommand(3000).repeatedly());
     }
 
     private void configDefaultCommands() { 
@@ -357,7 +362,7 @@ public class RobotContainer {
         );
 
         m_led.setDefaultCommand(
-            m_led.waveCommand(() -> (Color) AllianceFlippable.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, 22, 2)
+            m_led.waveCommand(() -> (Color) AllianceFlipUtil.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, 22, 2)
         );
     }
 

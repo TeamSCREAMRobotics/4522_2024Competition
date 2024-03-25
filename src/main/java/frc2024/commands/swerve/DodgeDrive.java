@@ -4,7 +4,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-import com.team4522.lib.util.AllianceFlippable;
+import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.ScreamUtil;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -33,7 +33,7 @@ public class DodgeDrive extends Command{
         this.rotationSup = rotationSup;
         this.dodgeDirection = direction;
         this.slowModeSup = slowMode;
-        allianceFlip = AllianceFlippable.getForwardRotation();
+        allianceFlip = AllianceFlipUtil.getForwardRotation();
     }
 
     @Override
@@ -45,8 +45,8 @@ public class DodgeDrive extends Command{
     public void execute() {
         Translation2d translationValue = 
             slowModeSup.getAsBoolean() 
-            ? new Translation2d(translationSup[0].getAsDouble()*0.5, translationSup[1].getAsDouble()*0.5).times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient())
-            : new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlippable.getDirectionCoefficient());
+            ? new Translation2d(translationSup[0].getAsDouble()*0.5, translationSup[1].getAsDouble()*0.5).times(SwerveConstants.MAX_SPEED * AllianceFlipUtil.getDirectionCoefficient())
+            : new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlipUtil.getDirectionCoefficient());
         double rotationValue = rotationSup.getAsDouble() * SwerveConstants.MAX_ANGULAR_VELOCITY;
         
         ChassisSpeeds targetSpeeds;

@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 
 import javax.swing.text.html.Option;
 
-import com.team4522.lib.util.AllianceFlippable;
+import com.team4522.lib.util.AllianceFlipUtil;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -84,11 +84,11 @@ public class Controlboard{
             if(driverController_Command.getHID().getAButton()){
                 return 90.0;
             } else if(driverController_Command.getHID().getYButton()){
-                return AllianceFlippable.Number(0.0, 180.0);
+                return AllianceFlipUtil.Number(0.0, 180.0);
             } else if(driverController_Command.getHID().getBButton()){
-                return AllianceFlippable.Number(60.0, -120.0);
+                return AllianceFlipUtil.Number(60.0, -120.0);
             } else if(driverController_Command.getHID().getXButton()){
-                return AllianceFlippable.Number(-60.0, 120.0);
+                return AllianceFlipUtil.Number(-60.0, 120.0);
             } else {
                 return -1.0;
             }

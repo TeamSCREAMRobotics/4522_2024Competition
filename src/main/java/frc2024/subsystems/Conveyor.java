@@ -63,8 +63,8 @@ public class Conveyor extends SubsystemBase{
         return m_conveyorMotor.getVelocity().getValueAsDouble()*60;
     }
     
-    public BooleanSupplier hasPiece(boolean endgame){
-        return endgame ? () -> m_beamDebouncer.calculate(!m_beam.get()) : () -> !m_beam.get();
+    public BooleanSupplier hasPiece(boolean trapBeam){
+        return trapBeam ? () -> m_beamDebouncer.calculate(!m_beam.get()) : () -> !m_beam.get();
     }
 
     public void stop(){

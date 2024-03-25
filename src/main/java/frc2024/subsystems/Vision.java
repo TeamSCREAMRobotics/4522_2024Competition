@@ -6,7 +6,7 @@ import java.util.OptionalDouble;
 
 import org.photonvision.PhotonUtils;
 
-import com.team4522.lib.util.AllianceFlippable;
+import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.LimelightHelpers;
 import com.team4522.lib.util.RunOnce;
 import com.team4522.lib.util.ScreamUtil;
@@ -48,8 +48,8 @@ public class Vision{
 
     public enum Limelight{
         TRAP("limelight-trap", new Pose3d()), 
-        SHOOTER("limelight-shooter", new Pose3d(0.286, -0.162, 0.233, new Rotation3d(0, Math.toRadians(27), Math.toRadians(180.0)))), // z: 0.220615
-        INTAKE("limelight-intake", new Pose3d());
+        SHOOT_SIDE("limelight-shooter", new Pose3d(0.286, -0.162, 0.233, new Rotation3d(0, Math.toRadians(27), Math.toRadians(180.0)))), // z: 0.220615
+        INTAKE_SIDE("limelight-intake", new Pose3d());
 
         String name;
         Pose3d mountPose;
@@ -137,7 +137,7 @@ public class Vision{
     }
 
     public static double getDistanceToTargetMeters(double targetHeight, Limelight limelight){
-        double goal_theta = limelight.mountPose.getRotation().getY() + Math.toRadians(getTY(Limelight.SHOOTER));
+        double goal_theta = limelight.mountPose.getRotation().getY() + Math.toRadians(getTY(Limelight.SHOOT_SIDE));
         double height_diff = targetHeight - limelight.mountPose.getZ();
 
         return height_diff / Math.tan(goal_theta);
@@ -145,7 +145,7 @@ public class Vision{
 
     public static double getFusedDistanceToSpeaker(Limelight limelight, Pose2d currentPose){
         double sum;
-        sum = ScreamUtil.calculateDistanceToTranslation(currentPose.getTranslation(), AllianceFlippable.getTargetSpeaker().getTranslation());
+        sum = ScreamUtil.calculateDistanceToTranslation(currentPose.getTranslation(), AllianceFlipUtil.getTargetSpeaker().getTranslation());
         if(getTV(limelight)){
             sum += getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, limelight);
             return sum / 2;
@@ -197,11 +197,11 @@ public class Vision{
     }
 
     public static void setPipeline(IntakePipeline pipeline){
-        setPipeline(Limelight.INTAKE, pipeline.index);
+        setPipeline(Limelight.INTAKE_SIDE, pipeline.index);
     }
 
     public static void setPipeline(FrontPipeline pipeline){
-        setPipeline(Limelight.SHOOTER, pipeline.index);
+        setPipeline(Limelight.SHOOT_SIDE, pipeline.index);
     }
 
     public static void setPipeline(BackPipeline pipeline){
@@ -209,7 +209,7 @@ public class Vision{
     }
 
     public static void periodic() {
-        if(!getTV(Limelight.SHOOTER)){
+        if(!getTV(Limelight.SHOOT_SIDE)){
             filterReset.runOnce(
                 () -> {
                     txFilter.reset();
