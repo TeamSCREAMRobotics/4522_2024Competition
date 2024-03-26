@@ -396,7 +396,8 @@ public final class Constants{
         public static final double PODIUM_VELOCITY = 3500.0;
         public static final double IDLE_VELOCITY = 1000.0;
 
-        public static final double TRAJECTORY_VELOCITY_EXTRA = 1800; //2000.0;
+        public static final double TRAJECTORY_VELOCITY_EXTRA = 1800;
+        public static final double ARBITRARY_VELOCITY_EXTRA = 0.0;
 
         public static final double SHOOT_OUTPUT = 0.8;
         public static final double EJECT_OUTPUT = 0.25;//0.5;

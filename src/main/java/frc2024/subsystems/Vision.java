@@ -39,13 +39,6 @@ import frc2024.Constants.VisionConstants;
 
 public class Vision{
 
-    private static final LinearFilter txFilter = LinearFilter.movingAverage(8);
-    private static final LinearFilter tyFilter = LinearFilter.movingAverage(8);
-    private static final LinearFilter taFilter = LinearFilter.movingAverage(8);
-    private static final LinearFilter distanceFilter = LinearFilter.movingAverage(5);
-
-    private static final RunOnce filterReset = new RunOnce();
-
     public enum Limelight{
         TRAP("limelight-trap", new Pose3d()), 
         SHOOT_SIDE("limelight-shooter", new Pose3d(0.286, -0.162, 0.233, new Rotation3d(0, Math.toRadians(27), Math.toRadians(180.0)))), // z: 0.220615
@@ -97,15 +90,15 @@ public class Vision{
     }
 
     public static double getTX(Limelight limelight){
-        return txFilter.calculate(LimelightHelpers.getTX(limelight.name));
+        return LimelightHelpers.getTX(limelight.name);
     }
 
     public static double getTY(Limelight limelight){
-        return tyFilter.calculate(LimelightHelpers.getTY(limelight.name));
+        return LimelightHelpers.getTY(limelight.name);
     }
 
     public static double getTA(Limelight limelight){
-        return taFilter.calculate(LimelightHelpers.getTA(limelight.name));
+        return LimelightHelpers.getTA(limelight.name);
     }
 
     public static boolean getTV(Limelight limelight){
@@ -209,17 +202,6 @@ public class Vision{
     }
 
     public static void periodic() {
-        if(!getTV(Limelight.SHOOT_SIDE)){
-            filterReset.runOnce(
-                () -> {
-                    txFilter.reset();
-                    tyFilter.reset();
-                    taFilter.reset();
-                    distanceFilter.reset();
-                });
-        } else {
-            filterReset.reset();
-        }
         // System.out.println(Units.metersToInches(getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER)));
     }
 

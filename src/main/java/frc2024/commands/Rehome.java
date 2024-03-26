@@ -10,12 +10,12 @@ import frc2024.Constants.PivotConstants;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Pivot;
 
-public class RehomeSuperstructure extends Command {
+public class Rehome extends Command {
 
   Elevator elevator;
   Pivot pivot;
 
-  public RehomeSuperstructure(Elevator elevator, Pivot pivot) {
+  public Rehome(Elevator elevator, Pivot pivot) {
     addRequirements(elevator, pivot);
 
     this.elevator = elevator;

@@ -105,12 +105,12 @@ public class PoseAutoFire extends Command {
 
   private ShootState calculateShootState(){
     Rotation2d baseAngle = new Translation2d(calculateHorizontalDistance(), FieldConstants.SPEAKER_OPENING_HEIGHT).minus(calculateAbsolutePivotPosition()).getAngle();
-    Rotation2d adjustedAngle = Rotation2d.fromDegrees(MathUtil.clamp(-baseAngle.getDegrees() + PivotConstants.RELATIVE_ENCODER_TO_HORIZONTAL.getDegrees(), 1, 45)).plus(calculatePivotAngleAdjustment());
+    double adjustedAngle = MathUtil.clamp((-baseAngle.getDegrees() + PivotConstants.RELATIVE_ENCODER_TO_HORIZONTAL.getDegrees()) + calculatePivotAngleAdjustment().getDegrees(), PivotConstants.SUBWOOFER_ANGLE.getDegrees(), 45);
 
     double tof = calculateTOF();
-    double velocityRPM = MathUtil.clamp(Conversions.mpsToFalconRPS(calculateHorizontalDistance() / tof, ShooterConstants.WHEEL_CIRCUMFERENCE, 1.0) * 60.0, ShooterConstants.SUBWOOFER_VELOCITY, ShooterConstants.SHOOTER_MAX_VELOCITY);
+    double velocityRPM = MathUtil.clamp((Conversions.mpsToFalconRPS(calculateHorizontalDistance() / tof, ShooterConstants.WHEEL_CIRCUMFERENCE, 1.0) * 60.0) + ShooterConstants.ARBITRARY_VELOCITY_EXTRA, ShooterConstants.SUBWOOFER_VELOCITY, ShooterConstants.SHOOTER_MAX_VELOCITY);
 
-    return new ShootState(adjustedAngle, VisionConstants.ELEVATOR_HEIGHT_MAP.get(calculateHorizontalDistance()), velocityRPM);
+    return new ShootState(Rotation2d.fromDegrees(adjustedAngle), VisionConstants.ELEVATOR_HEIGHT_MAP.get(calculateHorizontalDistance()), velocityRPM);
   }
 
   private Rotation2d calculateTargetRobotAngle(){
@@ -131,6 +131,6 @@ public class PoseAutoFire extends Command {
   }
 
   private Translation2d calculateCurveOffset(){
-    return new Translation2d(0, curveDistanceInterpolator.interpolate(0.3, 1.0, calculateHorizontalDistance() / 6.0) * AllianceFlipUtil.getDirectionCoefficient());
+    return new Translation2d(0, curveDistanceInterpolator.interpolate(0.3, 1.0, calculateHorizontalDistance() / 6.0) * directionCoefficient);
   }
 }
