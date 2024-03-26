@@ -222,6 +222,10 @@ public class Swerve extends SubsystemBase {
         m_poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
     }
 
+    public void resetPose_Apriltag(){
+        m_poseEstimator.resetPosition(getYaw(), getModulePositions(), Vision.getBotPose2d(Limelight.SHOOT_SIDE));
+    }
+
     /**
      * Retrieves the estimated pose of the odometry.
      *
@@ -352,6 +356,7 @@ public class Swerve extends SubsystemBase {
             m_poseEstimator.addVisionMeasurement(measurement.pose(), measurement.timestamp());
         }
         // System.out.println(Units.metersToInches(Vision.getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER)));
+        //System.out.println(getPose().getTranslation().getDistance(AllianceFlipUtil.getTargetSpeaker().getTranslation()));
     }
 
 

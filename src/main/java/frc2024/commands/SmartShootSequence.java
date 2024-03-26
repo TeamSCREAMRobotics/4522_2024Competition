@@ -51,7 +51,7 @@ public class SmartShootSequence extends Command{
         this.shouldTimeout = timeout;
         this.virtualCalculation = virtualCalculation;
         this.translation = translationSup;
-        rotationController = SwerveConstants.VISION_MOVING_ROTATION_CONSTANTS.toPIDController(); //SwerveConstants.SNAP_CONSTANTS.toPIDController();
+        rotationController = /* SwerveConstants.VISION_MOVING_ROTATION_CONSTANTS.toPIDController(); */ SwerveConstants.SNAP_CONSTANTS.toPIDController();
     }
 
     public SmartShootSequence(boolean timeout, boolean virtualCalculation, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, LED led){
@@ -80,11 +80,11 @@ public class SmartShootSequence extends Command{
         double rotationValue = Math.abs(Vision.getTX(Limelight.SHOOT_SIDE)) < 2.0 ? 0 : rotationController.calculate(Vision.getTX(Limelight.SHOOT_SIDE), 0.0);
 
         Translation2d translationValue = translation == null ? new Translation2d() : new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlipUtil.getDirectionCoefficient());
+        translationValue.times(SwerveConstants.SHOOT_WHILE_MOVING_SCALAR);
         
         if(virtualCalculation){
             Translation2d physicalTarget = AllianceFlipUtil.getTargetSpeaker().getTranslation();
             rotationValue = SmartShooting.getRotationToPoint(swerve, pivot, shooter, physicalTarget, virtualCalculation, false, rotationController);
-            translationValue.times(SwerveConstants.SHOOT_WHILE_MOVING_SCALAR);
 
             Translation2d virtualTarget = SmartShooting.calculateVirtualTarget(swerve, pivot, shooter, physicalTarget);
 

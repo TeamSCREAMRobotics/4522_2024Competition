@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -46,6 +47,8 @@ public class Pivot extends SubsystemBase{
 
     private Rotation2d m_targetAngle = Rotation2d.fromDegrees(0);
     private Rotation2d m_tweakAngle = Rotation2d.fromDegrees(0);
+
+    private RunOnce m_currentLimitConfigurator = new RunOnce();
 
     public Pivot(){
         m_pivotMotor = new TalonFX(Ports.PIVOT_MOTOR_ID, Ports.RIO_CANBUS_NAME);
@@ -126,6 +129,7 @@ public class Pivot extends SubsystemBase{
         System.out.println(Controlboard.operatorController_Command.ge); */
         //System.out.println("Encoder: " + getPivotAngle().getDegrees());
         // System.out.println("Motor: " + Rotation2d.fromRotations(m_pivotMotor.getPosition().refresh().getValue()).getDegrees());
+        System.out.println(m_pivotMotor.getSupplyCurrent().getValueAsDouble());
     }
 
     public void logOutputs(){
@@ -149,25 +153,11 @@ public class Pivot extends SubsystemBase{
         return run(() -> setPivotOutput(dutyCycle)).withName("DutyCycleCommand");
     }
 
-    public Command angleCommand(Supplier<Rotation2d> angle, boolean springyMode){
-        return run(() -> setTargetAngle(angle.get()))
-            .beforeStarting(
-                new ConditionalCommand(
-                    new InstantCommand(() ->  m_pivotMotor.getConfigurator().apply(PivotConstants.SPRINGY_CURRENT_CONFIG)), 
-                    new InstantCommand(() ->  m_pivotMotor.getConfigurator().apply(PivotConstants.DEFAULT_CURRENT_CONFIG)), 
-                    () -> springyMode))
-            .withName("AngleCommand | Springy: " + springyMode);
-    }
-
-    public Command angleCommand(Rotation2d angle, boolean springyMode){
-        return angleCommand(() -> angle, springyMode);
+    public Command angleCommand(Supplier<Rotation2d> angle){
+        return run(() -> setTargetAngle(angle.get())).withName("AngleCommand");
     }
 
     public Command angleCommand(Rotation2d angle){
-        return angleCommand(() -> angle, false);
-    }
-
-    public Command angleCommand(Supplier<Rotation2d> angle){
-        return angleCommand(angle, false);
+        return angleCommand(() -> angle);
     }
 }

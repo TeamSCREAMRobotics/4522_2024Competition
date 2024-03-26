@@ -425,17 +425,10 @@ public final class Constants{
         public static final CurrentLimitsConfigs DEFAULT_CURRENT_CONFIG = new CurrentLimitsConfigs();
         static{
             DEFAULT_CURRENT_CONFIG.SupplyCurrentLimitEnable = true;
+            DEFAULT_CURRENT_CONFIG.StatorCurrentLimitEnable = false;
             DEFAULT_CURRENT_CONFIG.SupplyCurrentLimit = SUPPLY_CURRENT_LIMIT;
             DEFAULT_CURRENT_CONFIG.SupplyCurrentThreshold = SUPPLY_CURRENT_THRESHOLD;
             DEFAULT_CURRENT_CONFIG.SupplyTimeThreshold = SUPPLY_TIME_THRESHOLD;
-        }
-
-        public static final CurrentLimitsConfigs SPRINGY_CURRENT_CONFIG = new CurrentLimitsConfigs();
-        static{
-            SPRINGY_CURRENT_CONFIG.StatorCurrentLimitEnable = true;
-            SPRINGY_CURRENT_CONFIG.SupplyCurrentLimitEnable = true;
-            SPRINGY_CURRENT_CONFIG.StatorCurrentLimit = 20;
-            SPRINGY_CURRENT_CONFIG.SupplyCurrentLimit = 5;
         }
         
         public static final boolean SOFTWARE_LIMIT_ENABLE = false;
@@ -453,10 +446,10 @@ public final class Constants{
         public static final double TARGET_THRESHOLD = 0.2; //Degrees
 
         public static final double CRUISE_VELOCITY = 200;
-        public static final double ACCELERATION = 200;
+        public static final double ACCELERATION = 100;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(500.0, 0.0, 0.0); //500
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(450.0, 0.0, 0.0); //500
         
         public static final double KS = 0.0;
         public static final double KV = 0.0;
@@ -615,8 +608,8 @@ public final class Constants{
     public static record ShootState(Rotation2d pivotAngle, double elevatorHeightInches, double velocityRPM){}
 
     public static final class VisionConstants {
-        public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.003, 0.003, 0.9);
-        public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(0.9, 0.9, 0.001);
+        public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.001, 0.001, 0.9);
+        public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(0.999, 0.999, 0.001);
 
         public static final double DETECTOR_TARGET_Y = 0.0;
         public static final double DETECTOR_TARGET_X = 0.0;

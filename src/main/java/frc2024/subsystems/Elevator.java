@@ -83,8 +83,8 @@ public class Elevator extends SubsystemBase{
     }
     
     public void setElevator(ControlRequest control){
-        m_rightElevatorMotor.setControl(control);
-        m_leftElevatorMotor.setControl(control);
+        //m_rightElevatorMotor.setControl(control);
+        //m_leftElevatorMotor.setControl(control);
     }
 
     public void setTargetHeight(double heightInches){

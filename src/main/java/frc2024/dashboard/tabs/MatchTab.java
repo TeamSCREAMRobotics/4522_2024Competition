@@ -59,6 +59,8 @@ public class MatchTab extends ShuffleboardTabBase {
         m_matchTimeEntry = createNumberEntry("Match Time", 0.0, new EntryProperties(4, 0, 19, 8), new Widget(BuiltInWidgets.kTextView));
         
         m_elevatorCoast = createBooleanEntry("Elevator Coast", false, new EntryProperties(0, 2, 4, 4), new Widget(BuiltInWidgets.kToggleSwitch));
+
+        m_field = createSendableEntry("Field", m_field2d, new EntryProperties(null, null));
     }
 
     @Override
@@ -71,6 +73,8 @@ public class MatchTab extends ShuffleboardTabBase {
         m_neutralModeChanger.runOnce(
             () -> elevator.setNeutralMode(m_elevatorCoast.getBoolean(false) ? NeutralModeValue.Coast : NeutralModeValue.Brake)
         );
+
+        m_field2d.setRobotPose(RobotContainer.getSwerve().getPose());
         
         m_lastNeutralMode = m_elevatorCoast.getBoolean(false);
 

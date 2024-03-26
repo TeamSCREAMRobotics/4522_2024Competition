@@ -27,11 +27,4 @@ public class SuperstructureToPosition extends SequentialCommandGroup{
                 .alongWith(pivot.angleCommand(position.pivotAngle))
         );
     }
-
-    public SuperstructureToPosition(SuperstructureState position, boolean springyMode, Elevator elevator, Pivot pivot){
-        addCommands(
-            elevator.heightCommand(position.elevatorPosition)
-                .alongWith(pivot.angleCommand(position.pivotAngle, springyMode))
-        );
-    }
 }

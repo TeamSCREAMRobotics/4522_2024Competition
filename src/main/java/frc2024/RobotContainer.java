@@ -109,6 +109,7 @@ public class RobotContainer {
      */
     private void configButtonBindings() {
         Controlboard.zeroGyro().onTrue(Commands.runOnce(() -> m_swerve.resetHeading(AllianceFlipUtil.getForwardRotation())));
+        Controlboard.resetPose_Apriltag().onTrue(Commands.runOnce(() -> m_swerve.resetPose_Apriltag()).ignoringDisable(true));
         //Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, new Rotation2d()))));
 
         Controlboard.snapAnglePresent()
@@ -186,10 +187,10 @@ public class RobotContainer {
             .onFalse(goHome("Sub"));
 
         Controlboard.goToAmpPosition()
-            .whileTrue(
+            .toggleOnTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.AMP)
                     .andThen(
-                        new SuperstructureToPosition(SuperstructureState.AMP, true, m_elevator, m_pivot)))
+                        new SuperstructureToPosition(SuperstructureState.AMP, m_elevator, m_pivot)))
             .onFalse(goHome("Amp"));
 
         Controlboard.goToPodiumPosition()
@@ -238,7 +239,7 @@ public class RobotContainer {
                     .andThen(
                         m_elevator.heightCommand(ElevatorConstants.TRAP_CHAIN_HEIGHT))
                     .alongWith(
-                        m_pivot.angleCommand(PivotConstants.HOME_ANGLE, true))
+                        m_pivot.angleCommand(PivotConstants.HOME_ANGLE))
                     .alongWith(
                         m_stabilizers.outputCommand(StabilizerConstants.OUT_OUTPUT)
                             .withTimeout(1)
@@ -342,10 +343,10 @@ public class RobotContainer {
 
         new Trigger(() -> Timer.getMatchTime() < 20.0).onTrue(m_led.strobeCommand(Color.kWhite, 0.1).withTimeout(1));
 
-        new Trigger(() -> ScreamUtil.calculateDistanceToTranslation(m_swerve.getPose().getTranslation(), AllianceFlipUtil.getTargetSpeaker().getTranslation()) < 6.0)
+        /* new Trigger(() -> ScreamUtil.calculateDistanceToTranslation(m_swerve.getPose().getTranslation(), AllianceFlipUtil.getTargetSpeaker().getTranslation()) < 6.0)
             .and(m_conveyor.hasPiece(false))
             .and(Controlboard.endGameMode().negate())
-            .whileTrue(m_shooter.velocityCommand(3000).repeatedly());
+            .whileTrue(m_shooter.velocityCommand(3000).repeatedly()); */
     }
 
     private void configDefaultCommands() { 

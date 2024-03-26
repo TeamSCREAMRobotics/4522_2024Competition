@@ -133,6 +133,10 @@ public class Controlboard{
         return driverController_Command.povUp();
     }
 
+    public static Trigger resetPose_Apriltag() {
+        return operatorController_Command.povUp();
+    }
+
     /**
      * Retreives the current field-centric mode.
      *
