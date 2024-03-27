@@ -1,6 +1,6 @@
 {
-  "robotWidth": 0.9144,
-  "robotLength": 0.97,
+  "robotWidth": 0.8636,
+  "robotLength": 0.8128,
   "holonomicMode": true,
   "pathFolders": [
     "2ScoreAmp_Center",

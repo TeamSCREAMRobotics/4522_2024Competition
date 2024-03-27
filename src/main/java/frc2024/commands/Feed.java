@@ -6,28 +6,24 @@ package frc2024.commands;
 
 import java.util.function.DoubleSupplier;
 
-import com.team4522.lib.math.Conversions;
+import javax.swing.text.StyledEditorKit.AlignmentAction;
+
 import com.team4522.lib.util.AllianceFlipUtil;
+import com.team4522.lib.util.RectanglePoseArea;
 import com.team4522.lib.util.ScreamUtil;
 import com.team4522.lib.util.ShootingUtil;
-import com.team6328.GeomUtil;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.interpolation.Interpolator;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc2024.Constants;
+import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.FieldConstants;
-import frc2024.Constants.PivotConstants;
 import frc2024.Constants.ShootState;
-import frc2024.Constants.ShooterConstants;
 import frc2024.Constants.SwerveConstants;
-import frc2024.Constants.VisionConstants;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.LED;
@@ -35,7 +31,8 @@ import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Shooter;
 import frc2024.subsystems.swerve.Swerve;
 
-public class PoseAutoFire extends Command {
+public class Feed extends Command {
+  
   Swerve swerve;
   Pivot pivot;
   Elevator elevator;
@@ -45,14 +42,11 @@ public class PoseAutoFire extends Command {
 
   DoubleSupplier[] translationSup;
 
-  Translation2d targetSpeaker;
-  double directionCoefficient;
-  ChassisSpeeds robotSpeed;
+  Translation3d targetPoint;
+  RectanglePoseArea illegalArea;
+  int directionCoefficient;
 
-  final Interpolator<Double> pivotDistanceInterpolator = Interpolator.forDouble();
-  final Interpolator<Double> curveDistanceInterpolator = Interpolator.forDouble();
-
-  public PoseAutoFire(DoubleSupplier[] translationSup, Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, LED led) {
+  public Feed(DoubleSupplier[] translationSup, Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, LED led) {
     addRequirements(swerve, pivot, elevator, shooter, conveyor, led);
     this.swerve = swerve;
     this.pivot = pivot;
@@ -63,30 +57,43 @@ public class PoseAutoFire extends Command {
     this.translationSup = translationSup;
   }
 
+  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    targetSpeaker = AllianceFlipUtil.getTargetSpeaker().getTranslation();
+    targetPoint = AllianceFlipUtil.MirroredTranslation3d(new Translation3d(2.03, 6.61, 5.0));
+    illegalArea = AllianceFlipUtil.MirroredPoseArea(FieldConstants.WING_POSE_AREA);
     directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();
   }
 
+  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    robotSpeed = swerve.getFieldRelativeSpeeds();
 
-    ShootState targetState = ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, ScreamUtil.calculateDistanceToTranslation(swerve.getPose().getTranslation(), targetSpeaker), elevator.getElevatorHeight());
-    Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getPose().getTranslation(), targetSpeaker).minus(new Rotation2d(Math.PI));
+    ShootState targetState = ShootingUtil.calculateShootState(targetPoint.getZ(), ScreamUtil.calculateDistanceToTranslation(swerve.getPose().getTranslation(), targetPoint.toTranslation2d()), elevator.getElevatorHeight());
+    Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getPose().getTranslation(), targetPoint.toTranslation2d()).minus(new Rotation2d(Math.PI));
     Translation2d translation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times((SwerveConstants.MAX_SPEED * 0.5) * directionCoefficient);
 
     swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
-    elevator.setTargetHeight(0.0 /* targetState.elevatorHeightInches() */);
-    shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), ShooterConstants.SUBWOOFER_VELOCITY, ShooterConstants.SHOOTER_MAX_VELOCITY));
-    pivot.setTargetAngle(targetState.pivotAngle());
-    led.scaledTarget(Color.kOrange, shooter.getRPM(), shooter.getTargetVelocity());
+    
+    if(!illegalArea.isPoseWithinArea(swerve.getPose())){
+      shooter.setTargetVelocity(targetState.velocityRPM() / 3.0);
+      pivot.setTargetAngle(targetState.pivotAngle());
+      elevator.setTargetHeight(ElevatorConstants.SUBWOOFER_HEIGHT);
+      led.strobe(Color.kGreen, 0.3);
+
+      if(shooter.getShooterAtTarget().getAsBoolean()){
+        conveyor.dutyCycleCommand(ConveyorConstants.SHOOT_SPEED);
+      }
+    } else {
+      led.strobe(Color.kRed, 0.3);
+    }
   }
 
+  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
 
+  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;

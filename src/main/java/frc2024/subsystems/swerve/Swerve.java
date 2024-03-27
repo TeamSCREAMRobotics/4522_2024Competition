@@ -11,7 +11,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.pid.ScreamPIDConstants;
-import com.team4522.lib.util.AllianceFlipUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.LinearFilter;
@@ -22,24 +21,18 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
-import frc2024.RobotContainer;
-import frc2024.Constants.FieldConstants;
 import frc2024.Constants.Ports;
 import frc2024.Constants.SwerveConstants;
 import frc2024.Constants.VisionConstants;
 import frc2024.Constants.SwerveConstants.ModuleConstants;
 import frc2024.Constants.SwerveConstants.ModuleConstants.ModuleLocation;
-import frc2024.controlboard.Controlboard;
 import frc2024.subsystems.Vision;
 import frc2024.subsystems.Vision.Limelight;
-import frc2024.subsystems.Vision.TimestampedVisionMeasurement;
 
 /**
  * A swerve drive subsystem.
@@ -347,18 +340,11 @@ public class Swerve extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        if(Vision.getTimestampedVisionMeasurement(Limelight.SHOOT_SIDE).isPresent()){
-            TimestampedVisionMeasurement measurement = Vision.getTimestampedVisionMeasurement(Limelight.SHOOT_SIDE).get();
-            m_poseEstimator.addVisionMeasurement(measurement.pose(), measurement.timestamp());
-        }
-        if(Vision.getTimestampedVisionMeasurement(Limelight.INTAKE_SIDE).isPresent()){
-            TimestampedVisionMeasurement measurement = Vision.getTimestampedVisionMeasurement(Limelight.SHOOT_SIDE).get();
-            m_poseEstimator.addVisionMeasurement(measurement.pose(), measurement.timestamp());
-        }
+        Vision.updateEstimateWithValidMeasurements(Limelight.SHOOT_SIDE, m_poseEstimator);
+        Vision.updateEstimateWithValidMeasurements(Limelight.INTAKE_SIDE, m_poseEstimator);
         // System.out.println(Units.metersToInches(Vision.getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER)));
         //System.out.println(getPose().getTranslation().getDistance(AllianceFlipUtil.getTargetSpeaker().getTranslation()));
     }
-
 
     public Command resetPoseCommand(Pose2d pose){
         return Commands.runOnce(() -> resetPose(pose));

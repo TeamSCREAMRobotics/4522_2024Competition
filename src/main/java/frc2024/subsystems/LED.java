@@ -49,7 +49,7 @@ public class LED extends SubsystemBase{
     // From FRC 6328 Mechanical Advantage
     // https://github.com/Mechanical-Advantage/RobotCode2023/blob/main/src/main/java/org/littletonrobotics/frc2023/subsystems/leds/Leds.java
 
-    private void solid(Color color) {
+    public void solid(Color color) {
         if (color != null) {
             for (int i = 0; i < length; i++) {
                 buffer.setLED(i, color);
@@ -57,22 +57,22 @@ public class LED extends SubsystemBase{
         }
     }
 
-    private void solid(double percent, Color color) {
+    public void solid(double percent, Color color) {
         for (int i = 0; i < MathUtil.clamp(length * percent, 0, length); i++) {
             buffer.setLED(i, color);
         }
     }
 
-    private void strobe(Color color, double duration) {
+    public void strobe(Color color, double duration) {
         boolean on = ((Timer.getFPGATimestamp() % duration) / duration) > 0.5;
         solid(on ? color : Color.kBlack);
     }
 
-    private void breathe(Color c1, Color c2, double duration) {
+    public void breathe(Color c1, Color c2, double duration) {
         breathe(c1, c2, duration, Timer.getFPGATimestamp());
     }
 
-    private void breathe(Color c1, Color c2, double duration, double timestamp) {
+    public void breathe(Color c1, Color c2, double duration, double timestamp) {
         double x = ((timestamp % LEDConstants.BREATHE_DURATION) / LEDConstants.BREATHE_DURATION) * 2.0 * Math.PI;
         double ratio = (Math.sin(x) + 1.0) / 2.0;
         double red = (c1.red * (1 - ratio)) + (c2.red * ratio);
@@ -81,7 +81,7 @@ public class LED extends SubsystemBase{
         solid(new Color(red, green, blue));
     }
 
-    private void rainbow(double cycleLength, double duration) {
+    public void rainbow(double cycleLength, double duration) {
         double x = (1 - ((Timer.getFPGATimestamp() / duration) % 1.0)) * 180.0;
         double xDiffPerLed = 180.0 / cycleLength;
         for (int i = 0; i < length; i++) {
@@ -93,7 +93,7 @@ public class LED extends SubsystemBase{
         }
     }
 
-    private void wave(Color c1, Color c2, double cycleLength, double duration) {
+    public void wave(Color c1, Color c2, double cycleLength, double duration) {
         double x = (1 - ((Timer.getFPGATimestamp() % duration) / duration)) * 2.0 * Math.PI;
         double xDiffPerLed = (2.0 * Math.PI) / cycleLength;
         for (int i = 0; i < length; i++) {
@@ -114,7 +114,7 @@ public class LED extends SubsystemBase{
         }
     }
 
-    private void stripes(List<Color> colors, int length, double duration) {
+    public void stripes(List<Color> colors, int length, double duration) {
         int offset = (int) (Timer.getFPGATimestamp() % duration / duration * length * colors.size());
         for (int i = 0; i < length; i++) {
           int colorIndex =
@@ -127,6 +127,7 @@ public class LED extends SubsystemBase{
     public void scaledTarget(Color color, double currentValue, double targetValue){
         if(targetValue == 0) return;
         int mapped = (int) Math.round(Conversions.mapRange(currentValue, 0, targetValue, 0, length));
+        if(mapped >= length - 2) color = Color.kGreen;
         for(int i = 0; i < mapped; i++){
             if(i >= length) return;
             buffer.setLED(i, color);

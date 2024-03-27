@@ -14,6 +14,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import com.team4522.lib.pid.ScreamPIDConstants;
 import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.COTSFalconSwerveConstants;
+import com.team4522.lib.util.RectanglePoseArea;
 import com.team4522.lib.util.ScreamUtil;
 import com.team4522.lib.util.ShootStateInterpolatingTreeMap;
 
@@ -133,20 +134,12 @@ public final class Constants{
         public static final double MAX_ANGULAR_VELOCITY = 8.0; // rad/s
         public static final double MAX_ANGULAR_ACCELERATION = 7.679;
 
-        /* Swerve Kinematics */
         // No need to ever change this unless there are more than four modules.
         public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
                 ModuleLocation.FRONT_LEFT.translation,
                 ModuleLocation.FRONT_RIGHT.translation,
                 ModuleLocation.BACK_LEFT.translation,
                 ModuleLocation.BACK_RIGHT.translation
-        );
-
-        public static final SwerveDriveKinematics POSE_ESTIMATOR_KINEMATICS = new SwerveDriveKinematics(
-                new Translation2d(WHEEL_BASE + Units.inchesToMeters(5 - 2.75) / 2.0, TRACK_WIDTH / 2.0),
-                new Translation2d(WHEEL_BASE + Units.inchesToMeters(5 - 2.75) / 2.0, -TRACK_WIDTH / 2.0),
-                new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
-                new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0)
         );
 
         /* Selected Module Constants */
@@ -374,15 +367,15 @@ public final class Constants{
         public static final double ACCELERATION = 5;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.38, 0.01, 0.0);
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.38, 0.0, 0.0);
 
         public static final double KS = 0.0;
-        public static final double KV = 0.13;
+        public static final double KV = 0.20;
         public static final double KA = 0.0;
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
 
-        public static final double TARGET_THRESHOLD = 150.0; // rpm
+        public static final double TARGET_THRESHOLD = 50.0; // rpm
 
         public static final double AUTO_SHOOT_VELOCITY_THRESHOLD = 4800; // rpm
         public static final double AUTO_SHOOT_DISTANCE_THRESHOLD = 6.5; // meters
@@ -417,14 +410,14 @@ public final class Constants{
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Coast;
         
         /* Current Limits */
-        public static final int SUPPLY_CURRENT_LIMIT = 35;
-        public static final int SUPPLY_CURRENT_THRESHOLD = 60;
+        public static final int SUPPLY_CURRENT_LIMIT = 30;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 0;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
-        public static final boolean CURRENT_LIMIT_ENABLE = false;
+        public static final boolean CURRENT_LIMIT_ENABLE = true;
 
         public static final CurrentLimitsConfigs DEFAULT_CURRENT_CONFIG = new CurrentLimitsConfigs();
         static{
-            DEFAULT_CURRENT_CONFIG.SupplyCurrentLimitEnable = true;
+            DEFAULT_CURRENT_CONFIG.SupplyCurrentLimitEnable = CURRENT_LIMIT_ENABLE;
             DEFAULT_CURRENT_CONFIG.StatorCurrentLimitEnable = false;
             DEFAULT_CURRENT_CONFIG.SupplyCurrentLimit = SUPPLY_CURRENT_LIMIT;
             DEFAULT_CURRENT_CONFIG.SupplyCurrentThreshold = SUPPLY_CURRENT_THRESHOLD;
@@ -494,10 +487,10 @@ public final class Constants{
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
         
         /* Current Limits */
-        public static final int SUPPLY_CURRENT_LIMIT = 35;
-        public static final int SUPPLY_CURRENT_THRESHOLD = 50;
+        public static final int SUPPLY_CURRENT_LIMIT = 30;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 0;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
-        public static final boolean CURRENT_LIMIT_ENABLE = false;
+        public static final boolean CURRENT_LIMIT_ENABLE = true;
         
         public static final boolean SOFTWARE_LIMIT_ENABLE = true;
         public static final double FORWARD_SOFT_LIMIT = 3.1;
@@ -719,5 +712,7 @@ public final class Constants{
         public static final double STAGE_TAG_HEIGHT = 1.320884;
         public static final double SOURCE_TAG_HEIGHT = 1.355726;
         public static final double AMP_TAG_HEIGHT = SOURCE_TAG_HEIGHT;
+
+        public static final RectanglePoseArea WING_POSE_AREA = new RectanglePoseArea(new Translation2d(0, 0), new Translation2d(6.3, 8.2));
     }
 }

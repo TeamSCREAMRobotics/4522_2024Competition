@@ -108,10 +108,10 @@
   "goalEndState": {
     "velocity": 0,
     "rotation": 0.0,
-    "rotateFast": true
+    "rotateFast": false
   },
   "reversed": false,
-  "folder": "Amp5_1Center",
+  "folder": null,
   "previewStartingState": null,
   "useDefaultConstraints": false
 }

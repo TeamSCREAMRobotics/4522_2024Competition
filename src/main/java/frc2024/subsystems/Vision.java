@@ -10,11 +10,13 @@ import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.LimelightHelpers;
 import com.team4522.lib.util.RunOnce;
 import com.team4522.lib.util.ScreamUtil;
+import com.team4522.lib.util.LimelightHelpers.PoseEstimate;
 
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.KalmanFilter;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -28,7 +30,10 @@ import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.LinearSystemLoop;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -150,18 +155,37 @@ public class Vision{
         return Math.abs(getTX(limelight)) <= VisionConstants.AUTO_FIRE_X_THRESHOLD;
     }
 
-    public static Optional<TimestampedVisionMeasurement> getTimestampedVisionMeasurement(Limelight limelight){
-        if(LimelightHelpers.getBotPose(limelight.name).length == 0){
-            return Optional.empty();
-        }
-        return Optional.of(new TimestampedVisionMeasurement(LimelightHelpers.getBotPoseEstimate_wpiBlue(limelight.name).pose, Timer.getFPGATimestamp() - LimelightHelpers.getBotPose(limelight.name)[6]));
+    public static void updateEstimateWithValidMeasurements(Limelight limelight, SwerveDrivePoseEstimator poseEstimator){
+        validateVisionMeasurement(LimelightHelpers.getBotPoseEstimate_wpiBlue(limelight.name), poseEstimator);
     }
 
-    /* public static Optional<TimestampedVisionMeasurement>[] getBotPoses(){
-        return new Optional<TimestampedVisionMeasurement>[] {
-            getTimestampedVisionMeasurement(Limelight.SHOOTER)
-        };
-    } */
+    private static void validateVisionMeasurement(PoseEstimate estimate, SwerveDrivePoseEstimator poseEstimator){
+        if (estimate.pose.getX() == 0.0) {
+          return;
+        }
+
+        double poseDifference = poseEstimator.getEstimatedPosition().getTranslation()
+            .getDistance(estimate.pose.getTranslation());
+
+        if (estimate.tagCount != 0) {
+            double xyStds;
+            double degStds;
+            if (estimate.tagCount >= 2) {
+                xyStds = 0.5;
+                degStds = 6;
+            } else if (estimate.avgTagArea > 0.8 && poseDifference < 0.5) {
+                xyStds = 1.0;
+                degStds = 12;
+            } else if (estimate.avgTagArea > 0.1 && poseDifference < 0.3) {
+                xyStds = 2.0;
+                degStds = 30;
+            } else {
+                return;
+            }
+            poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(xyStds, xyStds, Units.degreesToRadians(degStds)));
+            poseEstimator.addVisionMeasurement(estimate.pose, estimate.timestampSeconds);
+        }
+    }
 
     public static int getCurrentPipeline(Limelight limelight){
         return (int) LimelightHelpers.getCurrentPipelineIndex(limelight.name);
