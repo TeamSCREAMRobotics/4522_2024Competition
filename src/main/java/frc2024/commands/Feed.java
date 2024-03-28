@@ -60,7 +60,7 @@ public class Feed extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    targetPoint = AllianceFlipUtil.MirroredTranslation3d(new Translation3d(2.03, 6.61, 5.0));
+    targetPoint = AllianceFlipUtil.MirroredTranslation3d(new Translation3d(2.71, 6.02, 5.0));
     illegalArea = AllianceFlipUtil.MirroredPoseArea(FieldConstants.WING_POSE_AREA);
     directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();
   }
@@ -69,14 +69,15 @@ public class Feed extends Command {
   @Override
   public void execute() {
 
-    ShootState targetState = ShootingUtil.calculateShootState(targetPoint.getZ(), ScreamUtil.calculateDistanceToTranslation(swerve.getPose().getTranslation(), targetPoint.toTranslation2d()), elevator.getElevatorHeight());
+    double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getPose().getTranslation(), targetPoint.toTranslation2d());
+    ShootState targetState = ShootingUtil.calculateShootState(targetPoint.getZ(), horizontalDistance, elevator.getElevatorHeight());
     Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getPose().getTranslation(), targetPoint.toTranslation2d()).minus(new Rotation2d(Math.PI));
     Translation2d translation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times((SwerveConstants.MAX_SPEED * 0.5) * directionCoefficient);
 
     swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
     
     if(!illegalArea.isPoseWithinArea(swerve.getPose())){
-      shooter.setTargetVelocity(targetState.velocityRPM() / 3.0);
+      shooter.setTargetVelocity(targetState.velocityRPM() / 2.5);
       pivot.setTargetAngle(targetState.pivotAngle());
       elevator.setTargetHeight(ElevatorConstants.SUBWOOFER_HEIGHT);
       led.strobe(Color.kGreen, 0.3);

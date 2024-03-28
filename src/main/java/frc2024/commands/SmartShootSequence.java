@@ -77,19 +77,20 @@ public class SmartShootSequence extends Command{
 
     @Override
     public void execute() {
-        double rotationValue = Math.abs(Vision.getTX(Limelight.SHOOT_SIDE)) < 2.0 ? 0 : rotationController.calculate(Vision.getTX(Limelight.SHOOT_SIDE), 0.0);
+        Translation2d physicalTarget = AllianceFlipUtil.getTargetSpeaker().getTranslation();
+        /* double rotationValue = Math.abs(Vision.getTX(Limelight.SHOOT_SIDE)) < 2.0 ? 0 : rotationController.calculate(Vision.getTX(Limelight.SHOOT_SIDE), 0.0); */
+        double rotationValue = SmartShooting.getRotationToPoint(swerve, pivot, shooter, physicalTarget, false, false, rotationController);
 
         Translation2d translationValue = translation == null ? new Translation2d() : new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlipUtil.getDirectionCoefficient());
-        translationValue.times(SwerveConstants.SHOOT_WHILE_MOVING_SCALAR);
         
         if(virtualCalculation){
-            Translation2d physicalTarget = AllianceFlipUtil.getTargetSpeaker().getTranslation();
-            rotationValue = SmartShooting.getRotationToPoint(swerve, pivot, shooter, physicalTarget, virtualCalculation, false, rotationController);
+            translationValue = translationValue.times(SwerveConstants.SHOOT_WHILE_MOVING_SCALAR);
 
             Translation2d virtualTarget = SmartShooting.calculateVirtualTarget(swerve, pivot, shooter, physicalTarget);
+            rotationValue = SmartShooting.getRotationToPoint(swerve, pivot, shooter, virtualTarget, false, false, rotationController); //virtualCalculation is false because we are passing in the virtualTarget already
 
-            shooter.setTargetVelocity(SmartShooting.calculateShotTrajectory(() -> elevator.getElevatorHeight(), SmartShooting.getDistanceToTarget_SHOOTER(swerve, virtualTarget, FieldConstants.SPEAKER_TAG_HEIGHT)).velocityRPM());
-            pivot.setTargetAngle(SmartShooting.calculateShotTrajectory(() -> elevator.getElevatorHeight(), SmartShooting.getDistanceToTarget_SHOOTER(swerve, virtualTarget, FieldConstants.SPEAKER_TAG_HEIGHT)).pivotAngle());
+            shooter.setTargetVelocity(SmartShooting.calculateShotTrajectory(() -> elevator.getElevatorHeight(), SmartShooting.getDistanceToTarget_SHOOTER(swerve, virtualTarget, FieldConstants.SPEAKER_OPENING_HEIGHT)).velocityRPM());
+            pivot.setTargetAngle(SmartShooting.calculateShotTrajectory(() -> elevator.getElevatorHeight(), SmartShooting.getDistanceToTarget_SHOOTER(swerve, virtualTarget, FieldConstants.SPEAKER_OPENING_HEIGHT)).pivotAngle());
         } else{
             shooter.setTargetVelocity(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).velocityRPM());
             pivot.setTargetAngle(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).pivotAngle());

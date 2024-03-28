@@ -370,7 +370,7 @@ public final class Constants{
         public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.38, 0.0, 0.0);
 
         public static final double KS = 0.0;
-        public static final double KV = 0.20;
+        public static final double KV = 0.2;
         public static final double KA = 0.0;
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
@@ -394,6 +394,14 @@ public final class Constants{
 
         public static final double SHOOT_OUTPUT = 0.8;
         public static final double EJECT_OUTPUT = 0.25;//0.5;
+
+        public static final InterpolatingDoubleTreeMap shooterOffset = new InterpolatingDoubleTreeMap();
+        static{
+            //HorizontalDistance, RPM Offset
+            shooterOffset.put(0.0, 750.0);
+            shooterOffset.put(3.4, 750.0);
+            shooterOffset.put(3.5, 0.0);
+        }
     }
     
     public static final class PivotConstants {
@@ -601,8 +609,8 @@ public final class Constants{
     public static record ShootState(Rotation2d pivotAngle, double elevatorHeightInches, double velocityRPM){}
 
     public static final class VisionConstants {
-        public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.001, 0.001, 0.9);
-        public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(0.999, 0.999, 0.001);
+        public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.23, 0.23, 0.001);
+        public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(10, 10, 100000.0);
 
         public static final double DETECTOR_TARGET_Y = 0.0;
         public static final double DETECTOR_TARGET_X = 0.0;

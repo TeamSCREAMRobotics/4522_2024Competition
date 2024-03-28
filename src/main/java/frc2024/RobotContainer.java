@@ -53,6 +53,7 @@ import frc2024.auto.Autonomous.PPEvent;
 import frc2024.auto.Routines;
 import frc2024.commands.AutoFire;
 import frc2024.commands.AutoShootSequence;
+import frc2024.commands.Feed;
 import frc2024.commands.Rehome;
 import frc2024.commands.SmartShootSequence;
 import frc2024.commands.PoseAutoFire;
@@ -259,14 +260,15 @@ public class RobotContainer {
             .whileTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.AUTO_FIRE)
                     .andThen(
-                        new SmartShootSequence(Controlboard.getTranslation(), false, true, m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_led).onlyIf(() -> Vision.getTV(Limelight.SHOOT_SIDE))))
+                        new SmartShootSequence(Controlboard.getTranslation(), false, true, m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_led)))
             .onFalse(goHome("AutoFire"));
 
-        Controlboard.autoFire().and(m_conveyor.hasPiece(false)).and(Controlboard.virtualAutoFire().negate())
+        Controlboard.autoFire().and(Controlboard.virtualAutoFire().negate())
             .whileTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.AUTO_FIRE)
                     .andThen(
-                        new PoseAutoFire(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led)))
+                        new PoseAutoFire(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led)
+                            .andThen(m_shooter.idleCommand())))
             .onFalse(goHome("AutoFire"));
 
         Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece(false)).negate())
@@ -326,6 +328,13 @@ public class RobotContainer {
         Controlboard.prepShot()
             .whileTrue(m_shooter.velocityCommand(3000))
             .onFalse(m_shooter.idleCommand());
+
+        Controlboard.driverController_Command.povLeft()
+            .whileTrue(
+                new InstantCommand(() -> currentState = SuperstructureState.AUTO_FIRE)
+                    .alongWith(
+                        new Feed(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led)))
+            .onFalse(goHome("Feed"));
 
         /* Controlboard.autoPickupFromFloor()
             .whileTrue(
@@ -448,7 +457,12 @@ public class RobotContainer {
                 .alongWith(new PrintCommand(test))
                 .andThen(
                     new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
-                        .until((() -> superstructureAtTarget())).alongWith(m_shooter.idleCommand().alongWith(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()))));
+                        .until((() -> superstructureAtTarget()))
+                        .alongWith(
+                            new ParallelCommandGroup(
+                                m_shooter.idleCommand(), 
+                                m_conveyor.stopCommand(), 
+                                m_intake.stopCommand())));
     }
 
     public static boolean superstructureAtTarget(){
