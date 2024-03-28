@@ -105,7 +105,13 @@ public final class AllianceFlipUtil {
         return new Pose3d(MirroredTranslation3d(blueValue.getTranslation()), MirroredRotation3d(blueValue.getRotation()));
     } 
 
-    public static RectanglePoseArea MirroredPoseArea(RectanglePoseArea blueValue){
-        return new RectanglePoseArea(MirroredTranslation2d(blueValue.getBottomLeftPoint()), MirroredTranslation2d(blueValue.getTopRightPoint()));
+    public static RectanglePoseArea PoseArea(RectanglePoseArea blueValue){
+        return new RectanglePoseArea(
+            Translation2d(
+                blueValue.getBottomLeftPoint(), 
+                new Translation2d(blueValue.getMinX() + FieldConstants.FIELD_DIMENSIONS.getX()/2.0, blueValue.getMinY())),
+            Translation2d(
+                blueValue.getTopRightPoint(), 
+                new Translation2d(blueValue.getMaxX() + FieldConstants.FIELD_DIMENSIONS.getX()/2.0, blueValue.getMaxY())));
     }
 }

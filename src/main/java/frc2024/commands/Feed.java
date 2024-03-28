@@ -61,7 +61,7 @@ public class Feed extends Command {
   @Override
   public void initialize() {
     targetPoint = AllianceFlipUtil.MirroredTranslation3d(new Translation3d(2.71, 6.02, 5.0));
-    illegalArea = AllianceFlipUtil.MirroredPoseArea(FieldConstants.WING_POSE_AREA);
+    illegalArea = AllianceFlipUtil.PoseArea(FieldConstants.WING_POSE_AREA);
     directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();
   }
 
@@ -77,7 +77,7 @@ public class Feed extends Command {
     swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
     
     if(!illegalArea.isPoseWithinArea(swerve.getPose())){
-      shooter.setTargetVelocity(targetState.velocityRPM() / 2.5);
+      shooter.setTargetVelocity(targetState.velocityRPM() / 3.5);
       pivot.setTargetAngle(targetState.pivotAngle());
       elevator.setTargetHeight(ElevatorConstants.SUBWOOFER_HEIGHT);
       led.strobe(Color.kGreen, 0.3);

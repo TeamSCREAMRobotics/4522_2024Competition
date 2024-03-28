@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.sql.Driver;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.locks.Condition;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -55,6 +56,7 @@ import frc2024.commands.AutoFire;
 import frc2024.commands.AutoShootSequence;
 import frc2024.commands.Feed;
 import frc2024.commands.Rehome;
+import frc2024.commands.ShooterIdle;
 import frc2024.commands.SmartShootSequence;
 import frc2024.commands.PoseAutoFire;
 import frc2024.commands.SuperstructureToPosition;
@@ -253,7 +255,8 @@ public class RobotContainer {
                 m_shooter.dutyCycleCommand(-ShooterConstants.EJECT_OUTPUT))
             .onFalse(m_shooter.stopCommand());
 
-        Controlboard.stopFlywheel().onTrue(m_shooter.stopCommand());
+        Controlboard.stopFlywheel()
+            .toggleOnTrue(Commands.run(() -> m_shooter.stop(), m_shooter));
 
         /* Automation */
         Controlboard.autoFire().and(Controlboard.virtualAutoFire())
@@ -267,8 +270,10 @@ public class RobotContainer {
             .whileTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.AUTO_FIRE)
                     .andThen(
-                        new PoseAutoFire(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led)
-                            .andThen(m_shooter.idleCommand())))
+                        new ConditionalCommand(
+                            new Feed(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led),
+                            new PoseAutoFire(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led), 
+                            () -> ScreamUtil.calculateDistanceToTranslation(() -> m_swerve.getPose().getTranslation(), () -> AllianceFlipUtil.getTargetSpeaker().getTranslation()).getAsDouble() >= 6.5)))
             .onFalse(goHome("AutoFire"));
 
         Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece(false)).negate())
@@ -329,13 +334,6 @@ public class RobotContainer {
             .whileTrue(m_shooter.velocityCommand(3000))
             .onFalse(m_shooter.idleCommand());
 
-        Controlboard.driverController_Command.povLeft()
-            .whileTrue(
-                new InstantCommand(() -> currentState = SuperstructureState.AUTO_FIRE)
-                    .alongWith(
-                        new Feed(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led)))
-            .onFalse(goHome("Feed"));
-
         /* Controlboard.autoPickupFromFloor()
             .whileTrue(
                 new AutoIntakeFloor(Controlboard.getTranslation(), m_swerve, m_elevator, m_pivot, m_intake, m_conveyor)
@@ -368,6 +366,9 @@ public class RobotContainer {
                 Controlboard.getFieldCentric(),
                 Controlboard.getSlowMode())
         );
+
+        m_shooter.setDefaultCommand(
+            new ShooterIdle(Controlboard.endGameMode(), m_swerve, m_conveyor, m_shooter));
 
         m_led.setDefaultCommand(
             m_led.waveCommand(() -> (Color) AllianceFlipUtil.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, 22, 2)
@@ -460,7 +461,6 @@ public class RobotContainer {
                         .until((() -> superstructureAtTarget()))
                         .alongWith(
                             new ParallelCommandGroup(
-                                m_shooter.idleCommand(), 
                                 m_conveyor.stopCommand(), 
                                 m_intake.stopCommand())));
     }

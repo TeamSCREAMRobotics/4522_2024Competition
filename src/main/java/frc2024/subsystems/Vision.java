@@ -161,7 +161,7 @@ public class Vision{
     }
 
     private static void validateVisionMeasurement(Limelight limelight, PoseEstimate estimate, SwerveDrivePoseEstimator poseEstimator){
-        if (estimate.pose.getX() == 0.0) {
+        if (estimate.pose.getX() == 0.0 || !FieldConstants.FIELD_AREA.isPoseWithinArea(estimate.pose)) {
           return;
         }
 
