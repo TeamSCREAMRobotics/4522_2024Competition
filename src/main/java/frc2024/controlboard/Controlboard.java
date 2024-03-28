@@ -176,8 +176,8 @@ public class Controlboard{
         return new Trigger(() -> buttonBoard.getRawSwitch(3));
     }
 
-    public static final Trigger endGameMode(){
-        return new Trigger(() -> buttonBoard.getRawSwitch(2));
+    public static final BooleanSupplier endGameMode(){
+        return () -> buttonBoard.getRawSwitch(2);
     }
 
     /* public static final Trigger rehome(){
@@ -242,7 +242,7 @@ public class Controlboard{
     }
 
     public static final Trigger goToHomePosition(){
-        return new Trigger(() -> buttonBoard.getRawButton(9)).and(endGameMode().negate());
+        return new Trigger(() -> buttonBoard.getRawButton(9)).and(new Trigger(endGameMode()).negate());
     }
     
     public static final Trigger goToHomePositionEndgame(){
@@ -259,7 +259,7 @@ public class Controlboard{
 
     public static final Trigger goToPodiumPosition(){
         return new Trigger(() -> buttonBoard.getRawButton(12)).and(defendedMode().negate())
-            .and(endGameMode().negate());
+            .and(new Trigger(endGameMode()).negate());
     }
 
     public static final Trigger goToTrapPosition(){
@@ -276,12 +276,12 @@ public class Controlboard{
 
     public static final Trigger goToPodiumPositionDefended(){
         return new Trigger(() -> buttonBoard.getRawButton(12)).and(defendedMode())
-            .and(endGameMode().negate());
+            .and(new Trigger(endGameMode()).negate());
     }
 
     /* Intake */
     public static final Trigger intakeFromFloor(){
-        return driverController_Command.rightTrigger(TRIGGER_DEADBAND).and(endGameMode().negate());
+        return driverController_Command.rightTrigger(TRIGGER_DEADBAND).and(new Trigger(endGameMode()).negate());
     }
 
     public static final Trigger intakeFromFloorEndgame(){
@@ -305,7 +305,7 @@ public class Controlboard{
     }
 
     public static final Trigger intakeOverride(){
-        return new Trigger(() -> buttonBoard.getRawButton(7)).and(endGameMode().negate());
+        return new Trigger(() -> buttonBoard.getRawButton(7)).and(new Trigger(endGameMode()).negate());
     }
 
     public static final Trigger intakeOverrideEndgame(){

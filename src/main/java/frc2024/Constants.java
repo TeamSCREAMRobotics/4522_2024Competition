@@ -482,7 +482,7 @@ public final class Constants{
         public static final double AXLE_DISTANCE_FROM_LENS_TOP = Units.inchesToMeters(12.966620);
         public static final double AXLE_DISTANCE_FROM_ROBOT_CENTER_HOME = Units.inchesToMeters(2.840333);
         public static final double AXLE_DISTANCE_FROM_ROBOT_CENTER_TOP = Units.inchesToMeters(6.617781);
-        public static final double SHOOTER_DISTANCE_FROM_AXLE = Units.inchesToMeters(3.100600);
+        public static final double SHOOTER_DISTANCE_FROM_AXLE = Units.inchesToMeters(2.877975);
     }
 
     public static final class ElevatorConstants {
@@ -505,7 +505,7 @@ public final class Constants{
         public static final double REVERSE_SOFT_LIMIT = 0.0;
 
         public static final double CRUISE_VELOCITY = 50*(ROTOR_TO_SENSOR_RATIO/3.0);
-        public static final double ACCELERATION = 30*(ROTOR_TO_SENSOR_RATIO/9.0);
+        public static final double ACCELERATION = 30;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
         public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(50.0*(ROTOR_TO_SENSOR_RATIO/9.0), 0.0, 0.0);//50
@@ -721,6 +721,7 @@ public final class Constants{
         public static final double SOURCE_TAG_HEIGHT = 1.355726;
         public static final double AMP_TAG_HEIGHT = SOURCE_TAG_HEIGHT;
 
-        public static final RectanglePoseArea WING_POSE_AREA = new RectanglePoseArea(new Translation2d(0, 0), new Translation2d(6.3, 8.2));
+        public static final RectanglePoseArea FIELD_AREA = new RectanglePoseArea(new Translation2d(0, 0), FIELD_DIMENSIONS);
+        public static final RectanglePoseArea WING_POSE_AREA = new RectanglePoseArea(new Translation2d(10.4, 0.0), FIELD_DIMENSIONS);
     }
 }

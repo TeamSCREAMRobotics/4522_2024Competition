@@ -1,5 +1,8 @@
 package com.team4522.lib.util;
 
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+
 import javax.swing.TransferHandler.TransferSupport;
 
 import org.photonvision.PhotonUtils;
@@ -107,6 +110,10 @@ public class ScreamUtil {
 
     public static double calculateDistanceToTranslation(Translation2d current, Translation2d target){
         return current.getDistance(target);
+    }
+
+    public static DoubleSupplier calculateDistanceToTranslation(Supplier<Translation2d> current, Supplier<Translation2d> target){
+        return () -> current.get().getDistance(target.get());
     }
 
     public static double average(double... nums){

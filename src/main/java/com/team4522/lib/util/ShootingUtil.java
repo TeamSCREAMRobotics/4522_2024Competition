@@ -27,12 +27,12 @@ public class ShootingUtil {
     }
 
     public static ShootState calculateShootState(double targetHeightMeters, double horizontalDistance, double elevatorHeightInches){
-      Rotation2d baseAngle = new Translation2d(horizontalDistance, targetHeightMeters).minus(calculateAbsolutePivotPosition(elevatorHeightInches)).getAngle();
+      Rotation2d baseAngle = new Translation2d(horizontalDistance, targetHeightMeters - PivotConstants.SHOOTER_DISTANCE_FROM_AXLE).minus(calculateAbsolutePivotPosition(elevatorHeightInches)).getAngle();
       /* Rotation2d adjustedAngle = Rotation2d.fromDegrees(MathUtil.clamp(-baseAngle.getDegrees() + PivotConstants.RELATIVE_ENCODER_TO_HORIZONTAL.getDegrees(), 1, 45)).plus(calculatePivotAngleAdjustment()); */
       Rotation2d adjustedAngle = Rotation2d.fromDegrees(MathUtil.clamp((-baseAngle.getDegrees() + PivotConstants.RELATIVE_ENCODER_TO_HORIZONTAL.getDegrees()), 1, 45));
 
       //double tof = calculateTOF(elevatorHeightInches, targetHeightMeters);
-      double velocityRPM = horizontalDistance * 900.0;
+      double velocityRPM = horizontalDistance * 925.0;
 
       return new ShootState(adjustedAngle, VisionConstants.ELEVATOR_HEIGHT_MAP.get(horizontalDistance), velocityRPM);
     }
