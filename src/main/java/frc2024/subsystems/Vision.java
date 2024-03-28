@@ -1,6 +1,7 @@
 package frc2024.subsystems;
 
 import java.nio.channels.Pipe;
+import java.util.ConcurrentModificationException;
 import java.util.Optional;
 import java.util.OptionalDouble;
 
@@ -156,34 +157,32 @@ public class Vision{
     }
 
     public static void updateEstimateWithValidMeasurements(Limelight limelight, SwerveDrivePoseEstimator poseEstimator){
-        validateVisionMeasurement(LimelightHelpers.getBotPoseEstimate_wpiBlue(limelight.name), poseEstimator);
+        validateVisionMeasurement(limelight, LimelightHelpers.getBotPoseEstimate_wpiBlue(limelight.name), poseEstimator);
     }
 
-    private static void validateVisionMeasurement(PoseEstimate estimate, SwerveDrivePoseEstimator poseEstimator){
+    private static void validateVisionMeasurement(Limelight limelight, PoseEstimate estimate, SwerveDrivePoseEstimator poseEstimator){
         if (estimate.pose.getX() == 0.0) {
           return;
         }
+
+        double latency = getLatency_Pipeline(limelight) + getLatency_Capture(limelight);
+        latency = latency / 1000.0;
 
         double poseDifference = poseEstimator.getEstimatedPosition().getTranslation()
             .getDistance(estimate.pose.getTranslation());
 
         if (estimate.tagCount != 0) {
             double xyStds;
-            double degStds;
             if (estimate.tagCount >= 2) {
-                xyStds = 0.5;
-                degStds = 6;
+                xyStds = 0.3;
             } else if (estimate.avgTagArea > 0.8 && poseDifference < 0.5) {
                 xyStds = 1.0;
-                degStds = 12;
             } else if (estimate.avgTagArea > 0.1 && poseDifference < 0.3) {
                 xyStds = 2.0;
-                degStds = 30;
             } else {
                 return;
             }
-            poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(xyStds, xyStds, Units.degreesToRadians(degStds)));
-            poseEstimator.addVisionMeasurement(estimate.pose, estimate.timestampSeconds);
+            poseEstimator.addVisionMeasurement(estimate.pose, Timer.getFPGATimestamp() - latency, VecBuilder.fill(xyStds, xyStds, 100000.0));
         }
     }
 

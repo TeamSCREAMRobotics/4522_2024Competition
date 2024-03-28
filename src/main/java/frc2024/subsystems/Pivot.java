@@ -129,7 +129,8 @@ public class Pivot extends SubsystemBase{
         System.out.println(Controlboard.operatorController_Command.ge); */
         //System.out.println("Encoder: " + getPivotAngle().getDegrees());
         // System.out.println("Motor: " + Rotation2d.fromRotations(m_pivotMotor.getPosition().refresh().getValue()).getDegrees());
-        System.out.println(m_pivotMotor.getSupplyCurrent().getValueAsDouble());
+        
+        // System.out.println(m_pivotMotor.getSupplyCurrent().getValueAsDouble());
     }
 
     public void logOutputs(){

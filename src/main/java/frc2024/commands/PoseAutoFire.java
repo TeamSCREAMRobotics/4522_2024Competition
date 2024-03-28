@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc2024.Constants;
@@ -65,30 +66,34 @@ public class PoseAutoFire extends Command {
 
   @Override
   public void initialize() {
-    targetSpeaker = AllianceFlipUtil.getTargetSpeaker().getTranslation();
     directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();
+    targetSpeaker = AllianceFlipUtil.getTargetSpeaker().getTranslation().plus(new Translation2d(Units.inchesToMeters(8.0) * directionCoefficient, 0));
   }
 
   @Override
   public void execute() {
     robotSpeed = swerve.getFieldRelativeSpeeds();
 
-    ShootState targetState = ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, ScreamUtil.calculateDistanceToTranslation(swerve.getPose().getTranslation(), targetSpeaker), elevator.getElevatorHeight());
+    double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getPose().getTranslation(), targetSpeaker);
+    ShootState targetState = ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT - Units.inchesToMeters(5.0), horizontalDistance, elevator.getElevatorHeight());
     Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getPose().getTranslation(), targetSpeaker).minus(new Rotation2d(Math.PI));
     Translation2d translation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times((SwerveConstants.MAX_SPEED * 0.5) * directionCoefficient);
-
-    swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
-    elevator.setTargetHeight(0.0 /* targetState.elevatorHeightInches() */);
-    shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), ShooterConstants.SUBWOOFER_VELOCITY, ShooterConstants.SHOOTER_MAX_VELOCITY));
-    pivot.setTargetAngle(targetState.pivotAngle());
-    led.scaledTarget(Color.kOrange, shooter.getRPM(), shooter.getTargetVelocity());
+    if(conveyor.hasPiece(false).getAsBoolean()) {
+      swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
+      elevator.setTargetHeight(0.0 /* targetState.elevatorHeightInches() */);
+      shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), ShooterConstants.SUBWOOFER_VELOCITY, ShooterConstants.SHOOTER_MAX_VELOCITY));
+      pivot.setTargetAngle(targetState.pivotAngle());
+      led.scaledTarget(Color.kOrange, shooter.getRPM(), shooter.getTargetVelocity());
+    }
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    
+  }
 
   @Override
   public boolean isFinished() {
-    return false;
+    return !conveyor.hasPiece(false).getAsBoolean();
   }
 }

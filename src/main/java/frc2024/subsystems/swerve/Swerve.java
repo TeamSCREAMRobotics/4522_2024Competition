@@ -22,6 +22,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -86,8 +87,8 @@ public class Swerve extends SubsystemBase {
             VisionConstants.VISION_STD_DEVS
         );
         
-        m_odometryThread = new OdometryThread();
-        m_odometryThread.start();
+        /* m_odometryThread = new OdometryThread();
+        m_odometryThread.start(); */
 
         m_headingController.enableContinuousInput(-180, 180);
         m_snapController.enableContinuousInput(-180.0, 180);
@@ -340,8 +341,11 @@ public class Swerve extends SubsystemBase {
      */
     @Override
     public void periodic() {
+        if(getModulePositions() != null){
+            m_poseEstimator.updateWithTime(Timer.getFPGATimestamp(), getYaw(), getModulePositions());
+        }
         Vision.updateEstimateWithValidMeasurements(Limelight.SHOOT_SIDE, m_poseEstimator);
-        Vision.updateEstimateWithValidMeasurements(Limelight.INTAKE_SIDE, m_poseEstimator);
+        //Vision.updateEstimateWithValidMeasurements(Limelight.INTAKE_SIDE, m_poseEstimator);
         // System.out.println(Units.metersToInches(Vision.getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER)));
         //System.out.println(getPose().getTranslation().getDistance(AllianceFlipUtil.getTargetSpeaker().getTranslation()));
     }
@@ -421,7 +425,7 @@ public class Swerve extends SubsystemBase {
                         BaseStatusSignal.getLatencyCompensatedValue(
                                 m_pigeon2.getYaw(), m_pigeon2.getAngularVelocityZDevice());
 
-                m_poseEstimator.update(Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
+                //m_poseEstimator.updateWithTime(Timer.getFPGATimestamp(), Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
             }
         }
         
