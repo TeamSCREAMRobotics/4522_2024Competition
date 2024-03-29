@@ -177,8 +177,8 @@ public class Vision{
                 xyStds = 0.3;
             } else if (estimate.avgTagArea > 0.8 && poseDifference < 0.5) {
                 xyStds = 1.0;
-            } else if (estimate.avgTagArea > 0.1 && poseDifference < 0.3) {
-                xyStds = 2.0;
+            } else if (estimate.avgTagArea > 0.1 && poseDifference < 0.5) {
+                xyStds = 1.0;
             } else {
                 return;
             }
