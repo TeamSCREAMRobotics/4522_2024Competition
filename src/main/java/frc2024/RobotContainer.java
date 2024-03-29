@@ -273,7 +273,7 @@ public class RobotContainer {
                         new ConditionalCommand(
                             new Feed(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led),
                             new PoseAutoFire(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led), 
-                            () -> ScreamUtil.calculateDistanceToTranslation(() -> m_swerve.getPose().getTranslation(), () -> AllianceFlipUtil.getTargetSpeaker().getTranslation()).getAsDouble() >= 6.5)))
+                            () -> ScreamUtil.calculateDistanceToTranslation(() -> m_swerve.getPose().getTranslation(), () -> AllianceFlipUtil.getTargetSpeaker().getTranslation()).getAsDouble() >= 7.0)))
             .onFalse(goHome("AutoFire"));
 
         Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece(false)).negate())

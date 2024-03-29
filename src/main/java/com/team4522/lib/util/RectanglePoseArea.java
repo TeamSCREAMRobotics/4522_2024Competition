@@ -9,6 +9,7 @@ public class RectanglePoseArea {
 
   // From FRC 6391 
   // https://github.com/6391-Ursuline-Bearbotics/2024-6391-Crescendo/blob/master/src/main/java/frc/robot/Util/RectanglePoseArea.java
+  
   /**
    * Create a 2D rectangular area for pose calculations.
    *

@@ -47,7 +47,7 @@ public class Feed extends Command {
   int directionCoefficient;
 
   public Feed(DoubleSupplier[] translationSup, Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, LED led) {
-    addRequirements(swerve, pivot, elevator, shooter, conveyor, led);
+    addRequirements(swerve, pivot, elevator, shooter, led);
     this.swerve = swerve;
     this.pivot = pivot;
     this.elevator = elevator;
@@ -60,7 +60,7 @@ public class Feed extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    targetPoint = AllianceFlipUtil.MirroredTranslation3d(new Translation3d(2.71, 6.02, 5.0));
+    targetPoint = AllianceFlipUtil.MirroredTranslation3d(new Translation3d(2.71, 6.02, 7.0));
     illegalArea = AllianceFlipUtil.PoseArea(FieldConstants.WING_POSE_AREA);
     directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();
   }
@@ -77,14 +77,10 @@ public class Feed extends Command {
     swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
     
     if(!illegalArea.isPoseWithinArea(swerve.getPose())){
-      shooter.setTargetVelocity(targetState.velocityRPM() / 3.5);
+      shooter.setTargetVelocity(targetState.velocityRPM() / 2.75);
       pivot.setTargetAngle(targetState.pivotAngle());
       elevator.setTargetHeight(ElevatorConstants.SUBWOOFER_HEIGHT);
       led.strobe(Color.kGreen, 0.3);
-
-      if(shooter.getShooterAtTarget().getAsBoolean()){
-        conveyor.dutyCycleCommand(ConveyorConstants.SHOOT_SPEED);
-      }
     } else {
       led.strobe(Color.kRed, 0.3);
     }

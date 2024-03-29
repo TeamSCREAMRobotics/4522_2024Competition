@@ -47,8 +47,8 @@ public class SmartShooting {
     Translation2d movingGoalLocation = new Translation2d();
     for(int i=0; i<5; i++){
       /* Calculates the  distance and time for the virtual target */
-        double virtualGoalX = target.getX() - shotTime * (m_fieldRelVel.vxMetersPerSecond + m_fieldRelAccel.ax * 0.01 /* ShooterConstants.kAccelCompFactor */);
-        double virtualGoalY = target.getY() - shotTime * (m_fieldRelVel.vyMetersPerSecond + m_fieldRelAccel.ay * 0.01 /* ShooterConstants.kAccelCompFactor */);
+        double virtualGoalX = target.getX() - shotTime * (m_fieldRelVel.vxMetersPerSecond + m_fieldRelAccel.ax * 0.065 /* ShooterConstants.kAccelCompFactor */);
+        double virtualGoalY = target.getY() - shotTime * (m_fieldRelVel.vyMetersPerSecond + m_fieldRelAccel.ay * 0.065 /* ShooterConstants.kAccelCompFactor */);
         Translation2d virtualGoalLocation = new Translation2d(virtualGoalX, virtualGoalY);
         double toGoalDistance = ScreamUtil.calculateDistanceToTranslation(virtualGoalLocation, currentPose);
         double virtualDistance = (Math.sqrt(Math.pow(toGoalDistance, 2) + Math.pow(targetHeight, 2)));
@@ -161,6 +161,8 @@ public class SmartShooting {
   public static double getRotationToPoint(Swerve swerve, Pivot pivot, Shooter shooter, Translation2d target, boolean virtualCalculation, boolean front, PIDController PIDController){
     targetController = PIDController;
     targetController.enableContinuousInput(-180.0, 180.0);
+
+    target = new Translation2d(target.getX() + Units.inchesToMeters(15.0), target.getY()); //Offsets the target 8 inches forward
 
     if(virtualCalculation){
       target = SmartShooting.calculateVirtualTarget(swerve, pivot, shooter, target);

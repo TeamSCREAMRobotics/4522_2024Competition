@@ -53,7 +53,7 @@ public class PoseAutoFire extends Command {
   final Interpolator<Double> pivotDistanceInterpolator = Interpolator.forDouble();
 
   public PoseAutoFire(DoubleSupplier[] translationSup, Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, LED led) {
-    addRequirements(swerve, pivot, elevator, shooter, conveyor, led);
+    addRequirements(swerve, pivot, elevator, shooter, led);
     this.swerve = swerve;
     this.pivot = pivot;
     this.elevator = elevator;
@@ -66,7 +66,7 @@ public class PoseAutoFire extends Command {
   @Override
   public void initialize() {
     directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();
-    targetSpeaker = AllianceFlipUtil.getTargetSpeaker().getTranslation().plus(new Translation2d(Units.inchesToMeters(8.0) * directionCoefficient, 0));
+    targetSpeaker = AllianceFlipUtil.getTargetSpeaker().getTranslation().plus(new Translation2d(Units.inchesToMeters(12.0) * directionCoefficient, 0));
   }
 
   @Override
@@ -78,13 +78,13 @@ public class PoseAutoFire extends Command {
     Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getPose().getTranslation(), targetSpeaker).minus(new Rotation2d(Math.PI));
     Translation2d translation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times((SwerveConstants.MAX_SPEED * 0.5) * directionCoefficient);
 
-    if(conveyor.hasPiece(false).getAsBoolean()) {
+    //if(conveyor.hasPiece(false).getAsBoolean()) {
       swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
       elevator.setTargetHeight(0.0 /* targetState.elevatorHeightInches() */);
       shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3000.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
       pivot.setTargetAngle(targetState.pivotAngle());
       led.scaledTarget(Color.kOrange, shooter.getRPM(), shooter.getTargetVelocity());
-    }
+    //}
   }
 
   @Override
@@ -94,6 +94,6 @@ public class PoseAutoFire extends Command {
 
   @Override
   public boolean isFinished() {
-    return !conveyor.hasPiece(false).getAsBoolean();
+    return false;
   }
 }
