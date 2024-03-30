@@ -54,6 +54,7 @@ import frc2024.auto.Autonomous.PPEvent;
 import frc2024.auto.Routines;
 import frc2024.commands.AutoFire;
 import frc2024.commands.Feed;
+import frc2024.commands.GoHome;
 import frc2024.commands.Rehome;
 import frc2024.commands.ShooterIdle;
 import frc2024.commands.SmartShootSequence;
@@ -171,8 +172,7 @@ public class RobotContainer {
             .whileTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.HOME)
                     .andThen(
-                        new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
-                            .until(() -> superstructureAtTarget())));
+                        new GoHome(true, m_pivot, m_elevator, m_conveyor, m_intake)));
                     
         Controlboard.goToHomePositionEndgame()
             .whileTrue(
@@ -187,14 +187,14 @@ public class RobotContainer {
                     .andThen(
                         new SuperstructureToPosition(SuperstructureState.SUBWOOFER, m_elevator, m_pivot)
                             .alongWith(m_shooter.velocityCommand(ShooterConstants.SUBWOOFER_VELOCITY))))
-            .onFalse(goHome("Sub"));
+            .onFalse(new GoHome(true, m_pivot, m_elevator, m_conveyor, m_intake));
 
         Controlboard.goToAmpPosition()
             .toggleOnTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.AMP)
                     .andThen(
                         new SuperstructureToPosition(SuperstructureState.AMP, m_elevator, m_pivot)))
-            .onFalse(goHome("Amp"));
+            .onFalse(new GoHome(false, m_pivot, m_elevator, m_conveyor, m_intake));
 
         Controlboard.goToPodiumPosition()
             .whileTrue(
@@ -203,7 +203,7 @@ public class RobotContainer {
                         new SuperstructureToPosition(SuperstructureState.PODIUM, m_elevator, m_pivot)
                             .alongWith(m_shooter.velocityCommand(ShooterConstants.PODIUM_VELOCITY)))
                                 .alongWith(new SnappedDrive(m_swerve, Controlboard.getTranslation(), () -> AllianceFlipUtil.Number(-18.0, -162.0), Controlboard.getSlowMode())))
-            .onFalse(goHome("Podium"));
+            .onFalse(new GoHome(false, m_pivot, m_elevator, m_conveyor, m_intake));
 
         Controlboard.goToChainPosition()
             .whileTrue(
@@ -211,7 +211,7 @@ public class RobotContainer {
                     .andThen(
                         new SuperstructureToPosition(SuperstructureState.CHAIN, m_elevator, m_pivot)
                             .alongWith(m_shooter.velocityCommand(ShooterConstants.CHAIN_VELOCITY))))
-            .onFalse(goHome("Chain"));
+            .onFalse(new GoHome(false, m_pivot, m_elevator, m_conveyor, m_intake));
 
         Controlboard.goToSubwooferPositionDefended()
             .whileTrue(
@@ -219,7 +219,7 @@ public class RobotContainer {
                     .andThen(
                         new SuperstructureToPosition(SuperstructureState.SUBWOOFER_DEFENDED, m_elevator, m_pivot)
                             .alongWith(m_shooter.velocityCommand(ShooterConstants.SUBWOOFER_DEFENDED_VELOCITY))))
-            .onFalse(goHome("SubDefended"));
+            .onFalse(new GoHome(false, m_pivot, m_elevator, m_conveyor, m_intake));
 
         Controlboard.goToPodiumPositionDefended()
             .whileTrue(
@@ -227,7 +227,7 @@ public class RobotContainer {
                     .andThen(
                         new SuperstructureToPosition(SuperstructureState.PODIUM_DEFENDED, m_elevator, m_pivot)
                             .alongWith(m_shooter.velocityCommand(ShooterConstants.PODIUM_VELOCITY))))
-            .onFalse(goHome("PodiumDefended"));
+            .onFalse(new GoHome(false, m_pivot, m_elevator, m_conveyor, m_intake));
 
         Controlboard.goToTrapPosition()
             .toggleOnTrue(
@@ -264,7 +264,7 @@ public class RobotContainer {
                 new InstantCommand(() -> currentState = SuperstructureState.AUTO_FIRE)
                     .andThen(
                         new SmartShootSequence(Controlboard.getTranslation(), false, true, m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_led)))
-            .onFalse(goHome("AutoFire"));
+            .onFalse(new GoHome(true, m_pivot, m_elevator, m_conveyor, m_intake));
 
         Controlboard.autoFire().and(Controlboard.virtualAutoFire().negate())
             .whileTrue(
@@ -274,14 +274,14 @@ public class RobotContainer {
                             new Feed(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led),
                             new PoseShooting(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led), 
                             () -> ScreamUtil.calculateDistanceToTranslation(() -> m_swerve.getPose().getTranslation(), () -> AllianceFlipUtil.getTargetSpeaker().getTranslation()).getAsDouble() >= 7.0)))
-            .onFalse(goHome("AutoFire"));
+            .onFalse(new GoHome(true, m_pivot, m_elevator, m_conveyor, m_intake));
 
         Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece(false)).negate())
             /* .or(Controlboard.intakeOverride()) */
                 .whileTrue(
                     new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, m_led, () -> false)
                 )
-                    .onFalse(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()));
+                    .onFalse(new GoHome(false, m_pivot, m_elevator, m_conveyor, m_intake));
 
         new Trigger(m_conveyor.hasPiece(false))
             .and(Controlboard.intakeFromFloor().or(Controlboard.intakeFromFloorEndgame()))
@@ -292,11 +292,12 @@ public class RobotContainer {
         Controlboard.intakeFromFloorEndgame().and(new Trigger(m_conveyor.hasPiece(true)).negate())
             /* .or(Controlboard.intakeOverride()) */
                 .whileTrue(
-                    new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, m_led, () -> true)
+                    new InstantCommand(() -> currentState = SuperstructureState.HOME_ENDGAME)
+                    .andThen(
+                        new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, m_led, () -> true))
                 )
                 .onFalse(
-                    new SuperstructureToPosition(SuperstructureState.HOME, m_elevator, m_pivot)
-                    .alongWith(m_conveyor.stopCommand().alongWith(m_intake.stopCommand()))
+                    new GoHome(true, m_pivot, m_elevator, m_conveyor, m_intake)
                 );
 
         Controlboard.intakeOverride().whileTrue(m_conveyor.dutyCycleCommand(ConveyorConstants.TRANSFER_OUTPUT)
@@ -314,7 +315,7 @@ public class RobotContainer {
                     m_intake.dutyCycleCommand(IntakeConstants.EJECT_OUTPUT)
                         .alongWith(m_conveyor.dutyCycleCommand(ConveyorConstants.AMP_OUTPUT))
                         .alongWith(m_shooter.dutyCycleCommand(ShooterConstants.EJECT_OUTPUT))))
-            .onFalse((goHome("Eject")));
+            .onFalse(new GoHome(false, m_pivot, m_elevator, m_conveyor, m_intake));
 
         Controlboard.trapAdjustUp()
             .whileTrue(
@@ -334,18 +335,17 @@ public class RobotContainer {
             .whileTrue(m_shooter.velocityCommand(3000))
             .onFalse(m_shooter.idleCommand());
 
-        Controlboard.driverController_Command.povLeft()
-            .whileTrue(
-                new InstantCommand(() -> currentState = SuperstructureState.AUTO_FIRE)
-                    .alongWith(
-                        new Feed(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led)))
-            .onFalse(goHome("Feed"));
-
         /* Controlboard.autoPickupFromFloor()
             .whileTrue(
                 new AutoIntakeFloor(Controlboard.getTranslation(), m_swerve, m_elevator, m_pivot, m_intake, m_conveyor)
                     .until(() -> m_conveyor.hasPiece())); */
 
+        Controlboard.elevatorDown_MAX().whileTrue(
+            m_elevator.voltageCommand(-12.0)
+        ).onFalse(
+            m_elevator.stopCommand()
+        );
+        
         /* Stabilizers */
         new Trigger(Controlboard.endGameMode())
             .whileTrue(
@@ -378,7 +378,7 @@ public class RobotContainer {
             new ShooterIdle(Controlboard.endGameMode(), m_swerve, m_conveyor, m_shooter));
 
         m_led.setDefaultCommand(
-            m_led.waveCommand(() -> (Color) AllianceFlipUtil.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, 22, 2)
+            m_led.waveCommand(() -> (Color) AllianceFlipUtil.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, 22, 0.5)
         );
     }
 
@@ -394,7 +394,7 @@ public class RobotContainer {
                 new AutoIntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, m_led)),
             new PPEvent("StopIntake", m_intake.stopCommand().alongWith(m_conveyor.stopCommand())),
             new PPEvent("RunShooterHigh", m_shooter.velocityCommand(4500)),
-            new PPEvent("Shoot", m_conveyor.dutyCycleCommand(ConveyorConstants.SHOOT_SPEED).withTimeout(1).andThen(m_conveyor.stopCommand()))
+            new PPEvent("Shoot", m_conveyor.dutyCycleCommand(ConveyorConstants.SHOOT_OUTPUT).withTimeout(1).andThen(m_conveyor.stopCommand()))
         );
 
         Autonomous.addRoutines(

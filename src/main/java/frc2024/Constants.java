@@ -143,7 +143,7 @@ public final class Constants{
         );
 
         /* Selected Module Constants */
-        public static final COTSFalconSwerveConstants MODULE_TYPE = COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.L3); 
+        public static final COTSFalconSwerveConstants MODULE_TYPE = COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.LUDICROUS_SPEED); 
 
         /* Swerve Heading Correction */
         public static final ScreamPIDConstants HEADING_CONSTANTS = new ScreamPIDConstants(0.1, 0.0, 0.001);
@@ -270,7 +270,7 @@ public final class Constants{
                 1, 
                 0, 
                 0, 
-                Rotation2d.fromRotations(-0.211669921875) /* -0.319580078125 */
+                Rotation2d.fromRotations(-0.326416015625) /* -0.211669921875 */
             );
 
             /* Front Right */
@@ -278,7 +278,7 @@ public final class Constants{
                 3, 
                 2, 
                 1, 
-                Rotation2d.fromRotations(-0.578125) /* -0.0546875 */
+                Rotation2d.fromRotations(-0.467529296875) /* -0.578125 */
             );
 
             /* Back Left */
@@ -286,7 +286,7 @@ public final class Constants{
                 5, 
                 4, 
                 2, 
-                Rotation2d.fromRotations(-0.073974609375) /* 0.23974609375 */
+                Rotation2d.fromRotations(-0.076904296875) /* -0.073974609375 */
             );
 
             /* Back Right */
@@ -294,7 +294,7 @@ public final class Constants{
                 7, 
                 6, 
                 3, 
-                Rotation2d.fromRotations(-0.50439453125) /* -0.26318359375+0.5 */
+                Rotation2d.fromRotations(-0.5048828125) /* -0.50439453125 */
             );
 
             public static final SwerveModuleConstants MODULE_4 = new SwerveModuleConstants(
@@ -352,7 +352,7 @@ public final class Constants{
         public static final double WHEEL_CIRCUMFERENCE = 4.0 * Math.PI;
 
         /* Motor Invert */
-        public static final InvertedValue MOTOR_INVERT = InvertedValue.Clockwise_Positive;
+        public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;
         
         /* Neutral Modes */
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Coast;
@@ -375,7 +375,7 @@ public final class Constants{
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
 
-        public static final double TARGET_THRESHOLD = 50.0; // rpm
+        public static final double TARGET_THRESHOLD = 100.0; // rpm
 
         public static final double AUTO_SHOOT_VELOCITY_THRESHOLD = 4800; // rpm
         public static final double AUTO_SHOOT_DISTANCE_THRESHOLD = 6.5; // meters
@@ -415,7 +415,7 @@ public final class Constants{
         public static final InvertedValue MOTOR_INVERT = InvertedValue.CounterClockwise_Positive;
         
         /* Neutral Modes */
-        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Coast;
+        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
         
         /* Current Limits */
         public static final int SUPPLY_CURRENT_LIMIT = 30;
@@ -444,13 +444,14 @@ public final class Constants{
         public static final double HARDWARE_LIMIT_POSITION_FORWARD = 0.0;
         public static final double HARDWARE_LIMIT_POSITION_REVERSE = 0.0;
 
-        public static final double TARGET_THRESHOLD = 0.2; //Degrees
+        public static final double TARGET_THRESHOLD = 0.7; //Degrees
 
-        public static final double CRUISE_VELOCITY = 200;
-        public static final double ACCELERATION = 100;
+        public static final double CRUISE_VELOCITY = 55.0; // 200.0
+        public static final double ACCELERATION = 10.0;
+        public static final int JERK = 0;
 
-        public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(450.0, 0.0, 0.0); //500
+        public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, JERK);
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(550.0, 0.0, 0.0); //500
         
         public static final double KS = 0.0;
         public static final double KV = 0.0;
@@ -458,22 +459,24 @@ public final class Constants{
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA, GravityTypeValue.Arm_Cosine);
 
-        public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(14.0);
-        public static final Rotation2d HOME_ANGLE_ENDGAME = Rotation2d.fromDegrees(-13.623);
-        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(-5.3613-1.5);
-        public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(16.9629); //+4.25
-        public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(29.0039);
-        public static final Rotation2d CHAIN_ANGLE = Rotation2d.fromDegrees(22.93945); //+4.25
-        public static final Rotation2d PODIUM_ANGLE = Rotation2d.fromDegrees(13.7988);
-        public static final Rotation2d PODIUM_DEFENDED_ANGLE = Rotation2d.fromDegrees(24.1699);
-        public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(48.516 /* 56.0742 */);
-        public static final Rotation2d AMP5_CLOSESHOTS = Rotation2d.fromDegrees(16.25);
+        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromDegrees(3.1);
+
+        public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(14.0).plus(PIVOT_ANGLE_OFFSET);
+        public static final Rotation2d HOME_ANGLE_ENDGAME = Rotation2d.fromDegrees(-13.623).plus(PIVOT_ANGLE_OFFSET);
+        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(-5.3613-1.5).plus(PIVOT_ANGLE_OFFSET);
+        public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(16.9629).plus(PIVOT_ANGLE_OFFSET); //+4.25
+        public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(29.0039 - 9.0).plus(PIVOT_ANGLE_OFFSET);
+        public static final Rotation2d CHAIN_ANGLE = Rotation2d.fromDegrees(22.93945).plus(PIVOT_ANGLE_OFFSET); //+4.25
+        public static final Rotation2d PODIUM_ANGLE = Rotation2d.fromDegrees(13.7988).plus(PIVOT_ANGLE_OFFSET);
+        public static final Rotation2d PODIUM_DEFENDED_ANGLE = Rotation2d.fromDegrees(24.1699).plus(PIVOT_ANGLE_OFFSET);
+        public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(48.516 /* 56.0742 */).plus(PIVOT_ANGLE_OFFSET);
+        public static final Rotation2d AMP5_CLOSESHOTS = Rotation2d.fromDegrees(16.25).plus(PIVOT_ANGLE_OFFSET);
         public static final Rotation2d EJECT_ANGLE = CHAIN_ANGLE;
 
         public static final double AUTO_ZERO_OUTPUT = 0.0;
 
-        public static final Rotation2d ABSOLUTE_ENCODER_OFFSET = Rotation2d.fromRotations(0.31201171875);
-        public static final Rotation2d RELATIVE_ENCODER_TO_HORIZONTAL = Rotation2d.fromDegrees(44.824); // TODO RE-MEASURE
+        public static final Rotation2d ABSOLUTE_ENCODER_OFFSET = Rotation2d.fromRotations(0.2431640625); // 0.31201171875
+        public static final Rotation2d RELATIVE_ENCODER_TO_HORIZONTAL = Rotation2d.fromDegrees(44.824).minus(PIVOT_ANGLE_OFFSET); // TODO RE-MEASURE
 
         public static final double AXLE_HEIGHT_HOME = Units.inchesToMeters(16.640069);
         public static final double AXLE_HEIGHT_TOP = Units.inchesToMeters(38.059638);
@@ -575,10 +578,10 @@ public final class Constants{
         public static final double SUPPLY_TIME_THRESHOLD = 0;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         
-        public static final double SHOOT_SPEED = 1.00;
+        public static final double SHOOT_OUTPUT = 1.00;
         public static final double AMP_OUTPUT = -1.0;
         public static final double TRANSFER_OUTPUT = 0.75;
-        public static final double TRAP_SPEED = 0.5;
+        public static final double TRAP_OUTPUT = 0.5;
     } 
 
     public static enum SuperstructureState{
@@ -609,7 +612,7 @@ public final class Constants{
     public static record ShootState(Rotation2d pivotAngle, double elevatorHeightInches, double velocityRPM){}
 
     public static final class VisionConstants {
-        public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.23, 0.23, 0.001);
+        public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.15, 0.15, 0.0001);
         public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(10, 10, 100000.0);
 
         public static final double DETECTOR_TARGET_Y = 0.0;
@@ -668,7 +671,7 @@ public final class Constants{
     }
 
     public static final class LEDConstants{
-        public static final int STRIP_LENGTH = 45;
+        public static final int STRIP_LENGTH = 17;
 
         public static final double BREATHE_DURATION = 1.0;
         public static final double WAVE_EXPONENT = 0.4;
@@ -714,7 +717,7 @@ public final class Constants{
         public static final Translation2d BLUE_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(7).get().getTranslation().toTranslation2d();
         public static final Translation2d RED_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(4).get().getTranslation().toTranslation2d();
 
-        public static final double SPEAKER_OPENING_HEIGHT = Units.inchesToMeters(80.567496 - 3.0); // 80.567496
+        public static final double SPEAKER_OPENING_HEIGHT = Units.inchesToMeters(80.567496); // 80.567496 - 3.0
 
         public static final double SPEAKER_TAG_HEIGHT = 1.468864;
         public static final double STAGE_TAG_HEIGHT = 1.320884;

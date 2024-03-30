@@ -34,7 +34,7 @@ public class ShootingUtil {
       //double tof = calculateTOF(elevatorHeightInches, targetHeightMeters);
       double velocityRPM = horizontalDistance * 1000.0;
 
-      return new ShootState(adjustedAngle, VisionConstants.ELEVATOR_HEIGHT_MAP.get(horizontalDistance), velocityRPM);
+      return new ShootState(adjustedAngle, VisionConstants.SHOOT_STATE_MAP.get(Units.metersToFeet(horizontalDistance)).elevatorHeightInches(), velocityRPM);
     }
 
     /* private Rotation2d calculateTargetRobotAngle(){

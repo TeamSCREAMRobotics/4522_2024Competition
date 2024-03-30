@@ -48,7 +48,6 @@ public class Shooter extends SubsystemBase{
         configShooterMotors();
         
         OrchestraUtil.add(m_bottomShooterMotor, m_topShooterMotor);
-        m_bottomShooterMotor.setInverted(true);
     }
     
     private void configShooterMotors() {

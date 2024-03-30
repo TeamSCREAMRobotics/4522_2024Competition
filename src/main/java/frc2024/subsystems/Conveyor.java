@@ -88,7 +88,7 @@ public class Conveyor extends SubsystemBase{
         return new ConditionalCommand(
             dutyCycleCommand(ConveyorConstants.AMP_OUTPUT), 
             new ConditionalCommand(
-                dutyCycleCommand(ConveyorConstants.SHOOT_SPEED), 
+                dutyCycleCommand(ConveyorConstants.SHOOT_OUTPUT), 
                 stopCommand(), 
                 () -> RobotContainer.getCurrentState().get() != SuperstructureState.HOME
                 && RobotContainer.getCurrentState().get() != SuperstructureState.HOME_ENDGAME

@@ -54,15 +54,17 @@ public class ShootSequence extends Command{
         elevator.setTargetHeight(targetState.elevatorPosition);
 
         if(shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD){
-            conveyor.setConveyorOutput(ConveyorConstants.SHOOT_SPEED);
+            conveyor.setConveyorOutput(ConveyorConstants.SHOOT_OUTPUT);
         }
+
+        System.out.println(shooter.getShooterAtTarget().getAsBoolean() + " " + pivot.getPivotAtTarget().getAsBoolean());
     }
 
     @Override
     public void end(boolean interrupted) {
-        shooter.setTargetVelocity(ShooterConstants.IDLE_VELOCITY);
         pivot.stop();
         conveyor.stop();
+        elevator.setTargetHeight(ElevatorConstants.HOME_HEIGHT);
     }
 
     @Override

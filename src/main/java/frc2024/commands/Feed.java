@@ -77,7 +77,7 @@ public class Feed extends Command {
     swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
     
     if(!illegalArea.isPoseWithinArea(swerve.getPose())){
-      shooter.setTargetVelocity(targetState.velocityRPM() / 2.75);
+      shooter.setTargetVelocity(targetState.velocityRPM() / 2.875);
       pivot.setTargetAngle(targetState.pivotAngle());
       elevator.setTargetHeight(ElevatorConstants.SUBWOOFER_HEIGHT);
       led.strobe(Color.kGreen, 0.3);

@@ -217,7 +217,10 @@ public class Swerve extends SubsystemBase {
     }
 
     public void resetPose_Apriltag(){
-        m_poseEstimator.resetPosition(getYaw(), getModulePositions(), Vision.getBotPose2d(Limelight.SHOOT_SIDE));
+        if(Vision.getBotPose2d(Limelight.SHOOT_SIDE).getX() != 0.0){
+            Translation2d translation = Vision.getBotPose2d(Limelight.SHOOT_SIDE).getTranslation();
+            m_poseEstimator.resetPosition(getYaw(), getModulePositions(), new Pose2d(translation, getHeading()));
+        }
     }
 
     /**
@@ -341,6 +344,10 @@ public class Swerve extends SubsystemBase {
      */
     @Override
     public void periodic() {
+        /* if(getModulePositions() != null){
+            m_poseEstimator.updateWithTime(Timer.getFPGATimestamp(), getYaw(), getModulePositions());
+        } */
+        //Vision.updateEstimateWithValidMeasurements(Limelight.SHOOT_SIDE, m_poseEstimator);
         //Vision.updateEstimateWithValidMeasurements(Limelight.INTAKE_SIDE, m_poseEstimator);
         // System.out.println(Units.metersToInches(Vision.getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER)));
         //System.out.println(getPose().getTranslation().getDistance(AllianceFlipUtil.getTargetSpeaker().getTranslation()));

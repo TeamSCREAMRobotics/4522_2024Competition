@@ -69,7 +69,7 @@ public class AutoShootSequence extends Command{
         }
 
         if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && Vision.getTV(Limelight.SHOOT_SIDE)) || (timeout.hasElapsed(2) && shouldTimeout)){
-            conveyor.setConveyorOutput(ConveyorConstants.SHOOT_SPEED);
+            conveyor.setConveyorOutput(ConveyorConstants.SHOOT_OUTPUT);
         }
     }
 

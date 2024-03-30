@@ -21,9 +21,11 @@ import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc2024.Constants;
+import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.FieldConstants;
 import frc2024.Constants.PivotConstants;
@@ -36,6 +38,8 @@ import frc2024.subsystems.Elevator;
 import frc2024.subsystems.LED;
 import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Shooter;
+import frc2024.subsystems.Vision;
+import frc2024.subsystems.Vision.Limelight;
 import frc2024.subsystems.swerve.Swerve;
 
 public class AutoPoseShooting extends Command {
@@ -45,23 +49,30 @@ public class AutoPoseShooting extends Command {
   Shooter shooter;
   Conveyor conveyor;
 
+  Timer timeout = new Timer();
+  boolean shouldTimeout;
+
   Translation2d targetSpeaker;
   double directionCoefficient;
 
   final Interpolator<Double> pivotDistanceInterpolator = Interpolator.forDouble();
 
-  public AutoPoseShooting(Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor) {
-    addRequirements(pivot, elevator, shooter);
+  public AutoPoseShooting(boolean shouldTimeout, Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor) {
+    addRequirements(swerve, pivot, elevator, shooter);
+    this.swerve = swerve;
     this.pivot = pivot;
     this.elevator = elevator;
     this.shooter = shooter;
     this.conveyor = conveyor;
+    this.shouldTimeout = shouldTimeout;
   }
 
   @Override
   public void initialize() {
     directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();
     targetSpeaker = AllianceFlipUtil.getTargetSpeaker().getTranslation().plus(new Translation2d(Units.inchesToMeters(12.0) * directionCoefficient, 0));
+    timeout.reset();
+    timeout.start();
   }
 
   @Override
@@ -70,18 +81,27 @@ public class AutoPoseShooting extends Command {
     ShootState targetState = ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight());
     Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getPose().getTranslation(), targetSpeaker).minus(new Rotation2d(Math.PI));
 
-    PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.of(targetAngle));
+    //PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.of(targetAngle));
 
-    elevator.setTargetHeight(0.0 /* targetState.elevatorHeightInches() */);
+    swerve.resetPose_Apriltag();
+    swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(new Translation2d(), targetAngle));
+    elevator.setTargetHeight(targetState.elevatorHeightInches());
     shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3000.0, 5000.0));
     pivot.setTargetAngle(targetState.pivotAngle());
+
+    if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD) || (timeout.hasElapsed(2) && shouldTimeout)){
+            conveyor.setConveyorOutput(ConveyorConstants.SHOOT_OUTPUT);
+    }
+    System.out.println(shooter.getShooterAtTarget().getAsBoolean() + " " + pivot.getPivotAtTarget().getAsBoolean());
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    conveyor.stop();
+  }
 
   @Override
   public boolean isFinished() {
-    return false;
+    return !conveyor.hasPiece(false).getAsBoolean() || (timeout.hasElapsed(2.5) && shouldTimeout);
   }
 }

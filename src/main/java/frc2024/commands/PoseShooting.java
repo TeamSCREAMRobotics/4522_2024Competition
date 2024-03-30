@@ -79,10 +79,12 @@ public class PoseShooting extends Command {
     Translation2d translation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times((SwerveConstants.MAX_SPEED * 0.5) * directionCoefficient);
 
     swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
-    elevator.setTargetHeight(0.0 /* targetState.elevatorHeightInches() */);
+    elevator.setTargetHeight(targetState.elevatorHeightInches());
     shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3000.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
     pivot.setTargetAngle(targetState.pivotAngle());
     led.scaledTarget(Color.kOrange, shooter.getRPM(), shooter.getTargetVelocity());
+
+    System.out.println("error: " + pivot.getPivotError().getDegrees());
   }
 
   @Override

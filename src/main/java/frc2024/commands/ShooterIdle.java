@@ -50,12 +50,16 @@ public class ShooterIdle extends Command {
        && RobotContainer.getCurrentState().get() != SuperstructureState.AMP
        && RobotContainer.getCurrentState().get() != SuperstructureState.TRAP_CHAIN){
       if(!endgame.getAsBoolean()){
-        shooter.setTargetVelocity(3000);
+        shooter.setTargetVelocity(ShooterConstants.SUBWOOFER_VELOCITY);
       } else {
         shooter.stop();
       }
     } else {
-      shooter.setTargetVelocity(ShooterConstants.IDLE_VELOCITY);
+      if(endgame.getAsBoolean()){
+        shooter.stop();
+      } else {
+        shooter.setTargetVelocity(ShooterConstants.IDLE_VELOCITY);
+      }
     }
   }
 

@@ -231,6 +231,10 @@ public class Controlboard{
     public static final DoubleSupplier getManualElevatorOutput(){
         return () -> (-MathUtil.applyDeadband(operatorController_Command.getLeftY(), STICK_DEADBAND))*6;
     }
+
+    public static final Trigger elevatorDown_MAX(){
+        return operatorController_Command.a();
+    }
     
     public static final Trigger resetElevatorHeight(){
         return new Trigger(() -> buttonBoard.getRawButton(6));

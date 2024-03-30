@@ -100,7 +100,7 @@ public class SmartShootSequence extends Command{
         led.scaledTarget(Color.kGoldenrod, shooter.getRPM(), shooter.getTargetVelocity());
 
         if(((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && Vision.getLockedToTarget(Limelight.SHOOT_SIDE)) || timeout.hasElapsed(2.0)) && shouldTimeout){
-            conveyor.setConveyorOutput(ConveyorConstants.SHOOT_SPEED);
+            conveyor.setConveyorOutput(ConveyorConstants.SHOOT_OUTPUT);
         }
     }
 

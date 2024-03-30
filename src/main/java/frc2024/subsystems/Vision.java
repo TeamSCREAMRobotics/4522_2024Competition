@@ -171,14 +171,14 @@ public class Vision{
         double poseDifference = poseEstimator.getEstimatedPosition().getTranslation()
             .getDistance(estimate.pose.getTranslation());
 
-        if (estimate.tagCount != 0) {
+        if (estimate.tagCount != 0 && DriverStation.isTeleop()) {
             double xyStds;
             if (estimate.tagCount >= 2) {
                 xyStds = 0.3;
-            } else if (estimate.avgTagArea > 0.8 && poseDifference < 0.4) {
+            } else if (estimate.avgTagArea > 0.8 && poseDifference < 0.3) {
                 xyStds = 0.7;
-            } else if (estimate.avgTagArea > 0.1 && poseDifference < 0.4) {
-                xyStds = 0.9;
+            } else if (estimate.avgTagArea > 0.1 && poseDifference < 0.6) {
+                xyStds = 1.1;
             } else {
                 return;
             }
