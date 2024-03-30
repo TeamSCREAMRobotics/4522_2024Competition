@@ -47,7 +47,8 @@ public class ShooterIdle extends Command {
   public void execute() {
     if(conveyor.hasPiece(false).getAsBoolean() 
        && ScreamUtil.calculateDistanceToTranslation(swerve.getPose().getTranslation(), target) <= Units.feetToMeters(25.0)
-       && RobotContainer.getCurrentState().get() != SuperstructureState.AMP){
+       && RobotContainer.getCurrentState().get() != SuperstructureState.AMP
+       && RobotContainer.getCurrentState().get() != SuperstructureState.TRAP_CHAIN){
       if(!endgame.getAsBoolean()){
         shooter.setTargetVelocity(3000);
       } else {

@@ -1,4 +1,4 @@
-package frc2024.commands;
+package frc2024.commands.auto;
 
 import java.util.function.DoubleSupplier;
 
@@ -16,6 +16,7 @@ import frc2024.Constants.ShooterConstants;
 import frc2024.Constants.SuperstructureState;
 import frc2024.Constants.SwerveConstants;
 import frc2024.Constants.VisionConstants;
+import frc2024.commands.AutoFire;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.LED;

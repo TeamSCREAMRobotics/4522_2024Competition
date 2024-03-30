@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc2024.RobotContainer;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.SuperstructureState;
@@ -34,10 +35,11 @@ import frc2024.Constants.PivotConstants;
 import frc2024.Constants.ShooterConstants;
 import frc2024.Constants.SwerveConstants;
 import frc2024.commands.AutoFire;
-import frc2024.commands.ShootSequence;
 import frc2024.commands.SmartShootSequence;
-import frc2024.commands.AutoShootSequence;
 import frc2024.commands.SuperstructureToPosition;
+import frc2024.commands.auto.AutoPoseShooting;
+import frc2024.commands.auto.AutoShootSequence;
+import frc2024.commands.auto.ShootSequence;
 import frc2024.commands.intake.AutoIntakeFloor;
 import frc2024.commands.intake.IntakeFloor;
 import frc2024.commands.swerve.FacePoint;
@@ -123,21 +125,16 @@ public class Routines {
             .andThen(
                 new SequentialCommandGroup(
                 Amp4Close.getIndex(0),
-                new WaitCommand(0.5),
+                new WaitCommand(0.25),
                 Amp4Close.getIndex(1),
-                new WaitCommand(0.5),
+                new WaitCommand(0.25),
                 Amp4Close.getIndex(2),
                 printTimer())
-                    .alongWith(
-                        swerve.overrideRotationTargetCommand(
-                            () -> ScreamUtil.calculateAngleToPoint(
-                                swerve.getPose().getTranslation(), 
-                                AllianceFlipUtil.getTargetSpeaker().getTranslation()).plus(new Rotation2d(Math.PI))))
-                    .alongWith(elevator.heightCommand(ElevatorConstants.HOME_HEIGHT))
-                    .alongWith(intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT))
-                    .alongWith(conveyor.dutyCycleCommand(ConveyorConstants.TRANSFER_OUTPUT))
-                    .alongWith(shooter.velocityCommand(() -> AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).velocityRPM()))
-                    .alongWith(pivot.angleCommand(() -> AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).pivotAngle())));
+                    .deadlineWith(
+                        new AutoPoseShooting(swerve, pivot, elevator, shooter, conveyor)
+                        .alongWith(conveyor.dutyCycleCommand(ConveyorConstants.SHOOT_SPEED))
+                        .alongWith(intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT))),
+                Commands.runOnce(() -> RobotContainer.stopAll()));
     }
 
     public static Command Amp4Center(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake, LED led){

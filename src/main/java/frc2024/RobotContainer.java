@@ -53,13 +53,13 @@ import frc2024.auto.Autonomous;
 import frc2024.auto.Autonomous.PPEvent;
 import frc2024.auto.Routines;
 import frc2024.commands.AutoFire;
-import frc2024.commands.AutoShootSequence;
 import frc2024.commands.Feed;
 import frc2024.commands.Rehome;
 import frc2024.commands.ShooterIdle;
 import frc2024.commands.SmartShootSequence;
-import frc2024.commands.PoseAutoFire;
+import frc2024.commands.PoseShooting;
 import frc2024.commands.SuperstructureToPosition;
+import frc2024.commands.auto.AutoShootSequence;
 import frc2024.commands.intake.AutoIntakeFloor;
 import frc2024.commands.intake.IntakeFloor;
 import frc2024.commands.swerve.TeleopDrive;
@@ -272,7 +272,7 @@ public class RobotContainer {
                     .andThen(
                         new ConditionalCommand(
                             new Feed(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led),
-                            new PoseAutoFire(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led), 
+                            new PoseShooting(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led), 
                             () -> ScreamUtil.calculateDistanceToTranslation(() -> m_swerve.getPose().getTranslation(), () -> AllianceFlipUtil.getTargetSpeaker().getTranslation()).getAsDouble() >= 7.0)))
             .onFalse(goHome("AutoFire"));
 
@@ -393,7 +393,8 @@ public class RobotContainer {
             new PPEvent("StartIntake", //, new PrintCommand("PATHPLANNER INTAKE EVENT COMMENTED FIX ME")),
                 new AutoIntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, m_led)),
             new PPEvent("StopIntake", m_intake.stopCommand().alongWith(m_conveyor.stopCommand())),
-            new PPEvent("RunShooterHigh", m_shooter.velocityCommand(4500))
+            new PPEvent("RunShooterHigh", m_shooter.velocityCommand(4500)),
+            new PPEvent("Shoot", m_conveyor.dutyCycleCommand(ConveyorConstants.SHOOT_SPEED).withTimeout(1).andThen(m_conveyor.stopCommand()))
         );
 
         Autonomous.addRoutines(

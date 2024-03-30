@@ -36,7 +36,7 @@ import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Shooter;
 import frc2024.subsystems.swerve.Swerve;
 
-public class PoseAutoFire extends Command {
+public class PoseShooting extends Command {
   Swerve swerve;
   Pivot pivot;
   Elevator elevator;
@@ -52,7 +52,7 @@ public class PoseAutoFire extends Command {
 
   final Interpolator<Double> pivotDistanceInterpolator = Interpolator.forDouble();
 
-  public PoseAutoFire(DoubleSupplier[] translationSup, Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, LED led) {
+  public PoseShooting(DoubleSupplier[] translationSup, Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, LED led) {
     addRequirements(swerve, pivot, elevator, shooter, led);
     this.swerve = swerve;
     this.pivot = pivot;
@@ -78,19 +78,15 @@ public class PoseAutoFire extends Command {
     Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getPose().getTranslation(), targetSpeaker).minus(new Rotation2d(Math.PI));
     Translation2d translation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times((SwerveConstants.MAX_SPEED * 0.5) * directionCoefficient);
 
-    //if(conveyor.hasPiece(false).getAsBoolean()) {
-      swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
-      elevator.setTargetHeight(0.0 /* targetState.elevatorHeightInches() */);
-      shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3000.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
-      pivot.setTargetAngle(targetState.pivotAngle());
-      led.scaledTarget(Color.kOrange, shooter.getRPM(), shooter.getTargetVelocity());
-    //}
+    swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
+    elevator.setTargetHeight(0.0 /* targetState.elevatorHeightInches() */);
+    shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3000.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
+    pivot.setTargetAngle(targetState.pivotAngle());
+    led.scaledTarget(Color.kOrange, shooter.getRPM(), shooter.getTargetVelocity());
   }
 
   @Override
-  public void end(boolean interrupted) {
-    
-  }
+  public void end(boolean interrupted) {}
 
   @Override
   public boolean isFinished() {

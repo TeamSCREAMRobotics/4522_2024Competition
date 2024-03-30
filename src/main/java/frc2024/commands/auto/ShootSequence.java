@@ -1,4 +1,4 @@
-package frc2024.commands;
+package frc2024.commands.auto;
 
 import java.util.function.DoubleSupplier;
 
