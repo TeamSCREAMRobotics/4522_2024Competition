@@ -3,6 +3,8 @@ package frc2024.subsystems.swerve;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
@@ -19,6 +21,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -28,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.Constants.Ports;
+import frc2024.Constants.RobotMode;
 import frc2024.Constants.SwerveConstants;
 import frc2024.Constants.VisionConstants;
 import frc2024.Constants.SwerveConstants.ModuleConstants;
@@ -45,8 +49,11 @@ public class Swerve extends SubsystemBase {
     private SwerveModule[] m_swerveModules;
     private SwerveModulePosition[] m_modulePositions;
     private SwerveDrivePoseEstimator m_poseEstimator;
+    private SwerveDriveOdometry m_odometry;
     //private PoseEstimator m_poseEstimator;
     private OdometryThread m_odometryThread;
+    private ChassisSpeeds m_desiredSpeeds = new ChassisSpeeds();
+    private SwerveModuleState[] m_desiredStates = new SwerveModuleState[4];
 
     private PIDController m_headingController = SwerveConstants.HEADING_CONSTANTS.toPIDController();
     private PIDController m_snapController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
@@ -86,6 +93,12 @@ public class Swerve extends SubsystemBase {
             VisionConstants.STATE_STD_DEVS,
             VisionConstants.VISION_STD_DEVS
         );
+
+        m_odometry = new SwerveDriveOdometry(
+            SwerveConstants.KINEMATICS, 
+            getYaw(), 
+            getModulePositions()
+        );
         
         m_odometryThread = new OdometryThread();
         m_odometryThread.start();
@@ -100,7 +113,7 @@ public class Swerve extends SubsystemBase {
      */
     public void configureAutoBuilder(){
         AutoBuilder.configureHolonomic(
-            this::getPose,
+            this::getOdometryPose,
             this::resetPose,
             this::getRobotRelativeSpeeds,
             this::setChassisSpeeds,
@@ -112,6 +125,10 @@ public class Swerve extends SubsystemBase {
         );
     }
 
+    public void stopOdometryThread(){
+        m_odometryThread.stop();
+    }
+
     /**
      * Resets the yaw of the gyro to zero.
      */
@@ -119,8 +136,12 @@ public class Swerve extends SubsystemBase {
         m_pigeon2.setYaw(rotation.getDegrees());
     }
 
-    public void resetHeading(Rotation2d rotation) {
-        m_poseEstimator.resetPosition(getYaw(), getModulePositions(), new Pose2d(getPose().getTranslation(), rotation));
+    public void resetEstimatedHeading(Rotation2d rotation) {
+        m_poseEstimator.resetPosition(getYaw(), getModulePositions(), new Pose2d(getEstimatedPose().getTranslation(), rotation));
+    }
+
+    public void resetOdometryHeading(Rotation2d rotation) {
+        m_poseEstimator.resetPosition(getYaw(), getModulePositions(), new Pose2d(getOdometryPose().getTranslation(), rotation));
     }
 
     /**
@@ -142,12 +163,12 @@ public class Swerve extends SubsystemBase {
      * @return The calculated ChassisSpeeds.
      */
     public ChassisSpeeds fieldRelativeSpeeds(Translation2d translation, double angularVel){
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(translation.getX(), translation.getY(), angularVel, getHeading());
+        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(translation.getX(), translation.getY(), angularVel, getEstimatedHeading());
         return ChassisSpeeds.discretize(speeds, Constants.LOOP_TIME_SEC);
     }
 
     public ChassisSpeeds snappedFieldRelativeSpeeds(Translation2d translation, Rotation2d angle){
-        return fieldRelativeSpeeds(translation, m_snapController.calculate(getHeading().getDegrees(), angle.getDegrees()));
+        return fieldRelativeSpeeds(translation, m_snapController.calculate(getEstimatedHeading().getDegrees(), angle.getDegrees()));
     }
 
     /**
@@ -157,12 +178,13 @@ public class Swerve extends SubsystemBase {
      * @param isOpenLoop Whether the ChassisSpeeds is open loop (Tele-Op driving), or closed loop (Autonomous driving).
      */
     public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, Translation2d centerOfRotationMeters, boolean isOpenLoop){
-        SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds, centerOfRotationMeters);
+        m_desiredSpeeds = chassisSpeeds;
+        m_desiredStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds, centerOfRotationMeters);
 
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.MAX_SPEED);
+        SwerveDriveKinematics.desaturateWheelSpeeds(m_desiredStates, SwerveConstants.MAX_SPEED);
 
         for (SwerveModule mod : m_swerveModules) {
-            mod.set(swerveModuleStates[mod.getModuleNumber()], isOpenLoop);
+            mod.set(m_desiredStates[mod.getModuleNumber()], isOpenLoop);
         }
     }
 
@@ -204,6 +226,11 @@ public class Swerve extends SubsystemBase {
     public double calculateHeadingCorrection(double currentAngle, double lastAngle){
         return m_headingController.calculate(currentAngle, lastAngle);
     }
+
+    public boolean snappedToAngle(double threshold){
+        m_snapController.setTolerance(threshold);
+        return m_snapController.atSetpoint();
+    }
     
     /**
      * Resets the pose reported by the odometry to the specified pose.
@@ -214,12 +241,13 @@ public class Swerve extends SubsystemBase {
         resetYaw(Rotation2d.fromDegrees(0.0)); //TODO needs testing
         resetModulePositions();
         m_poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
+        m_odometry.resetPosition(getYaw(), getModulePositions(), pose);
     }
 
     public void resetPose_Apriltag(){
         if(Vision.getBotPose2d(Limelight.SHOOT_SIDE).getX() != 0.0){
             Translation2d translation = Vision.getBotPose2d(Limelight.SHOOT_SIDE).getTranslation();
-            m_poseEstimator.resetPosition(getYaw(), getModulePositions(), new Pose2d(translation, getHeading()));
+            m_poseEstimator.resetPosition(getYaw(), getModulePositions(), new Pose2d(translation, getEstimatedHeading()));
         }
     }
 
@@ -228,8 +256,12 @@ public class Swerve extends SubsystemBase {
      *
      * @return The current pose of the odometry.
      */
-    public Pose2d getPose() {
+    public Pose2d getEstimatedPose() {
         return m_poseEstimator.getEstimatedPosition();
+    }
+
+    public Pose2d getOdometryPose(){
+        return m_odometry.getPoseMeters();
     }
 
     /**
@@ -287,13 +319,21 @@ public class Swerve extends SubsystemBase {
         return ChassisSpeeds.fromRobotRelativeSpeeds(getRobotRelativeSpeeds(), getYaw());
     }
 
+    public double getRobotSpeed(){
+        return Math.sqrt(Math.pow(getRobotRelativeSpeeds().vxMetersPerSecond, 2) + Math.pow(getRobotRelativeSpeeds().vyMetersPerSecond, 2));
+    }
+
     /**
      * Returns the odometry rotation in degrees.
      *
      * @return The odometry rotation as a Rotation2d.
      */
-    public Rotation2d getHeading() {
+    public Rotation2d getEstimatedHeading() {
         return m_poseEstimator.getEstimatedPosition().getRotation();
+    }
+
+    public Rotation2d getOdometryHeading() {
+        return m_odometry.getPoseMeters().getRotation();
     }
 
     public Rotation2d getYaw(){
@@ -351,6 +391,25 @@ public class Swerve extends SubsystemBase {
         //Vision.updateEstimateWithValidMeasurements(Limelight.INTAKE_SIDE, m_poseEstimator);
         // System.out.println(Units.metersToInches(Vision.getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER)));
         //System.out.println(getPose().getTranslation().getDistance(AllianceFlipUtil.getTargetSpeaker().getTranslation()));
+        if(Constants.MODE == RobotMode.COMP){
+            logOutputs();
+        }
+    }
+
+    public void logOutputs(){
+        Logger.recordOutput("RobotState/OdometryPose", getOdometryPose());
+        Logger.recordOutput("RobotState/EstimatedPose", getEstimatedPose());
+        Logger.recordOutput("RobotState/GyroAngle", getYaw());
+        Logger.recordOutput("Swerve/Setpoint/DesiredSpeeds", m_desiredSpeeds);
+        Logger.recordOutput("Swerve/Measured/FieldSpeeds", getFieldRelativeSpeeds());
+        Logger.recordOutput("Swerve/Measured/RobotSpeeds", getRobotRelativeSpeeds());
+        Logger.recordOutput("Swerve/Measured/States", getModuleStates());
+        Logger.recordOutput("Swerve/Setpoint/DesiredStates", m_desiredStates);
+        Logger.recordOutput("Swerve/Measured/ModulePositions", getModulePositions());
+        Logger.recordOutput("Swerve/CurrentCommand", getCurrentCommand().toString());
+        for(SwerveModule mod : getModules()){
+            mod.logOutputs();
+        }
     }
 
     public Command resetPoseCommand(Pose2d pose){
@@ -428,8 +487,7 @@ public class Swerve extends SubsystemBase {
                         BaseStatusSignal.getLatencyCompensatedValue(
                                 m_pigeon2.getYaw(), m_pigeon2.getAngularVelocityZDevice());
 
-                m_poseEstimator.updateWithTime(Timer.getFPGATimestamp(), Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
-                Vision.updateEstimateWithValidMeasurements(Limelight.SHOOT_SIDE, m_poseEstimator);
+                m_odometry.update(Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
             }
         }
         

@@ -94,24 +94,5 @@ public class Conveyor extends SubsystemBase{
                 && RobotContainer.getCurrentState().get() != SuperstructureState.HOME_ENDGAME
                 && RobotContainer.getCurrentState().get() != SuperstructureState.NONE), 
             () -> RobotContainer.getCurrentState().get() == SuperstructureState.AMP);
-        /* Command command;
-        switch (RobotContainer.getCurrentState().get()) {
-            case AMP:
-            case TRAP_CHAIN:
-                command = dutyCycleCommand(ConveyorConstants.AMP_OUTPUT);
-                break;
-            case CHAIN:
-            case PODIUM_DEFENDED:
-            case PODIUM:
-            case SUBWOOFER:
-            case SUBWOOFER_DEFENDED:
-            case AUTO_FIRE:
-                command = dutyCycleCommand(ConveyorConstants.SHOOT_SPEED);
-                break;
-            default:
-                command = stopCommand();
-                break;
-        }
-        return command; */
     }
 }

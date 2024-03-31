@@ -5,8 +5,10 @@ import java.util.function.Supplier;
 
 import javax.swing.TransferHandler.TransferSupport;
 
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonUtils;
 
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.team4522.lib.pid.ScreamPIDConstants;
@@ -128,5 +130,19 @@ public class ScreamUtil {
 
     public static boolean valueBetween(double value, double upper, double lower){
         return value < upper && value > lower;
+    }
+
+    public static void logBasicMotorOutputs(String path, TalonFX motor){
+        Logger.recordOutput(path + "/Motor/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
+        Logger.recordOutput(path + "/Motor/SupplyCurrent", motor.getSupplyCurrent().getValueAsDouble());
+        Logger.recordOutput(path + "/Motor/TorqueCurrent", motor.getTorqueCurrent().getValueAsDouble());
+        Logger.recordOutput(path + "/Motor/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
+        Logger.recordOutput(path + "/Motor/TempCelcius", motor.getDeviceTemp().getValueAsDouble());
+    }
+
+    public static void logServoMotorOutputs(String path, TalonFX motor){
+        Logger.recordOutput(path + "/Measured/Position", motor.getPosition().getValueAsDouble());
+        Logger.recordOutput(path + "/Measured/Velocity", motor.getVelocity().getValueAsDouble());
+        Logger.recordOutput(path + "/Measured/Acceleration", motor.getAcceleration().getValueAsDouble());
     }
 }

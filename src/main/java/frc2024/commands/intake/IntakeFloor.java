@@ -35,6 +35,7 @@ import frc2024.subsystems.Pivot;
 public class IntakeFloor extends SequentialCommandGroup {
   
   public IntakeFloor(Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake, LED led, BooleanSupplier endGame) {
+    setName("IntakeFloor");
     addCommands(
         elevator.heightCommand(endGame.getAsBoolean() ? ElevatorConstants.HOME_HEIGHT_ENDGAME : ElevatorConstants.HOME_HEIGHT)
             .alongWith(pivot.angleCommand(endGame.getAsBoolean() ? PivotConstants.HOME_ANGLE_ENDGAME : PivotConstants.HOME_ANGLE))

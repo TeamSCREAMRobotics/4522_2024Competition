@@ -47,9 +47,10 @@ public class AutoFire extends Command{
     static final Interpolator<Double> pivotDistanceInterpolator = Interpolator.forDouble();
 
     PIDController rotationController;
-
+    
     public AutoFire(DoubleSupplier[] translationSup, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, LED led){
         addRequirements(swerve, pivot, shooter);
+        setName("AutoFire");
         this.swerve = swerve;
         this.elevator = elevator;
         this.pivot = pivot;

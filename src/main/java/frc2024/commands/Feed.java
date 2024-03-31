@@ -48,6 +48,7 @@ public class Feed extends Command {
 
   public Feed(DoubleSupplier[] translationSup, Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, LED led) {
     addRequirements(swerve, pivot, elevator, shooter, led);
+    setName("Feed");
     this.swerve = swerve;
     this.pivot = pivot;
     this.elevator = elevator;
@@ -69,15 +70,15 @@ public class Feed extends Command {
   @Override
   public void execute() {
 
-    double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getPose().getTranslation(), targetPoint.toTranslation2d());
+    double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getEstimatedPose().getTranslation(), targetPoint.toTranslation2d());
     ShootState targetState = ShootingUtil.calculateShootState(targetPoint.getZ(), horizontalDistance, elevator.getElevatorHeight());
-    Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getPose().getTranslation(), targetPoint.toTranslation2d()).minus(new Rotation2d(Math.PI));
-    Translation2d translation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times((SwerveConstants.MAX_SPEED * 0.5) * directionCoefficient);
+    Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation(), targetPoint.toTranslation2d()).minus(new Rotation2d(Math.PI));
+    Translation2d translation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times((SwerveConstants.MAX_SPEED * 0.8) * directionCoefficient);
 
     swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
     
-    if(!illegalArea.isPoseWithinArea(swerve.getPose())){
-      shooter.setTargetVelocity(targetState.velocityRPM() / 2.875);
+    if(!illegalArea.isPoseWithinArea(swerve.getEstimatedPose())){
+      shooter.setTargetVelocity(targetState.velocityRPM() / 2.93);
       pivot.setTargetAngle(targetState.pivotAngle());
       elevator.setTargetHeight(ElevatorConstants.SUBWOOFER_HEIGHT);
       led.strobe(Color.kGreen, 0.3);

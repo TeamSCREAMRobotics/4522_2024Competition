@@ -22,6 +22,7 @@ public class DriveToPose extends Command {
 
   public DriveToPose(Swerve swerve, Pose2d targetPose) {
     addRequirements(swerve);
+    setName("DriveToPose");
 
     this.swerve = swerve;
     this.targetPose = targetPose;
@@ -37,8 +38,8 @@ public class DriveToPose extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Translation2d translationValue = new Translation2d(driveController.calculate(swerve.getPose().getX(), targetPose.getX()), driveController.calculate(swerve.getPose().getY(), targetPose.getY()));
-    double rotationValue = rotationController.calculate(swerve.getHeading().getDegrees(), targetPose.getRotation().getDegrees());
+    Translation2d translationValue = new Translation2d(driveController.calculate(swerve.getEstimatedPose().getX(), targetPose.getX()), driveController.calculate(swerve.getEstimatedPose().getY(), targetPose.getY()));
+    double rotationValue = rotationController.calculate(swerve.getEstimatedHeading().getDegrees(), targetPose.getRotation().getDegrees());
 
     swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(translationValue, rotationValue));
   }

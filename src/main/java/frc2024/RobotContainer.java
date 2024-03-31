@@ -112,7 +112,7 @@ public class RobotContainer {
      * Configures button bindings from Controlboard.
      */
     private void configButtonBindings() {
-        Controlboard.zeroGyro().onTrue(Commands.runOnce(() -> m_swerve.resetHeading(AllianceFlipUtil.getForwardRotation())));
+        Controlboard.zeroGyro().onTrue(Commands.runOnce(() -> m_swerve.resetEstimatedHeading(AllianceFlipUtil.getForwardRotation())));
         Controlboard.resetPose_Apriltag().onTrue(Commands.runOnce(() -> m_swerve.resetPose_Apriltag()).ignoringDisable(true));
         //Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, new Rotation2d()))));
 
@@ -272,8 +272,8 @@ public class RobotContainer {
                     .andThen(
                         new ConditionalCommand(
                             new Feed(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led),
-                            new PoseShooting(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led), 
-                            () -> ScreamUtil.calculateDistanceToTranslation(() -> m_swerve.getPose().getTranslation(), () -> AllianceFlipUtil.getTargetSpeaker().getTranslation()).getAsDouble() >= 7.0)))
+                            new PoseShooting(Controlboard.getTranslation(), Controlboard.defendedMode(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led), 
+                            () -> ScreamUtil.calculateDistanceToTranslation(() -> m_swerve.getEstimatedPose().getTranslation(), () -> AllianceFlipUtil.getTargetSpeaker().getTranslation()).getAsDouble() >= 7.0)))
             .onFalse(new GoHome(true, m_pivot, m_elevator, m_conveyor, m_intake));
 
         Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece(false)).negate())
@@ -353,7 +353,7 @@ public class RobotContainer {
             .onTrue(new InstantCommand(() -> m_led.setDefaultCommand(m_led.rainbowCommand(10, 1.5)))
                 .andThen(m_led.rainbowCommand(10, 1.5)))
             .onFalse(new InstantCommand(() -> m_led.setDefaultCommand(m_led.waveCommand(() -> (Color) AllianceFlipUtil.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, 22, 2)))
-                .andThen(m_led.waveCommand(() -> (Color) AllianceFlipUtil.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, 22, 2)));
+                .andThen(m_led.waveCommand(() -> (Color) AllianceFlipUtil.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, LEDConstants.STRIP_LENGTH / 2.0, () -> (1.0 / m_swerve.getRobotSpeed()) * 2)));
 
         new Trigger(() -> Timer.getMatchTime() < 20.0).onTrue(m_led.strobeCommand(Color.kWhite, 0.1).withTimeout(1));
 
@@ -378,7 +378,7 @@ public class RobotContainer {
             new ShooterIdle(Controlboard.endGameMode(), m_swerve, m_conveyor, m_shooter));
 
         m_led.setDefaultCommand(
-            m_led.waveCommand(() -> (Color) AllianceFlipUtil.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, 22, 0.5)
+            m_led.waveCommand(() -> (Color) AllianceFlipUtil.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, LEDConstants.STRIP_LENGTH / 2.0, () -> (1.0 / m_swerve.getRobotSpeed()) * 2)
         );
     }
 

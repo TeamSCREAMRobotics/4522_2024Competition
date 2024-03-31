@@ -17,6 +17,7 @@ public class Rehome extends Command {
 
   public Rehome(Elevator elevator, Pivot pivot) {
     addRequirements(elevator, pivot);
+    setName("Rehome");
 
     this.elevator = elevator;
     this.pivot = pivot;

@@ -226,12 +226,13 @@ public class DeviceConfig {
                     fx.getConfigurator().apply(config),
                     fx.getConfigurator().setPosition(0.0),
                     fx.getVelocity().setUpdateFrequency(updateFrequencyHz),
-                    fx.getAcceleration().setUpdateFrequency(updateFrequencyHz),
+                    fx.getAcceleration().setUpdateFrequency(50.0),
                     fx.getPosition().setUpdateFrequency(updateFrequencyHz),
-                    fx.getSupplyVoltage().setUpdateFrequency(updateFrequencyHz),
-                    fx.getStatorCurrent().setUpdateFrequency(updateFrequencyHz),
-                    fx.getSupplyCurrent().setUpdateFrequency(updateFrequencyHz),
-                    fx.getTorqueCurrent().setUpdateFrequency(updateFrequencyHz));
+                    fx.getSupplyVoltage().setUpdateFrequency(10.0),
+                    fx.getStatorCurrent().setUpdateFrequency(10.0),
+                    fx.getSupplyCurrent().setUpdateFrequency(10.0),
+                    fx.getTorqueCurrent().setUpdateFrequency(50.0),
+                    fx.getDeviceTemp().setUpdateFrequency(4.0));
             }
         };
         ErrorChecker.configureDevice(deviceConfig, name + " " + fx.getDeviceID() + " version " + fx.getVersion(), true);
@@ -245,7 +246,7 @@ public class DeviceConfig {
                     encoder.getConfigurator().apply(config),
                     encoder.getVelocity().setUpdateFrequency(updateFrequencyHz),
                     encoder.getPosition().setUpdateFrequency(updateFrequencyHz),
-                    encoder.getSupplyVoltage().setUpdateFrequency(updateFrequencyHz),
+                    encoder.getSupplyVoltage().setUpdateFrequency(50.0),
                     encoder.getAbsolutePosition().setUpdateFrequency(updateFrequencyHz));
                 }
         };

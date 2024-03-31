@@ -4,6 +4,7 @@
 
 package frc2024.commands;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.team4522.lib.math.Conversions;
@@ -29,6 +30,7 @@ import frc2024.Constants.ShootState;
 import frc2024.Constants.ShooterConstants;
 import frc2024.Constants.SwerveConstants;
 import frc2024.Constants.VisionConstants;
+import frc2024.controlboard.Controlboard;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.LED;
@@ -48,12 +50,14 @@ public class PoseShooting extends Command {
 
   Translation2d targetSpeaker;
   double directionCoefficient;
-  ChassisSpeeds robotSpeed;
+
+  BooleanSupplier isDefended;
 
   final Interpolator<Double> pivotDistanceInterpolator = Interpolator.forDouble();
 
-  public PoseShooting(DoubleSupplier[] translationSup, Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, LED led) {
+  public PoseShooting(DoubleSupplier[] translationSup, BooleanSupplier isDefended, Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, LED led) {
     addRequirements(swerve, pivot, elevator, shooter, led);
+    setName("PoseShooting");
     this.swerve = swerve;
     this.pivot = pivot;
     this.elevator = elevator;
@@ -61,6 +65,7 @@ public class PoseShooting extends Command {
     this.conveyor = conveyor;
     this.led = led;
     this.translationSup = translationSup;
+    this.isDefended = isDefended;
   }
 
   @Override
@@ -71,20 +76,23 @@ public class PoseShooting extends Command {
 
   @Override
   public void execute() {
-    robotSpeed = swerve.getFieldRelativeSpeeds();
-
-    double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getPose().getTranslation(), targetSpeaker);
+    double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getEstimatedPose().getTranslation(), targetSpeaker);
     ShootState targetState = ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight());
-    Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getPose().getTranslation(), targetSpeaker).minus(new Rotation2d(Math.PI));
+    Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation(), targetSpeaker).minus(new Rotation2d(Math.PI));
     Translation2d translation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times((SwerveConstants.MAX_SPEED * 0.5) * directionCoefficient);
+    Rotation2d adjustedPivotAngle = 
+      Rotation2d.fromDegrees(
+        MathUtil.clamp(
+          targetState.pivotAngle().getDegrees() + (ShootingUtil.calculatePivotAngleAdjustment(swerve.getFieldRelativeSpeeds(), horizontalDistance, 0.5).getDegrees() * directionCoefficient), 
+          elevator.getElevatorHeight() > 1.5 ? PivotConstants.SUBWOOFER_ANGLE.getDegrees() : 1, 
+          45)
+      );
 
     swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
-    elevator.setTargetHeight(targetState.elevatorHeightInches());
+    elevator.setTargetHeight(isDefended.getAsBoolean() && swerve.snappedToAngle(45.0) ? ElevatorConstants.MAX_HEIGHT : targetState.elevatorHeightInches());
     shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3000.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
-    pivot.setTargetAngle(targetState.pivotAngle());
+    pivot.setTargetAngle(adjustedPivotAngle);
     led.scaledTarget(Color.kOrange, shooter.getRPM(), shooter.getTargetVelocity());
-
-    System.out.println("error: " + pivot.getPivotError().getDegrees());
   }
 
   @Override

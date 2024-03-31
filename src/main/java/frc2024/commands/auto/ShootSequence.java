@@ -39,6 +39,7 @@ public class ShootSequence extends Command{
 
     public ShootSequence(SuperstructureState state, double velocity, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor){
         addRequirements(elevator, pivot, shooter, conveyor);
+        setName("ShootSequence");
         this.elevator = elevator;
         this.pivot = pivot;
         this.shooter = shooter;

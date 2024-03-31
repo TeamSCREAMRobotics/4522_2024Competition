@@ -26,6 +26,7 @@ public class AutoAlign extends Command {
 
   public AutoAlign(Swerve swerve, Rotation2d targetAngle, double targetY, Limelight limelight) {
     addRequirements(swerve);
+    setName("AutoAlign");
 
     this.swerve = swerve;
     this.targetAngle = targetAngle;

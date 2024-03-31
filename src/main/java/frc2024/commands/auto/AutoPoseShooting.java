@@ -59,6 +59,7 @@ public class AutoPoseShooting extends Command {
 
   public AutoPoseShooting(boolean shouldTimeout, Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor) {
     addRequirements(swerve, pivot, elevator, shooter);
+    setName("AutoPoseShooting");
     this.swerve = swerve;
     this.pivot = pivot;
     this.elevator = elevator;
@@ -77,9 +78,9 @@ public class AutoPoseShooting extends Command {
 
   @Override
   public void execute() {
-    double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getPose().getTranslation(), targetSpeaker);
+    double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getEstimatedPose().getTranslation(), targetSpeaker);
     ShootState targetState = ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight());
-    Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getPose().getTranslation(), targetSpeaker).minus(new Rotation2d(Math.PI));
+    Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation(), targetSpeaker).minus(new Rotation2d(Math.PI));
 
     //PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.of(targetAngle));
 

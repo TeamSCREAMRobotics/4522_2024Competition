@@ -53,6 +53,7 @@ public class FacePoint extends Command {
   /** Face Point Command With Virtual Targeting */
   public FacePoint(Swerve swerve, Pivot pivot, Shooter shooter, DoubleSupplier[] translationSup, Translation2d target, boolean intakeSide) {
     addRequirements(swerve, pivot, shooter);
+    setName("FacePoint");
 
     this.swerve = swerve;
     this.pivot = pivot;
@@ -78,11 +79,11 @@ public class FacePoint extends Command {
 
     Translation2d drivingTranslation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlipUtil.getDirectionCoefficient());
 
-    targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getPose().getTranslation(), target);
+    targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation(), target);
     /* Substract PI if the robot should face the point with the back of the robot */
     if(!front) targetAngle = targetAngle.minus(Rotation2d.fromRadians(Math.PI));
 
-    swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(drivingTranslation, targetController.calculate(swerve.getHeading().getDegrees(), targetAngle.getDegrees())));
+    swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(drivingTranslation, targetController.calculate(swerve.getEstimatedHeading().getDegrees(), targetAngle.getDegrees())));
   }
 
   // Called once the command ends or is interrupted.

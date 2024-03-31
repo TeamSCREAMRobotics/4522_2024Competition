@@ -39,6 +39,7 @@ import frc2024.subsystems.swerve.Swerve;
 public class AutoIntakeFloor extends SequentialCommandGroup {
 
     public AutoIntakeFloor(Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake, LED led){
+        setName("AutoIntakeFloor");
         addCommands(
             new IntakeFloor(elevator, pivot, conveyor, intake, led, () -> false).withTimeout(1.5)
                 .until(conveyor.hasPiece(false))

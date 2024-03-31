@@ -41,6 +41,7 @@ public class AutoShootSequence extends Command{
 
     public AutoShootSequence(boolean shouldTimeout, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, LED led){
         addRequirements(swerve, elevator, pivot, shooter);
+        setName("AutoShootSequence");
         this.swerve = swerve;
         this.elevator = elevator;
         this.pivot = pivot;

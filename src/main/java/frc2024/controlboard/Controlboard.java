@@ -42,15 +42,17 @@ public class Controlboard{
     public static boolean fieldCentric = true;
 
     public static Command driverRumbleCommand(RumbleType type, double value, double time){
-        return new RunCommand(() -> driverController_Command.getHID().setRumble(type, value))
-            .withTimeout(time)
-            .andThen(() -> driverController_Command.getHID().setRumble(type, 0.0));
+        return Commands.startEnd(
+            () -> driverController_Command.getHID().setRumble(type, value),
+            () -> driverController_Command.getHID().setRumble(type, 0.0))
+            .withTimeout(time);
     }
 
     public static Command operatorRumbleCommand(RumbleType type, double value, double time){
-        return new RunCommand(() -> operatorController_Command.getHID().setRumble(type, value))
-            .withTimeout(time)
-            .andThen(() -> operatorController_Command.getHID().setRumble(type, 0.0));
+        return Commands.startEnd(
+            () -> operatorController_Command.getHID().setRumble(type, value),
+            () -> operatorController_Command.getHID().setRumble(type, 0.0))
+            .withTimeout(time);
     }
 
     /**

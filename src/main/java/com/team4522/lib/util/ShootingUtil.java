@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.Interpolator;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import frc2024.Constants;
 import frc2024.Constants.ElevatorConstants;
@@ -29,7 +30,7 @@ public class ShootingUtil {
     public static ShootState calculateShootState(double targetHeightMeters, double horizontalDistance, double elevatorHeightInches){
       Rotation2d baseAngle = new Translation2d(horizontalDistance, targetHeightMeters - PivotConstants.SHOOTER_DISTANCE_FROM_AXLE).minus(calculateAbsolutePivotPosition(elevatorHeightInches)).getAngle();
       /* Rotation2d adjustedAngle = Rotation2d.fromDegrees(MathUtil.clamp(-baseAngle.getDegrees() + PivotConstants.RELATIVE_ENCODER_TO_HORIZONTAL.getDegrees(), 1, 45)).plus(calculatePivotAngleAdjustment()); */
-      Rotation2d adjustedAngle = Rotation2d.fromDegrees(MathUtil.clamp((-baseAngle.getDegrees() + PivotConstants.RELATIVE_ENCODER_TO_HORIZONTAL.getDegrees()), 1, 45));
+      Rotation2d adjustedAngle = Rotation2d.fromDegrees((-baseAngle.getDegrees() + PivotConstants.RELATIVE_ENCODER_TO_HORIZONTAL.getDegrees()));
 
       //double tof = calculateTOF(elevatorHeightInches, targetHeightMeters);
       double velocityRPM = horizontalDistance * 1000.0;
@@ -45,10 +46,9 @@ public class ShootingUtil {
       return ScreamUtil.calculateAngleToPoint(swerve.getPose().getTranslation(), targetSpeaker.plus(calculateCurveOffset())).plus(movingAngleAdjustment).minus(Rotation2d.fromRadians(Math.PI));
     } */
 
-    /* private Rotation2d calculatePivotAngleAdjustment(){
-      double scaleFactor = 0.5;
-      return Rotation2d.fromRadians(scaleFactor * Math.tan(robotSpeed.vxMetersPerSecond / calculateHorizontalDistance()));
-    } */
+    public static  Rotation2d calculatePivotAngleAdjustment(ChassisSpeeds robotSpeed, double horizontalDistance, double scalingFactor){
+      return Rotation2d.fromDegrees(scalingFactor * robotSpeed.vxMetersPerSecond);
+    }
 
     public static double robotCenterToPivot(double elevatorHeightInches){
       return pivotDistanceInterpolator.interpolate(PivotConstants.AXLE_DISTANCE_FROM_ROBOT_CENTER_HOME, PivotConstants.AXLE_DISTANCE_FROM_ROBOT_CENTER_TOP, elevatorHeightInches / ElevatorConstants.MAX_HEIGHT);

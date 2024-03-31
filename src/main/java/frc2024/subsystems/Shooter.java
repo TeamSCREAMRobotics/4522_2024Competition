@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.RobotContainer;
 import frc2024.Constants.Ports;
+import frc2024.Constants.RobotMode;
 import frc2024.Constants.ShooterConstants;
 import frc2024.dashboard.tabs.SubsystemTestTab;
 import frc2024.subsystems.Vision.Limelight;
@@ -117,7 +118,9 @@ public class Shooter extends SubsystemBase{
     @Override
     public void periodic() {
         //System.out.println("Shooter: " + getShooterAtTarget().getAsBoolean());
-        //logOutputs();
+        if(Constants.MODE == RobotMode.COMP){
+            logOutputs();
+        }
     }
 
     public void logOutputs(){
@@ -125,14 +128,8 @@ public class Shooter extends SubsystemBase{
         Logger.recordOutput("Shooter/Measured/AverageError", getShooterError());
         Logger.recordOutput("Shooter/Setpoint/Velocity", m_targetVelocity);
         Logger.recordOutput("Shooter/Setpoint/AtTarget", getShooterAtTarget().getAsBoolean());
-        Logger.recordOutput("Shooter/Power/Left/SupplyCurrent", m_topShooterMotor.getSupplyCurrent().getValueAsDouble());
-        Logger.recordOutput("Shooter/Power/Left/StatorCurrent", m_topShooterMotor.getStatorCurrent().getValueAsDouble());
-        Logger.recordOutput("Shooter/Power/Left/Voltage", m_topShooterMotor.getSupplyVoltage().getValueAsDouble());
-        Logger.recordOutput("Shooter/Power/Right/SupplyCurrent", m_bottomShooterMotor.getSupplyCurrent().getValueAsDouble());
-        Logger.recordOutput("Shooter/Power/Right/StatorCurrent", m_bottomShooterMotor.getStatorCurrent().getValueAsDouble());
-        Logger.recordOutput("Shooter/Power/Right/Voltage", m_topShooterMotor.getSupplyVoltage().getValueAsDouble());
-        Logger.recordOutput("Shooter/Power/AverageVoltage", getShooterVoltage());
-        Logger.recordOutput("Shooter/Power/AverageCurrent", getShooterCurrent());
+        ScreamUtil.logBasicMotorOutputs("Shooter/Bottom", m_bottomShooterMotor);
+        ScreamUtil.logBasicMotorOutputs("Shooter/Top", m_topShooterMotor);
         //Logger.recordOutput("Shooter/CurrentCommand", getCurrentCommand().getName());
     }
 
@@ -141,12 +138,11 @@ public class Shooter extends SubsystemBase{
     }
 
     public Command velocityCommand(double velocityRPM){
-        return run(() -> setTargetVelocity(velocityRPM)).withName("VelocityCommand")
-            .alongWith(RobotContainer.getLED().scaledTargetCommand(Color.kPurple, () -> getRPM(), () -> velocityRPM));
+        return velocityCommand(() -> velocityRPM);
     }
 
     public Command velocityCommand(DoubleSupplier velocityRPM){
-        return run(() -> setTargetVelocity(velocityRPM.getAsDouble())).withName("VelocityCommand[Supplier]")
+        return run(() -> setTargetVelocity(velocityRPM.getAsDouble())).withName("VelocityCommand")
             .alongWith(RobotContainer.getLED().scaledTargetCommand(Color.kPurple, () -> getRPM(), velocityRPM));
     }
 

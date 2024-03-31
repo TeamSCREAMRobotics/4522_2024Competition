@@ -37,6 +37,7 @@ public class SnappedDrive extends Command {
      */
     public SnappedDrive(Swerve swerve, DoubleSupplier[] translationSup, DoubleSupplier snapAngle, BooleanSupplier slowMode) {
         addRequirements(swerve);
+        setName("SnappedDrive");
 
         this.swerve = swerve;
         this.translationSup = translationSup;

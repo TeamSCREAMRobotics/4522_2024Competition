@@ -29,6 +29,7 @@ public class FaceVisionTarget extends Command {
   
   public FaceVisionTarget(Swerve swerve, DoubleSupplier[] translationSup, ScreamPIDConstants rotationConstants, Limelight limelight) {
     addRequirements(swerve);
+    setName("FaceVisionTarget");
     this.swerve = swerve;
     this.translationSup = translationSup;
     rotController = rotationConstants.toPIDController();
@@ -37,6 +38,7 @@ public class FaceVisionTarget extends Command {
 
   public FaceVisionTarget(Swerve swerve, ScreamPIDConstants rotationConstants, Limelight limelight) {
     addRequirements(swerve);
+    setName("FaceVisionTarget");
     this.swerve = swerve;
     this.translationSup = new DoubleSupplier[]{() -> 0.0, () -> 0.0};
     rotController = rotationConstants.toPIDController();

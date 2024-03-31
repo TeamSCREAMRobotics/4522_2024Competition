@@ -12,12 +12,14 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.pid.ScreamPIDConstants;
 import com.team4522.lib.util.OrchestraUtil;
+import com.team4522.lib.util.ScreamUtil;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.Constants.StabilizerConstants;
 import frc2024.Constants.Ports;
+import frc2024.Constants.RobotMode;
 
 public class Stabilizers extends SubsystemBase{
 
@@ -76,6 +78,17 @@ public class Stabilizers extends SubsystemBase{
 
     public void stop(){
         m_stabilizerMotor.stopMotor();
+    }
+
+    @Override
+    public void periodic() {
+        if(Constants.MODE == RobotMode.COMP){
+            logOutputs();
+        }
+    }
+
+    public void logOutputs(){
+        ScreamUtil.logBasicMotorOutputs("Stabilizers", m_stabilizerMotor);
     }
 
     public Command outputCommand(DoubleSupplier output){

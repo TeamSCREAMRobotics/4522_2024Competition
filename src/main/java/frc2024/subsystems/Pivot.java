@@ -19,6 +19,7 @@ import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.pid.ScreamPIDConstants;
 import com.team4522.lib.util.OrchestraUtil;
 import com.team4522.lib.util.RunOnce;
+import com.team4522.lib.util.ScreamUtil;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -35,6 +36,7 @@ import frc2024.Constants.StabilizerConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.Ports;
+import frc2024.Constants.RobotMode;
 import frc2024.controlboard.Controlboard;
 
 public class Pivot extends SubsystemBase{
@@ -120,42 +122,41 @@ public class Pivot extends SubsystemBase{
     @Override
     public void periodic() {
         //System.out.println("Pivot:" + m_targetAngle.getDegrees());
-        //logOutputs();
-        /* if(Controlboard.increasePivot().getAsBoolean()){
-            m_tweakAngle = m_tweakAngle.minus(Rotation2d.fromDegrees(1));
-        } else if(Controlboard.decreasePivot().getAsBoolean()){
-            m_tweakAngle = m_tweakAngle.plus(Rotation2d.fromDegrees(1));
+        if(Controlboard.operatorController_Command.getHID().getRightStickButtonPressed()){
+            m_tweakAngle = m_tweakAngle.minus(Rotation2d.fromDegrees(0.5));
+        } else if(Controlboard.operatorController_Command.getHID().getLeftStickButtonPressed()){
+            m_tweakAngle = m_tweakAngle.plus(Rotation2d.fromDegrees(0.5));
         }
-        System.out.println(Controlboard.operatorController_Command.ge); */
         //System.out.println("Encoder: " + getPivotAngle().getDegrees());
         // System.out.println("Motor: " + Rotation2d.fromRotations(m_pivotMotor.getPosition().refresh().getValue()).getDegrees());
         
         // System.out.println(m_pivotMotor.getSupplyCurrent().getValueAsDouble());
+        if(Constants.MODE == RobotMode.COMP){
+            logOutputs();
+        }
     }
 
     public void logOutputs(){
+        ScreamUtil.logBasicMotorOutputs("Pivot", m_pivotMotor);
+        ScreamUtil.logServoMotorOutputs("Pivot", m_pivotMotor);
         Logger.recordOutput("Pivot/Measured/Angle", getPivotAngle());
-        Logger.recordOutput("Pivot/Measured/Rotations", m_pivotMotor.getPosition().getValueAsDouble());
-        Logger.recordOutput("Pivot/Measured/ErrorDegrees", getPivotError());
+        Logger.recordOutput("Pivot/Measured/AngleHorizontal", getPivotAngle().unaryMinus().plus(PivotConstants.RELATIVE_ENCODER_TO_HORIZONTAL));
+        Logger.recordOutput("Pivot/Measured/Error", getPivotError());
         Logger.recordOutput("Pivot/Setpoint/Angle", m_targetAngle);
-        Logger.recordOutput("Pivot/Setpoint/Rotations", m_targetAngle.getRotations());
         Logger.recordOutput("Pivot/Setpoint/AtTarget", getPivotAtTarget().getAsBoolean());
-        Logger.recordOutput("Pivot/Power/StatorCurrent", m_pivotMotor.getStatorCurrent().getValueAsDouble());
-        Logger.recordOutput("Pivot/Power/SupplyCurrent", m_pivotMotor.getSupplyCurrent().getValueAsDouble());
-        Logger.recordOutput("Pivot/Power/Voltage", m_pivotMotor.getSupplyVoltage().getValueAsDouble());
-        //Logger.recordOutput("Pivot/CurrentCommand", getCurrentCommand().getName());
+        Logger.recordOutput("Pivot/CurrentCommand", getCurrentCommand().getName());
     }
 
     public Command dutyCycleCommand(DoubleSupplier dutyCycle){
-        return run(() -> setPivotOutput(dutyCycle.getAsDouble())).withName("DutyCycleCommand[Supplier]");
+        return run(() -> setPivotOutput(dutyCycle.getAsDouble())).withName("DutyCycleCommand");
     }
 
     public Command dutyCycleCommand(double dutyCycle){
-        return run(() -> setPivotOutput(dutyCycle)).withName("DutyCycleCommand");
+        return dutyCycleCommand(() -> dutyCycle);
     }
 
     public Command angleCommand(Supplier<Rotation2d> angle){
-        return run(() -> setTargetAngle(angle.get())).withName("AngleCommand");
+        return run(() -> setTargetAngle(angle.get().plus(m_tweakAngle))).withName("AngleCommand");
     }
 
     public Command angleCommand(Rotation2d angle){

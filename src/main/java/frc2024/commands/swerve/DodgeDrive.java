@@ -27,6 +27,7 @@ public class DodgeDrive extends Command{
     
     public DodgeDrive(Swerve swerve, DoubleSupplier[] translationSup, DoubleSupplier rotationSup, DodgeDirection direction, BooleanSupplier slowMode) {
         addRequirements(swerve);
+        setName("DodgeDrive");
 
         this.swerve = swerve;
         this.translationSup = translationSup;
@@ -38,7 +39,7 @@ public class DodgeDrive extends Command{
 
     @Override
     public void initialize() {
-        lastHeading = swerve.getHeading();
+        lastHeading = swerve.getEstimatedHeading();
     }
 
     @Override

@@ -99,9 +99,9 @@ public class SwerveTab extends ShuffleboardTabBase {
         m_BREncoder.setDouble(filter(m_swerve.getModules()[3].getEncoderAngle().getDegrees()));
         m_BRIntegrated.setDouble(filter(m_swerve.getModules()[3].getPosition(true).angle.getDegrees()));
 
-        m_odometryX.setDouble(m_swerve.getPose().getX());
-        m_odometryY.setDouble(m_swerve.getPose().getY());
-        m_odometryRotation.setDouble(m_swerve.getHeading().getDegrees());
+        m_odometryX.setDouble(m_swerve.getEstimatedPose().getX());
+        m_odometryY.setDouble(m_swerve.getEstimatedPose().getY());
+        m_odometryRotation.setDouble(m_swerve.getEstimatedHeading().getDegrees());
         
         m_gyroYaw.setDouble(m_swerve.getYaw().getDegrees());
 

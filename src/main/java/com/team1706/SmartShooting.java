@@ -34,10 +34,10 @@ public class SmartShooting {
 
   //1706 mock-up, shoot while moving from Rapid React 2022 Season
   public static Translation2d calculateVirtualTarget(Swerve swerve, Pivot pivot, Shooter shooter, Translation2d target){
-    Translation2d currentPose = /* Vision.getBotPose2d(Limelight.SHOOT_SIDE).getTranslation(); */ swerve.getPose().getTranslation();
+    Translation2d currentPose = /* Vision.getBotPose2d(Limelight.SHOOT_SIDE).getTranslation(); */ swerve.getEstimatedPose().getTranslation();
 
     /* Sets the field relative speed variables */
-    ChassisSpeeds m_fieldRelVel = ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotRelativeSpeeds(), swerve.getHeading());
+    ChassisSpeeds m_fieldRelVel = ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotRelativeSpeeds(), swerve.getEstimatedHeading());
     ChassisSpeeds m_lastFieldRelVel = m_fieldRelVel;
     FieldRelativeAccel m_fieldRelAccel = new FieldRelativeAccel(m_fieldRelVel, m_lastFieldRelVel, Constants.LOOP_TIME_SEC);
 
@@ -109,7 +109,7 @@ public class SmartShooting {
   //** Calculates the distance to a specified target based on the shooter side limelight */
   public static double getDistanceToTarget_SHOOTER(Swerve swerve, Translation2d target, double targetHeight){
     double pivotHeight = PivotConstants.AXLE_HEIGHT_HOME;
-    Translation2d currentPosition = swerve.getPose().getTranslation(); /* Vision.getBotPose2d(Limelight.SHOOT_SIDE).getTranslation(); */
+    Translation2d currentPosition = swerve.getEstimatedPose().getTranslation(); /* Vision.getBotPose2d(Limelight.SHOOT_SIDE).getTranslation(); */
 
     double height_diff = targetHeight - pivotHeight;
     double horizontalDistance = currentPosition.getDistance(target);
@@ -168,11 +168,11 @@ public class SmartShooting {
       target = SmartShooting.calculateVirtualTarget(swerve, pivot, shooter, target);
     }
 
-    Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getPose().getTranslation() /* Vision.getBotPose2d(Limelight.SHOOT_SIDE).getTranslation() */, target);
+    Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation() /* Vision.getBotPose2d(Limelight.SHOOT_SIDE).getTranslation() */, target);
     /* Substract PI if the robot should face the point with the back of the robot */
     if(!front) targetAngle = targetAngle.minus(Rotation2d.fromRadians(Math.PI));
 
-    double targetValue = targetController.calculate(swerve.getHeading().getDegrees(), targetAngle.getDegrees());
+    double targetValue = targetController.calculate(swerve.getEstimatedHeading().getDegrees(), targetAngle.getDegrees());
 
     return targetValue;
   }

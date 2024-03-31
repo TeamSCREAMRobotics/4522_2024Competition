@@ -22,6 +22,7 @@ import frc2024.subsystems.Pivot;
 public class SuperstructureToPosition extends SequentialCommandGroup{
 
     public SuperstructureToPosition(SuperstructureState position, Elevator elevator, Pivot pivot){
+        setName("SuperstructureToPosition");
         addCommands(
             elevator.heightCommand(position.elevatorPosition)
                 .alongWith(pivot.angleCommand(position.pivotAngle))

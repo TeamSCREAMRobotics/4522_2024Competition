@@ -39,6 +39,7 @@ public class TeleopDrive extends Command {
      */
     public TeleopDrive(Swerve swerve, DoubleSupplier[] translationSup, DoubleSupplier rotationSup, BooleanSupplier fieldCentricSup, BooleanSupplier slowMode) {
         addRequirements(swerve);
+        setName("TeleopDrive");
 
         this.swerve = swerve;
         this.translationSup = translationSup;
@@ -51,7 +52,7 @@ public class TeleopDrive extends Command {
     public void initialize() {
         correctionTimer.stop();
         correctionTimer.reset();
-        lastAngle = swerve.getHeading();
+        lastAngle = swerve.getEstimatedHeading();
     } 
 
     /**
@@ -93,11 +94,11 @@ public class TeleopDrive extends Command {
         correctionTimer.start();
 
         if(correctionTimer.get() <= SwerveConstants.CORRECTION_TIME_THRESHOLD){
-            lastAngle = swerve.getHeading();
+            lastAngle = swerve.getEstimatedHeading();
         }
 
         if(correctionTimer.hasElapsed(SwerveConstants.CORRECTION_TIME_THRESHOLD)){
-            return swerve.calculateHeadingCorrection(swerve.getHeading().getDegrees(), lastAngle.getDegrees());
+            return swerve.calculateHeadingCorrection(swerve.getEstimatedHeading().getDegrees(), lastAngle.getDegrees());
         }
 
         return currentValue * SwerveConstants.MAX_ANGULAR_VELOCITY;

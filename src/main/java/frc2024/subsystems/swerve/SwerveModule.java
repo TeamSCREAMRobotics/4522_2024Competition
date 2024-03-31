@@ -1,5 +1,7 @@
 package frc2024.subsystems.swerve;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -15,6 +17,7 @@ import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.math.Conversions;
 import com.team4522.lib.pid.ScreamPIDConstants;
 import com.team4522.lib.util.OrchestraUtil;
+import com.team4522.lib.util.ScreamUtil;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -263,6 +266,13 @@ public class SwerveModule {
 
     public BaseStatusSignal[] getSignals() {
         return m_signals;
+    }
+
+    public void logOutputs(){
+        ScreamUtil.logBasicMotorOutputs("Swerve/Modules/" + m_modLocation + "/Drive", m_driveMotor);
+        ScreamUtil.logBasicMotorOutputs("Swerve/Modules/" + m_modLocation + "/Steer", m_steerMotor);
+        ScreamUtil.logServoMotorOutputs("Swerve/Modules/" + m_modLocation + "/Drive", m_driveMotor);
+        ScreamUtil.logServoMotorOutputs("Swerve/Modules/" + m_modLocation + "/Steer", m_steerMotor);
     }
 
     public void stopAll(){

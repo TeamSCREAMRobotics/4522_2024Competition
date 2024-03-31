@@ -41,6 +41,7 @@ public class SmartShootSequence extends Command{
 
     public SmartShootSequence(DoubleSupplier[] translationSup, boolean timeout, boolean virtualCalculation, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, LED led){
         addRequirements(swerve, elevator, pivot, shooter);
+        setName("SmartShootSequence");
 
         this.swerve = swerve;
         this.elevator = elevator;

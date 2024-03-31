@@ -5,6 +5,7 @@
 package frc2024.subsystems;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -126,14 +127,17 @@ public class LED extends SubsystemBase{
 
     public void scaledTarget(Color color, double currentValue, double targetValue){
         if(targetValue == 0) return;
+
         int mapped = (int) Math.round(Conversions.mapRange(currentValue, 0, targetValue, 0, length));
-        if(mapped >= length - 2) color = Color.kGreen;
+        mapped = MathUtil.clamp(mapped, 0, length);
+
+        if(mapped >= length - 1) color = Color.kGreen;
+
         for(int i = 0; i < mapped; i++){
-            if(i >= length) return;
             buffer.setLED(i, color);
         }
+
         for(int i = mapped; i < length; i++){
-            if(i >= length) return;
             buffer.setLED(i, Color.kBlack);
         }
     }
@@ -174,6 +178,10 @@ public class LED extends SubsystemBase{
 
     public Command waveCommand(Supplier<Color> color1, Supplier<Color> color2, double cycleLength, double duration){
         return run(() -> wave(color1.get(), color2.get(), cycleLength, duration)).ignoringDisable(true);
+    }
+
+    public Command waveCommand(Supplier<Color> color1, Supplier<Color> color2, double cycleLength, DoubleSupplier duration){
+        return run(() -> wave(color1.get(), color2.get(), cycleLength, duration.getAsDouble())).ignoringDisable(true);
     }
 
     public Command stripeCommand(List<Color> colors, int length, double duration){

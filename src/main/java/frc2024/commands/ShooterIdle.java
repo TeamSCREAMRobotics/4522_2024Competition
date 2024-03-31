@@ -30,6 +30,7 @@ public class ShooterIdle extends Command {
 
   public ShooterIdle(BooleanSupplier endgame, Swerve swerve, Conveyor conveyor, Shooter shooter) {
     addRequirements(shooter);
+    setName("ShooterIdle");
     this.endgame = endgame;
     this.swerve = swerve;
     this.conveyor = conveyor;
@@ -46,7 +47,7 @@ public class ShooterIdle extends Command {
   @Override
   public void execute() {
     if(conveyor.hasPiece(false).getAsBoolean() 
-       && ScreamUtil.calculateDistanceToTranslation(swerve.getPose().getTranslation(), target) <= Units.feetToMeters(25.0)
+       && ScreamUtil.calculateDistanceToTranslation(swerve.getEstimatedPose().getTranslation(), target) <= Units.feetToMeters(25.0)
        && RobotContainer.getCurrentState().get() != SuperstructureState.AMP
        && RobotContainer.getCurrentState().get() != SuperstructureState.TRAP_CHAIN){
       if(!endgame.getAsBoolean()){
