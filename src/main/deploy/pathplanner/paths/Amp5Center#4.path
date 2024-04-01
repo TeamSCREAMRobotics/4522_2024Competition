@@ -63,7 +63,7 @@
             {
               "type": "named",
               "data": {
-                "name": "StartIntake"
+                "name": "RunIntake"
               }
             }
           ]
@@ -83,7 +83,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "4SubSide_Center",
+  "folder": "5SubSide_Center",
   "previewStartingState": {
     "rotation": 10.0,
     "velocity": 0

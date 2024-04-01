@@ -63,7 +63,6 @@ public class ShootSequence extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        pivot.stop();
         conveyor.stop();
         elevator.setTargetHeight(ElevatorConstants.HOME_HEIGHT);
     }

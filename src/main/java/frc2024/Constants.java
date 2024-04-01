@@ -430,14 +430,27 @@ public final class Constants{
             DEFAULT_CURRENT_CONFIG.SupplyCurrentLimit = SUPPLY_CURRENT_LIMIT;
             DEFAULT_CURRENT_CONFIG.SupplyCurrentThreshold = SUPPLY_CURRENT_THRESHOLD;
             DEFAULT_CURRENT_CONFIG.SupplyTimeThreshold = SUPPLY_TIME_THRESHOLD;
+            DEFAULT_CURRENT_CONFIG.StatorCurrentLimit = 0.0;
         }
+
+        public static final CurrentLimitsConfigs SPRINGY_CURRENT_CONFIG = new CurrentLimitsConfigs();
+        static{
+            SPRINGY_CURRENT_CONFIG.SupplyCurrentLimitEnable = true;
+            SPRINGY_CURRENT_CONFIG.StatorCurrentLimitEnable = true;
+            SPRINGY_CURRENT_CONFIG.SupplyCurrentLimit = 2.0;
+            SPRINGY_CURRENT_CONFIG.SupplyCurrentThreshold = 0.0;
+            SPRINGY_CURRENT_CONFIG.SupplyTimeThreshold = 0.0;
+            SPRINGY_CURRENT_CONFIG.StatorCurrentLimit = 3.0;
+        }
+
+        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromDegrees(3.1);
         
         public static final boolean SOFTWARE_LIMIT_ENABLE = false;
         public static final boolean SOFTWARE_LIMIT_ENABLE_ENDGAME = true;
         public static final Rotation2d FORWARD_SOFT_LIMIT = Rotation2d.fromDegrees(40.0);
         public static final Rotation2d REVERSE_SOFT_LIMIT = Rotation2d.fromDegrees(-9999);
-        public static final Rotation2d FORWARD_SOFT_LIMIT_ENDGAME = Rotation2d.fromDegrees(54.0);
-        public static final Rotation2d REVERSE_SOFT_LIMIT_ENDGAME = Rotation2d.fromDegrees(25.0);
+        public static final Rotation2d FORWARD_SOFT_LIMIT_ENDGAME = Rotation2d.fromDegrees(54.0).plus(PIVOT_ANGLE_OFFSET);
+        public static final Rotation2d REVERSE_SOFT_LIMIT_ENDGAME = Rotation2d.fromDegrees(25.0).plus(PIVOT_ANGLE_OFFSET);
 
         public static final boolean HARDWARE_AUTO_POSITION_FORWARD_ENABLE = false;
         public static final boolean HARDWARE_AUTO_POSITION_REVERSE_ENABLE = false;
@@ -458,8 +471,6 @@ public final class Constants{
         public static final double KA = 0.0;
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA, GravityTypeValue.Arm_Cosine);
-
-        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromDegrees(3.1);
 
         public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(14.0).plus(PIVOT_ANGLE_OFFSET);
         public static final Rotation2d HOME_ANGLE_ENDGAME = Rotation2d.fromDegrees(-13.623).plus(PIVOT_ANGLE_OFFSET);
@@ -532,7 +543,7 @@ public final class Constants{
         public static final double SUBWOOFER_HEIGHT = 3.12684; //3.5;
         public static final double AMP_HEIGHT = 19.70989;
         public static final double TRAP_CHAIN_HEIGHT = MAX_HEIGHT;
-        public static final double EJECT_HEIGHT = MAX_HEIGHT/3.0;
+        public static final double EJECT_HEIGHT = MAX_HEIGHT/4.0;
 
         public static final double REHOME_VOLTAGE = -5.0;
         public static final double REHOME_CURRENT_THRESHOLD = 0.0;

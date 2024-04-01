@@ -103,8 +103,8 @@ public class Swerve extends SubsystemBase {
         m_odometryThread = new OdometryThread();
         m_odometryThread.start();
 
-        m_headingController.enableContinuousInput(-180, 180);
-        m_snapController.enableContinuousInput(-180.0, 180);
+        m_headingController.enableContinuousInput(-180.0, 180.0);
+        m_snapController.enableContinuousInput(-180.0, 180.0);
     }
 
     /**

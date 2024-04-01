@@ -2,13 +2,12 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc2024.commands;
+package frc2024.commands.auto;
 
-import java.util.function.BooleanSupplier;
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
-import org.littletonrobotics.junction.Logger;
-
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.team4522.lib.math.Conversions;
 import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.ScreamUtil;
@@ -22,9 +21,11 @@ import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc2024.Constants;
+import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.FieldConstants;
 import frc2024.Constants.PivotConstants;
@@ -32,42 +33,35 @@ import frc2024.Constants.ShootState;
 import frc2024.Constants.ShooterConstants;
 import frc2024.Constants.SwerveConstants;
 import frc2024.Constants.VisionConstants;
-import frc2024.controlboard.Controlboard;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.LED;
 import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Shooter;
+import frc2024.subsystems.Vision;
+import frc2024.subsystems.Vision.Limelight;
 import frc2024.subsystems.swerve.Swerve;
 
-public class PoseShooting extends Command {
+public class AutoPoseShootingContinuous extends Command {
   Swerve swerve;
   Pivot pivot;
   Elevator elevator;
   Shooter shooter;
   Conveyor conveyor;
-  LED led;
-
-  DoubleSupplier[] translationSup;
 
   Translation2d targetSpeaker;
   double directionCoefficient;
 
-  BooleanSupplier isDefended;
-
   final Interpolator<Double> pivotDistanceInterpolator = Interpolator.forDouble();
 
-  public PoseShooting(DoubleSupplier[] translationSup, BooleanSupplier isDefended, Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, LED led) {
-    addRequirements(swerve, pivot, elevator, shooter, led);
-    setName("PoseShooting");
+  public AutoPoseShootingContinuous(Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor) {
+    addRequirements(swerve, pivot, elevator, shooter);
+    setName("AutoPoseShootingContinuous");
     this.swerve = swerve;
     this.pivot = pivot;
     this.elevator = elevator;
     this.shooter = shooter;
     this.conveyor = conveyor;
-    this.led = led;
-    this.translationSup = translationSup;
-    this.isDefended = isDefended;
   }
 
   @Override
@@ -81,22 +75,16 @@ public class PoseShooting extends Command {
     double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getEstimatedPose().getTranslation(), targetSpeaker);
     ShootState targetState = ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight());
     Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation(), targetSpeaker).minus(new Rotation2d(Math.PI));
-    Translation2d translation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times((SwerveConstants.MAX_SPEED * 0.5) * directionCoefficient);
-    Rotation2d adjustedPivotAngle = 
-      Rotation2d.fromDegrees(
-        MathUtil.clamp(
-          targetState.pivotAngle().getDegrees() + (ShootingUtil.calculatePivotAngleAdjustment(swerve.getFieldRelativeSpeeds(), horizontalDistance, 0.5).getDegrees() * directionCoefficient), 
-          elevator.getElevatorHeight() > 1.5 ? PivotConstants.SUBWOOFER_ANGLE.getDegrees() : 1, 
-          45)
-      );
 
-    swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
-    elevator.setTargetHeight(isDefended.getAsBoolean() && swerve.snappedToAngle(45.0) ? ElevatorConstants.MAX_HEIGHT : targetState.elevatorHeightInches());
-    shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3000.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
-    pivot.setTargetAngle(adjustedPivotAngle);
-    led.scaledTarget(Color.kOrange, shooter.getRPM(), shooter.getTargetVelocity());
+    PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.of(targetAngle));
 
-    Logger.recordOutput("Commands/PoseShooting/Distance", horizontalDistance);
+    swerve.resetPose_Apriltag();
+    swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(new Translation2d(), targetAngle));
+    elevator.setTargetHeight(targetState.elevatorHeightInches());
+    shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3000.0, 5000.0));
+    pivot.setTargetAngle(targetState.pivotAngle());
+
+    System.out.println(shooter.getShooterAtTarget().getAsBoolean() + " " + pivot.getPivotAtTarget().getAsBoolean());
   }
 
   @Override

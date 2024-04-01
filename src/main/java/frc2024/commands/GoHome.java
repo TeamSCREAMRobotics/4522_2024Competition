@@ -13,11 +13,11 @@ import frc2024.subsystems.Pivot;
 
 public class GoHome extends SequentialCommandGroup{
 
-    public GoHome(boolean shouldWait, Pivot pivot, Elevator elevator, Conveyor conveyor, Intake intake){
+    public GoHome(boolean pivotFirst, Pivot pivot, Elevator elevator, Conveyor conveyor, Intake intake){
         addRequirements(pivot, elevator, conveyor, intake);
         setName("GoHome");
         addCommands(
-            new WaitCommand(shouldWait ? 0.15 : 0).deadlineWith(pivot.angleCommand(PivotConstants.HOME_ANGLE))
+            new WaitCommand(pivotFirst ? 0.15 : 0).deadlineWith(pivot.angleCommand(PivotConstants.HOME_ANGLE))
                 .andThen(elevator.heightCommand(ElevatorConstants.HOME_HEIGHT))
                 .alongWith(conveyor.stopCommand())
                 .alongWith(intake.stopCommand())

@@ -59,6 +59,7 @@ public class Robot extends LoggedRobot {
   private RobotContainer robotContainer;
 
   private Timer timeSinceDisabled = new Timer();
+  private Timer autoTimer = new Timer();
   private RunOnce autoConfigurator = new RunOnce();
 
   public Robot() {}
@@ -125,6 +126,7 @@ public class Robot extends LoggedRobot {
       DriverStation.getAlliance().isPresent());
     //System.out.println("(" + RobotContainer.getPivot().getPivotAngle().getDegrees() + ", " + RobotContainer.getElevator().getElevatorHeight() + ", " + RobotContainer.getShooter().getRPM() + ")");
     Vision.periodic();
+    if(Constants.MODE == RobotMode.COMP) RobotContainer.logOutputs();
   }
 
   @Override
@@ -162,12 +164,19 @@ public class Robot extends LoggedRobot {
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     if (autonomousCommand != null) {
+      autoTimer.reset();
+      autoTimer.start();
       autonomousCommand.schedule();
     }
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    if(autonomousCommand.isFinished()){
+      autoTimer.stop();
+      System.out.println("[Auto] Time taken: " + autoTimer.get());
+    }
+  }
 
   @Override
   public void autonomousExit() {

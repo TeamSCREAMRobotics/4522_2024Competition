@@ -41,7 +41,7 @@
             {
               "type": "named",
               "data": {
-                "name": "StartIntake"
+                "name": "RunIntake"
               }
             }
           ]
@@ -61,7 +61,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Amp5_1Center",
+  "folder": null,
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

@@ -232,7 +232,8 @@ public class DeviceConfig {
                     fx.getStatorCurrent().setUpdateFrequency(10.0),
                     fx.getSupplyCurrent().setUpdateFrequency(10.0),
                     fx.getTorqueCurrent().setUpdateFrequency(50.0),
-                    fx.getDeviceTemp().setUpdateFrequency(4.0));
+                    fx.getDeviceTemp().setUpdateFrequency(4.0),
+                    fx.getControlMode().setUpdateFrequency(4.0));
             }
         };
         ErrorChecker.configureDevice(deviceConfig, name + " " + fx.getDeviceID() + " version " + fx.getVersion(), true);

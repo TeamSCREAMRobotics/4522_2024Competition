@@ -23,6 +23,7 @@ import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.IntakeConstants;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.Ports;
+import frc2024.Constants.RobotMode;
 import frc2024.Constants.SwerveConstants;
 import frc2024.commands.swerve.FaceVisionTarget;
 import frc2024.subsystems.Vision.Limelight;
@@ -63,6 +64,17 @@ public class Intake extends SubsystemBase{
 
     public void stop(){
         m_intakeMotor.stopMotor();
+    }
+
+    @Override
+    public void periodic() {
+        if(Constants.MODE == RobotMode.COMP){
+            logOutputs();
+        }
+    }
+
+    public void logOutputs(){
+        ScreamUtil.logBasicMotorOutputs("Intake", m_intakeMotor);
     }
 
     public Command dutyCycleCommand(double output){

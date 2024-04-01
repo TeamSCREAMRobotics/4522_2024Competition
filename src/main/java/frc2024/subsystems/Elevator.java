@@ -3,6 +3,8 @@ package frc2024.subsystems;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -36,6 +38,7 @@ import frc2024.Constants.StabilizerConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.Ports;
+import frc2024.Constants.RobotMode;
 
 public class Elevator extends SubsystemBase{
     
@@ -46,6 +49,7 @@ public class Elevator extends SubsystemBase{
     private VoltageOut m_voltageRequest = new VoltageOut(0);
     private MotionMagicVoltage m_positionRequest = new MotionMagicVoltage(0);
 
+    private double m_targetHeight;
     private double m_targetPosition;
 
     public Elevator(){
@@ -88,6 +92,7 @@ public class Elevator extends SubsystemBase{
     }
 
     public void setTargetHeight(double heightInches){
+        m_targetHeight = heightInches;
         setTargetPosition(heightInchesToPosition(heightInches));
     }
 
@@ -127,7 +132,20 @@ public class Elevator extends SubsystemBase{
     }
 
     @Override
-    public void periodic() {}
+    public void periodic() {
+        if(Constants.MODE == RobotMode.COMP){
+            logOutputs();
+        }
+    }
+
+    public void logOutputs() {
+        ScreamUtil.logBasicMotorOutputs("Elevator", m_leftElevatorMotor);
+        ScreamUtil.logServoMotorOutputs("Elevator", m_leftElevatorMotor);
+        Logger.recordOutput("Elevator/Measured/Height", getElevatorHeight());
+        Logger.recordOutput("Elevator/Setpoint/Height", m_targetHeight);
+        Logger.recordOutput("Elevator/Setpoint/Position", m_targetPosition);
+        Logger.recordOutput("Elevator/CurrentCommand", getCurrentCommand().getName());
+    }
 
     public double heightInchesToPosition(double inches){
         return ((inches - ElevatorConstants.MIN_HEIGHT) / (ElevatorConstants.MAX_HEIGHT - ElevatorConstants.MIN_HEIGHT)) * (ElevatorConstants.ENCODER_MAX - ElevatorConstants.ENCODER_MIN);
@@ -135,29 +153,28 @@ public class Elevator extends SubsystemBase{
 
     public Command voltageCommand(DoubleSupplier voltage){
         return run(() -> setElevatorVoltage(voltage.getAsDouble()))
-            .alongWith(RobotContainer.getLED().scaledTargetCommand(Color.kRed, () -> getElevatorHeight(), () -> ElevatorConstants.MAX_HEIGHT));
+            .alongWith(RobotContainer.getLED().scaledTargetCommand(Color.kRed, () -> getElevatorHeight(), () -> ElevatorConstants.MAX_HEIGHT)).withName("VoltageCommand");
     }
 
     public Command voltageCommand(double voltage){
-        return run(() -> setElevatorVoltage(voltage))
-            .alongWith(RobotContainer.getLED().scaledTargetCommand(Color.kYellow, () -> getElevatorHeight(), () -> ElevatorConstants.MAX_HEIGHT));
+        return voltageCommand(() -> voltage);
     }
 
     public Command heightCommand(double heightInches){
-        return run(() -> setTargetHeight(heightInches));
+        return heightCommand(() -> heightInches);
     }
 
     public Command heightCommand(DoubleSupplier heightInches){
-        return run(() -> setTargetHeight(heightInches.getAsDouble()));
+        return run(() -> setTargetHeight(heightInches.getAsDouble())).withName("HeightCommand");
     }
 
     public Command reHomeCommand(){
         return voltageCommand(ElevatorConstants.REHOME_VOLTAGE)
             .until(() -> getElevatorCurrent() >= ElevatorConstants.REHOME_CURRENT_THRESHOLD)
-            .finallyDo(() -> zeroPosition());
+            .finallyDo(() -> zeroPosition()).withName("RehomeCommand");
     }
 
     public Command stopCommand(){
-        return runOnce(() -> stop());    
+        return runOnce(() -> stop()).withName("StopCommand");    
     }
 }

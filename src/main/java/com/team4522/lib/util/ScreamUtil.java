@@ -138,6 +138,7 @@ public class ScreamUtil {
         Logger.recordOutput(path + "/Motor/TorqueCurrent", motor.getTorqueCurrent().getValueAsDouble());
         Logger.recordOutput(path + "/Motor/AppliedVoltage", motor.getMotorVoltage().getValueAsDouble());
         Logger.recordOutput(path + "/Motor/TempCelcius", motor.getDeviceTemp().getValueAsDouble());
+        Logger.recordOutput(path + "/Motor/ControlMode", motor.getControlMode().getValue().toString());
     }
 
     public static void logServoMotorOutputs(String path, TalonFX motor){

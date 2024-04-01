@@ -23,6 +23,7 @@ import com.team4522.lib.util.ScreamUtil;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.Current;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -69,6 +70,10 @@ public class Pivot extends SubsystemBase{
 
     public void configPID(ScreamPIDConstants constants){
         m_pivotMotor.getConfigurator().apply(constants.toSlot0Configs(PivotConstants.FEEDFORWARD_CONSTANTS));
+    }
+
+    public void configCurrentLimit(CurrentLimitsConfigs config){
+        m_pivotMotor.getConfigurator().apply(config);
     }
 
     public void zeroPivot(){

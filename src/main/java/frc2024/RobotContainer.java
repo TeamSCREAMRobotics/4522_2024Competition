@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 import javax.crypto.spec.DESKeySpec;
 import javax.swing.text.html.Option;
 
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonUtils;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -150,7 +151,7 @@ public class RobotContainer {
                     .alongWith(m_stabilizers.positionCommand(StabilizerConstants.DOWN_POSITION)))
                 // .alongWith(m_stabilizers.outputCommand(StabilizerConstants.OUT_OUTPUT).withTimeout(1).andThen(m_stabilizers.stopCommand())))
             .onFalse(
-                new WaitCommand(0.4).andThen(goHome("ClearNote"))
+                new WaitCommand(0.4).andThen(new GoHome(false, m_pivot, m_elevator, m_conveyor, m_intake))
                     .alongWith(m_stabilizers.positionCommand(StabilizerConstants.UP_POSITION)));
                     /* .alongWith(
                         m_stabilizers.outputCommand(StabilizerConstants.IN_OUTPUT).withTimeout(1).andThen(m_stabilizers.stopCommand()))); */
@@ -162,8 +163,8 @@ public class RobotContainer {
         /* Pivot */
         Controlboard.manualMode()
             .whileTrue(m_pivot.dutyCycleCommand(Controlboard.getManualPivotOutput())
-                .alongWith(new InstantCommand(() -> m_pivot.setNeutralMode(NeutralModeValue.Brake))))
-            .onFalse(new InstantCommand(() -> m_pivot.setNeutralMode(NeutralModeValue.Coast)));
+                .alongWith(Commands.runOnce(() -> m_pivot.configCurrentLimit(PivotConstants.SPRINGY_CURRENT_CONFIG))))
+            .onFalse(Commands.runOnce(() -> m_pivot.configCurrentLimit(PivotConstants.DEFAULT_CURRENT_CONFIG)));
         Controlboard.resetPivotAngle().onTrue(Commands.runOnce(() -> m_pivot.resetToAbsolute()).ignoringDisable(true));
         
 
@@ -192,9 +193,12 @@ public class RobotContainer {
         Controlboard.goToAmpPosition()
             .toggleOnTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.AMP)
+                    .alongWith(Commands.runOnce(() -> m_pivot.configCurrentLimit(PivotConstants.SPRINGY_CURRENT_CONFIG)))
                     .andThen(
                         new SuperstructureToPosition(SuperstructureState.AMP, m_elevator, m_pivot)))
-            .onFalse(new GoHome(false, m_pivot, m_elevator, m_conveyor, m_intake));
+            .onFalse(
+                new GoHome(false, m_pivot, m_elevator, m_conveyor, m_intake)
+                    .alongWith(Commands.runOnce(() -> m_pivot.configCurrentLimit(PivotConstants.DEFAULT_CURRENT_CONFIG))));
 
         Controlboard.goToPodiumPosition()
             .whileTrue(
@@ -232,13 +236,16 @@ public class RobotContainer {
         Controlboard.goToTrapPosition()
             .toggleOnTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.TRAP_CHAIN)
+                    .alongWith(Commands.runOnce(() -> m_pivot.configCurrentLimit(PivotConstants.SPRINGY_CURRENT_CONFIG)))
                     .andThen(
                         new SuperstructureToPosition(SuperstructureState.TRAP_CHAIN, m_elevator, m_pivot)
-                            .alongWith(m_shooter.stopCommand())));
+                            .alongWith(m_shooter.stopCommand())))
+            .onFalse(Commands.runOnce(() -> m_pivot.configCurrentLimit(PivotConstants.DEFAULT_CURRENT_CONFIG)));
 
         Controlboard.autoClimb()
             .toggleOnTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.TRAP_CHAIN)
+                    .alongWith(Commands.runOnce(() -> m_pivot.configCurrentLimit(PivotConstants.SPRINGY_CURRENT_CONFIG)))
                     .andThen(
                         m_elevator.heightCommand(ElevatorConstants.TRAP_CHAIN_HEIGHT))
                     .alongWith(
@@ -246,8 +253,8 @@ public class RobotContainer {
                     .alongWith(
                         m_stabilizers.outputCommand(StabilizerConstants.OUT_OUTPUT)
                             .withTimeout(1)
-                            .andThen(m_stabilizers.stopCommand()))
-            );
+                            .andThen(m_stabilizers.stopCommand())))
+            .onFalse(Commands.runOnce(() -> m_pivot.configCurrentLimit(PivotConstants.DEFAULT_CURRENT_CONFIG)));
 
         /* Shooter */        
         Controlboard.shooterIntoConveyor()
@@ -271,7 +278,7 @@ public class RobotContainer {
                 new InstantCommand(() -> currentState = SuperstructureState.AUTO_FIRE)
                     .andThen(
                         new ConditionalCommand(
-                            new Feed(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led),
+                            new Feed(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_intake, m_led),
                             new PoseShooting(Controlboard.getTranslation(), Controlboard.defendedMode(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led), 
                             () -> ScreamUtil.calculateDistanceToTranslation(() -> m_swerve.getEstimatedPose().getTranslation(), () -> AllianceFlipUtil.getTargetSpeaker().getTranslation()).getAsDouble() >= 7.0)))
             .onFalse(new GoHome(true, m_pivot, m_elevator, m_conveyor, m_intake));
@@ -390,9 +397,8 @@ public class RobotContainer {
     public static void configAuto() {
         Autonomous.configure(
             Commands.none().withName("Do Nothing"),
-            new PPEvent("StartIntake", //, new PrintCommand("PATHPLANNER INTAKE EVENT COMMENTED FIX ME")),
-                new AutoIntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, m_led)),
-            new PPEvent("StopIntake", m_intake.stopCommand().alongWith(m_conveyor.stopCommand())),
+            new PPEvent("RunIntake", new AutoIntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, m_led)),
+            new PPEvent("RunIntakeContinuous", m_conveyor.dutyCycleCommand(ConveyorConstants.SHOOT_OUTPUT).alongWith(m_intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT))),
             new PPEvent("RunShooterHigh", m_shooter.velocityCommand(4500)),
             new PPEvent("Shoot", m_conveyor.dutyCycleCommand(ConveyorConstants.SHOOT_OUTPUT).withTimeout(1).andThen(m_conveyor.stopCommand()))
         );
@@ -400,17 +406,17 @@ public class RobotContainer {
         Autonomous.addRoutines(
             Routines.Amp4Close(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("Amp_4_Close"),
             Routines.Amp5_1Center(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_5.5_Close&Center"),
-            Routines.Amp6Center(m_swerve, m_elevator, m_pivot, m_intake, m_conveyor).withName("Amp_6_Close&Center"),
-            Routines.Source4Center(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_led).withName("Source_4_Center&Stage"),
-            Routines.Amp4Center(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("AmpLine_4_Center"),
+            //Routines.Amp6Center(m_swerve, m_elevator, m_pivot, m_intake, m_conveyor).withName("Amp_6_Close&Center"),
+            //Routines.Source4Center(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_led).withName("Source_4_Center&Stage"),
+            //Routines.Amp4Center(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("AmpLine_4_Center"),
             Routines.SweepSource(m_swerve, m_pivot, m_shooter, m_conveyor, m_intake).withName("SweepSource"),
             Routines.Sweep3_Source(m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_intake, m_led).withName("Sweep3_Source"),
             Routines.Amp5Center_2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("SubSide_4_1Close&Center"),
-            Routines.Amp5_NoCenter(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_5_Close&Center"),
+            Routines.Amp5_NoStage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_5_Close&Center"),
             Routines.Source3_NoStage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Center&NoStage"),
             Routines.Leave(m_swerve, 2.0).withName("Leave"),
-            Routines.testAuto(m_swerve).withName("test")
-            //Routines.Amp4Close_FastShootTest(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("4CloseTest")
+            Routines.testAuto(m_swerve).withName("test"),
+            Routines.Amp4Close_FastShootTest(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("4CloseTest")
         );
     }
 
@@ -491,6 +497,12 @@ public class RobotContainer {
 
     public static Supplier<SuperstructureState> getCurrentState(){
         return () -> currentState;
+    }
+
+    public static void logOutputs(){
+        Logger.recordOutput("RobotState/SuperstructureState", getCurrentState().get());
+        Logger.recordOutput("RobotState/TrapForwardLimitExceeded", forwardPivotLimit());
+        Logger.recordOutput("RobotState/TrapReverseLimitExceeded", reversePivotLimit());
     }
 
     public static void stopAll(){

@@ -18,7 +18,6 @@ public class DriveToPose extends Command {
   Swerve swerve;
   Pose2d targetPose;
   PIDController driveController;
-  PIDController rotationController;
 
   public DriveToPose(Swerve swerve, Pose2d targetPose) {
     addRequirements(swerve);
@@ -27,8 +26,6 @@ public class DriveToPose extends Command {
     this.swerve = swerve;
     this.targetPose = targetPose;
     this.driveController = SwerveConstants.DRIVE_TO_TARGET_CONSTANTS.toPIDController();
-    this.rotationController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
-    rotationController.enableContinuousInput(-180.0, 180.0);
   }
 
   // Called when the command is initially scheduled.
@@ -39,9 +36,8 @@ public class DriveToPose extends Command {
   @Override
   public void execute() {
     Translation2d translationValue = new Translation2d(driveController.calculate(swerve.getEstimatedPose().getX(), targetPose.getX()), driveController.calculate(swerve.getEstimatedPose().getY(), targetPose.getY()));
-    double rotationValue = rotationController.calculate(swerve.getEstimatedHeading().getDegrees(), targetPose.getRotation().getDegrees());
 
-    swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(translationValue, rotationValue));
+    swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translationValue, targetPose.getRotation()));
   }
 
   // Called once the command ends or is interrupted.

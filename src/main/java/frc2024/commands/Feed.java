@@ -13,6 +13,7 @@ import com.team4522.lib.util.RectanglePoseArea;
 import com.team4522.lib.util.ScreamUtil;
 import com.team4522.lib.util.ShootingUtil;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -22,10 +23,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.FieldConstants;
+import frc2024.Constants.IntakeConstants;
 import frc2024.Constants.ShootState;
 import frc2024.Constants.SwerveConstants;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
+import frc2024.subsystems.Intake;
 import frc2024.subsystems.LED;
 import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Shooter;
@@ -38,6 +41,7 @@ public class Feed extends Command {
   Elevator elevator;
   Shooter shooter;
   Conveyor conveyor;
+  Intake intake;
   LED led;
 
   DoubleSupplier[] translationSup;
@@ -46,7 +50,7 @@ public class Feed extends Command {
   RectanglePoseArea illegalArea;
   int directionCoefficient;
 
-  public Feed(DoubleSupplier[] translationSup, Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, LED led) {
+  public Feed(DoubleSupplier[] translationSup, Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, Intake intake, LED led) {
     addRequirements(swerve, pivot, elevator, shooter, led);
     setName("Feed");
     this.swerve = swerve;
@@ -54,6 +58,7 @@ public class Feed extends Command {
     this.elevator = elevator;
     this.shooter = shooter;
     this.conveyor = conveyor;
+    this.intake = intake;
     this.led = led;
     this.translationSup = translationSup;
   }
@@ -78,10 +83,14 @@ public class Feed extends Command {
     swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
     
     if(!illegalArea.isPoseWithinArea(swerve.getEstimatedPose())){
-      shooter.setTargetVelocity(targetState.velocityRPM() / 2.93);
+      shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM() / 2.8, 0.0, 2700.0));
       pivot.setTargetAngle(targetState.pivotAngle());
       elevator.setTargetHeight(ElevatorConstants.SUBWOOFER_HEIGHT);
       led.strobe(Color.kGreen, 0.3);
+      if(shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean()){
+        conveyor.dutyCycleCommand(ConveyorConstants.SHOOT_OUTPUT);
+        intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT);
+      }
     } else {
       led.strobe(Color.kRed, 0.3);
     }

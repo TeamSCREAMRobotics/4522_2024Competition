@@ -10,6 +10,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.util.OrchestraUtil;
+import com.team4522.lib.util.ScreamUtil;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
@@ -24,6 +25,7 @@ import frc2024.RobotContainer;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.SuperstructureState;
 import frc2024.Constants.Ports;
+import frc2024.Constants.RobotMode;
 
 public class Conveyor extends SubsystemBase{
         
@@ -74,6 +76,13 @@ public class Conveyor extends SubsystemBase{
     @Override
     public void periodic() {
         //System.out.println(!m_beam.get());
+        if(Constants.MODE == RobotMode.COMP){
+            logOutputs();
+        }
+    }
+
+    public void logOutputs(){
+        ScreamUtil.logBasicMotorOutputs("Conveyor", m_conveyorMotor);
     }
 
     public Command dutyCycleCommand(double output){
