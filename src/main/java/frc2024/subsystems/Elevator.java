@@ -51,7 +51,7 @@ public class Elevator extends SubsystemBase{
 
     private double m_targetHeight;
     private double m_targetPosition;
-
+    
     public Elevator(){
         m_rightElevatorMotor = new TalonFX(Ports.RIGHT_ELEVATOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
         m_leftElevatorMotor = new TalonFX(Ports.LEFT_ELEVATOR_MOTOR_ID, Ports.RIO_CANBUS_NAME);
@@ -144,7 +144,9 @@ public class Elevator extends SubsystemBase{
         Logger.recordOutput("Elevator/Measured/Height", getElevatorHeight());
         Logger.recordOutput("Elevator/Setpoint/Height", m_targetHeight);
         Logger.recordOutput("Elevator/Setpoint/Position", m_targetPosition);
-        Logger.recordOutput("Elevator/CurrentCommand", getCurrentCommand().getName());
+        if(getCurrentCommand() != null){
+            Logger.recordOutput("Elevator/CurrentCommand", getCurrentCommand().getName());
+        }
     }
 
     public double heightInchesToPosition(double inches){

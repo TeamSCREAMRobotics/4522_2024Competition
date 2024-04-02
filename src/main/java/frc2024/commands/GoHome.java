@@ -17,7 +17,7 @@ public class GoHome extends SequentialCommandGroup{
         addRequirements(pivot, elevator, conveyor, intake);
         setName("GoHome");
         addCommands(
-            new WaitCommand(pivotFirst ? 0.15 : 0).deadlineWith(pivot.angleCommand(PivotConstants.HOME_ANGLE))
+            new WaitCommand(pivotFirst ? 0.23 : 0).deadlineWith(pivot.angleCommand(PivotConstants.HOME_ANGLE))
                 .andThen(elevator.heightCommand(ElevatorConstants.HOME_HEIGHT))
                 .alongWith(conveyor.stopCommand())
                 .alongWith(intake.stopCommand())

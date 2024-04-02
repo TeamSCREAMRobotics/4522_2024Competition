@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc2024.Constants.SuperstructureState;
+import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.IntakeConstants;
 import frc2024.Constants.SwerveConstants;
 import frc2024.Constants.VisionConstants;
@@ -41,7 +42,7 @@ public class AutoIntakeFloor extends SequentialCommandGroup {
     public AutoIntakeFloor(Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake, LED led){
         setName("AutoIntakeFloor");
         addCommands(
-            new IntakeFloor(elevator, pivot, conveyor, intake, led, () -> false).withTimeout(1.5)
+            conveyor.dutyCycleCommand(ConveyorConstants.TRANSFER_OUTPUT).alongWith(intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT))
                 .until(conveyor.hasPiece(false))
                 .finallyDo((interrupted) -> {
                     if(!interrupted){

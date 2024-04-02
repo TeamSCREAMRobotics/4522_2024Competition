@@ -73,26 +73,26 @@ public class PoseShooting extends Command {
   @Override
   public void initialize() {
     directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();
-    targetSpeaker = AllianceFlipUtil.getTargetSpeaker().getTranslation().plus(new Translation2d(Units.inchesToMeters(12.0) * directionCoefficient, 0));
+    targetSpeaker = AllianceFlipUtil.getTargetSpeaker().getTranslation().plus(new Translation2d(Units.inchesToMeters(12.0) * directionCoefficient, Units.inchesToMeters(8) * directionCoefficient));
   }
 
   @Override
   public void execute() {
     double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getEstimatedPose().getTranslation(), targetSpeaker);
-    ShootState targetState = ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight());
+    ShootState targetState = isDefended.getAsBoolean() ? ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight()) : ShootingUtil.oldCalculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight());
     Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation(), targetSpeaker).minus(new Rotation2d(Math.PI));
     Translation2d translation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times((SwerveConstants.MAX_SPEED * 0.5) * directionCoefficient);
     Rotation2d adjustedPivotAngle = 
       Rotation2d.fromDegrees(
         MathUtil.clamp(
-          targetState.pivotAngle().getDegrees() + (ShootingUtil.calculatePivotAngleAdjustment(swerve.getFieldRelativeSpeeds(), horizontalDistance, 0.5).getDegrees() * directionCoefficient), 
+          targetState.pivotAngle().getDegrees(), 
           elevator.getElevatorHeight() > 1.5 ? PivotConstants.SUBWOOFER_ANGLE.getDegrees() : 1, 
-          45)
+          43)
       );
 
     swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
     elevator.setTargetHeight(isDefended.getAsBoolean() && swerve.snappedToAngle(45.0) ? ElevatorConstants.MAX_HEIGHT : targetState.elevatorHeightInches());
-    shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3000.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
+    shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM() + ShooterConstants.ARBITRARY_VELOCITY_EXTRA, 3250.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
     pivot.setTargetAngle(adjustedPivotAngle);
     led.scaledTarget(Color.kOrange, shooter.getRPM(), shooter.getTargetVelocity());
 

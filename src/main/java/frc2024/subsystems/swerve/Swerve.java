@@ -179,7 +179,7 @@ public class Swerve extends SubsystemBase {
      */
     public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, Translation2d centerOfRotationMeters, boolean isOpenLoop){
         m_desiredSpeeds = chassisSpeeds;
-        m_desiredStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds, centerOfRotationMeters);
+        m_desiredStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(m_desiredSpeeds, centerOfRotationMeters);
 
         SwerveDriveKinematics.desaturateWheelSpeeds(m_desiredStates, SwerveConstants.MAX_SPEED);
 
@@ -200,6 +200,10 @@ public class Swerve extends SubsystemBase {
      */
     public void setChassisSpeeds(ChassisSpeeds chassisSpeeds){
         setChassisSpeeds(chassisSpeeds, false);
+    }
+
+    public void overrideRotation(double omegaRadiansPerSecond){
+        m_desiredSpeeds.omegaRadiansPerSecond = omegaRadiansPerSecond;
     }
 
     /**
@@ -384,10 +388,10 @@ public class Swerve extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        /* if(getModulePositions() != null){
+        if(getModulePositions() != null){
             m_poseEstimator.updateWithTime(Timer.getFPGATimestamp(), getYaw(), getModulePositions());
-        } */
-        //Vision.updateEstimateWithValidMeasurements(Limelight.SHOOT_SIDE, m_poseEstimator);
+        }
+        Vision.updateEstimateWithValidMeasurements(Limelight.SHOOT_SIDE, m_poseEstimator);
         //Vision.updateEstimateWithValidMeasurements(Limelight.INTAKE_SIDE, m_poseEstimator);
         // System.out.println(Units.metersToInches(Vision.getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER)));
         //System.out.println(getPose().getTranslation().getDistance(AllianceFlipUtil.getTargetSpeaker().getTranslation()));
@@ -404,9 +408,13 @@ public class Swerve extends SubsystemBase {
         Logger.recordOutput("Swerve/Measured/FieldSpeeds", getFieldRelativeSpeeds());
         Logger.recordOutput("Swerve/Measured/RobotSpeeds", getRobotRelativeSpeeds());
         Logger.recordOutput("Swerve/Measured/States", getModuleStates());
-        Logger.recordOutput("Swerve/Setpoint/DesiredStates", m_desiredStates);
+        if(m_desiredStates[0] != null){
+            Logger.recordOutput("Swerve/Setpoint/DesiredStates", m_desiredStates);
+        }
         Logger.recordOutput("Swerve/Measured/ModulePositions", getModulePositions());
-        Logger.recordOutput("Swerve/CurrentCommand", getCurrentCommand().toString());
+        if(getCurrentCommand() != null){
+            Logger.recordOutput("Swerve/CurrentCommand", getCurrentCommand().getName());
+        }
         for(SwerveModule mod : getModules()){
             mod.logOutputs();
         }

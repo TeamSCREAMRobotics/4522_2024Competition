@@ -89,17 +89,17 @@ public class Robot extends LoggedRobot {
       case COMP:
         //Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
         //Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-        //new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
+        new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
         SignalLogger.setPath("/media/sda1/");
         //Logger.start();
         SignalLogger.enableAutoLogging(true);
         break;
       case REPLAY:
-        //setUseTiming(false); // Run as fast as possible
-        //String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-        //Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
-        //Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
-        //Logger.start();
+        setUseTiming(false); // Run as fast as possible
+        String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+        Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
+        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+        Logger.start();
         break;
       case SIM, DEV:
         break;
@@ -136,9 +136,9 @@ public class Robot extends LoggedRobot {
     RobotContainer.stopAll();
     Controlboard.driverController_Command.getHID().setRumble(RumbleType.kBothRumble, 0);
 
-    if(Constants.MODE == RobotMode.COMP){
+    /* if(Constants.MODE == RobotMode.COMP){
       autoConfigurator.reset();
-    }
+    } */
   }
 
   @Override

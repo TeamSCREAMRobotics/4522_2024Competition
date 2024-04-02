@@ -52,7 +52,7 @@ public final class Constants{
         COMP, REPLAY, SIM, DEV;
     }
 
-    public static final RobotMode MODE = RobotMode.DEV;
+    public static final RobotMode MODE = RobotMode.COMP;
 
     /* Robot loop time */
     public static final double LOOP_TIME_SEC = 0.02;
@@ -128,7 +128,7 @@ public final class Constants{
         public static final boolean GYRO_INVERT = false;
 
         /* Swerve Kinematics */
-        public static final double SHOOT_WHILE_MOVING_SCALAR = 0.5;
+        public static final double SHOOT_WHILE_MOVING_SCALAR = 0.6;
         public static final double MAX_SPEED = 4.9; // m/s theoretical = 5.7
         public static final double MAX_ACCELERATION = 4.9; // m/s^2 theoretical
         public static final double MAX_ANGULAR_VELOCITY = 8.0; // rad/s
@@ -150,11 +150,11 @@ public final class Constants{
         public static final double CORRECTION_TIME_THRESHOLD = 0.2;
 
         /* Swerve Controllers */
-        public static final ScreamPIDConstants VISION_ROTATION_CONSTANTS = new ScreamPIDConstants(0.04, 0.0, 0.0);
-        public static final ScreamPIDConstants VISION_MOVING_ROTATION_CONSTANTS = new ScreamPIDConstants(0.04, 0.0, 0.0);
+        public static final ScreamPIDConstants VISION_ROTATION_CONSTANTS = new ScreamPIDConstants(0.06, 0.0, 0.0);
+        public static final ScreamPIDConstants VISION_MOVING_ROTATION_CONSTANTS = new ScreamPIDConstants(0.095, 0.0, 0.0);
         public static final ScreamPIDConstants VISION_TRANSLATION_X_CONSTANTS = new ScreamPIDConstants(1.0, 0.0, 0.0);
         public static final ScreamPIDConstants VISION_TRANSLATION_Y_CONSTANTS = new ScreamPIDConstants(4.5, 0.0, 0.0);
-        public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(0.095, 0.0, 0.0); //0.1
+        public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(0.095, 0.0, 0.001); //0.095
         public static final ScreamPIDConstants DRIVE_TO_TARGET_CONSTANTS = new ScreamPIDConstants(1.5, 0.0, 0.0);
 
         /* PathPlanner Constants */
@@ -367,29 +367,29 @@ public final class Constants{
         public static final double ACCELERATION = 5;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.38, 0.0, 0.0);
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.1, 0.0, 0.0); //0.38
 
         public static final double KS = 0.0;
-        public static final double KV = 0.2;
+        public static final double KV = 0.112;
         public static final double KA = 0.0;
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
 
-        public static final double TARGET_THRESHOLD = 100.0; // rpm
+        public static final double TARGET_THRESHOLD = 70.0; // rpm
 
         public static final double AUTO_SHOOT_VELOCITY_THRESHOLD = 4800; // rpm
         public static final double AUTO_SHOOT_DISTANCE_THRESHOLD = 6.5; // meters
 
         public static final double SHOOTER_MAX_VELOCITY = 6100;
         public static final double SHOOTER_TARGET_VELOCITY = 5000;
-        public static final double SUBWOOFER_VELOCITY = 2500;
+        public static final double SUBWOOFER_VELOCITY = 2800.0;
         public static final double AMP5_CLOSESHOTS = 3250.0;
         public static final double SUBWOOFER_DEFENDED_VELOCITY = 3000;
         public static final double CHAIN_VELOCITY = 4000.0;
         public static final double PODIUM_VELOCITY = 3500.0;
         public static final double IDLE_VELOCITY = 1000.0;
 
-        public static final double TRAJECTORY_VELOCITY_EXTRA = 1800;
+        public static final double TRAJECTORY_VELOCITY_EXTRA = 1550.0; //1800
         public static final double ARBITRARY_VELOCITY_EXTRA = 0.0;
 
         public static final double SHOOT_OUTPUT = 0.8;
@@ -437,10 +437,10 @@ public final class Constants{
         static{
             SPRINGY_CURRENT_CONFIG.SupplyCurrentLimitEnable = true;
             SPRINGY_CURRENT_CONFIG.StatorCurrentLimitEnable = true;
-            SPRINGY_CURRENT_CONFIG.SupplyCurrentLimit = 2.0;
+            SPRINGY_CURRENT_CONFIG.SupplyCurrentLimit = 4.0;
             SPRINGY_CURRENT_CONFIG.SupplyCurrentThreshold = 0.0;
             SPRINGY_CURRENT_CONFIG.SupplyTimeThreshold = 0.0;
-            SPRINGY_CURRENT_CONFIG.StatorCurrentLimit = 3.0;
+            SPRINGY_CURRENT_CONFIG.StatorCurrentLimit = 6.25;
         }
 
         public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromDegrees(3.1);
@@ -457,14 +457,14 @@ public final class Constants{
         public static final double HARDWARE_LIMIT_POSITION_FORWARD = 0.0;
         public static final double HARDWARE_LIMIT_POSITION_REVERSE = 0.0;
 
-        public static final double TARGET_THRESHOLD = 0.7; //Degrees
+        public static final double TARGET_THRESHOLD = 0.5; //Degrees
 
-        public static final double CRUISE_VELOCITY = 55.0; // 200.0
-        public static final double ACCELERATION = 10.0;
+        public static final double CRUISE_VELOCITY = 55.0; // 55.0
+        public static final double ACCELERATION = 10.0; // 10.0
         public static final int JERK = 0;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, JERK);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(550.0, 0.0, 0.0); //500
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(550.0, 0.0, 0.0); //550
         
         public static final double KS = 0.0;
         public static final double KV = 0.0;
@@ -474,9 +474,9 @@ public final class Constants{
 
         public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(14.0).plus(PIVOT_ANGLE_OFFSET);
         public static final Rotation2d HOME_ANGLE_ENDGAME = Rotation2d.fromDegrees(-13.623).plus(PIVOT_ANGLE_OFFSET);
-        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(-5.3613-1.5).plus(PIVOT_ANGLE_OFFSET);
+        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(-5.3613-2.5).plus(PIVOT_ANGLE_OFFSET);
         public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(16.9629).plus(PIVOT_ANGLE_OFFSET); //+4.25
-        public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(29.0039 - 9.0).plus(PIVOT_ANGLE_OFFSET);
+        public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(29.0039 - 11.0).plus(PIVOT_ANGLE_OFFSET);
         public static final Rotation2d CHAIN_ANGLE = Rotation2d.fromDegrees(22.93945).plus(PIVOT_ANGLE_OFFSET); //+4.25
         public static final Rotation2d PODIUM_ANGLE = Rotation2d.fromDegrees(13.7988).plus(PIVOT_ANGLE_OFFSET);
         public static final Rotation2d PODIUM_DEFENDED_ANGLE = Rotation2d.fromDegrees(24.1699).plus(PIVOT_ANGLE_OFFSET);

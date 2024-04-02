@@ -19,8 +19,6 @@ import frc2024.subsystems.Elevator;
 import frc2024.subsystems.LED;
 import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Shooter;
-import frc2024.subsystems.Vision;
-import frc2024.subsystems.Vision.Limelight;
 import frc2024.subsystems.swerve.Swerve;
 
 public class SmartShootSequence extends Command{
@@ -52,7 +50,7 @@ public class SmartShootSequence extends Command{
         this.shouldTimeout = timeout;
         this.virtualCalculation = virtualCalculation;
         this.translation = translationSup;
-        rotationController = /* SwerveConstants.VISION_MOVING_ROTATION_CONSTANTS.toPIDController(); */ SwerveConstants.SNAP_CONSTANTS.toPIDController();
+        rotationController = SwerveConstants.VISION_MOVING_ROTATION_CONSTANTS.toPIDController();
     }
 
     public SmartShootSequence(boolean timeout, boolean virtualCalculation, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, LED led){
@@ -67,7 +65,7 @@ public class SmartShootSequence extends Command{
         this.shouldTimeout = timeout;
         this.virtualCalculation = virtualCalculation;
         this.translation = null;
-        rotationController = SwerveConstants.VISION_MOVING_ROTATION_CONSTANTS.toPIDController(); //SwerveConstants.SNAP_CONSTANTS.toPIDController();
+        rotationController = SwerveConstants.VISION_MOVING_ROTATION_CONSTANTS.toPIDController();
     }
 
     @Override
@@ -78,35 +76,48 @@ public class SmartShootSequence extends Command{
 
     @Override
     public void execute() {
+        /* sets the physical target to the speaker based on the alliance */
         Translation2d physicalTarget = AllianceFlipUtil.getTargetSpeaker().getTranslation();
-        /* double rotationValue = Math.abs(Vision.getTX(Limelight.SHOOT_SIDE)) < 2.0 ? 0 : rotationController.calculate(Vision.getTX(Limelight.SHOOT_SIDE), 0.0); */
+        
+        /* sets the target rotation value for the physical speaker */
         double rotationValue = SmartShooting.getRotationToPoint(swerve, pivot, shooter, physicalTarget, false, false, rotationController);
 
+        /* Sets the the driving translation value */
         Translation2d translationValue = translation == null ? new Translation2d() : new Translation2d(translation[0].getAsDouble(), translation[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * AllianceFlipUtil.getDirectionCoefficient());
         
         if(virtualCalculation){
+            /* Scales the driving translation value to slow the drivetrain while aiming */
             translationValue = translationValue.times(SwerveConstants.SHOOT_WHILE_MOVING_SCALAR);
 
+            /* Sets the virtual target */
             Translation2d virtualTarget = SmartShooting.calculateVirtualTarget(swerve, pivot, shooter, physicalTarget);
+
+            /* Sets the new target rotation value based on the virtual target */
             rotationValue = SmartShooting.getRotationToPoint(swerve, pivot, shooter, virtualTarget, false, false, rotationController); //virtualCalculation is false because we are passing in the virtualTarget already
 
+            /* Sets the shooterRPMs and pivot angle based on the virtual target */
             shooter.setTargetVelocity(SmartShooting.calculateShotTrajectory(() -> elevator.getElevatorHeight(), SmartShooting.getDistanceToTarget_SHOOTER(swerve, virtualTarget, FieldConstants.SPEAKER_OPENING_HEIGHT)).velocityRPM());
             pivot.setTargetAngle(SmartShooting.calculateShotTrajectory(() -> elevator.getElevatorHeight(), SmartShooting.getDistanceToTarget_SHOOTER(swerve, virtualTarget, FieldConstants.SPEAKER_OPENING_HEIGHT)).pivotAngle());
         } else{
-            shooter.setTargetVelocity(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).velocityRPM());
-            pivot.setTargetAngle(AutoFire.calculateShotTrajectory(() -> elevator.getElevatorHeight()).pivotAngle());
+            /* Sets the shooterRPMs and pivot based on the physical target */
+            shooter.setTargetVelocity(SmartShooting.calculateShotTrajectory(() -> elevator.getElevatorHeight(), SmartShooting.getDistanceToTarget_SHOOTER(swerve, physicalTarget, FieldConstants.SPEAKER_OPENING_HEIGHT)).velocityRPM());
+            pivot.setTargetAngle(SmartShooting.calculateShotTrajectory(() -> elevator.getElevatorHeight(), SmartShooting.getDistanceToTarget_SHOOTER(swerve, physicalTarget, FieldConstants.SPEAKER_OPENING_HEIGHT)).pivotAngle());
         }
 
+        /* Sets the chassis speeds based on the set translation value and rotation value */
         swerve.setChassisSpeeds(swerve.fieldRelativeSpeeds(translationValue, rotationValue));
-        led.scaledTarget(Color.kGoldenrod, shooter.getRPM(), shooter.getTargetVelocity());
+        /* Changes led color based on shooterRPMs */
+        led.scaledTarget(Color.kDeepSkyBlue /* Color.kGoldenrod */, shooter.getRPM(), shooter.getTargetVelocity());
 
-        if(((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && Vision.getLockedToTarget(Limelight.SHOOT_SIDE)) || timeout.hasElapsed(2.0)) && shouldTimeout){
-            conveyor.setConveyorOutput(ConveyorConstants.SHOOT_OUTPUT);
+        /* Checks if all conditions are met to fire the shot */
+        if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && swerve.snappedToAngle(0.2)) || (timeout.hasElapsed(1) && shouldTimeout)){
+          conveyor.setConveyorOutput(ConveyorConstants.SHOOT_OUTPUT);
         }
     }
 
     @Override
     public void end(boolean interrupted) {
+        /* Sets the shooterRPMs back to idle and tells the pivot and conveyor to stop */
         shooter.setTargetVelocity(ShooterConstants.IDLE_VELOCITY);
         pivot.stop();
         conveyor.stop();
@@ -114,7 +125,7 @@ public class SmartShootSequence extends Command{
 
     @Override
     public boolean isFinished() {
-        return !conveyor.hasPiece(false).getAsBoolean() || (timeout.hasElapsed(2.5) && shouldTimeout);
+        /* Checks wether or not to end the command */
+        return !conveyor.hasPiece(false).getAsBoolean() || (timeout.hasElapsed(2.0) && shouldTimeout);
     }
-    
 }

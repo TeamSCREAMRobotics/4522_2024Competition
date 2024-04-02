@@ -1,5 +1,7 @@
 package com.team4522.lib.util;
 
+import com.team4522.lib.math.Conversions;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -33,9 +35,26 @@ public class ShootingUtil {
       Rotation2d adjustedAngle = Rotation2d.fromDegrees((-baseAngle.getDegrees() + PivotConstants.RELATIVE_ENCODER_TO_HORIZONTAL.getDegrees()));
 
       //double tof = calculateTOF(elevatorHeightInches, targetHeightMeters);
-      double velocityRPM = horizontalDistance * 1000.0;
+      double velocityRPM = horizontalDistance * 1500.0;
 
       return new ShootState(adjustedAngle, VisionConstants.SHOOT_STATE_MAP.get(Units.metersToFeet(horizontalDistance)).elevatorHeightInches(), velocityRPM);
+    }
+
+    public static ShootState oldCalculateShootState(double targetHeightMeters, double horizontalDistance, double elevatorHeightInches){
+      Translation2d absolutePivotPosition = calculateAbsolutePivotPosition(elevatorHeightInches);
+      double distanceToTarget = horizontalDistance + absolutePivotPosition.getX();
+      double extraYVel = Conversions.falconRPSToMechanismMPS(ShooterConstants.TRAJECTORY_VELOCITY_EXTRA / 60.0, ShooterConstants.WHEEL_CIRCUMFERENCE, 1.0);
+      double vy = Math.sqrt(
+              extraYVel * extraYVel
+              + ((targetHeightMeters - PivotConstants.SHOOTER_DISTANCE_FROM_AXLE) - (absolutePivotPosition.getY())) * 2 * Constants.GRAVITY
+      );
+      
+      double airtime = (vy - extraYVel) / Constants.GRAVITY;
+      double vx = distanceToTarget / airtime;
+      double launchAngleRads = Math.atan2(vy, vx);
+      Rotation2d launchAngle = Rotation2d.fromRadians(-launchAngleRads + PivotConstants.RELATIVE_ENCODER_TO_HORIZONTAL.getRadians());
+      double launchVelRPM = Conversions.mpsToFalconRPS(Math.sqrt(vx * vx + vy * vy), ShooterConstants.WHEEL_CIRCUMFERENCE, 1.0) * 60.0; // rpm
+      return new ShootState(launchAngle, VisionConstants.SHOOT_STATE_MAP.get(Units.metersToFeet(horizontalDistance)).elevatorHeightInches(), launchVelRPM); 
     }
 
     /* private Rotation2d calculateTargetRobotAngle(){

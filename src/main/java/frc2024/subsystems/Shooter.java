@@ -117,7 +117,7 @@ public class Shooter extends SubsystemBase{
 
     @Override
     public void periodic() {
-        //System.out.println("Shooter: " + getShooterAtTarget().getAsBoolean());
+        //System.out.println("Shooter Error: " + getShooterError());
         if(Constants.MODE == RobotMode.COMP){
             logOutputs();
         }

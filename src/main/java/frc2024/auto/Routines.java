@@ -108,15 +108,17 @@ public class Routines {
             new ShootSequence(SuperstructureState.SUBWOOFER, ShooterConstants.SUBWOOFER_VELOCITY, elevator, pivot, shooter, conveyor),
                 new SequentialCommandGroup(
                     Amp4Close.getIndex(0),
-                    new WaitCommand(0.25),
+                    new WaitCommand(0.3),
                     Amp4Close.getIndex(1),
-                    new WaitCommand(0.25),
-                    Amp4Close.getIndex(2))
+                    new WaitCommand(0.3))
                         .deadlineWith(
                             new AutoPoseShootingContinuous(swerve, pivot, elevator, shooter, conveyor)
                             .alongWith(conveyor.dutyCycleCommand(ConveyorConstants.SHOOT_OUTPUT))
                             .alongWith(intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT))),
-            Commands.runOnce(() -> RobotContainer.stopAll())
+                    Amp4Close.getIndex(2),
+                    new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(2),
+                    new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+                    new WaitCommand(0.3)
         );
     }
 
@@ -220,15 +222,6 @@ public class Routines {
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
             Source3_NoStage.getIndex(2),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
-            /* startTimer(),
-            swerve.resetPoseCommand(Source3_NoStage.getStartingPose()),
-            Source3_NoStage.getIndex(0),
-            new SmartShootSequence(true, true, swerve, elevator, pivot, shooter, conveyor, led),
-            Source3_NoStage.getIndex(1),
-            new SmartShootSequence(true, true, swerve, elevator, pivot, shooter, conveyor, led),
-            Source3_NoStage.getIndex(2),
-            new SmartShootSequence(true, true, swerve, elevator, pivot, shooter, conveyor, led),
-            printTimer() */
         );
     }
 

@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import com.team4522.lib.math.Conversions;
 import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.ScreamUtil;
@@ -55,7 +56,7 @@ public class AutoPoseShootingContinuous extends Command {
   final Interpolator<Double> pivotDistanceInterpolator = Interpolator.forDouble();
 
   public AutoPoseShootingContinuous(Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor) {
-    addRequirements(swerve, pivot, elevator, shooter);
+    addRequirements(pivot, elevator, shooter);
     setName("AutoPoseShootingContinuous");
     this.swerve = swerve;
     this.pivot = pivot;
@@ -67,7 +68,7 @@ public class AutoPoseShootingContinuous extends Command {
   @Override
   public void initialize() {
     directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();
-    targetSpeaker = AllianceFlipUtil.getTargetSpeaker().getTranslation().plus(new Translation2d(Units.inchesToMeters(12.0) * directionCoefficient, 0));
+    targetSpeaker = AllianceFlipUtil.getTargetSpeaker().getTranslation().plus(new Translation2d(Units.inchesToMeters(12.0) * directionCoefficient, Units.inchesToMeters(8) * directionCoefficient));
   }
 
   @Override
@@ -75,20 +76,27 @@ public class AutoPoseShootingContinuous extends Command {
     double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getEstimatedPose().getTranslation(), targetSpeaker);
     ShootState targetState = ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight());
     Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation(), targetSpeaker).minus(new Rotation2d(Math.PI));
+    Rotation2d adjustedPivotAngle = 
+      Rotation2d.fromDegrees(
+        MathUtil.clamp(
+          targetState.pivotAngle().getDegrees(), 
+          1, 
+          45)
+      );
 
     PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.of(targetAngle));
 
-    swerve.resetPose_Apriltag();
-    swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(new Translation2d(), targetAngle));
+    //swerve.resetPose_Apriltag();
+    //swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(new Translation2d(), targetAngle));
     elevator.setTargetHeight(targetState.elevatorHeightInches());
     shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3000.0, 5000.0));
-    pivot.setTargetAngle(targetState.pivotAngle());
-
-    System.out.println(shooter.getShooterAtTarget().getAsBoolean() + " " + pivot.getPivotAtTarget().getAsBoolean());
+    pivot.setTargetAngle(adjustedPivotAngle);
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.empty());
+  }
 
   @Override
   public boolean isFinished() {

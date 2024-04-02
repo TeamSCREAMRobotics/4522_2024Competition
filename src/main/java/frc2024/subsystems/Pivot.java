@@ -133,8 +133,8 @@ public class Pivot extends SubsystemBase{
             m_tweakAngle = m_tweakAngle.plus(Rotation2d.fromDegrees(0.5));
         }
         //System.out.println("Encoder: " + getPivotAngle().getDegrees());
-        // System.out.println("Motor: " + Rotation2d.fromRotations(m_pivotMotor.getPosition().refresh().getValue()).getDegrees());
-        
+        //System.out.println("Motor: " + Rotation2d.fromRotations(m_pivotMotor.getRotorPosition().refresh().getValue()).getDegrees());
+        System.out.println("Current: " + getPivotAngle().getDegrees() + " Target: " + m_targetAngle.getDegrees());
         // System.out.println(m_pivotMotor.getSupplyCurrent().getValueAsDouble());
         if(Constants.MODE == RobotMode.COMP){
             logOutputs();
@@ -149,7 +149,9 @@ public class Pivot extends SubsystemBase{
         Logger.recordOutput("Pivot/Measured/Error", getPivotError());
         Logger.recordOutput("Pivot/Setpoint/Angle", m_targetAngle);
         Logger.recordOutput("Pivot/Setpoint/AtTarget", getPivotAtTarget().getAsBoolean());
-        Logger.recordOutput("Pivot/CurrentCommand", getCurrentCommand().getName());
+        if(getCurrentCommand() != null){
+            Logger.recordOutput("Pivot/CurrentCommand", getCurrentCommand().getName());
+        }
     }
 
     public Command dutyCycleCommand(DoubleSupplier dutyCycle){

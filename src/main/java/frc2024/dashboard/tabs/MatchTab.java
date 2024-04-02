@@ -56,7 +56,7 @@ public class MatchTab extends ShuffleboardTabBase {
         m_tab = Shuffleboard.getTab("Match");
 
         m_autoChooserEntry = createSendableEntry("Auto Chooser", m_autoChooser, new EntryProperties(0, 0, 4, 2));
-        m_matchTimeEntry = createNumberEntry("Match Time", 0.0, new EntryProperties(4, 0, 19, 8), new Widget(BuiltInWidgets.kTextView));
+        //m_matchTimeEntry = createNumberEntry("Match Time", 0.0, new EntryProperties(4, 0, 19, 8), new Widget(BuiltInWidgets.kTextView));
         
         m_coast = createBooleanEntry("Coast Stuff", false, new EntryProperties(0, 2, 4, 4), new Widget(BuiltInWidgets.kToggleSwitch));
 
@@ -81,7 +81,7 @@ public class MatchTab extends ShuffleboardTabBase {
         
         m_lastNeutralMode = m_coast.getBoolean(false);
 
-        m_matchTimeEntry.setDouble(DriverStation.getMatchTime());
+        //m_matchTimeEntry.setDouble(DriverStation.getMatchTime());
     }
 
     public static SendableChooser<Command> getAutoChooser(){
