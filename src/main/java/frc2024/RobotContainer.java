@@ -270,7 +270,7 @@ public class RobotContainer {
             .whileTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.AUTO_FIRE)
                     .andThen(
-                        new SmartShootSequence(Controlboard.getTranslation(), false, true, m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_led)))
+                        new SmartShootSequence(Controlboard.getTranslation(), false, false, true, m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_led)))
             .onFalse(new GoHome(true, m_pivot, m_elevator, m_conveyor, m_intake));
 
         Controlboard.autoFire().and(Controlboard.virtualAutoFire().negate())

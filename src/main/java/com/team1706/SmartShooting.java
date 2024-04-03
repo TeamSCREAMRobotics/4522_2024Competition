@@ -28,10 +28,10 @@ public class SmartShooting {
   public static final double GRAVITY = 9.80665;
   public static final double xOffset = AllianceFlipUtil.Number(0.0, -0.0);
   public static final double yOffset = AllianceFlipUtil.Number(0.25, -0.25);
-  public static final double forwardOffset = AllianceFlipUtil.Number(12.0, -12.0);
+  public static final double forwardOffset = AllianceFlipUtil.Number(0.0, -0.0); //12.0
   public static final double shotTimeOffset = 0.0;
   public static final double targetHeight = FieldConstants.SPEAKER_OPENING_HEIGHT;
-  public static final double kAccelCompFactor = 0.08; //0.065
+  public static final double kAccelCompFactor = 0.02; //0.04
 
   //1706 mock-up, shoot while moving from Rapid React 2022 Season
   public static Translation2d calculateVirtualTarget(Swerve swerve, Pivot pivot, Shooter shooter, Translation2d target){

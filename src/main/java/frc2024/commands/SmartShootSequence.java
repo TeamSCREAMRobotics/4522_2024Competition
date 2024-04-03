@@ -5,8 +5,10 @@ import java.util.function.DoubleSupplier;
 import com.team1706.SmartShooting;
 import com.team4522.lib.util.AllianceFlipUtil;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,12 +34,13 @@ public class SmartShootSequence extends Command{
 
     Timer timeout = new Timer();
     boolean shouldTimeout;
+    boolean fire;
     DoubleSupplier[] translation;
     boolean virtualCalculation;
 
     PIDController rotationController;
 
-    public SmartShootSequence(DoubleSupplier[] translationSup, boolean timeout, boolean virtualCalculation, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, LED led){
+    public SmartShootSequence(DoubleSupplier[] translationSup, boolean timeout, boolean fire, boolean virtualCalculation, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, LED led){
         addRequirements(swerve, elevator, pivot, shooter);
         setName("SmartShootSequence");
 
@@ -48,9 +51,10 @@ public class SmartShootSequence extends Command{
         this.conveyor = conveyor;
         this.led = led;
         this.shouldTimeout = timeout;
+        this.fire = fire;
         this.virtualCalculation = virtualCalculation;
         this.translation = translationSup;
-        rotationController = SwerveConstants.VISION_MOVING_ROTATION_CONSTANTS.toPIDController();
+        rotationController = SwerveConstants.VISION_ROTATION_CONSTANTS.toPIDController(); //SwerveConstants.VISION_MOVING_ROTATION_CONSTANTS.toPIDController();
     }
 
     public SmartShootSequence(boolean timeout, boolean virtualCalculation, Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, LED led){
@@ -65,7 +69,7 @@ public class SmartShootSequence extends Command{
         this.shouldTimeout = timeout;
         this.virtualCalculation = virtualCalculation;
         this.translation = null;
-        rotationController = SwerveConstants.VISION_MOVING_ROTATION_CONSTANTS.toPIDController();
+        rotationController = SwerveConstants.VISION_ROTATION_CONSTANTS.toPIDController(); //SwerveConstants.VISION_MOVING_ROTATION_CONSTANTS.toPIDController();
     }
 
     @Override
@@ -76,8 +80,10 @@ public class SmartShootSequence extends Command{
 
     @Override
     public void execute() {
+        /* Sets the direction coefficient */
+        double directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();
         /* sets the physical target to the speaker based on the alliance */
-        Translation2d physicalTarget = AllianceFlipUtil.getTargetSpeaker().getTranslation();
+        Translation2d physicalTarget = AllianceFlipUtil.getTargetSpeaker().getTranslation().plus(new Translation2d(Units.inchesToMeters(12.0) * directionCoefficient, Units.inchesToMeters(8) * directionCoefficient));
         
         /* sets the target rotation value for the physical speaker */
         double rotationValue = SmartShooting.getRotationToPoint(swerve, pivot, shooter, physicalTarget, false, false, rotationController);
@@ -96,7 +102,7 @@ public class SmartShootSequence extends Command{
             rotationValue = SmartShooting.getRotationToPoint(swerve, pivot, shooter, virtualTarget, false, false, rotationController); //virtualCalculation is false because we are passing in the virtualTarget already
 
             /* Sets the shooterRPMs and pivot angle based on the virtual target */
-            shooter.setTargetVelocity(SmartShooting.calculateShotTrajectory(() -> elevator.getElevatorHeight(), SmartShooting.getDistanceToTarget_SHOOTER(swerve, virtualTarget, FieldConstants.SPEAKER_OPENING_HEIGHT)).velocityRPM());
+            shooter.setTargetVelocity(MathUtil.clamp(SmartShooting.calculateShotTrajectory(() -> elevator.getElevatorHeight(), SmartShooting.getDistanceToTarget_SHOOTER(swerve, virtualTarget, FieldConstants.SPEAKER_OPENING_HEIGHT)).velocityRPM(), 3250.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
             pivot.setTargetAngle(SmartShooting.calculateShotTrajectory(() -> elevator.getElevatorHeight(), SmartShooting.getDistanceToTarget_SHOOTER(swerve, virtualTarget, FieldConstants.SPEAKER_OPENING_HEIGHT)).pivotAngle());
         } else{
             /* Sets the shooterRPMs and pivot based on the physical target */
@@ -110,7 +116,7 @@ public class SmartShootSequence extends Command{
         led.scaledTarget(Color.kDeepSkyBlue /* Color.kGoldenrod */, shooter.getRPM(), shooter.getTargetVelocity());
 
         /* Checks if all conditions are met to fire the shot */
-        if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && swerve.snappedToAngle(0.2)) || (timeout.hasElapsed(1) && shouldTimeout)){
+        if(fire && (shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && swerve.snappedToAngle(0.2)) || (timeout.hasElapsed(1) && shouldTimeout)){
           conveyor.setConveyorOutput(ConveyorConstants.SHOOT_OUTPUT);
         }
     }

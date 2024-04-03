@@ -128,7 +128,7 @@ public final class Constants{
         public static final boolean GYRO_INVERT = false;
 
         /* Swerve Kinematics */
-        public static final double SHOOT_WHILE_MOVING_SCALAR = 0.6;
+        public static final double SHOOT_WHILE_MOVING_SCALAR = 0.75;
         public static final double MAX_SPEED = 4.9; // m/s theoretical = 5.7
         public static final double MAX_ACCELERATION = 4.9; // m/s^2 theoretical
         public static final double MAX_ANGULAR_VELOCITY = 8.0; // rad/s
@@ -418,8 +418,8 @@ public final class Constants{
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
         
         /* Current Limits */
-        public static final int SUPPLY_CURRENT_LIMIT = 30;
-        public static final int SUPPLY_CURRENT_THRESHOLD = 0;
+        public static final int SUPPLY_CURRENT_LIMIT = 40;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 50;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
 
@@ -459,12 +459,12 @@ public final class Constants{
 
         public static final double TARGET_THRESHOLD = 0.5; //Degrees
 
-        public static final double CRUISE_VELOCITY = 55.0; // 55.0
-        public static final double ACCELERATION = 10.0; // 10.0
+        public static final double CRUISE_VELOCITY = 10.0; //40.0
+        public static final double ACCELERATION = 3.0; // 10.0
         public static final int JERK = 0;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, JERK);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(550.0, 0.0, 0.0); //550
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(450.0, 0.0, 0.0); //400.0
         
         public static final double KS = 0.0;
         public static final double KV = 0.0;
@@ -474,7 +474,7 @@ public final class Constants{
 
         public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(14.0).plus(PIVOT_ANGLE_OFFSET);
         public static final Rotation2d HOME_ANGLE_ENDGAME = Rotation2d.fromDegrees(-13.623).plus(PIVOT_ANGLE_OFFSET);
-        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(-5.3613-2.5).plus(PIVOT_ANGLE_OFFSET);
+        public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(-5.3613-2.5-0.5).plus(PIVOT_ANGLE_OFFSET);
         public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(16.9629).plus(PIVOT_ANGLE_OFFSET); //+4.25
         public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(29.0039 - 11.0).plus(PIVOT_ANGLE_OFFSET);
         public static final Rotation2d CHAIN_ANGLE = Rotation2d.fromDegrees(22.93945).plus(PIVOT_ANGLE_OFFSET); //+4.25
@@ -728,7 +728,7 @@ public final class Constants{
         public static final Translation2d BLUE_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(7).get().getTranslation().toTranslation2d();
         public static final Translation2d RED_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(4).get().getTranslation().toTranslation2d();
 
-        public static final double SPEAKER_OPENING_HEIGHT = Units.inchesToMeters(80.567496); // 80.567496 - 3.0
+        public static final double SPEAKER_OPENING_HEIGHT = Units.inchesToMeters(80.567496 - 3.0); // 80.567496 - 3.0
 
         public static final double SPEAKER_TAG_HEIGHT = 1.468864;
         public static final double STAGE_TAG_HEIGHT = 1.320884;

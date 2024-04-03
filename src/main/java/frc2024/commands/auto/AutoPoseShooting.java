@@ -22,6 +22,7 @@ import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -99,14 +100,15 @@ public class AutoPoseShooting extends Command {
     //swerve.resetPose_Apriltag();
     swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(new Translation2d(), targetAngle));
     elevator.setTargetHeight(targetState.elevatorHeightInches());
-    shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3000.0, 5000.0));
+    shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3250.0, 5000.0));
     pivot.setTargetAngle(adjustedPivotAngle);
 
-    if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && test.calculate(swerve.snappedToAngle(0.75))) || (timeout.hasElapsed(2) && shouldTimeout)){
+    if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && swerve.snappedToAngle(1.0)) || (timeout.hasElapsed(2) && shouldTimeout)){
       wait.start();
     }
     if(wait.hasElapsed(0.5)){
         conveyor.setConveyorOutput(ConveyorConstants.SHOOT_OUTPUT);
+        System.out.println("Horizontal Distance: " + horizontalDistance);
     }
   }
 
@@ -117,6 +119,7 @@ public class AutoPoseShooting extends Command {
 
   @Override
   public boolean isFinished() {
+    if((timeout.hasElapsed(2.5) && shouldTimeout)) DriverStation.reportWarning("Timed Out", true);
     return !conveyor.hasPiece(false).getAsBoolean() || (timeout.hasElapsed(2.5) && shouldTimeout);
   }
 }

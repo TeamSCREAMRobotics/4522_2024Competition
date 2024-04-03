@@ -79,7 +79,7 @@ public class PoseShooting extends Command {
   @Override
   public void execute() {
     double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getEstimatedPose().getTranslation(), targetSpeaker);
-    ShootState targetState = isDefended.getAsBoolean() ? ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight()) : ShootingUtil.oldCalculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight());
+    ShootState targetState = ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight());
     Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation(), targetSpeaker).minus(new Rotation2d(Math.PI));
     Translation2d translation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times((SwerveConstants.MAX_SPEED * 0.5) * directionCoefficient);
     Rotation2d adjustedPivotAngle = 
@@ -96,6 +96,7 @@ public class PoseShooting extends Command {
     pivot.setTargetAngle(adjustedPivotAngle);
     led.scaledTarget(Color.kOrange, shooter.getRPM(), shooter.getTargetVelocity());
 
+    System.out.println("Horizontal Distance: " + horizontalDistance);
     Logger.recordOutput("Commands/PoseShooting/Distance", horizontalDistance);
   }
 

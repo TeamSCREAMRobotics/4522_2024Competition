@@ -11,6 +11,7 @@ import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -24,6 +25,7 @@ import com.team4522.lib.util.ScreamUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.Current;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -45,7 +47,7 @@ public class Pivot extends SubsystemBase{
     private TalonFX m_pivotMotor;
     private CANcoder m_encoder;
 
-    private MotionMagicVoltage m_positionRequest = new MotionMagicVoltage(0);
+    private PositionVoltage m_positionRequest = new PositionVoltage(0);
     private DutyCycleOut m_dutyCycleRequest = new DutyCycleOut(0);
 
     private Rotation2d m_targetAngle = Rotation2d.fromDegrees(0);
