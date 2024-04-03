@@ -131,8 +131,6 @@ public class LED extends SubsystemBase{
         int mapped = (int) Math.round(Conversions.mapRange(currentValue, 0, targetValue, 0, length));
         mapped = MathUtil.clamp(mapped, 0, length);
 
-        if(mapped >= length - 1) color = Color.kGreen;
-
         for(int i = 0; i < mapped; i++){
             buffer.setLED(i, color);
         }

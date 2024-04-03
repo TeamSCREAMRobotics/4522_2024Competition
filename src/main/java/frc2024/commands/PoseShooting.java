@@ -94,7 +94,12 @@ public class PoseShooting extends Command {
     elevator.setTargetHeight(isDefended.getAsBoolean() && swerve.snappedToAngle(45.0) ? ElevatorConstants.MAX_HEIGHT : targetState.elevatorHeightInches());
     shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM() + ShooterConstants.ARBITRARY_VELOCITY_EXTRA, 3250.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
     pivot.setTargetAngle(adjustedPivotAngle);
-    led.scaledTarget(Color.kOrange, shooter.getRPM(), shooter.getTargetVelocity());
+
+    if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && swerve.snappedToAngle(7.0))){
+      led.scaledTarget(Color.kGreen, shooter.getRPM(), shooter.getTargetVelocity());
+    } else {
+      led.scaledTarget(Color.kOrange, shooter.getRPM(), shooter.getTargetVelocity());
+    }
 
     System.out.println("Horizontal Distance: " + horizontalDistance);
     Logger.recordOutput("Commands/PoseShooting/Distance", horizontalDistance);
