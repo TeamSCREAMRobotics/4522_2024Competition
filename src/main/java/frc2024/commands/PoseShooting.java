@@ -16,6 +16,8 @@ import com.team4522.lib.util.ShootingUtil;
 import com.team6328.GeomUtil;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.Interpolator;
@@ -54,7 +56,7 @@ public class PoseShooting extends Command {
   double directionCoefficient;
 
   BooleanSupplier isDefended;
-
+  
   final Interpolator<Double> pivotDistanceInterpolator = Interpolator.forDouble();
 
   public PoseShooting(DoubleSupplier[] translationSup, BooleanSupplier isDefended, Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, LED led) {
@@ -90,12 +92,13 @@ public class PoseShooting extends Command {
           isDefended.getAsBoolean() ? 44 : 28)
       );
 
+
     swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
     elevator.setTargetHeight(isDefended.getAsBoolean() && swerve.snappedToAngle(45.0) ? ElevatorConstants.MAX_HEIGHT : targetState.elevatorHeightInches());
     shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM() + ShooterConstants.ARBITRARY_VELOCITY_EXTRA, 3250.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
     pivot.setTargetAngle(adjustedPivotAngle);
 
-    if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && swerve.snappedToAngle(7.0))){
+    if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && swerve.snappedToAngle(8.5))){
       led.scaledTarget(Color.kGreen, shooter.getRPM(), shooter.getTargetVelocity());
     } else {
       led.scaledTarget(Color.kOrange, shooter.getRPM(), shooter.getTargetVelocity());

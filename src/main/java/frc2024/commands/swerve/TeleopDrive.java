@@ -10,6 +10,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc2024.Constants.SwerveConstants;
+import frc2024.controlboard.Controlboard;
 import frc2024.subsystems.swerve.Swerve;
 
 /**
@@ -64,9 +65,11 @@ public class TeleopDrive extends Command {
             slowModeSup.getAsBoolean() 
             ? new Translation2d(translationSup[0].getAsDouble()*0.5, translationSup[1].getAsDouble()*0.5).times(SwerveConstants.MAX_SPEED * (fieldRelative ? AllianceFlipUtil.getDirectionCoefficient() : 1))
             : new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * (fieldRelative ? AllianceFlipUtil.getDirectionCoefficient() : 1));
-        double rotationValue = rotationSup.getAsDouble() * SwerveConstants.MAX_ANGULAR_VELOCITY;//getRotation(rotationSup.getAsDouble());
 
-        //if(Controlboard.driverController_Command.getHID().getBackButtonPressed()) lastAngle = AllianceFlippable.getForwardRotation();
+        if(Controlboard.driverController_Command.getHID().getBackButtonPressed()) lastAngle = AllianceFlipUtil.getForwardRotation();
+
+        double rotationValue = getRotation(rotationSup.getAsDouble());
+
         
         ChassisSpeeds targetSpeeds;
         targetSpeeds = fieldRelative ? swerve.fieldRelativeSpeeds(translationValue, rotationValue) : swerve.robotRelativeSpeeds(translationValue, rotationValue);

@@ -375,7 +375,7 @@ public final class Constants{
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
 
-        public static final double TARGET_THRESHOLD = 70.0; // rpm
+        public static final double TARGET_THRESHOLD = 100.0; // rpm
 
         public static final double AUTO_SHOOT_VELOCITY_THRESHOLD = 4800; // rpm
         public static final double AUTO_SHOOT_DISTANCE_THRESHOLD = 6.5; // meters

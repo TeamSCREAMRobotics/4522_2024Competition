@@ -16,6 +16,7 @@ import com.team4522.lib.pid.ScreamPIDConstants;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -24,6 +25,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -57,6 +61,8 @@ public class Swerve extends SubsystemBase {
 
     private PIDController m_headingController = SwerveConstants.HEADING_CONSTANTS.toPIDController();
     private PIDController m_snapController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
+
+    private SlewRateLimiter m_snapFilter = new SlewRateLimiter(60);
 
     /**
      * Constructs a new instance of the Swerve class.
@@ -168,11 +174,12 @@ public class Swerve extends SubsystemBase {
     }
 
     public ChassisSpeeds snappedFieldRelativeSpeeds(Translation2d translation, Rotation2d angle){
-        return fieldRelativeSpeeds(translation, m_snapController.calculate(getEstimatedHeading().getDegrees(), angle.getDegrees()));
+        return fieldRelativeSpeeds(translation, calculateSnapOutput(angle));
     }
 
     /**
      * Set the ChassisSpeeds to drive the robot. Use predefined methods such as {@code}robotSpeeds{@code} or create a new ChassisSpeeds object.
+     * 
      * 
      * @param chassisSpeeds The ChassisSpeeds to generate states for.
      * @param isOpenLoop Whether the ChassisSpeeds is open loop (Tele-Op driving), or closed loop (Autonomous driving).
@@ -229,6 +236,10 @@ public class Swerve extends SubsystemBase {
     */
     public double calculateHeadingCorrection(double currentAngle, double lastAngle){
         return m_headingController.calculate(currentAngle, lastAngle);
+    }
+
+    public double calculateSnapOutput(Rotation2d targetAngle){
+        return m_snapFilter.calculate(m_snapController.calculate(getEstimatedHeading().getDegrees(), targetAngle.getDegrees()));
     }
 
     public boolean snappedToAngle(double threshold){

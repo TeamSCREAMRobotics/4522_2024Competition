@@ -46,11 +46,14 @@ public class GoHome extends Command {
   @Override
   public void execute() {
     if(pivotFirst){
+      System.out.println("pivotFirst");
       if(wait.hasElapsed(0.23)) {
         elevator.setTargetHeight(ElevatorConstants.HOME_HEIGHT);
+        System.out.println("waitElapsed");
       }
     } else {
       elevator.setTargetHeight(ElevatorConstants.HOME_HEIGHT);
+      System.out.println("else");
     }
     pivot.setTargetAngle(PivotConstants.HOME_ANGLE);
   }

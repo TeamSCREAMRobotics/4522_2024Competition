@@ -92,7 +92,12 @@ public class Pivot extends SubsystemBase{
     }
 
     public void setPivot(ControlRequest control){
-        m_pivotMotor.setControl(control);
+        if(m_encoder.getSupplyVoltage().getValueAsDouble() == 0.0){
+            DriverStation.reportError("Encoder Power Bad", true);
+            m_pivotMotor.disable();
+        } else {
+            m_pivotMotor.setControl(control);
+        }
     }
 
     public void setTargetAngle(Rotation2d angle){
