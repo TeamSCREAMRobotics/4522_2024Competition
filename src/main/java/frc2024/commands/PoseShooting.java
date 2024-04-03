@@ -87,7 +87,7 @@ public class PoseShooting extends Command {
         MathUtil.clamp(
           targetState.pivotAngle().getDegrees(), 
           elevator.getElevatorHeight() > 1.5 ? PivotConstants.SUBWOOFER_ANGLE.getDegrees() : 1, 
-          43)
+          isDefended.getAsBoolean() ? 44 : 28)
       );
 
     swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
