@@ -103,12 +103,8 @@ public class AutoPoseShooting extends Command {
     shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3250.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
     pivot.setTargetAngle(adjustedPivotAngle);
 
-    if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && swerve.snappedToAngle(7.0)) || (timeout.hasElapsed(2) && shouldTimeout)){
-      wait.start();
-    }
-    if(wait.hasElapsed(0.5)){
-        conveyor.setConveyorOutput(ConveyorConstants.SHOOT_OUTPUT);
-        System.out.println("Horizontal Distance: " + horizontalDistance);
+    if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && swerve.snappedToAngle(6.0)) || (timeout.hasElapsed(1) && shouldTimeout)){
+      conveyor.setConveyorOutput(ConveyorConstants.SHOOT_OUTPUT);
     }
   }
 
@@ -120,6 +116,6 @@ public class AutoPoseShooting extends Command {
   @Override
   public boolean isFinished() {
     if((timeout.hasElapsed(2.5) && shouldTimeout)) DriverStation.reportWarning("Timed Out", true);
-    return !conveyor.hasPiece(false).getAsBoolean() || (timeout.hasElapsed(2.5) && shouldTimeout);
+    return !conveyor.hasPiece(false).getAsBoolean() || (timeout.hasElapsed(1.5) && shouldTimeout);
   }
 }

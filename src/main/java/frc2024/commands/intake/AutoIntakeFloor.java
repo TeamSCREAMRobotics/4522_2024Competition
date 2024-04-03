@@ -18,7 +18,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc2024.Constants.SuperstructureState;
 import frc2024.Constants.ConveyorConstants;
+import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.IntakeConstants;
+import frc2024.Constants.PivotConstants;
 import frc2024.Constants.SwerveConstants;
 import frc2024.Constants.VisionConstants;
 import frc2024.commands.SuperstructureToPosition;
@@ -42,7 +44,10 @@ public class AutoIntakeFloor extends SequentialCommandGroup {
     public AutoIntakeFloor(Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake, LED led){
         setName("AutoIntakeFloor");
         addCommands(
-            conveyor.dutyCycleCommand(ConveyorConstants.TRANSFER_OUTPUT).alongWith(intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT))
+            conveyor.dutyCycleCommand(ConveyorConstants.TRANSFER_OUTPUT)
+            .alongWith(intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT))
+            .alongWith(elevator.heightCommand(ElevatorConstants.HOME_HEIGHT))
+            .alongWith(pivot.angleCommand(PivotConstants.HOME_ANGLE))
                 .until(conveyor.hasPiece(false))
                 .finallyDo((interrupted) -> {
                     if(!interrupted){

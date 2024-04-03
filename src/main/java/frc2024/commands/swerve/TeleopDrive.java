@@ -85,7 +85,7 @@ public class TeleopDrive extends Command {
      * @return The determined rotation value.
      */
     private double getRotation(double currentValue){
-        if(Math.abs(currentValue) > 0.1){
+        if(Math.abs(currentValue) > 0.05){
             correctionTimer.reset();
             return currentValue * SwerveConstants.MAX_ANGULAR_VELOCITY;
         }

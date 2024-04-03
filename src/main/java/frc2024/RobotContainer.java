@@ -407,7 +407,8 @@ public class RobotContainer {
             Routines.SweepSource(m_swerve, m_pivot, m_shooter, m_conveyor, m_intake).withName("SweepSource"),
             Routines.Sweep3_Source(m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_intake, m_led).withName("Sweep3_Source"),
             Routines.Amp5Center_2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("SubSide_4_1Close&Center"),
-            Routines.Amp5_NoStage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_5_Close&Center"),
+            Routines.Amp5_Stage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_5_Close&Center"),
+            Routines.Amp5_NoStage_2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp5_NoStage_2"),
             Routines.Source3_NoStage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Center&NoStage"),
             Routines.Leave(m_swerve, 2.0).withName("Leave"),
             Routines.testAuto(m_swerve).withName("test")

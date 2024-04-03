@@ -3,37 +3,59 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.857824212082089,
-        "y": 6.45267093672561
+        "x": 5.369375354135325,
+        "y": 6.423379769836463
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.17401679881819,
-        "y": 6.37069508090514
+        "x": 6.369375354135325,
+        "y": 6.423379769836463
       },
       "isLocked": false,
-      "linkedName": "Close6_2End"
+      "linkedName": "Amp6Center_2End"
     },
     {
       "anchor": {
-        "x": 8.000907299960106,
-        "y": 6.077924167260603
+        "x": 7.895312713702351,
+        "y": 5.8609640296203676
       },
       "prevControl": {
-        "x": 7.684714713224006,
-        "y": 6.171610859626855
+        "x": 7.007287860729568,
+        "y": 6.176706199566246
+      },
+      "nextControl": {
+        "x": 8.783337566675133,
+        "y": 5.5452218596744896
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.369375354135325,
+        "y": 6.423379769836463
+      },
+      "prevControl": {
+        "x": 7.14542506008089,
+        "y": 5.964566929133858
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Close6_3End"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": -12.380756928807271,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "StartIntake",
-      "waypointRelativePos": 0.6,
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.55,
       "command": {
         "type": "parallel",
         "data": {
@@ -50,21 +72,21 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 5.0,
+    "maxVelocity": 4.98,
     "maxAcceleration": 5.0,
     "maxAngularVelocity": 570.0,
-    "maxAngularAcceleration": 440.0
+    "maxAngularAcceleration": 500.0
   },
   "goalEndState": {
-    "velocity": 2.0,
-    "rotation": -18.034285567129842,
-    "rotateFast": true
+    "velocity": 0,
+    "rotation": 1.3322198538697587,
+    "rotateFast": false
   },
   "reversed": false,
   "folder": "6AmpSide_Center",
   "previewStartingState": {
-    "rotation": -17.65012421993007,
+    "rotation": 3.9909130984297803,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

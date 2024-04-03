@@ -486,7 +486,7 @@ public final class Constants{
 
         public static final double AUTO_ZERO_OUTPUT = 0.0;
 
-        public static final Rotation2d ABSOLUTE_ENCODER_OFFSET = Rotation2d.fromRotations(0.2431640625); // 0.2431640625
+        public static final Rotation2d ABSOLUTE_ENCODER_OFFSET = Rotation2d.fromRotations(0.245849609375); // 0.2431640625
         public static final Rotation2d RELATIVE_ENCODER_TO_HORIZONTAL = Rotation2d.fromDegrees(44.824).minus(PIVOT_ANGLE_OFFSET); // TODO RE-MEASURE
 
         public static final double AXLE_HEIGHT_HOME = Units.inchesToMeters(16.640069);

@@ -3,50 +3,84 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.907220607593853,
-        "y": 7.506646225845947
+        "x": 2.6841875081753006,
+        "y": 6.862550215827963
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.391943799579466,
-        "y": 7.272429494930317
+        "x": 3.6841875081753006,
+        "y": 6.862550215827963
       },
       "isLocked": false,
-      "linkedName": "Close6_1End"
+      "linkedName": "Amp6Center_1End"
     },
     {
       "anchor": {
-        "x": 5.857824212082089,
-        "y": 6.45267093672561
+        "x": 7.984115198999631,
+        "y": 7.36073933686329
       },
       "prevControl": {
-        "x": 6.349679347004912,
-        "y": 6.698598504187022
+        "x": 7.9643813133780155,
+        "y": 7.676481506809168
+      },
+      "nextControl": {
+        "x": 8.009169212295689,
+        "y": 6.959875124126353
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.369375354135325,
+        "y": 6.423379769836463
+      },
+      "prevControl": {
+        "x": 6.782067564135129,
+        "y": 6.689787225728298
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Close6_2End"
+      "linkedName": "Amp6Center_2End"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "RunIntake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 5.0,
+    "maxVelocity": 4.98,
     "maxAcceleration": 5.0,
     "maxAngularVelocity": 570.0,
-    "maxAngularAcceleration": 440.0
+    "maxAngularAcceleration": 500.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 10.0,
+    "rotation": 4.513988458001262,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "6AmpSide_Center",
   "previewStartingState": {
-    "rotation": 0.0,
+    "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

@@ -67,7 +67,7 @@ public class Feed extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    targetPoint = AllianceFlipUtil.MirroredTranslation3d(new Translation3d(1, 7.4, 7.0));
+    targetPoint = AllianceFlipUtil.MirroredTranslation3d(new Translation3d(2, 5.6, 7.0));
     illegalArea = AllianceFlipUtil.PoseArea(FieldConstants.WING_POSE_AREA);
     directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();
   }
@@ -79,7 +79,7 @@ public class Feed extends Command {
     double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getEstimatedPose().getTranslation(), targetPoint.toTranslation2d());
     ShootState targetState = ShootingUtil.calculateShootState(targetPoint.getZ(), horizontalDistance, elevator.getElevatorHeight());
     Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation(), targetPoint.toTranslation2d()).minus(new Rotation2d(Math.PI));
-    Translation2d translation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times((SwerveConstants.MAX_SPEED * 0.8) * directionCoefficient);
+    Translation2d translation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times((SwerveConstants.MAX_SPEED /* * 0.8 */) * directionCoefficient);
     Rotation2d adjustedPivotAngle = 
       Rotation2d.fromDegrees(
         MathUtil.clamp(

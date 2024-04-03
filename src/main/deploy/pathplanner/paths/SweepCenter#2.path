@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.211702357784173,
-        "y": 0.9134452505709579
+        "x": 8.094593992326358,
+        "y": 0.8080477216589235
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.188280684692609,
-        "y": 1.6746496260467578
+        "x": 8.071172319234794,
+        "y": 1.5692520971347232
       },
       "isLocked": false,
       "linkedName": "SweepCenter_1End"
@@ -43,7 +43,7 @@
     "rotateFast": true
   },
   "reversed": false,
-  "folder": null,
+  "folder": "2ScoreAmp_Center",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
