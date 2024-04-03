@@ -84,7 +84,7 @@ public class Pivot extends SubsystemBase{
     }
 
     public void resetToAbsolute(){
-        m_pivotMotor.setPosition(m_encoder.getAbsolutePosition().getValueAsDouble());
+        m_pivotMotor.setPosition(m_encoder.getAbsolutePosition().refresh().getValueAsDouble());
     }
     
     public void setNeutralMode(NeutralModeValue mode){
@@ -114,6 +114,7 @@ public class Pivot extends SubsystemBase{
         return Rotation2d.fromDegrees(Math.abs(m_targetAngle.getDegrees()) - Math.abs(getPivotAngle().getDegrees()));
     }
 
+    
     public BooleanSupplier getPivotAtTarget(){
         return () -> Math.abs(getPivotError().getDegrees()) < PivotConstants.TARGET_THRESHOLD;
     }
@@ -136,7 +137,7 @@ public class Pivot extends SubsystemBase{
         }
         //System.out.println("Encoder: " + getPivotAngle().getDegrees());
         //System.out.println("Motor: " + Rotation2d.fromRotations(m_pivotMotor.getRotorPosition().refresh().getValue()).getDegrees());
-        System.out.println("Current: " + getPivotAngle().getDegrees() + " Target: " + m_targetAngle.getDegrees());
+        //System.out.println("Current: " + getPivotAngle().getDegrees() + " Target: " + m_targetAngle.getDegrees());
         // System.out.println(m_pivotMotor.getSupplyCurrent().getValueAsDouble());
         if(Constants.MODE == RobotMode.COMP){
             logOutputs();

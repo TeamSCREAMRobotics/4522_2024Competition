@@ -410,8 +410,8 @@ public class RobotContainer {
             Routines.Amp5_NoStage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_5_Close&Center"),
             Routines.Source3_NoStage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Center&NoStage"),
             Routines.Leave(m_swerve, 2.0).withName("Leave"),
-            Routines.testAuto(m_swerve).withName("test"),
-            Routines.Amp4Close_FastShootTest(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("4CloseTest")
+            Routines.testAuto(m_swerve).withName("test")
+            //Routines.Amp4Close_FastShootTest(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("4CloseTest")
         );
     }
 

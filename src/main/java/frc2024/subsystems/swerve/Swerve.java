@@ -395,9 +395,9 @@ public class Swerve extends SubsystemBase {
         //Vision.updateEstimateWithValidMeasurements(Limelight.INTAKE_SIDE, m_poseEstimator);
         // System.out.println(Units.metersToInches(Vision.getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER)));
         //System.out.println(getPose().getTranslation().getDistance(AllianceFlipUtil.getTargetSpeaker().getTranslation()));
-        if(Constants.MODE == RobotMode.COMP){
+        /* if(Constants.MODE == RobotMode.COMP){
             logOutputs();
-        }
+        } */
     }
 
     public void logOutputs(){

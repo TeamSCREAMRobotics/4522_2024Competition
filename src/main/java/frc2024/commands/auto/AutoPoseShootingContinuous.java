@@ -81,7 +81,7 @@ public class AutoPoseShootingContinuous extends Command {
         MathUtil.clamp(
           targetState.pivotAngle().getDegrees(), 
           1, 
-          45)
+          28)
       );
 
     PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.of(targetAngle));

@@ -85,14 +85,14 @@ public class AutoPoseShooting extends Command {
   @Override
   public void execute() {
     double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getEstimatedPose().getTranslation(), targetSpeaker);
-    ShootState targetState = ShootingUtil.oldCalculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight());
+    ShootState targetState = ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight());
     Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation(), targetSpeaker).minus(new Rotation2d(Math.PI));
     Rotation2d adjustedPivotAngle = 
       Rotation2d.fromDegrees(
         MathUtil.clamp(
           targetState.pivotAngle().getDegrees(), 
           1, 
-          45)
+          28)
       );
 
     //PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.of(targetAngle));
@@ -100,10 +100,10 @@ public class AutoPoseShooting extends Command {
     //swerve.resetPose_Apriltag();
     swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(new Translation2d(), targetAngle));
     elevator.setTargetHeight(targetState.elevatorHeightInches());
-    shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3250.0, 5000.0));
+    shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3250.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
     pivot.setTargetAngle(adjustedPivotAngle);
 
-    if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && swerve.snappedToAngle(1.0)) || (timeout.hasElapsed(2) && shouldTimeout)){
+    if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && swerve.snappedToAngle(7.0)) || (timeout.hasElapsed(2) && shouldTimeout)){
       wait.start();
     }
     if(wait.hasElapsed(0.5)){

@@ -171,7 +171,7 @@ public class Vision{
         double poseDifference = poseEstimator.getEstimatedPosition().getTranslation()
             .getDistance(estimate.pose.getTranslation());
 
-        if (estimate.tagCount != 0 && DriverStation.isTeleop()) {
+        if (estimate.tagCount != 0) {
             double xyStds;
             if (estimate.tagCount >= 2) {
                 xyStds = 0.3;

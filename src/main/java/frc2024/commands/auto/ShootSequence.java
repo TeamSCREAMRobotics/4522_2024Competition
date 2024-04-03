@@ -65,6 +65,7 @@ public class ShootSequence extends Command{
     public void end(boolean interrupted) {
         conveyor.stop();
         elevator.setTargetHeight(ElevatorConstants.HOME_HEIGHT);
+        pivot.setTargetAngle(PivotConstants.HOME_ANGLE);
     }
 
     @Override

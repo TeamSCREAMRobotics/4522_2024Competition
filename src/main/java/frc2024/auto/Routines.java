@@ -90,13 +90,13 @@ public class Routines {
             new ShootSequence(SuperstructureState.SUBWOOFER, ShooterConstants.SUBWOOFER_VELOCITY, elevator, pivot, shooter, conveyor),
             Amp4Close.getIndex(0),
             new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
-            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor, led),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
             Amp4Close.getIndex(1),
             new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
-            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor, led),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
             Amp4Close.getIndex(2),
             new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
-            new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor, led)
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
         );
     }
 
@@ -117,8 +117,7 @@ public class Routines {
                             .alongWith(intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT))),
                     Amp4Close.getIndex(2),
                     new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(2),
-                    new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-                    new WaitCommand(0.3)
+                    new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
         );
     }
 
@@ -178,7 +177,7 @@ public class Routines {
     public static Command Amp5_1Center(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
         currentSequence = Amp5_1Center;
         return new SequentialCommandGroup(
-            Amp4Close_FastShootTest(swerve, shooter, elevator, pivot, conveyor, intake, led),
+            Amp4Close(swerve, shooter, elevator, pivot, conveyor, intake, led),
             Amp5_1Center.getIndex(0),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
             Amp5_1Center.getIndex(1),
@@ -219,8 +218,10 @@ public class Routines {
             Source3_NoStage.getIndex(0),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
             Source3_NoStage.getIndex(1),
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
             Source3_NoStage.getIndex(2),
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
         );
     }

@@ -89,10 +89,10 @@ public class Robot extends LoggedRobot {
       case COMP:
         //Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
         //Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-        new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
-        SignalLogger.setPath("/media/sda1/");
+        //new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
         //Logger.start();
-        SignalLogger.enableAutoLogging(true);
+        SignalLogger.start();
+        //SignalLogger.enableAutoLogging(true);
         break;
       case REPLAY:
         setUseTiming(false); // Run as fast as possible
@@ -120,13 +120,13 @@ public class Robot extends LoggedRobot {
       () -> {
         RobotContainer.getSwerve().configureAutoBuilder();
         RobotContainer.configAuto();
-        Vision.setPriorityTagID((int) AllianceFlipUtil.Number(7, 4), Limelight.SHOOT_SIDE);
+        //Vision.setPriorityTagID((int) AllianceFlipUtil.Number(7, 4), Limelight.SHOOT_SIDE);
         System.out.println("Ready To Enable");
       },
       DriverStation.getAlliance().isPresent());
     //System.out.println("(" + RobotContainer.getPivot().getPivotAngle().getDegrees() + ", " + RobotContainer.getElevator().getElevatorHeight() + ", " + RobotContainer.getShooter().getRPM() + ")");
     Vision.periodic();
-    if(Constants.MODE == RobotMode.COMP) RobotContainer.logOutputs();
+    //if(Constants.MODE == RobotMode.COMP) RobotContainer.logOutputs();
   }
 
   @Override
@@ -161,7 +161,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousInit() {
-    autonomousCommand = robotContainer.getAutonomousCommand();
+    autonomousCommand = robotContainer.getAutonomousCommand().andThen(() -> RobotContainer.stopAll());
 
     if (autonomousCommand != null) {
       autoTimer.reset();
