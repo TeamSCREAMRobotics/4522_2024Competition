@@ -115,7 +115,6 @@ public class AutoPoseShooting extends Command {
 
   @Override
   public boolean isFinished() {
-    if((timeout.hasElapsed(2.5) && shouldTimeout)) DriverStation.reportWarning("Timed Out", true);
     return !conveyor.hasPiece(false).getAsBoolean() || (timeout.hasElapsed(1.5) && shouldTimeout);
   }
 }

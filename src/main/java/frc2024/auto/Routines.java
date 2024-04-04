@@ -67,8 +67,10 @@ public class Routines {
     private static final PathSequence Amp4Center = new PathSequence(Side.AMP, "Amp4Center#1", "Amp4Center#2", "Amp4Center#3");
     private static final PathSequence SweepCenter = new PathSequence(Side.SOURCE, "SweepCenter#1", "SweepCenter#2");
     private static final PathSequence Sweep3_Source = new PathSequence(Side.SOURCE, "SweepCenter#1", "3Sweep#1", "3Sweep#2");
+    private static final PathSequence Source2_1Sweep = new PathSequence(Side.SOURCE, "SweepCenter#1", "2Source_1Sweep#1", "2Source_1Sweep#2");
     private static final PathSequence Amp5Center_2 = new PathSequence(Side.AMP, "Amp5Center#1", "Amp5Center#2", "Amp5Center#3", "Amp5Center#4");
     private static final PathSequence Source3_NoStage = new PathSequence(Side.SOURCE, "Source3#0", "Source3#1", "Source3#2");
+    private static final PathSequence Source3_Stage = new PathSequence(Side.SOURCE, "Source3#0", "Source3_Stage#1", "Source3_Stage#2");
     private static final PathSequence Leave = new PathSequence(Side.SOURCE, "Leave");
     private static final PathSequence Amp6Full = new PathSequence(Side.AMP, "Amp6CenterFull");
 
@@ -89,15 +91,15 @@ public class Routines {
 
         return new SequentialCommandGroup(
             swerve.resetPoseCommand(Amp4Close.getStartingPose()),
-            new ShootSequence(SuperstructureState.SUBWOOFER, ShooterConstants.SUBWOOFER_VELOCITY, elevator, pivot, shooter, conveyor),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
             Amp4Close.getIndex(0),
-            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
+            // new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
             Amp4Close.getIndex(1),
-            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
+            // new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
             Amp4Close.getIndex(2),
-            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
+            // new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
         );
     }
@@ -118,7 +120,7 @@ public class Routines {
                             .alongWith(conveyor.dutyCycleCommand(ConveyorConstants.SHOOT_OUTPUT))
                             .alongWith(intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT))),
                     Amp4Close.getIndex(2),
-                    new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(2),
+                    // new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(2),
                     new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
         );
     }
@@ -186,8 +188,8 @@ public class Routines {
             Amp4Close(swerve, shooter, elevator, pivot, conveyor, intake, led),
             Amp5_1Center.getIndex(0),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-            Amp5_1Center.getIndex(1),
-            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led)
+            Amp5_1Center.getIndex(1)
+            // new AutoIntakeFloor(elevator, pivot, conveyor, intake, led)
         );
     }
 
@@ -216,7 +218,7 @@ public class Routines {
             swerve.resetPoseCommand(Amp5Center_2.getStartingPose()),
             new ShootSequence(SuperstructureState.SUBWOOFER, ShooterConstants.SUBWOOFER_VELOCITY + 500.0, elevator, pivot, shooter, conveyor),
             Amp5Center_2.getIndex(0),
-            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
+            // new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor, led),
             Amp5Center_2.getIndex(1),
             new AutoShootSequence(true, swerve, elevator, pivot, shooter, conveyor, led),
@@ -232,13 +234,29 @@ public class Routines {
         return new SequentialCommandGroup(
             swerve.resetPoseCommand(Source3_NoStage.getStartingPose()),
             Source3_NoStage.getIndex(0),
-            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor).withTimeout(1.5),
             Source3_NoStage.getIndex(1),
-            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
-            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+            // new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor).withTimeout(1.5),
             Source3_NoStage.getIndex(2),
-            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
-            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
+            // new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor).withTimeout(1.5)
+        );
+    }
+
+    /* Second note first */
+    public static Command Source3_Stage(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
+        currentSequence = Source3_Stage;
+        return new SequentialCommandGroup(
+            swerve.resetPoseCommand(Source3_Stage.getStartingPose()),
+            Source3_Stage.getIndex(0),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor).withTimeout(1.5),
+            Source3_Stage.getIndex(1),
+            // new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor).withTimeout(1.5),
+            Source3_Stage.getIndex(2),
+            // new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor).withTimeout(1.5)
         );
     }
 
@@ -274,10 +292,24 @@ public class Routines {
         );
     }
 
-    /* public static Command 2Source_1Sweep(Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
-        // currentSequence = 
-        return new SequentialCommandGroup(null)
-    } */
+    public static Command Source2_1Sweep(Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
+        currentSequence = Source2_1Sweep;
+        return new SequentialCommandGroup(
+            swerve.resetPoseCommand(Source2_1Sweep.getStartingPose()),
+            new ParallelRaceGroup(
+                intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT),
+                pivot.angleCommand(PivotConstants.HOME_ANGLE),
+                elevator.heightCommand(ElevatorConstants.HOME_HEIGHT),
+                shooter.dutyCycleCommand(0.2),
+                conveyor.dutyCycleCommand(1.0),
+                Source2_1Sweep.getIndex(0)
+            ),
+            Source2_1Sweep.getIndex(1),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+            Source2_1Sweep.getIndex(2),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
+        );
+    }
 
     public static Command Leave(Swerve swerve, double delay){
         currentSequence = Leave;

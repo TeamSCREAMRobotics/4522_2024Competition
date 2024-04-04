@@ -623,8 +623,8 @@ public final class Constants{
     public static record ShootState(Rotation2d pivotAngle, double elevatorHeightInches, double velocityRPM){}
 
     public static final class VisionConstants {
-        public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.15, 0.15, 0.0001);
-        public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(10, 10, 100000.0);
+        public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.15, 0.15, 0.00001);
+        public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(10, 10, 99999999.0);
 
         public static final double DETECTOR_TARGET_Y = 0.0;
         public static final double DETECTOR_TARGET_X = 0.0;
@@ -728,7 +728,7 @@ public final class Constants{
         public static final Translation2d BLUE_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(7).get().getTranslation().toTranslation2d();
         public static final Translation2d RED_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(4).get().getTranslation().toTranslation2d();
 
-        public static final double SPEAKER_OPENING_HEIGHT = Units.inchesToMeters(80.567496 - 3.0); // 80.567496 - 3.0
+        public static final double SPEAKER_OPENING_HEIGHT = Units.inchesToMeters(80.567496 - 1.0); // 80.567496 - 3.0
 
         public static final double SPEAKER_TAG_HEIGHT = 1.468864;
         public static final double STAGE_TAG_HEIGHT = 1.320884;

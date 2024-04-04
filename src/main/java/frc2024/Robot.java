@@ -125,7 +125,7 @@ public class Robot extends LoggedRobot {
       },
       DriverStation.getAlliance().isPresent());
     //System.out.println("(" + RobotContainer.getPivot().getPivotAngle().getDegrees() + ", " + RobotContainer.getElevator().getElevatorHeight() + ", " + RobotContainer.getShooter().getRPM() + ")");
-    Vision.periodic();
+    //Vision.periodic();
     //if(Constants.MODE == RobotMode.COMP) RobotContainer.logOutputs();
   }
 

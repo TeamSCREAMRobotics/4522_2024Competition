@@ -4,6 +4,7 @@
   "holonomicMode": true,
   "pathFolders": [
     "2ScoreAmp_Center",
+    "2Source_1Sweep",
     "3Source_NoStage",
     "3Sweep_Source",
     "4AmpSide_Center",
@@ -14,7 +15,7 @@
     "6AmpSide_NoStage",
     "7AmpSide_Center",
     "CenterPiecePathfinding",
-    "2Source_1Sweep"
+    "3Source_Stage"
   ],
   "autoFolders": [],
   "defaultMaxVel": 4.98,

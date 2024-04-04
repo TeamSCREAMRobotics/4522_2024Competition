@@ -1,5 +1,6 @@
 package com.team4522.lib.util;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -22,7 +23,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.Command;
 
 /**
  *  Various utility methods 
@@ -130,6 +133,10 @@ public class ScreamUtil {
 
     public static boolean valueBetween(double value, double upper, double lower){
         return value < upper && value > lower;
+    }
+
+    public static Supplier<Command> continuousCondtional(Command onTrue, Command onFalse, BooleanSupplier condition){
+        return condition.getAsBoolean() ? () -> onTrue : () -> onFalse;
     }
 
     public static void logBasicMotorOutputs(String path, TalonFX motor){

@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
+import frc2024.RobotContainer;
 import frc2024.Constants.FieldConstants;
 import frc2024.Constants.VisionConstants;
 
@@ -170,6 +171,7 @@ public class Vision{
 
         double poseDifference = poseEstimator.getEstimatedPosition().getTranslation()
             .getDistance(estimate.pose.getTranslation());
+        //LimelightHelpers.SetRobotOrientation(limelight.name, RobotContainer.getSwerve().getGyro().getAngle(), 0, 0, 0, 0, 0);
 
         if (estimate.tagCount != 0) {
             double xyStds;
@@ -177,12 +179,12 @@ public class Vision{
                 xyStds = 0.3;
             } else if (estimate.avgTagArea > 0.8 && poseDifference < 0.3) {
                 xyStds = 0.7;
-            } else if (estimate.avgTagArea > 0.1 && poseDifference < 0.6) {
-                xyStds = 1.1;
+            } else if (estimate.avgTagArea < 0.1 && poseDifference < 0.9) {
+                xyStds = 0.7;
             } else {
                 return;
             }
-            poseEstimator.addVisionMeasurement(estimate.pose, Timer.getFPGATimestamp() - latency, VecBuilder.fill(xyStds, xyStds, 100000.0));
+            poseEstimator.addVisionMeasurement(estimate.pose, Timer.getFPGATimestamp() - latency, VecBuilder.fill(xyStds, xyStds, 99999999));
         }
     }
 

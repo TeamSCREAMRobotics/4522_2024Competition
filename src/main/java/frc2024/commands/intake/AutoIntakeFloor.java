@@ -8,6 +8,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -40,9 +41,11 @@ import frc2024.subsystems.swerve.Swerve;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoIntakeFloor extends SequentialCommandGroup {
+    Timer timeout = new Timer();
 
     public AutoIntakeFloor(Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake, LED led){
         setName("AutoIntakeFloor");
+
         addCommands(
             conveyor.dutyCycleCommand(ConveyorConstants.TRANSFER_OUTPUT)
             .alongWith(intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT))
