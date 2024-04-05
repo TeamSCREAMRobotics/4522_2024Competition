@@ -91,7 +91,7 @@ public class Robot extends LoggedRobot {
         //Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
         //new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
         //Logger.start();
-        SignalLogger.start();
+        //SignalLogger.start();
         //SignalLogger.enableAutoLogging(true);
         break;
       case REPLAY:

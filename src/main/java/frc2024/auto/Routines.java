@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
@@ -62,6 +63,8 @@ public class Routines {
     private static final PathSequence Amp4Close = new PathSequence(Side.AMP, "Amp4Close#1", "Amp4Close#2", "Amp4Close#3");
     private static final PathSequence Amp5_1Center = new PathSequence(Side.AMP,  "Amp5_1Center#1", "Amp5_1Center#2");
     private static final PathSequence Amp5_NoStage_2 = new PathSequence(Side.AMP, "Amp5_NoStage");
+    private static final PathSequence Amp5_1Center_Piece1 = new PathSequence(Side.AMP, "Amp5_1Center_1#1", "Amp5_1Center_1#2", "Amp5_1Center_1#3");
+    private static final PathSequence Amp6_SplitOff = new PathSequence(Side.AMP, "Amp6_1Center#1", "Amp6_1CenterNoSplit#2", "Amp6_1CenterSplit#2", "Amp5_1Center_1#3");
     private static final PathSequence Amp6Center = new PathSequence(Side.AMP, "Amp6Center#1", "Amp6Center#2", "Amp6Center#3");
     private static final PathSequence Source4Center = new PathSequence(Side.SOURCE, "Source4Center#1", "Source4Center#3");
     private static final PathSequence Amp4Center = new PathSequence(Side.AMP, "Amp4Center#1", "Amp4Center#2", "Amp4Center#3");
@@ -85,21 +88,22 @@ public class Routines {
             AutoBuilder.followPath(path)
         );
     }
- 
+
     public static Command Amp4Close(Swerve swerve, Shooter shooter, Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake, LED led){
         currentSequence = Amp4Close;
 
         return new SequentialCommandGroup(
             swerve.resetPoseCommand(Amp4Close.getStartingPose()),
-            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+            new ShootSequence(SuperstructureState.SUBWOOFER, ShooterConstants.SUBWOOFER_VELOCITY, elevator, pivot, shooter, conveyor),
+            // new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
             Amp4Close.getIndex(0),
-            // new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(1.5),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
             Amp4Close.getIndex(1),
-            // new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(1.5),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
             Amp4Close.getIndex(2),
-            // new AutoIntakeFloor(elevator, pivot, conveyor, intake, led),
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(1.5),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
         );
     }
@@ -212,6 +216,46 @@ public class Routines {
         );
     }
 
+    /* Gets first note */
+    public static Command Amp5_1Center_Piece1(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
+        currentSequence = Amp5_1Center_Piece1;
+        return new SequentialCommandGroup(
+            Amp4Close(swerve, shooter, elevator, pivot, conveyor, intake, led),
+            Amp5_1Center_Piece1.getIndex(0),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+            Amp5_1Center_Piece1.getIndex(1),
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(1.0),
+            Amp5_1Center_Piece1.getIndex(2),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
+        );
+    }
+
+    /* Gets 1st piece and splits towards second if not gotten */
+    public static Command Amp6_SplitOff(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
+        currentSequence = Amp6_SplitOff;
+        return new SequentialCommandGroup(
+            Amp4Close(swerve, shooter, elevator, pivot, conveyor, intake, led),
+            Amp6_SplitOff.getIndex(0),
+            new WaitCommand(0.5), /* Gives time to register the picked up note */
+                new ConditionalCommand(
+                    new SequentialCommandGroup(
+                        Amp6_SplitOff.getIndex(1),
+                        new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+                        Amp5_1Center_Piece1.getIndex(1),
+                        new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(1.0),
+                        Amp5_1Center_Piece1.getIndex(2),
+                        new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
+                    ),
+                    new SequentialCommandGroup(
+                        Amp6_SplitOff.getIndex(2),
+                        Amp6_SplitOff.getIndex(3),
+                        new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
+                    ),
+                    conveyor.hasPiece(false)){
+                }
+        );
+    }
+    
     public static Command Amp5Center_2(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
         currentSequence = Amp5Center_2;
         return new SequentialCommandGroup(

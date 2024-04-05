@@ -6,6 +6,7 @@
     "2ScoreAmp_Center",
     "2Source_1Sweep",
     "3Source_NoStage",
+    "3Source_Stage",
     "3Sweep_Source",
     "4AmpSide_Center",
     "4AmpSide_Close",
@@ -14,8 +15,9 @@
     "6AmpSide_Center",
     "6AmpSide_NoStage",
     "7AmpSide_Center",
+    "Amp5.5_Piece1",
     "CenterPiecePathfinding",
-    "3Source_Stage"
+    "Amp6_SplitOff"
   ],
   "autoFolders": [],
   "defaultMaxVel": 4.98,

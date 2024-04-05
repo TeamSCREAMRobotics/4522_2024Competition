@@ -3,33 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.066066220577518,
-        "y": 5.3752739745137115
+        "x": 8.059461482689013,
+        "y": 7.471513716208602
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.038065653877384,
-        "y": 4.1690578102982165
+        "x": 7.7315580594071305,
+        "y": 6.862550215827963
       },
       "isLocked": false,
-      "linkedName": "Amp5_1Center1End"
+      "linkedName": "Amp6_1Center#1_SplittingEnd"
     },
     {
       "anchor": {
-        "x": 7.95406395377698,
-        "y": 4.368142031576503
+        "x": 8.000907299960106,
+        "y": 5.58606903233778
       },
       "prevControl": {
-        "x": 5.9866434140856875,
-        "y": 4.051949444840402
+        "x": 7.708136386315569,
+        "y": 6.382405917450922
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Amp5_1Center#2End"
+      "linkedName": "Amp5_1Center_1#2End"
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 2.5,
+        "maxAngularVelocity": 570.0,
+        "maxAngularAcceleration": 500.0
+      }
+    }
+  ],
   "eventMarkers": [
     {
       "name": "New Event Marker",
@@ -50,21 +62,21 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 5.0,
+    "maxVelocity": 4.98,
     "maxAcceleration": 5.0,
     "maxAngularVelocity": 570.0,
     "maxAngularAcceleration": 500.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": -87.90474743537615,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Amp6_SplitOff",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -74.89890183861456,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

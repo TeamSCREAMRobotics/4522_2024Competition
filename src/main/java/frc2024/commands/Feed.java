@@ -67,7 +67,7 @@ public class Feed extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    targetPoint = AllianceFlipUtil.MirroredTranslation3d(new Translation3d(2, 5.6, 7.0));
+    targetPoint = AllianceFlipUtil.Translation3d(new Translation3d(2, 5.6, 7.0), new Translation3d(FieldConstants.FIELD_DIMENSIONS.getX() - 2, 4.2, 7.0));
     illegalArea = AllianceFlipUtil.PoseArea(FieldConstants.WING_POSE_AREA);
     directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();
   }

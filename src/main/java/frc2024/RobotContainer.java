@@ -326,12 +326,12 @@ public class RobotContainer {
 
         Controlboard.trapAdjustUp()
             .whileTrue(
-                m_conveyor.dutyCycleCommand(-0.075))
+                m_conveyor.dutyCycleCommand(-0.075 - 0.02))
             .onFalse(m_conveyor.stopCommand());
 
         Controlboard.trapAdjustDown()
             .whileTrue(
-                m_conveyor.dutyCycleCommand(0.075))
+                m_conveyor.dutyCycleCommand(0.075 + 0.02))
             .onFalse(m_conveyor.stopCommand());
 
         Controlboard.score()
@@ -409,6 +409,8 @@ public class RobotContainer {
             Routines.Amp5Center_2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("SubSide_4_1Close&Center"),
             Routines.Amp5_Stage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_5_Close&Center"),
             Routines.Amp5_NoStage_2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp5_NoStage_2"),
+            Routines.Amp5_1Center_Piece1(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp5.5_Piece1"),
+            Routines.Amp6_SplitOff(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp6_SplitOff"),
             Routines.Source3_NoStage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Center&NoStage"),
             Routines.Source3_Stage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Stage"),
             Routines.Source2_1Sweep(m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_intake, m_led).withName("Source2_Sweep1"),

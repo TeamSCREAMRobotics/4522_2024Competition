@@ -76,6 +76,10 @@ public final class AllianceFlipUtil {
         return (Translation2d) Object(blueValue, redValue);
     }
 
+    public static Translation3d Translation3d(Translation3d blueValue, Translation3d redValue){
+        return (Translation3d) Object(blueValue, redValue);
+    }
+
     public static Pose2d Pose2d(Pose2d blueValue, Pose2d redValue){
         return (Pose2d) Object(blueValue, redValue);
     }

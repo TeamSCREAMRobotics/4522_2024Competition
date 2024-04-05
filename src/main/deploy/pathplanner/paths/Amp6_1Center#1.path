@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.066066220577518,
-        "y": 5.3752739745137115
+        "x": 2.719320017812645,
+        "y": 6.991369417831561
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.038065653877384,
-        "y": 4.1690578102982165
+        "x": 4.265150441855804,
+        "y": 7.202164475655628
       },
       "isLocked": false,
-      "linkedName": "Amp5_1Center1End"
+      "linkedName": "Amp4_3End"
     },
     {
       "anchor": {
-        "x": 7.95406395377698,
-        "y": 4.368142031576503
+        "x": 8.059461482689013,
+        "y": 7.471513716208602
       },
       "prevControl": {
-        "x": 5.9866434140856875,
-        "y": 4.051949444840402
+        "x": 8.068611665500494,
+        "y": 7.645367189626765
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Amp5_1Center#2End"
+      "linkedName": "Amp6_1Center#1_SplittingEnd"
     }
   ],
   "rotationTargets": [],
@@ -50,21 +50,21 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 5.0,
+    "maxVelocity": 4.98,
     "maxAcceleration": 5.0,
     "maxAngularVelocity": 570.0,
     "maxAngularAcceleration": 500.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 1.9414863909143663,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Amp6_SplitOff",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
