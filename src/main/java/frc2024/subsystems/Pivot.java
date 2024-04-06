@@ -140,8 +140,8 @@ public class Pivot extends SubsystemBase{
         } else if(Controlboard.operatorController_Command.getHID().getLeftStickButtonPressed()){
             m_tweakAngle = m_tweakAngle.plus(Rotation2d.fromDegrees(0.5));
         }
-        //System.out.println("Encoder: " + getPivotAngle().getDegrees());
-        //System.out.println("Motor: " + Rotation2d.fromRotations(m_pivotMotor.getRotorPosition().refresh().getValue()).getDegrees());
+        // System.out.println("Encoder: " + getPivotAngle().getDegrees());
+        // System.out.println("Motor: " + Rotation2d.fromRotations(m_pivotMotor.getRotorPosition().refresh().getValue()).getDegrees());
         //System.out.println("Current: " + getPivotAngle().getDegrees() + " Target: " + m_targetAngle.getDegrees());
         // System.out.println(m_pivotMotor.getSupplyCurrent().getValueAsDouble());
         if(Constants.MODE == RobotMode.COMP){

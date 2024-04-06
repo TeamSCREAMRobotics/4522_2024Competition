@@ -457,7 +457,7 @@ public final class Constants{
         public static final double HARDWARE_LIMIT_POSITION_FORWARD = 0.0;
         public static final double HARDWARE_LIMIT_POSITION_REVERSE = 0.0;
 
-        public static final double TARGET_THRESHOLD = 0.7; //Degrees
+        public static final double TARGET_THRESHOLD = 0.5; //Degrees
 
         public static final double CRUISE_VELOCITY = 10.0; //40.0
         public static final double ACCELERATION = 3.0; // 10.0
@@ -486,7 +486,7 @@ public final class Constants{
 
         public static final double AUTO_ZERO_OUTPUT = 0.0;
 
-        public static final Rotation2d ABSOLUTE_ENCODER_OFFSET = Rotation2d.fromRotations(0.245849609375); // 0.2431640625
+        public static final Rotation2d ABSOLUTE_ENCODER_OFFSET = Rotation2d.fromRotations(0.2470703125); // 0.245849609375
         public static final Rotation2d RELATIVE_ENCODER_TO_HORIZONTAL = Rotation2d.fromDegrees(44.824).minus(PIVOT_ANGLE_OFFSET); // TODO RE-MEASURE
 
         public static final double AXLE_HEIGHT_HOME = Units.inchesToMeters(16.640069);
@@ -728,7 +728,7 @@ public final class Constants{
         public static final Translation2d BLUE_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(7).get().getTranslation().toTranslation2d();
         public static final Translation2d RED_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(4).get().getTranslation().toTranslation2d();
 
-        public static final double SPEAKER_OPENING_HEIGHT = Units.inchesToMeters(80.567496 - 1.0); // 80.567496 - 3.0
+        public static final double SPEAKER_OPENING_HEIGHT = Units.inchesToMeters(80.567496 - 4.0); // 80.567496 - 3.0
 
         public static final double SPEAKER_TAG_HEIGHT = 1.468864;
         public static final double STAGE_TAG_HEIGHT = 1.320884;

@@ -75,7 +75,7 @@ public class Conveyor extends SubsystemBase{
 
     @Override
     public void periodic() {
-        //System.out.println(!m_beam.get());
+        // System.out.println(!m_beam.get());
         if(Constants.MODE == RobotMode.COMP){
             logOutputs();
         }

@@ -92,7 +92,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 1.3,
+      "waypointRelativePos": 1.55,
       "command": {
         "type": "parallel",
         "data": {

@@ -236,7 +236,7 @@ public class Routines {
         return new SequentialCommandGroup(
             Amp4Close(swerve, shooter, elevator, pivot, conveyor, intake, led),
             Amp6_SplitOff.getIndex(0),
-            new WaitCommand(0.5), /* Gives time to register the picked up note */
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
                 new ConditionalCommand(
                     new SequentialCommandGroup(
                         Amp6_SplitOff.getIndex(1),
