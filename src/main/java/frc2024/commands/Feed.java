@@ -89,7 +89,7 @@ public class Feed extends Command {
       );
 
 
-    swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
+    swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle, Rotation2d.fromDegrees(3.0)));
     
     if(!illegalArea.isPoseWithinArea(swerve.getEstimatedPose())){
       shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM() / 2.8, 0.0, 3000.0));

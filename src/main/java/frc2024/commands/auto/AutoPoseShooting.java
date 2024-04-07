@@ -98,12 +98,12 @@ public class AutoPoseShooting extends Command {
     //PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.of(targetAngle));
 
     //swerve.resetPose_Apriltag();
-    swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(new Translation2d(), targetAngle));
+    swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(new Translation2d(), targetAngle, Rotation2d.fromDegrees(1.5)));
     elevator.setTargetHeight(targetState.elevatorHeightInches());
     shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3250.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
     pivot.setTargetAngle(adjustedPivotAngle);
 
-    if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && swerve.snappedToAngle(6.0)) || (timeout.hasElapsed(1) && shouldTimeout)){
+    if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD) || (timeout.hasElapsed(1) && shouldTimeout)){
       conveyor.setConveyorOutput(ConveyorConstants.SHOOT_OUTPUT);
     }
   }

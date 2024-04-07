@@ -102,7 +102,11 @@ public class Pivot extends SubsystemBase{
 
     public void setTargetAngle(Rotation2d angle){
         m_targetAngle = angle;
-        setPivot(m_positionRequest.withPosition(m_targetAngle.getRotations()));
+        if(!getPivotAtTarget().getAsBoolean()){
+            setPivot(m_positionRequest.withPosition(m_targetAngle.getRotations()));
+        } else {
+            stop();
+        }
     }
 
     public void setPivotOutput(double output){
@@ -119,7 +123,6 @@ public class Pivot extends SubsystemBase{
         return Rotation2d.fromDegrees(Math.abs(m_targetAngle.getDegrees()) - Math.abs(getPivotAngle().getDegrees()));
     }
 
-    
     public BooleanSupplier getPivotAtTarget(){
         return () -> Math.abs(getPivotError().getDegrees()) < PivotConstants.TARGET_THRESHOLD;
     }

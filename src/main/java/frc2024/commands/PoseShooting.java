@@ -93,12 +93,15 @@ public class PoseShooting extends Command {
       );
 
 
-    swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle));
-    elevator.setTargetHeight(isDefended.getAsBoolean() && swerve.snappedToAngle(45.0) ? ElevatorConstants.MAX_HEIGHT : targetState.elevatorHeightInches());
+    swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle, Rotation2d.fromDegrees(1.5)));
+    elevator.setTargetHeight(isDefended.getAsBoolean() && swerve.atAngleThreshold(targetAngle, Rotation2d.fromDegrees(45.0)) ? ElevatorConstants.MAX_HEIGHT : targetState.elevatorHeightInches());
     shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM() + ShooterConstants.ARBITRARY_VELOCITY_EXTRA, 3250.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
     pivot.setTargetAngle(adjustedPivotAngle);
 
-    if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && swerve.snappedToAngle(8.5))){
+    if(shooter.getShooterAtTarget().getAsBoolean()
+        && pivot.getPivotAtTarget().getAsBoolean() 
+        && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD
+        && swerve.snapAtSetpoint()){
       led.scaledTarget(Color.kGreen, shooter.getRPM(), shooter.getTargetVelocity());
     } else {
       led.scaledTarget(Color.kOrange, shooter.getRPM(), shooter.getTargetVelocity());

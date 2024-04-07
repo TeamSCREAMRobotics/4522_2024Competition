@@ -59,7 +59,7 @@ public class SnappedDrive extends Command {
         Rotation2d snapAngle = Rotation2d.fromDegrees(snapAngleSup.getAsDouble());
         
         ChassisSpeeds targetSpeeds;
-        targetSpeeds = swerve.snappedFieldRelativeSpeeds(translationValue, snapAngle);
+        targetSpeeds = swerve.snappedFieldRelativeSpeeds(translationValue, snapAngle, Rotation2d.fromDegrees(0.5));
         
         swerve.setChassisSpeeds(targetSpeeds, true);
     }

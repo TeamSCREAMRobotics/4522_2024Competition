@@ -116,7 +116,7 @@ public class SmartShootSequence extends Command{
         led.scaledTarget(Color.kDeepSkyBlue /* Color.kGoldenrod */, shooter.getRPM(), shooter.getTargetVelocity());
 
         /* Checks if all conditions are met to fire the shot */
-        if(fire && (shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD && swerve.snappedToAngle(0.2)) || (timeout.hasElapsed(1) && shouldTimeout)){
+        if(fire && (shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD) || (timeout.hasElapsed(1) && shouldTimeout)){
           conveyor.setConveyorOutput(ConveyorConstants.SHOOT_OUTPUT);
         }
     }

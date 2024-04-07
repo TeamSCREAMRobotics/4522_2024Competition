@@ -13,7 +13,10 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.pid.ScreamPIDConstants;
+import com.team4522.lib.util.ScreamUtil;
+
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -60,7 +63,7 @@ public class Swerve extends SubsystemBase {
     private SwerveModuleState[] m_desiredStates = new SwerveModuleState[4];
 
     private PIDController m_headingController = SwerveConstants.HEADING_CONSTANTS.toPIDController();
-    private PIDController m_snapController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
+    private ProfiledPIDController m_snapController = SwerveConstants.SNAP_CONSTANTS.toProfiledPIDController(new Constraints(200, 40));
 
     private SlewRateLimiter m_snapFilter = new SlewRateLimiter(60);
 
@@ -173,8 +176,8 @@ public class Swerve extends SubsystemBase {
         return ChassisSpeeds.discretize(speeds, Constants.LOOP_TIME_SEC);
     }
 
-    public ChassisSpeeds snappedFieldRelativeSpeeds(Translation2d translation, Rotation2d angle){
-        return fieldRelativeSpeeds(translation, calculateSnapOutput(angle));
+    public ChassisSpeeds snappedFieldRelativeSpeeds(Translation2d translation, Rotation2d angle, Rotation2d angleThreshold){
+        return fieldRelativeSpeeds(translation, calculateSnapOutput(angle, angleThreshold));
     }
 
     /**
@@ -238,13 +241,17 @@ public class Swerve extends SubsystemBase {
         return m_headingController.calculate(currentAngle, lastAngle);
     }
 
-    public double calculateSnapOutput(Rotation2d targetAngle){
-        return m_snapFilter.calculate(m_snapController.calculate(getEstimatedHeading().getDegrees(), targetAngle.getDegrees()));
+    public double calculateSnapOutput(Rotation2d targetAngle, Rotation2d angleThreshold){
+        m_snapController.setTolerance(getRobotSpeed());
+        return !m_snapController.atSetpoint() ? m_snapFilter.calculate(m_snapController.calculate(getEstimatedHeading().getDegrees(), targetAngle.getDegrees())) : 0.0;
     }
 
-    public boolean snappedToAngle(double threshold){
-        m_snapController.setTolerance(threshold);
+    public boolean snapAtSetpoint(){
         return m_snapController.atSetpoint();
+    }
+
+    public boolean atAngleThreshold(Rotation2d target, Rotation2d threshold){
+        return Math.abs(target.minus(getEstimatedHeading()).getDegrees()) < threshold.getDegrees();
     }
     
     /**

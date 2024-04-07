@@ -37,7 +37,7 @@ public class DriveToPose extends Command {
   public void execute() {
     Translation2d translationValue = new Translation2d(driveController.calculate(swerve.getEstimatedPose().getX(), targetPose.getX()), driveController.calculate(swerve.getEstimatedPose().getY(), targetPose.getY()));
 
-    swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translationValue, targetPose.getRotation()));
+    swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translationValue, targetPose.getRotation(), Rotation2d.fromDegrees(0.5)));
   }
 
   // Called once the command ends or is interrupted.
