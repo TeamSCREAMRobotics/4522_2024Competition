@@ -12,6 +12,7 @@ import javax.swing.text.html.Option;
 import com.team4522.lib.util.AllianceFlipUtil;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -87,10 +88,6 @@ public class Controlboard{
                 return 90.0;
             } else if(driverController_Command.getHID().getYButton()){
                 return AllianceFlipUtil.Number(0.0, 180.0);
-            } else if(driverController_Command.getHID().getBButton()){
-                return AllianceFlipUtil.Number(60.0, -120.0);
-            } else if(driverController_Command.getHID().getXButton()){
-                return AllianceFlipUtil.Number(-60.0, 120.0);
             } else {
                 return -1.0;
             }
@@ -162,6 +159,14 @@ public class Controlboard{
         return new Trigger(() -> buttonBoard.getRawButton(3));
     }
 
+    public static final Trigger stopClimbSequence(){
+        return driverController_Command.b();
+    }
+
+    public static final Trigger advanceClimbSequence(){
+        return driverController_Command.b();
+    }
+
     public static final Trigger autoFire(){
         /* Uses a toggle switch to enable or disable automatic firing when requirements are met */
         /* return new Trigger(() -> buttonBoard.getRawSwitch(4)); */
@@ -172,6 +177,12 @@ public class Controlboard{
     public static final Trigger defendedMode(){
         /* Uses a toggle switch to enable or disable wether we are being defended. This allows us to raise our elevator with auto shots */
         return new Trigger(() -> buttonBoard.getRawSwitch(4));
+    }
+
+    static boolean driverDefended = false;
+    public static final BooleanSupplier driverDefendedMode(){
+        driverController_Command.x().onTrue(Commands.runOnce(() -> driverDefended = !driverDefended));
+        return () -> driverDefended;
     }
 
     public static final Trigger virtualAutoFire(){
@@ -230,8 +241,10 @@ public class Controlboard{
     }
 
     /* Elevator */
-    public static final DoubleSupplier getManualElevatorOutput(){
-        return () -> (-MathUtil.applyDeadband(operatorController_Command.getLeftY(), STICK_DEADBAND))*6;
+    public static final DoubleSupplier getManualElevatorOutput(boolean driverController){
+        return () -> driverController
+               ? (-MathUtil.applyDeadband(driverController_Command.getRightY(), STICK_DEADBAND))*12.0
+               : (-MathUtil.applyDeadband(operatorController_Command.getLeftY(), STICK_DEADBAND))*6.0;
     }
 
     public static final Trigger elevatorDown_MAX(){
@@ -256,11 +269,11 @@ public class Controlboard{
     }
     
     public static final Trigger goToSubwooferPosition(){
-        return new Trigger(() -> buttonBoard.getRawButton(10)).and(defendedMode().negate());
+        return new Trigger(() -> buttonBoard.getRawButton(10)).or(driverController_Command.y()).and(defendedMode().negate());
     }
     
     public static final Trigger goToAmpPosition(){
-        return new Trigger(() -> buttonBoard.getRawButton(11));
+        return new Trigger(() -> buttonBoard.getRawButton(11)).or(driverController_Command.a());
     }
 
     public static final Trigger goToPodiumPosition(){
@@ -277,11 +290,11 @@ public class Controlboard{
     }
     
     public static final Trigger goToSubwooferPositionDefended(){
-        return new Trigger(() -> buttonBoard.getRawButton(10)).and(defendedMode());
+        return new Trigger(() -> buttonBoard.getRawButton(10)).and(defendedMode().or(driverDefendedMode()));
     }
 
     public static final Trigger goToPodiumPositionDefended(){
-        return new Trigger(() -> buttonBoard.getRawButton(12)).and(defendedMode())
+        return new Trigger(() -> buttonBoard.getRawButton(12)).and(defendedMode().or(driverDefendedMode()))
             .and(new Trigger(endGameMode()).negate());
     }
 

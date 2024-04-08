@@ -21,6 +21,7 @@ import com.ctre.phoenix6.mechanisms.DifferentialMechanism;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
+import com.team4522.lib.math.Conversions;
 import com.team4522.lib.pid.ScreamPIDConstants;
 import com.team4522.lib.util.OrchestraUtil;
 import com.team4522.lib.util.ScreamUtil;
@@ -155,7 +156,7 @@ public class Elevator extends SubsystemBase{
 
     public Command voltageCommand(DoubleSupplier voltage){
         return run(() -> setElevatorVoltage(voltage.getAsDouble()))
-            .alongWith(RobotContainer.getLED().scaledTargetCommand(Color.kRed, () -> getElevatorHeight(), () -> ElevatorConstants.MAX_HEIGHT)).withName("VoltageCommand");
+            .alongWith(RobotContainer.getLED().mappedCommand(() -> Conversions.mapRange(getElevatorHeight(), 0, ElevatorConstants.MAX_HEIGHT, 0, 100))).withName("VoltageCommand");
     }
 
     public Command voltageCommand(double voltage){

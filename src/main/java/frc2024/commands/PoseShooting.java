@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc2024.Constants;
+import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.FieldConstants;
 import frc2024.Constants.PivotConstants;
@@ -92,7 +93,6 @@ public class PoseShooting extends Command {
           isDefended.getAsBoolean() ? 44 : 28)
       );
 
-
     swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle, Rotation2d.fromDegrees(1.5)));
     elevator.setTargetHeight(isDefended.getAsBoolean() && swerve.atAngleThreshold(targetAngle, Rotation2d.fromDegrees(45.0)) ? ElevatorConstants.MAX_HEIGHT : targetState.elevatorHeightInches());
     shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM() + ShooterConstants.ARBITRARY_VELOCITY_EXTRA, 3250.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
@@ -103,6 +103,7 @@ public class PoseShooting extends Command {
         && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD
         && swerve.snapAtSetpoint()){
       led.scaledTarget(Color.kGreen, shooter.getRPM(), shooter.getTargetVelocity());
+      conveyor.setConveyorOutput(ConveyorConstants.SHOOT_OUTPUT);
     } else {
       led.scaledTarget(Color.kOrange, shooter.getRPM(), shooter.getTargetVelocity());
     }

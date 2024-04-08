@@ -54,6 +54,7 @@ import frc2024.auto.Autonomous;
 import frc2024.auto.Autonomous.PPEvent;
 import frc2024.auto.Routines;
 import frc2024.commands.AutoFire;
+import frc2024.commands.ClimbSequence;
 import frc2024.commands.Feed;
 import frc2024.commands.GoHome;
 import frc2024.commands.Rehome;
@@ -99,6 +100,8 @@ public class RobotContainer {
     private static final ShuffleboardTabManager m_shuffleboardTabManager = new ShuffleboardTabManager(m_swerve, m_stabilizers, m_conveyor, m_elevator, m_intake, m_pivot, m_shooter);
 
     public static SuperstructureState currentState = SuperstructureState.HOME;
+
+    public static ClimbSequence m_climbSequence = new ClimbSequence(Controlboard.getTranslation(), Controlboard.getRotation(), Controlboard.getManualElevatorOutput(true), m_swerve, m_elevator, m_pivot, m_stabilizers, m_led);
     
     /**
      * Configures the basic robot systems, such as Shuffleboard, autonomous, default commands, and button bindings.
@@ -157,7 +160,7 @@ public class RobotContainer {
                         m_stabilizers.outputCommand(StabilizerConstants.IN_OUTPUT).withTimeout(1).andThen(m_stabilizers.stopCommand()))); */
 
         /* Elevator */
-        Controlboard.manualMode().whileTrue(m_elevator.voltageCommand(Controlboard.getManualElevatorOutput()));
+        Controlboard.manualMode().whileTrue(m_elevator.voltageCommand(Controlboard.getManualElevatorOutput(false)));
         Controlboard.resetElevatorHeight().onTrue(Commands.runOnce(() -> m_elevator.zeroPosition()).ignoringDisable(true));
 
         /* Pivot */
@@ -256,6 +259,9 @@ public class RobotContainer {
                             .andThen(m_stabilizers.stopCommand())))
             .onFalse(Commands.runOnce(() -> m_pivot.configCurrentLimit(PivotConstants.DEFAULT_CURRENT_CONFIG)));
 
+        Controlboard.advanceClimbSequence()
+            .onTrue(Commands.runOnce(() -> m_climbSequence.schedule()).andThen(Commands.runOnce(() -> m_climbSequence.advance())));
+
         /* Shooter */        
         Controlboard.shooterIntoConveyor()
             .whileTrue(
@@ -297,7 +303,7 @@ public class RobotContainer {
                     .alongWith(m_led.strobeCommand(Color.kGreen, 0.1).withTimeout(1)));
 
         Controlboard.intakeFromFloorEndgame().and(new Trigger(m_conveyor.hasPiece(true)).negate())
-            /* .or(Controlboard.intakeOverride()) */
+            .or(Controlboard.driverController_Command.rightStick())
                 .whileTrue(
                     new InstantCommand(() -> currentState = SuperstructureState.HOME_ENDGAME)
                     .andThen(
@@ -338,9 +344,9 @@ public class RobotContainer {
             .whileTrue(m_conveyor.scoreCommand())
                 .onFalse(m_conveyor.stopCommand());
 
-        Controlboard.prepShot()
+        /* Controlboard.prepShot()
             .whileTrue(m_shooter.velocityCommand(3000))
-            .onFalse(m_shooter.idleCommand());
+            .onFalse(m_shooter.idleCommand()); */
 
         /* Controlboard.autoPickupFromFloor()
             .whileTrue(
@@ -352,6 +358,16 @@ public class RobotContainer {
         ).onFalse(
             m_elevator.stopCommand()
         );
+
+        Controlboard.stopClimbSequence().debounce(0.5).onTrue(
+            Commands.runOnce(() -> m_climbSequence.cancel())
+        );
+
+        new Trigger(Controlboard.driverDefendedMode()).or(Controlboard.defendedMode())
+            .onTrue(new InstantCommand(() -> m_led.setDefaultCommand(m_led.strobeCommand(Color.kRed, 0.07)))
+                .andThen(m_led.strobeCommand(Color.kRed, 0.07)))
+            .onFalse(new InstantCommand(() -> m_led.setDefaultCommand(m_led.waveCommand(() -> (Color) AllianceFlipUtil.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, 22, 2)))
+                .andThen(m_led.waveCommand(() -> (Color) AllianceFlipUtil.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, LEDConstants.STRIP_LENGTH / 3.0, 1.5)));
         
         /* Stabilizers */
         new Trigger(Controlboard.endGameMode())

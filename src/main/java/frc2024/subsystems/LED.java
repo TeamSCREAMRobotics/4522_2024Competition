@@ -140,6 +140,12 @@ public class LED extends SubsystemBase{
         }
     }
 
+    public void mapped(double currentValue){
+        int mapped = (int) Conversions.mapRange(currentValue, 0, 100, 0, 180);
+        mapped = MathUtil.clamp(mapped, 0, 180);
+        solid(Color.fromHSV(mapped, 255, 255));
+    }
+
     @Override
     public void periodic() {
         leds.setData(buffer);
@@ -188,5 +194,9 @@ public class LED extends SubsystemBase{
 
     public Command scaledTargetCommand(Color color, DoubleSupplier currentValue, DoubleSupplier targetValue){
         return run(() -> scaledTarget(color, currentValue.getAsDouble(), targetValue.getAsDouble())).ignoringDisable(true);
+    }
+
+    public Command mappedCommand(DoubleSupplier currentValue){
+        return run(() -> mapped(currentValue.getAsDouble())).ignoringDisable(true);
     }
 }
