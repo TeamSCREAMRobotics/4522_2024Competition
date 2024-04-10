@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc2024.Constants;
+import frc2024.RobotContainer;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.FieldConstants;
@@ -86,8 +87,10 @@ public class AutoPoseShootingContinuous extends Command {
 
     PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.of(targetAngle));
 
+    if(!RobotContainer.isRunningPath){
+      swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(new Translation2d(), targetAngle, Rotation2d.fromDegrees(1.5)));
+    }
     //swerve.resetPose_Apriltag();
-    //swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(new Translation2d(), targetAngle));
     elevator.setTargetHeight(targetState.elevatorHeightInches());
     shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3000.0, 5000.0));
     pivot.setTargetAngle(adjustedPivotAngle);

@@ -1,0 +1,96 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.3070140425995143,
+        "y": 5.55593454044051
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.9509535064267867,
+        "y": 5.554029639132724
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.464254092349993,
+        "y": 6.516418908544032
+      },
+      "prevControl": {
+        "x": 3.377144833385712,
+        "y": 5.298938507481535
+      },
+      "nextControl": {
+        "x": 6.852954124007989,
+        "y": 7.326493927011196
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.119520871810105,
+        "y": 7.351262612129744
+      },
+      "prevControl": {
+        "x": 8.00224520868735,
+        "y": 7.644451769936632
+      },
+      "nextControl": {
+        "x": 8.190297889561537,
+        "y": 7.174320067751162
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.313518423647017,
+        "y": 6.261327776892842
+      },
+      "prevControl": {
+        "x": 7.959550572854171,
+        "y": 6.840376363561444
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Amp6_CenterFirst_1End"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.25,
+      "maxWaypointRelativePos": 0.55,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 570.0,
+        "maxAngularAcceleration": 500.0
+      }
+    }
+  ],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.98,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 570.0,
+    "maxAngularAcceleration": 500.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 7.125016348901878,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Amp6_CenterFirst",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

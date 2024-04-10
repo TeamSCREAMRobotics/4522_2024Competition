@@ -1,0 +1,68 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.313518423647017,
+        "y": 6.261327776892842
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.216514830124091,
+        "y": 6.160450829376235
+      },
+      "isLocked": false,
+      "linkedName": "Amp6_CenterFirst_1End"
+    },
+    {
+      "anchor": {
+        "x": 8.131115923248796,
+        "y": 5.843905925099985
+      },
+      "prevControl": {
+        "x": 8.038355511739272,
+        "y": 5.403293970429749
+      },
+      "nextControl": {
+        "x": 8.203332199988752,
+        "y": 6.186933239614777
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.323705504553867,
+        "y": 6.362204724409449
+      },
+      "prevControl": {
+        "x": 7.099156345205345,
+        "y": 6.226542622576771
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Amp6_CenterFirst_2End"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.98,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 570.0,
+    "maxAngularAcceleration": 500.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 8.923906171165257,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Amp6_CenterFirst",
+  "previewStartingState": {
+    "rotation": -0.7275734841838026,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc2024.RobotContainer;
 import frc2024.subsystems.Vision.IntakePipeline;
 
 public class PathSequence {
@@ -47,7 +48,7 @@ public class PathSequence {
     }
 
     private static Command getPathCommand(PathPlannerPath path){
-        return AutoBuilder.followPath(path);
+        return AutoBuilder.followPath(path).beforeStarting(() -> RobotContainer.isRunningPath = true).finallyDo(() -> RobotContainer.isRunningPath = false);
     }
 
     private static Pose2d getPathStartingPose(PathPlannerPath path){

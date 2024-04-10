@@ -158,7 +158,7 @@ public class Vision{
     }
 
     public static void updateEstimateWithValidMeasurements(Limelight limelight, SwerveDrivePoseEstimator poseEstimator){
-        validateVisionMeasurement(limelight, LimelightHelpers.getBotPoseEstimate_wpiBlue(limelight.name), poseEstimator);
+        validateVisionMeasurement(limelight, LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelight.name), poseEstimator);
     }
 
     private static void validateVisionMeasurement(Limelight limelight, PoseEstimate estimate, SwerveDrivePoseEstimator poseEstimator){
@@ -171,16 +171,16 @@ public class Vision{
 
         double poseDifference = poseEstimator.getEstimatedPosition().getTranslation()
             .getDistance(estimate.pose.getTranslation());
-        //LimelightHelpers.SetRobotOrientation(limelight.name, RobotContainer.getSwerve().getGyro().getAngle(), 0, 0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation(limelight.name, poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
 
         if (estimate.tagCount != 0) {
             double xyStds;
             if (estimate.tagCount >= 2) {
-                xyStds = 0.3;
+                xyStds = 0.7;
             } else if (estimate.avgTagArea > 0.8 && poseDifference < 0.3) {
-                xyStds = 0.7;
+                xyStds = 1.0;
             } else if (estimate.avgTagArea < 0.1 && poseDifference < 0.9) {
-                xyStds = 0.7;
+                xyStds = 1.0;
             } else {
                 return;
             }

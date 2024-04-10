@@ -18,15 +18,12 @@ import frc2024.Constants.VisionConstants;
 
 public class ShootingUtil {
 
-    static final Interpolator<Double> pivotDistanceInterpolator = Interpolator.forDouble();
-    static final Interpolator<Double> curveDistanceInterpolator = Interpolator.forDouble();
-
     public static double calculateTOF(double elevatorHeightInches, double targetHeightMeters){
       return 2 * (targetHeightMeters - calculateAbsolutePivotPosition(elevatorHeightInches).getY()) / Constants.GRAVITY;
     }
 
     public static Translation2d calculateAbsolutePivotPosition(double elevatorHeightInches){
-      return new Translation2d(-robotCenterToPivot(elevatorHeightInches), (Units.inchesToMeters(elevatorHeightInches) + ElevatorConstants.HOME_HEIGHT_FROM_FLOOR) - PivotConstants.AXLE_DISTANCE_FROM_ELEVATOR_TOP);
+      return new Translation2d(robotCenterToPivot(elevatorHeightInches), (Units.inchesToMeters(elevatorHeightInches) + ElevatorConstants.HOME_HEIGHT_FROM_FLOOR) - PivotConstants.AXLE_DISTANCE_FROM_ELEVATOR_TOP);
     }
 
     public static ShootState calculateShootState(double targetHeightMeters, double horizontalDistance, double elevatorHeightInches){
@@ -70,10 +67,10 @@ public class ShootingUtil {
     }
 
     public static double robotCenterToPivot(double elevatorHeightInches){
-      return pivotDistanceInterpolator.interpolate(PivotConstants.AXLE_DISTANCE_FROM_ROBOT_CENTER_HOME, PivotConstants.AXLE_DISTANCE_FROM_ROBOT_CENTER_TOP, elevatorHeightInches / ElevatorConstants.MAX_HEIGHT);
+      return MathUtil.interpolate(PivotConstants.AXLE_DISTANCE_FROM_ROBOT_CENTER_HOME, PivotConstants.AXLE_DISTANCE_FROM_ROBOT_CENTER_TOP, elevatorHeightInches / ElevatorConstants.MAX_HEIGHT);
     }
 
     public static Translation2d calculateCurveOffset(double horizontalDistance){
-      return new Translation2d(0, curveDistanceInterpolator.interpolate(0.3, 1.0, horizontalDistance / 6.0) * AllianceFlipUtil.getDirectionCoefficient());
+      return new Translation2d(0, MathUtil.interpolate(0.3, 1.0, horizontalDistance / 6.0) * AllianceFlipUtil.getDirectionCoefficient());
     }
 }

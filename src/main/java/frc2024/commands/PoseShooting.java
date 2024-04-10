@@ -30,6 +30,7 @@ import frc2024.Constants;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.FieldConstants;
+import frc2024.Constants.IntakeConstants;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.ShootState;
 import frc2024.Constants.ShooterConstants;
@@ -38,6 +39,7 @@ import frc2024.Constants.VisionConstants;
 import frc2024.controlboard.Controlboard;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
+import frc2024.subsystems.Intake;
 import frc2024.subsystems.LED;
 import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Shooter;
@@ -49,6 +51,7 @@ public class PoseShooting extends Command {
   Elevator elevator;
   Shooter shooter;
   Conveyor conveyor;
+  Intake intake;
   LED led;
 
   DoubleSupplier[] translationSup;
@@ -60,7 +63,7 @@ public class PoseShooting extends Command {
   
   final Interpolator<Double> pivotDistanceInterpolator = Interpolator.forDouble();
 
-  public PoseShooting(DoubleSupplier[] translationSup, BooleanSupplier isDefended, Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, LED led) {
+  public PoseShooting(DoubleSupplier[] translationSup, BooleanSupplier isDefended, Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, Intake intake, LED led) {
     addRequirements(swerve, pivot, elevator, shooter, led);
     setName("PoseShooting");
     this.swerve = swerve;
@@ -68,6 +71,7 @@ public class PoseShooting extends Command {
     this.elevator = elevator;
     this.shooter = shooter;
     this.conveyor = conveyor;
+    this.intake = intake;
     this.led = led;
     this.translationSup = translationSup;
     this.isDefended = isDefended;
@@ -76,7 +80,7 @@ public class PoseShooting extends Command {
   @Override
   public void initialize() {
     directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();
-    targetSpeaker = AllianceFlipUtil.getTargetSpeaker().getTranslation().plus(new Translation2d(Units.inchesToMeters(12.0) * directionCoefficient, Units.inchesToMeters(8) * directionCoefficient));
+    targetSpeaker = AllianceFlipUtil.getTargetSpeaker().getTranslation().plus(new Translation2d(Units.inchesToMeters(8.0) * directionCoefficient, Units.inchesToMeters(8.0) * directionCoefficient));
   }
 
   @Override
@@ -104,6 +108,7 @@ public class PoseShooting extends Command {
         && swerve.snapAtSetpoint()){
       led.scaledTarget(Color.kGreen, shooter.getRPM(), shooter.getTargetVelocity());
       conveyor.setConveyorOutput(ConveyorConstants.SHOOT_OUTPUT);
+      intake.setIntakeOutput(IntakeConstants.INTAKE_OUTPUT);
     } else {
       led.scaledTarget(Color.kOrange, shooter.getRPM(), shooter.getTargetVelocity());
     }

@@ -102,6 +102,8 @@ public class RobotContainer {
     public static SuperstructureState currentState = SuperstructureState.HOME;
 
     public static ClimbSequence m_climbSequence = new ClimbSequence(Controlboard.getTranslation(), Controlboard.getRotation(), Controlboard.getManualElevatorOutput(true), m_swerve, m_elevator, m_pivot, m_stabilizers, m_led);
+
+    public static boolean isRunningPath = false;
     
     /**
      * Configures the basic robot systems, such as Shuffleboard, autonomous, default commands, and button bindings.
@@ -285,7 +287,7 @@ public class RobotContainer {
                     .andThen(
                         new ConditionalCommand(
                             new Feed(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_intake, m_led),
-                            new PoseShooting(Controlboard.getTranslation(), Controlboard.defendedMode(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_led), 
+                            new PoseShooting(Controlboard.getTranslation(), Controlboard.defendedMode(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_intake, m_led), 
                             () -> ScreamUtil.calculateDistanceToTranslation(() -> m_swerve.getEstimatedPose().getTranslation(), () -> AllianceFlipUtil.getTargetSpeaker().getTranslation()).getAsDouble() >= 7.8)))
             .onFalse(new GoHome(true, m_pivot, m_elevator, m_conveyor, m_intake));
 

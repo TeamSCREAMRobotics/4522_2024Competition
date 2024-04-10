@@ -7,6 +7,7 @@ import com.team4522.lib.util.AllianceFlipUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc2024.Constants.SwerveConstants;
@@ -24,6 +25,8 @@ public class TeleopDrive extends Command {
     private BooleanSupplier slowModeSup;
     private Rotation2d lastAngle;
     private Timer correctionTimer = new Timer();
+
+    private boolean isAuto;
 
     /**
      * Constructs a TeleopSwerve command with the given parameters.
@@ -50,6 +53,8 @@ public class TeleopDrive extends Command {
         correctionTimer.stop();
         correctionTimer.reset();
         lastAngle = swerve.getEstimatedHeading();
+        
+        isAuto = DriverStation.isAutonomous();
     } 
 
     /**
@@ -59,22 +64,23 @@ public class TeleopDrive extends Command {
      */
     @Override
     public void execute() {
+        if(!isAuto){
+            boolean fieldRelative = fieldRelativeSup.getAsBoolean();
+            Translation2d translationValue = 
+                slowModeSup.getAsBoolean() 
+                ? new Translation2d(translationSup[0].getAsDouble()*0.5, translationSup[1].getAsDouble()*0.5).times(SwerveConstants.MAX_SPEED * (fieldRelative ? AllianceFlipUtil.getDirectionCoefficient() : 1))
+                : new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * (fieldRelative ? AllianceFlipUtil.getDirectionCoefficient() : 1));
 
-        boolean fieldRelative = fieldRelativeSup.getAsBoolean();
-        Translation2d translationValue = 
-            slowModeSup.getAsBoolean() 
-            ? new Translation2d(translationSup[0].getAsDouble()*0.5, translationSup[1].getAsDouble()*0.5).times(SwerveConstants.MAX_SPEED * (fieldRelative ? AllianceFlipUtil.getDirectionCoefficient() : 1))
-            : new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times(SwerveConstants.MAX_SPEED * (fieldRelative ? AllianceFlipUtil.getDirectionCoefficient() : 1));
+            if(Controlboard.driverController_Command.getHID().getBackButtonPressed()) lastAngle = AllianceFlipUtil.getForwardRotation();
 
-        if(Controlboard.driverController_Command.getHID().getBackButtonPressed()) lastAngle = AllianceFlipUtil.getForwardRotation();
+            double rotationValue = getRotation(rotationSup.getAsDouble());
 
-        double rotationValue = getRotation(rotationSup.getAsDouble());
 
-        
-        ChassisSpeeds targetSpeeds;
-        targetSpeeds = fieldRelative ? swerve.fieldRelativeSpeeds(translationValue, rotationValue) : swerve.robotRelativeSpeeds(translationValue, rotationValue);
-        
-        swerve.setChassisSpeeds(targetSpeeds, true);
+            ChassisSpeeds targetSpeeds;
+            targetSpeeds = fieldRelative ? swerve.fieldRelativeSpeeds(translationValue, rotationValue) : swerve.robotRelativeSpeeds(translationValue, rotationValue);
+
+            swerve.setChassisSpeeds(targetSpeeds, true);
+        }
     }
 
     /**
