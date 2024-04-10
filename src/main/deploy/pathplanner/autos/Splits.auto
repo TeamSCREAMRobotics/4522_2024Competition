@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Amp_To1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ForwardSplit_1-2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ForwardSplit2-3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ForwardSplit_3-4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ForwardSplit_4-5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BackwardSplit_5-4"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

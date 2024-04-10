@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.281967377058862,
+        "y": 0.7612043754757987
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.099172885934929,
+        "y": 0.8314693947504864
+      },
+      "isLocked": false,
+      "linkedName": "Piece5"
+    },
+    {
+      "anchor": {
+        "x": 3.339994354739065,
+        "y": 3.103371684632099
+      },
+      "prevControl": {
+        "x": 3.5273677394715697,
+        "y": 2.096239741694889
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "SourceScoring"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.98,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 570.0,
+    "maxAngularAcceleration": 500.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -40.3141001604973,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Piece To Scoring Paths",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

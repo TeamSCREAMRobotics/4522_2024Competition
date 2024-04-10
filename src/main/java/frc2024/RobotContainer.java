@@ -20,6 +20,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.OrchestraUtil;
 import com.team4522.lib.util.ScreamUtil;
+import com.team4522.lib.util.PathSequence.Side;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;

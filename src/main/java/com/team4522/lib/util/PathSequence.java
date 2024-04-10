@@ -67,6 +67,10 @@ public class PathSequence {
         return getPathCommand(list.get(list.size()-1));
     }
 
+    public static int getSize(PathSequence pathSequence){
+        return pathSequence.list.size()-1;
+    }
+
     public Side getSide(){
         return side;
     }
