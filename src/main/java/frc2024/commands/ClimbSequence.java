@@ -58,15 +58,15 @@ public class ClimbSequence extends Command {
     switch(index){
       case 0:
         swerve.setChassisSpeeds(swerve.robotRelativeSpeeds(translation, rotation));
-        elevator.setTargetHeight(ElevatorConstants.TRAP_CHAIN_HEIGHT);
+        if(elevator.getElevatorHeight() < ElevatorConstants.TRAP_CHAIN_HEIGHT - 0.1){
+          elevator.setTargetHeight(ElevatorConstants.TRAP_CHAIN_HEIGHT);
+        } else {
+          elevator.setElevatorVoltage(elevatorVoltage.getAsDouble() > 3.5 ? elevatorVoltage.getAsDouble() : 0);
+        }
         pivot.setTargetAngle(PivotConstants.HOME_ANGLE);
         stabilizers.setTargetPosition(StabilizerConstants.DOWN_POSITION);
       break;
       case 1:
-        swerve.setChassisSpeeds(swerve.robotRelativeSpeeds(translation, rotation));
-        elevator.setElevatorVoltage(elevatorVoltage.getAsDouble() > 3.0 ? elevatorVoltage.getAsDouble() : 0);
-      break;
-      case 2:
         swerve.stopAll();
         elevator.setTargetHeight(ElevatorConstants.TRAP_CHAIN_HEIGHT);
         pivot.setTargetAngle(PivotConstants.TRAP_CHAIN_ANGLE);
@@ -93,7 +93,7 @@ public class ClimbSequence extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return index == 3;
+    return index == 2;
   }
 
   public void advance(){

@@ -263,7 +263,13 @@ public class RobotContainer {
             .onFalse(Commands.runOnce(() -> m_pivot.configCurrentLimit(PivotConstants.DEFAULT_CURRENT_CONFIG)));
 
         Controlboard.advanceClimbSequence()
-            .onTrue(Commands.runOnce(() -> m_climbSequence.schedule()).andThen(Commands.runOnce(() -> m_climbSequence.advance())));
+            .onTrue(
+                Commands.runOnce(() -> 
+                    {
+                        currentState = SuperstructureState.TRAP_CHAIN;
+                        m_climbSequence.schedule();
+                    })
+                    .andThen(Commands.runOnce(() -> m_climbSequence.advance())));
 
         /* Shooter */        
         Controlboard.shooterIntoConveyor()
@@ -300,13 +306,12 @@ public class RobotContainer {
                     .onFalse(new GoHome(false, m_pivot, m_elevator, m_conveyor, m_intake));
 
         new Trigger(m_conveyor.hasPiece(false))
-            .and(Controlboard.intakeFromFloor().or(Controlboard.intakeFromFloorEndgame()))
+            .and(Controlboard.intakeFromFloor().or(Controlboard.intakeFromFloorEndgame()).or(Controlboard.driverController_Command.rightStick()))
             .onTrue(
                 Controlboard.driverRumbleCommand(RumbleType.kBothRumble, 0.8, 0.2)
                     .alongWith(m_led.strobeCommand(Color.kGreen, 0.1).withTimeout(1)));
 
-        Controlboard.intakeFromFloorEndgame().and(new Trigger(m_conveyor.hasPiece(true)).negate())
-            .or(Controlboard.driverController_Command.rightStick())
+        (Controlboard.intakeFromFloorEndgame().or(Controlboard.driverController_Command.rightStick())).and(new Trigger(m_conveyor.hasPiece(true)).negate())
                 .whileTrue(
                     new InstantCommand(() -> currentState = SuperstructureState.HOME_ENDGAME)
                     .andThen(

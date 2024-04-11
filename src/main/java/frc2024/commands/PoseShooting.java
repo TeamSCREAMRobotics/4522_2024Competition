@@ -80,7 +80,7 @@ public class PoseShooting extends Command {
   @Override
   public void initialize() {
     directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();
-    targetSpeaker = AllianceFlipUtil.getTargetSpeaker().getTranslation().plus(new Translation2d(Units.inchesToMeters(8.0) * directionCoefficient, Units.inchesToMeters(8.0) * directionCoefficient));
+    targetSpeaker = AllianceFlipUtil.getTargetSpeaker().getTranslation().plus(FieldConstants.SPEAKER_GOAL_OFFSET.times(directionCoefficient));
   }
 
   @Override

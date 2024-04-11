@@ -728,7 +728,9 @@ public final class Constants{
         public static final Translation2d BLUE_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(7).get().getTranslation().toTranslation2d();
         public static final Translation2d RED_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(4).get().getTranslation().toTranslation2d();
 
-        public static final double SPEAKER_OPENING_HEIGHT = Units.inchesToMeters(80.567496 - 4.0); // 80.567496 - 3.0
+        public static final Translation2d SPEAKER_GOAL_OFFSET = new Translation2d(Units.inchesToMeters(9.5), Units.inchesToMeters(12.0));
+
+        public static final double SPEAKER_OPENING_HEIGHT = Units.inchesToMeters(80.567496 - 1.0); // 80.567496 - 3.0
 
         public static final double SPEAKER_TAG_HEIGHT = 1.468864;
         public static final double STAGE_TAG_HEIGHT = 1.320884;

@@ -316,11 +316,11 @@ public class Controlboard{
     }
 
     public static final Trigger trapAdjustDown(){
-        return driverController_Command.povDown().and(endGameMode());
+        return driverController_Command.povDown();
     }
 
     public static final Trigger trapAdjustUp(){
-        return driverController_Command.povUp().and(endGameMode());
+        return driverController_Command.povUp();
     }
 
     public static final Trigger intakeOverride(){
