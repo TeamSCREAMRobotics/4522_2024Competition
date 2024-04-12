@@ -31,6 +31,7 @@ public class ClimbSequence extends Command {
   Stabilizers stabilizers;
   LED led;
 
+  boolean manualMode = false;
   int index = -1;
 
   public ClimbSequence(DoubleSupplier[] translation, DoubleSupplier rotation, DoubleSupplier elevatorVoltage, Swerve swerve, Elevator elevator, Pivot pivot, Stabilizers stabilizers, LED led) {
@@ -58,10 +59,13 @@ public class ClimbSequence extends Command {
     switch(index){
       case 0:
         swerve.setChassisSpeeds(swerve.robotRelativeSpeeds(translation, rotation));
-        if(elevator.getElevatorHeight() < ElevatorConstants.TRAP_CHAIN_HEIGHT - 0.1){
-          elevator.setTargetHeight(ElevatorConstants.TRAP_CHAIN_HEIGHT);
+        if(elevator.getElevatorHeight() > ElevatorConstants.TRAP_CHAIN_HEIGHT - 0.5){
+          manualMode = true;
+        }
+        if(manualMode){
+          elevator.setElevatorVoltage(Math.abs(elevatorVoltage.getAsDouble()) > 3.5 ? elevatorVoltage.getAsDouble() : 0);
         } else {
-          elevator.setElevatorVoltage(elevatorVoltage.getAsDouble() > 3.5 ? elevatorVoltage.getAsDouble() : 0);
+          elevator.setTargetHeight(ElevatorConstants.TRAP_CHAIN_HEIGHT);
         }
         pivot.setTargetAngle(PivotConstants.HOME_ANGLE);
         stabilizers.setTargetPosition(StabilizerConstants.DOWN_POSITION);

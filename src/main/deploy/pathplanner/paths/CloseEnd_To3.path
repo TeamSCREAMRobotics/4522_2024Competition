@@ -1,0 +1,68 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.719320017812645,
+        "y": 6.991369417831561
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.9418259121824937,
+        "y": 6.265297551993107
+      },
+      "isLocked": false,
+      "linkedName": "Amp4_3End"
+    },
+    {
+      "anchor": {
+        "x": 4.9443789615111315,
+        "y": 4.485250397034318
+      },
+      "prevControl": {
+        "x": 4.556211373035434,
+        "y": 4.800410551966634
+      },
+      "nextControl": {
+        "x": 5.332546549986829,
+        "y": 4.170090242102002
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.281967377058862,
+        "y": 4.098792791023527
+      },
+      "prevControl": {
+        "x": 7.281967377058862,
+        "y": 4.098792791023527
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Piece3"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.98,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 570.0,
+    "maxAngularAcceleration": 500.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

@@ -336,116 +336,209 @@ public class Routines {
         );
     }
 
-    /* Split off paths */
-    /* Paths for centerline split offs */
-    private static final PathSequence ForwardSplitPaths = new PathSequence(Side.AMP, "ForwardSplit_1-2", "ForwardSplit_2-3", "ForwardSplit_3-4", "ForwardSplit_4-5");
-    private static final PathSequence BackwardSplitPaths = new PathSequence(Side.AMP, "BackwardSplit_5-4", "BackwardSplit_4-3", "BackwardSplit_3-2", "BackwardSplit_2-1");
-    /* Paths for scoring position to piece */
-    private static final PathSequence AmpScoringToPiece = new PathSequence(Side.AMP, "Amp_To1", "Amp_To2", "Amp_To3");
-    private static final PathSequence SourceScoringToPiece = new PathSequence(Side.SOURCE, "Source_To5", "Source_To4", "Source_To3");
-    /* Paths for piece to scoring position */
-    private static final PathSequence PieceToAmpScoring = new PathSequence(Side.AMP, "1_ToAmp", "2_ToAmp", "3_ToAmp");
-    private static final PathSequence PieceToSourceScoring = new PathSequence(Side.SOURCE, "3_ToSource", "4_ToSource", "5_ToSource");
-
     /* Amp Side Splitting Sequenced Autos */
     /* Final close4 to starting piece, first piece to scoring, first split, scoring to second piece, second piece to scoring, second split, scoring to third piece, third piece to scoring */
-    private static final PathSequence Amp_1To2 = new PathSequence(Side.AMP, "");
-    private static final PathSequence Amp_2To3 = new PathSequence(Side.AMP, "");
-    private static final PathSequence Amp_1To3 = new PathSequence(Side.AMP, "");
-    private static final PathSequence Amp_3To2 = new PathSequence(Side.AMP, "");
-    private static final PathSequence Amp_2To1 = new PathSequence(Side.AMP, "");
-    private static final PathSequence Amp_3To1 = new PathSequence(Side.AMP, "");
+    // private static final PathSequence Amp_1To2 = new PathSequence(Side.AMP, "Amp6_1Center#1", "1_ToAmp", "ForwardSplit_1-2", "Amp_To2", "2_ToAmp");
+    // private static final PathSequence Amp_2To3 = new PathSequence(Side.AMP, "Amp5_NoStage", "2_ToAmp", "ForwardSplit_2-3", "Amp_To3", "3_ToAmp");
+    // private static final PathSequence Amp_1To3 = new PathSequence(Side.AMP, "Amp6_1Center#1"); //TODO
+    // private static final PathSequence Amp_3To2 = new PathSequence(Side.AMP, "CloseEnd_To3", "3_ToAmp", "BackwardSplit_3-2", "Amp_To2", "2_ToAmp");
+    // private static final PathSequence Amp_2To1 = new PathSequence(Side.AMP, "Amp5_NoStage", "2_ToAmp", "BackwardSplit_2-1", "Amp_To1", "1_ToAmp");
+    // private static final PathSequence Amp_3To1 = new PathSequence(Side.AMP, "CloseEnd_To3"); //TODO
+
+    // public static Command Amp_1To2(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
+    //     currentSequence = Amp_1To2;
+    //     return new SequentialCommandGroup(
+    //         Amp4Close(swerve, shooter, elevator, pivot, conveyor, intake, led),
+    //         Amp_1To2.getIndex(0),
+    //         new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.25),
+    //             new ConditionalCommand(
+    //                 new SequentialCommandGroup(
+    //                     Amp_1To2.getIndex(1),
+    //                     new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+    //                     Amp_1To2.getIndex(3),
+    //                     new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.25),
+    //                     Amp_1To2.getIndex(4),
+    //                     new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
+    //                 ),
+    //                 new SequentialCommandGroup(
+    //                     Amp_1To2.getIndex(2),
+    //                     Amp_1To2.getIndex(4),
+    //                     new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
+    //                 ),
+    //                 conveyor.hasPiece(false)){
+    //             }
+    //     );
+    // }
     
-    public static Command AmpSplittingSequence(Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, Intake intake, LED led, PathSequence pathSequence){
-        currentSequence = pathSequence;
-        return new SequentialCommandGroup(
-            Amp4Close(swerve, shooter, elevator, pivot, conveyor, intake, led),
-            pathSequence.getIndex(0),
-            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.25),
-                new SequentialCommandGroup(
-                    new ConditionalCommand(
-                        /* Sequential Command Group if starting piece is gotten */
-                        new SequentialCommandGroup(
-                            pathSequence.getIndex(1),
-                            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-                            pathSequence.getIndex(3),
-                            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
-                        ),
-                        /* Sequential Command Group if starting piece is missed */
-                        new SequentialCommandGroup(
-                            pathSequence.getIndex(2),
-                                /* Condition to check if the second piece is gotten */
-                                new ConditionalCommand(
-                                    new SequentialCommandGroup(
-                                        pathSequence.getIndex(4),
-                                        new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-                                            /* Condition to check if going to a third piece at centerline */
-                                            new ConditionalCommand(
-                                                new SequentialCommandGroup(
-                                                    pathSequence.getIndex(6),
-                                                    new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.25)
-                                                ), 
-                                                new SequentialCommandGroup(
+    // public static Command Amp_2To3(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
+    //     currentSequence = Amp_2To3;
+    //     return new SequentialCommandGroup(
+    //         Amp4Close(swerve, shooter, elevator, pivot, conveyor, intake, led),
+    //         Amp_2To3.getIndex(0),
+    //         new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.25),
+    //             new ConditionalCommand(
+    //                 new SequentialCommandGroup(
+    //                     Amp_2To3.getIndex(1),
+    //                     new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+    //                     Amp_2To3.getIndex(3),
+    //                     new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.25),
+    //                     Amp_2To3.getIndex(4),
+    //                     new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
+    //                 ),
+    //                 new SequentialCommandGroup(
+    //                     Amp_2To3.getIndex(2),
+    //                     Amp_2To3.getIndex(4),
+    //                     new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
+    //                 ),
+    //                 conveyor.hasPiece(false)){
+    //             }
+    //     );
+    // }
+
+    // //TODO
+
+    // public static Command Amp_3To2(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
+    //     currentSequence = Amp_3To2;
+    //     return new SequentialCommandGroup(
+    //         Amp4Close(swerve, shooter, elevator, pivot, conveyor, intake, led),
+    //         Amp_3To2.getIndex(0),
+    //         new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.25),
+    //             new ConditionalCommand(
+    //                 new SequentialCommandGroup(
+    //                     Amp_3To2.getIndex(1),
+    //                     new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+    //                     Amp_3To2.getIndex(3),
+    //                     new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.25),
+    //                     Amp_3To2.getIndex(4),
+    //                     new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
+    //                 ),
+    //                 new SequentialCommandGroup(
+    //                     Amp_3To2.getIndex(2),
+    //                     Amp_3To2.getIndex(4),
+    //                     new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
+    //                 ),
+    //                 conveyor.hasPiece(false)){
+    //             }
+    //     );
+    // }
+    
+    // public static Command Amp_2To1(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
+    //     currentSequence = Amp_2To1;
+    //     return new SequentialCommandGroup(
+    //         Amp4Close(swerve, shooter, elevator, pivot, conveyor, intake, led),
+    //         Amp_2To1.getIndex(0),
+    //         new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.25),
+    //             new ConditionalCommand(
+    //                 new SequentialCommandGroup(
+    //                     Amp_2To1.getIndex(1),
+    //                     new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+    //                     Amp_2To1.getIndex(3),
+    //                     new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.25),
+    //                     Amp_2To1.getIndex(4),
+    //                     new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
+    //                 ),
+    //                 new SequentialCommandGroup(
+    //                     Amp_2To1.getIndex(2),
+    //                     Amp_2To1.getIndex(4),
+    //                     new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
+    //                 ),
+    //                 conveyor.hasPiece(false)){
+    //             }
+    //     );
+    // }
+
+    // //TODO
+    
+    // public static Command AmpSplittingSequence(Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, Intake intake, LED led, PathSequence pathSequence){
+    //     currentSequence = pathSequence;
+    //     return new SequentialCommandGroup(
+    //         Amp4Close(swerve, shooter, elevator, pivot, conveyor, intake, led),
+    //         pathSequence.getIndex(0),
+    //         new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.25),
+    //             new SequentialCommandGroup(
+    //                 new ConditionalCommand(
+    //                     /* Sequential Command Group if starting piece is gotten */
+    //                     new SequentialCommandGroup(
+    //                         pathSequence.getIndex(1),
+    //                         new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+    //                         pathSequence.getIndex(3),
+    //                         new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
+    //                     ),
+    //                     /* Sequential Command Group if starting piece is missed */
+    //                     new SequentialCommandGroup(
+    //                         pathSequence.getIndex(2),
+    //                             /* Condition to check if the second piece is gotten */
+    //                             new ConditionalCommand(
+    //                                 new SequentialCommandGroup(
+    //                                     pathSequence.getIndex(4),
+    //                                     new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+    //                                         /* Condition to check if going to a third piece at centerline */
+    //                                         new ConditionalCommand(
+    //                                             new SequentialCommandGroup(
+    //                                                 pathSequence.getIndex(6),
+    //                                                 new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.25)
+    //                                             ), 
+    //                                             new SequentialCommandGroup(
                                                     
-                                                ), () -> (PathSequence.getSize(pathSequence) == 7))
-                                    ),
-                                    new SequentialCommandGroup(
-                                        /* Condition to check if going to a third piece at the centerline */
-                                        new ConditionalCommand(
-                                            new SequentialCommandGroup(
-                                                pathSequence.getIndex(5),
-                                                new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.25),
-                                                pathSequence.getIndex(7),
-                                                new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
-                                            ), new SequentialCommandGroup(
+    //                                             ), () -> (PathSequence.getSize(pathSequence) == 7))
+    //                                 ),
+    //                                 new SequentialCommandGroup(
+    //                                     /* Condition to check if going to a third piece at the centerline */
+    //                                     new ConditionalCommand(
+    //                                         new SequentialCommandGroup(
+    //                                             pathSequence.getIndex(5),
+    //                                             new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.25),
+    //                                             pathSequence.getIndex(7),
+    //                                             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
+    //                                         ), new SequentialCommandGroup(
                                                 
-                                            ), () -> (PathSequence.getSize(pathSequence) == 7))
-                                    ), getHasPiece(conveyor))
-                        ), getHasPiece(conveyor)))
-        );
-    }
+    //                                         ), () -> (PathSequence.getSize(pathSequence) == 7))
+    //                                 ), getHasPiece(conveyor))
+    //                     ), getHasPiece(conveyor)))
+    //     );
+    // }
 
-    private static final PathSequence Source_5To4 = new PathSequence(Side.SOURCE, "");
-    private static final PathSequence Source_4To3 = new PathSequence(Side.SOURCE, "");
-    private static final PathSequence Source_5To3 = new PathSequence(Side.SOURCE, "");
-    private static final PathSequence Source_3To4 = new PathSequence(Side.SOURCE, "");
-    private static final PathSequence Source_4To5 = new PathSequence(Side.SOURCE, "");
-    private static final PathSequence Source_3To5 = new PathSequence(Side.SOURCE, "");
+    // private static final PathSequence Source_5To4 = new PathSequence(Side.SOURCE, "");
+    // private static final PathSequence Source_4To3 = new PathSequence(Side.SOURCE, "");
+    // private static final PathSequence Source_5To3 = new PathSequence(Side.SOURCE, "");
+    // private static final PathSequence Source_3To4 = new PathSequence(Side.SOURCE, "");
+    // private static final PathSequence Source_4To5 = new PathSequence(Side.SOURCE, "");
+    // private static final PathSequence Source_3To5 = new PathSequence(Side.SOURCE, "");
     
-    public static Command SourceSplittingSequence(Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, Intake intake, LED led, PathSequence pathSequence){
-        currentSequence = pathSequence;
-        return new SequentialCommandGroup(
+    // public static Command SourceSplittingSequence(Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, Intake intake, LED led, PathSequence pathSequence){
+    //     currentSequence = pathSequence;
+    //     return new SequentialCommandGroup(
             
-        );
-    }
+    //     );
+    // }
 
-    /** The peices are in numerical from 1-5 beginning from the amp side and going to the source side */
-    public static Command buildPath(Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, Intake intake, LED led, Side side, int startingPiece, int endingPiece){
-        PathSequence chosenSequence = null;
-        if((startingPiece < 1 || startingPiece > 5) || (endingPiece < 1 || endingPiece > 5)) return new SequentialCommandGroup();
-        if(side.equals(Side.AMP)){
-            if(startingPiece == 1 && endingPiece == 2) chosenSequence = Amp_1To2;
-            if(startingPiece == 2 && endingPiece == 3) chosenSequence = Amp_2To3;
-            if(startingPiece == 1 && endingPiece == 3) chosenSequence = Amp_1To3;
-            if(startingPiece == 3 && endingPiece == 2) chosenSequence = Amp_3To2;
-            if(startingPiece == 2 && endingPiece == 1) chosenSequence = Amp_2To1;
-            if(startingPiece == 3 && endingPiece == 1) chosenSequence = Amp_3To1;
-        }
-        if(side.equals(Side.SOURCE)){
-            if(startingPiece == 5 && endingPiece == 4) chosenSequence = Source_5To4;
-            if(startingPiece == 4 && endingPiece == 3) chosenSequence = Source_4To3;
-            if(startingPiece == 5 && endingPiece == 3) chosenSequence = Source_5To3;
-            if(startingPiece == 3 && endingPiece == 4) chosenSequence = Source_3To4;
-            if(startingPiece == 4 && endingPiece == 5) chosenSequence = Source_4To5;
-            if(startingPiece == 3 && endingPiece == 5) chosenSequence = Source_3To5;
-        }
+    // /** The peices are in numerical from 1-5 beginning from the amp side and going to the source side */
+    // public static Command buildPath(Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, Intake intake, LED led, Side side, int startingPiece, int endingPiece){
+    //     PathSequence chosenSequence = null;
+    //     if((startingPiece < 1 || startingPiece > 5) || (endingPiece < 1 || endingPiece > 5)) return new SequentialCommandGroup();
+    //     if(side.equals(Side.AMP)){
+    //         if(startingPiece == 1 && endingPiece == 2) chosenSequence = Amp_1To2;
+    //         if(startingPiece == 2 && endingPiece == 3) chosenSequence = Amp_2To3;
+    //         if(startingPiece == 1 && endingPiece == 3) chosenSequence = Amp_1To3;
+    //         if(startingPiece == 3 && endingPiece == 2) chosenSequence = Amp_3To2;
+    //         if(startingPiece == 2 && endingPiece == 1) chosenSequence = Amp_2To1;
+    //         if(startingPiece == 3 && endingPiece == 1) chosenSequence = Amp_3To1;
+    //     }
+    //     if(side.equals(Side.SOURCE)){
+    //         if(startingPiece == 5 && endingPiece == 4) chosenSequence = Source_5To4;
+    //         if(startingPiece == 4 && endingPiece == 3) chosenSequence = Source_4To3;
+    //         if(startingPiece == 5 && endingPiece == 3) chosenSequence = Source_5To3;
+    //         if(startingPiece == 3 && endingPiece == 4) chosenSequence = Source_3To4;
+    //         if(startingPiece == 4 && endingPiece == 5) chosenSequence = Source_4To5;
+    //         if(startingPiece == 3 && endingPiece == 5) chosenSequence = Source_3To5;
+    //     }
         
-        return new ConditionalCommand(
-            AmpSplittingSequence(swerve, pivot, elevator, shooter, conveyor, intake, led, chosenSequence),
-            SourceSplittingSequence(swerve, pivot, elevator, shooter, conveyor, intake, led, chosenSequence),
-            () -> side.equals(Side.AMP)
-        );
-    }
+    //     return new ConditionalCommand(
+    //         AmpSplittingSequence(swerve, pivot, elevator, shooter, conveyor, intake, led, chosenSequence),
+    //         SourceSplittingSequence(swerve, pivot, elevator, shooter, conveyor, intake, led, chosenSequence),
+    //         () -> side.equals(Side.AMP)
+    //     );
+    // }
 
     public static Command Leave(Swerve swerve, double delay){
         currentSequence = Leave;
