@@ -269,7 +269,7 @@ public class Controlboard{
     }
     
     public static final Trigger goToSubwooferPosition(){
-        return new Trigger(() -> buttonBoard.getRawButton(10)).or(driverController_Command.y()).and(defendedMode().negate());
+        return new Trigger(() -> buttonBoard.getRawButton(10)).or(driverController_Command.y()).and(defendedMode().negate().and(new Trigger(driverDefendedMode()).negate()));
     }
     
     public static final Trigger goToAmpPosition(){
@@ -278,7 +278,7 @@ public class Controlboard{
 
     public static final Trigger goToPodiumPosition(){
         return new Trigger(() -> buttonBoard.getRawButton(12)).and(defendedMode().negate())
-            .and(new Trigger(endGameMode()).negate());
+            .and(new Trigger(endGameMode()).negate()).and(new Trigger(driverDefendedMode()).negate());
     }
 
     public static final Trigger goToTrapPosition(){

@@ -63,7 +63,7 @@ public class Swerve extends SubsystemBase {
     private SwerveModuleState[] m_desiredStates = new SwerveModuleState[4];
 
     private PIDController m_headingController = SwerveConstants.HEADING_CONSTANTS.toPIDController();
-    private ProfiledPIDController m_snapController = SwerveConstants.SNAP_CONSTANTS.toProfiledPIDController(new Constraints(200, 40));
+    private PIDController m_snapController = SwerveConstants.SNAP_CONSTANTS.toPIDController();
 
     private SlewRateLimiter m_snapFilter = new SlewRateLimiter(60);
 
@@ -243,7 +243,8 @@ public class Swerve extends SubsystemBase {
 
     public double calculateSnapOutput(Rotation2d targetAngle, Rotation2d angleThreshold){
         m_snapController.setTolerance(angleThreshold.getDegrees());
-        return !m_snapController.atSetpoint() ? m_snapFilter.calculate(m_snapController.calculate(getEstimatedHeading().getDegrees(), targetAngle.getDegrees())) : 0.0;
+        m_snapController.setSetpoint(targetAngle.getDegrees());
+        return !m_snapController.atSetpoint() ? m_snapFilter.calculate(m_snapController.calculate(getEstimatedHeading().getDegrees())) : 0.0;
     }
 
     public boolean snapAtSetpoint(){

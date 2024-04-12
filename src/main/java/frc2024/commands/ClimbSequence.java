@@ -88,6 +88,7 @@ public class ClimbSequence extends Command {
   @Override
   public void end(boolean interrupted) {
     index = -1;
+    manualMode = false;
     swerve.stopAll();
     elevator.stop();
     pivot.stop();

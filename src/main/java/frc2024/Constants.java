@@ -737,7 +737,7 @@ public final class Constants{
         public static final double SOURCE_TAG_HEIGHT = 1.355726;
         public static final double AMP_TAG_HEIGHT = SOURCE_TAG_HEIGHT;
 
-        public static final RectanglePoseArea FIELD_AREA = new RectanglePoseArea(new Translation2d(0, 0), FIELD_DIMENSIONS);
-        public static final RectanglePoseArea WING_POSE_AREA = new RectanglePoseArea(new Translation2d(10.4, 0.0), FIELD_DIMENSIONS);
+        public static final RectanglePoseArea FIELD_AREA = new RectanglePoseArea(new Translation2d(0, 0), FIELD_DIMENSIONS); //Blue origin
+        public static final RectanglePoseArea WING_POSE_AREA = new RectanglePoseArea(new Translation2d(10.4, 0.0), FIELD_DIMENSIONS); //Blue origin
     }
 }

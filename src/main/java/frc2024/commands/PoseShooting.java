@@ -60,9 +60,10 @@ public class PoseShooting extends Command {
   double directionCoefficient;
 
   BooleanSupplier isDefended;
-  
-  final Interpolator<Double> pivotDistanceInterpolator = Interpolator.forDouble();
 
+  Rotation2d lastAngle;
+  LinearFilter m_angleFilter = LinearFilter.movingAverage(30);
+  
   public PoseShooting(DoubleSupplier[] translationSup, BooleanSupplier isDefended, Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor, Intake intake, LED led) {
     addRequirements(swerve, pivot, elevator, shooter, led);
     setName("PoseShooting");
@@ -81,14 +82,21 @@ public class PoseShooting extends Command {
   public void initialize() {
     directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();
     targetSpeaker = AllianceFlipUtil.getTargetSpeaker().getTranslation().plus(FieldConstants.SPEAKER_GOAL_OFFSET.times(directionCoefficient));
+    lastAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation(), targetSpeaker).minus(new Rotation2d(Math.PI));
   }
 
   @Override
   public void execute() {
     double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getEstimatedPose().getTranslation(), targetSpeaker);
+
     ShootState targetState = ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight());
     Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation(), targetSpeaker).minus(new Rotation2d(Math.PI));
+
+    targetAngle = filterTargetAngle(targetAngle);
+    lastAngle = targetAngle;
+
     Translation2d translation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times((SwerveConstants.MAX_SPEED * 0.5) * directionCoefficient);
+
     Rotation2d adjustedPivotAngle = 
       Rotation2d.fromDegrees(
         MathUtil.clamp(
@@ -113,8 +121,8 @@ public class PoseShooting extends Command {
       led.scaledTarget(Color.kOrange, shooter.getRPM(), shooter.getTargetVelocity());
     }
 
-    System.out.println("Horizontal Distance: " + horizontalDistance);
-    Logger.recordOutput("Commands/PoseShooting/Distance", horizontalDistance);
+    //System.out.println("Horizontal Distance: " + horizontalDistance);
+    //Logger.recordOutput("Commands/PoseShooting/Distance", horizontalDistance);
   }
 
   @Override
@@ -123,5 +131,13 @@ public class PoseShooting extends Command {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  public Rotation2d filterTargetAngle(Rotation2d rotation){
+    if(Math.signum(rotation.getDegrees()) != Math.signum(lastAngle.getDegrees())){
+      m_angleFilter.reset();
+    }
+
+    return Rotation2d.fromDegrees(m_angleFilter.calculate(rotation.getDegrees()));
   }
 }
