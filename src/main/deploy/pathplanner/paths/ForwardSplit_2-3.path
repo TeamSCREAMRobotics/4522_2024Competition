@@ -8,40 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.993775357022896,
-        "y": 6.335562571267795
+        "x": 7.626160530495097,
+        "y": 5.340141464876368
       },
       "isLocked": false,
       "linkedName": "Piece2"
     },
     {
       "anchor": {
-        "x": 5.8695350486278715,
-        "y": 6.604911811820771
+        "x": 8.281967377058862,
+        "y": 4.087081954477746
       },
       "prevControl": {
-        "x": 6.36896911749009,
-        "y": 6.581129237113046
-      },
-      "nextControl": {
-        "x": 5.3701009797656525,
-        "y": 6.628694386528496
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 4.042644547485956,
-        "y": 6.0076591479859145
-      },
-      "prevControl": {
-        "x": 4.6867405575039385,
-        "y": 6.45267093672561
+        "x": 7.926959251474715,
+        "y": 4.619594142853966
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "AmpScoring"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -55,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 3.6705486327161267,
+    "rotation": -90.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Piece To Scoring Paths",
+  "folder": "Split Off Paths",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

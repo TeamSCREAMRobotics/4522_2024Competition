@@ -131,7 +131,7 @@ public final class Constants{
         public static final double SHOOT_WHILE_MOVING_SCALAR = 0.75;
         public static final double MAX_SPEED = 4.9; // m/s theoretical = 5.7
         public static final double MAX_ACCELERATION = 4.9; // m/s^2 theoretical
-        public static final double MAX_ANGULAR_VELOCITY = 8.0; // rad/s
+        public static final double MAX_ANGULAR_VELOCITY = 9.0; // rad/s // 8.0
         public static final double MAX_ANGULAR_ACCELERATION = 7.679;
 
         // No need to ever change this unless there are more than four modules.
@@ -367,10 +367,10 @@ public final class Constants{
         public static final double ACCELERATION = 5;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.1, 0.0, 0.0); //0.38
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.1, 0.0, 0.0); //0.1
 
         public static final double KS = 0.0;
-        public static final double KV = 0.112;
+        public static final double KV = 0.1125;
         public static final double KA = 0.0;
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
@@ -457,7 +457,7 @@ public final class Constants{
         public static final double HARDWARE_LIMIT_POSITION_FORWARD = 0.0;
         public static final double HARDWARE_LIMIT_POSITION_REVERSE = 0.0;
 
-        public static final double TARGET_THRESHOLD = 0.5; //Degrees
+        public static final double TARGET_THRESHOLD = 0.8; //Degrees
 
         public static final double CRUISE_VELOCITY = 10.0; //40.0
         public static final double ACCELERATION = 3.0; // 10.0
@@ -728,9 +728,9 @@ public final class Constants{
         public static final Translation2d BLUE_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(7).get().getTranslation().toTranslation2d();
         public static final Translation2d RED_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(4).get().getTranslation().toTranslation2d();
 
-        public static final Translation2d SPEAKER_GOAL_OFFSET = new Translation2d(Units.inchesToMeters(9.5), Units.inchesToMeters(12.0));
+        public static final Translation2d SPEAKER_GOAL_OFFSET = new Translation2d(Units.inchesToMeters(13.5), Units.inchesToMeters(12.0));
 
-        public static final double SPEAKER_OPENING_HEIGHT = Units.inchesToMeters(80.567496 - 1.0); // 80.567496 - 3.0
+        public static final double SPEAKER_OPENING_HEIGHT = Units.inchesToMeters(80.567496); // 80.567496 - 3.0
 
         public static final double SPEAKER_TAG_HEIGHT = 1.468864;
         public static final double STAGE_TAG_HEIGHT = 1.320884;

@@ -137,7 +137,7 @@ public class Pivot extends SubsystemBase{
 
     @Override
     public void periodic() {
-        // System.out.println("Pivot:" + m_targetAngle.getDegrees());
+        //System.out.println("Pivot:" + m_targetAngle.getDegrees());
         if(Controlboard.operatorController_Command.getHID().getRightStickButtonPressed()){
             m_tweakAngle = m_tweakAngle.minus(Rotation2d.fromDegrees(0.5));
         } else if(Controlboard.operatorController_Command.getHID().getLeftStickButtonPressed()){

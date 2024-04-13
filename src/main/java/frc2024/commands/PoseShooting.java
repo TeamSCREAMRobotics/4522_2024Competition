@@ -91,10 +91,6 @@ public class PoseShooting extends Command {
 
     ShootState targetState = ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight());
     Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation(), targetSpeaker).minus(new Rotation2d(Math.PI));
-
-    targetAngle = filterTargetAngle(targetAngle);
-    lastAngle = targetAngle;
-
     Translation2d translation = new Translation2d(translationSup[0].getAsDouble(), translationSup[1].getAsDouble()).times((SwerveConstants.MAX_SPEED * 0.5) * directionCoefficient);
 
     Rotation2d adjustedPivotAngle = 
@@ -107,8 +103,10 @@ public class PoseShooting extends Command {
 
     swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle, Rotation2d.fromDegrees(1.5)));
     elevator.setTargetHeight(isDefended.getAsBoolean() && swerve.atAngleThreshold(targetAngle, Rotation2d.fromDegrees(45.0)) ? ElevatorConstants.MAX_HEIGHT : targetState.elevatorHeightInches());
-    shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM() + ShooterConstants.ARBITRARY_VELOCITY_EXTRA, 3250.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
+    shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM() + ShooterConstants.ARBITRARY_VELOCITY_EXTRA, /* 3500.0 */4000.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
     pivot.setTargetAngle(adjustedPivotAngle);
+
+    // System.out.println("Pivot: " + pivot.getPivotAtTarget().getAsBoolean());
 
     if(shooter.getShooterAtTarget().getAsBoolean()
         && pivot.getPivotAtTarget().getAsBoolean() 

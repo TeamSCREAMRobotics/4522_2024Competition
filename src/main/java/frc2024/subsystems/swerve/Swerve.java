@@ -243,8 +243,12 @@ public class Swerve extends SubsystemBase {
 
     public double calculateSnapOutput(Rotation2d targetAngle, Rotation2d angleThreshold){
         m_snapController.setTolerance(angleThreshold.getDegrees());
-        m_snapController.setSetpoint(targetAngle.getDegrees());
-        return !m_snapController.atSetpoint() ? m_snapFilter.calculate(m_snapController.calculate(getEstimatedHeading().getDegrees())) : 0.0;
+        double output = m_snapFilter.calculate(m_snapController.calculate(getEstimatedHeading().getDegrees(), targetAngle.getDegrees()));
+        if(m_snapController.atSetpoint()){
+            return 0.0;
+        } else {
+            return output;
+        }
     }
 
     public boolean snapAtSetpoint(){

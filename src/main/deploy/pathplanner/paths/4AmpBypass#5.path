@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.042644547485956,
-        "y": 6.0076591479859145
+        "x": 4.920957288419569,
+        "y": 6.464381773271393
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.124620403306426,
-        "y": 4.918551349228233
+        "x": 3.9489578551197027,
+        "y": 5.609490705429342
       },
       "isLocked": false,
-      "linkedName": "AmpScoring"
+      "linkedName": "AutoWingScoring"
     },
     {
       "anchor": {
-        "x": 4.827270596053316,
-        "y": 4.286166175756032
+        "x": 5.588474971529114,
+        "y": 4.262744502664469
       },
       "prevControl": {
-        "x": 4.409562054931347,
-        "y": 4.5609744264941705
+        "x": 4.318048715079051,
+        "y": 4.31023707299905
       },
       "nextControl": {
-        "x": 5.244979137175286,
-        "y": 4.011357925017893
+        "x": 6.841534481927736,
+        "y": 4.215901156481343
       },
       "isLocked": false,
       "linkedName": null
@@ -36,8 +36,8 @@
         "y": 4.145636137206654
       },
       "prevControl": {
-        "x": 6.888377828110863,
-        "y": 4.0285277717488395
+        "x": 7.251413761030088,
+        "y": 4.169057810298217
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,7 +46,25 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.75,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "RunIntake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.98,
     "maxAcceleration": 5.0,
@@ -59,7 +77,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Scoring To Piece Paths",
+  "folder": "4AmpBypass",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

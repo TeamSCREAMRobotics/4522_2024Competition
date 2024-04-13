@@ -57,6 +57,7 @@ public class Routines {
     private static final PathSequence Source3_Stage = new PathSequence(Side.SOURCE, "Source3#0", "Source3_Stage#1", "Source3_Stage#2");
     private static final PathSequence Leave = new PathSequence(Side.SOURCE, "Leave");
     private static final PathSequence Amp6Full = new PathSequence(Side.AMP, "Amp6CenterFull");
+    private static final PathSequence Amp4Bypass = new PathSequence(Side.AMP, "4AmpBypass#1", "4AmpBypass#2", "4AmpBypass#3", "4AmpBypass#4", "4AmpBypass#5", "4AmpBypass#6");
 
     private static PathSequence getCurrentSequence(){
         return currentSequence;
@@ -333,6 +334,56 @@ public class Routines {
                     ),
                     conveyor.hasPiece(false)){
                 }
+        );
+    }
+
+    public static Command Amp4Bypass(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
+        currentSequence = Amp4Bypass;
+        AutoPoseShootingContinuous shootCommand = new AutoPoseShootingContinuous(swerve, pivot, elevator, shooter, conveyor);
+        return new SequentialCommandGroup(
+            /* swerve.resetPoseCommand(Amp4Bypass.getStartingPose()),
+            new AutoPoseShooting(false, swerve, pivot, elevator, shooter, conveyor), //Preload
+            Amp4Bypass.getIndex(0),
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
+            Amp4Bypass.getIndex(1),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor), //Second Shot
+            Amp4Bypass.getIndex(2),
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
+            Amp4Bypass.getIndex(3),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor), //Third Shot
+            Amp4Bypass.getIndex(4),
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
+            Amp4Bypass.getIndex(5),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor) //Fourth Shot */
+            swerve.resetPoseCommand(Amp4Bypass.getStartingPose()),
+            new SequentialCommandGroup(
+                Amp4Bypass.getIndex(0)
+                    .deadlineWith(
+                        new WaitCommand(4)
+                            .andThen(
+                                Commands.startEnd(
+                                    () -> shootCommand.overrideTargetAngle(PivotConstants.HOME_ANGLE), 
+                                    () -> shootCommand.overrideTargetAngle(null)))),
+                Amp4Bypass.getIndex(1),
+                new WaitCommand(0.5),
+                conveyor.dutyCycleAutoEndCommand(ConveyorConstants.SHOOT_OUTPUT), //Second Shot
+                Amp4Bypass.getIndex(2)
+                    .deadlineWith(
+                        Commands.startEnd(
+                            () -> shootCommand.overrideTargetAngle(PivotConstants.HOME_ANGLE), 
+                            () -> shootCommand.overrideTargetAngle(null))),
+                Amp4Bypass.getIndex(3),
+                new WaitCommand(0.5),
+                conveyor.dutyCycleAutoEndCommand(ConveyorConstants.SHOOT_OUTPUT), //Third Shot
+                Amp4Bypass.getIndex(4)
+                    .deadlineWith(
+                        Commands.startEnd(
+                            () -> shootCommand.overrideTargetAngle(PivotConstants.HOME_ANGLE), 
+                            () -> shootCommand.overrideTargetAngle(null))),
+                Amp4Bypass.getIndex(5),
+                new WaitCommand(0.5),
+                conveyor.dutyCycleAutoEndCommand(ConveyorConstants.SHOOT_OUTPUT) //Fourth Shot */
+            ).alongWith(shootCommand)
         );
     }
 

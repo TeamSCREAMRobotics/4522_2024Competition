@@ -3,7 +3,6 @@
   "robotLength": 0.8128,
   "holonomicMode": true,
   "pathFolders": [
-    "Amp6_CenterFirst",
     "2ScoreAmp_Center",
     "2Source_1Sweep",
     "3Source_NoStage",
@@ -17,8 +16,10 @@
     "6AmpSide_NoStage",
     "7AmpSide_Center",
     "Amp5.5_Piece1",
+    "Amp6_CenterFirst",
     "Amp6_SplitOff",
     "CenterPiecePathfinding",
+    "4AmpBypass",
     "Piece To Scoring Paths",
     "Scoring To Piece Paths",
     "Split Off Paths"

@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.246834867421518,
-        "y": 4.145636137206654
+        "x": 8.281967377058862,
+        "y": 7.436381206571257
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.872088097956508,
-        "y": 3.6303593291922676
+        "x": 7.303733251956421,
+        "y": 7.228876998216195
       },
       "isLocked": false,
-      "linkedName": "Piece3"
+      "linkedName": "Piece1"
     },
     {
       "anchor": {
-        "x": 8.281967377058862,
-        "y": 2.4475648380683346
+        "x": 4.920957288419569,
+        "y": 6.464381773271393
       },
       "prevControl": {
-        "x": 7.926959251474715,
-        "y": 2.9800770264445564
+        "x": 5.7940427485105435,
+        "y": 6.951948978257261
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "AutoWingScoring"
     }
   ],
   "rotationTargets": [],
@@ -39,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0,
+    "rotation": 6.581944655177973,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Split Off Paths",
+  "folder": "4AmpBypass",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

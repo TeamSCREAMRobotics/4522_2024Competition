@@ -104,4 +104,8 @@ public class Conveyor extends SubsystemBase{
                 && RobotContainer.getCurrentState().get() != SuperstructureState.NONE), 
             () -> RobotContainer.getCurrentState().get() == SuperstructureState.AMP);
     }
+
+    public Command dutyCycleAutoEndCommand(double output){
+        return dutyCycleCommand(output).until(() -> !hasPiece(false).getAsBoolean());
+    }
 }

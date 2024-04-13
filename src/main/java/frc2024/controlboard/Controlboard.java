@@ -181,7 +181,7 @@ public class Controlboard{
 
     static boolean driverDefended = false;
     public static final BooleanSupplier driverDefendedMode(){
-        driverController_Command.x().onTrue(Commands.runOnce(() -> driverDefended = !driverDefended));
+        driverController_Command.x().onTrue(Commands.runOnce(() -> driverDefended =! driverDefended));
         return () -> driverDefended;
     }
 

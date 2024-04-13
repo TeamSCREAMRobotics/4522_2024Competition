@@ -100,10 +100,10 @@ public class AutoPoseShooting extends Command {
     //swerve.resetPose_Apriltag();
     swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(new Translation2d(), targetAngle, Rotation2d.fromDegrees(1.5)));
     elevator.setTargetHeight(targetState.elevatorHeightInches());
-    shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3250.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
+    shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), /* 3500.0 */4000.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
     pivot.setTargetAngle(adjustedPivotAngle);
 
-    if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD) || (timeout.hasElapsed(1) && shouldTimeout)){
+    if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD) || (timeout.hasElapsed(1.5) && shouldTimeout)){
       conveyor.setConveyorOutput(ConveyorConstants.SHOOT_OUTPUT);
     }
   }
@@ -115,6 +115,6 @@ public class AutoPoseShooting extends Command {
 
   @Override
   public boolean isFinished() {
-    return !conveyor.hasPiece(false).getAsBoolean() || (timeout.hasElapsed(1.5) && shouldTimeout);
+    return !conveyor.hasPiece(false).getAsBoolean() || (timeout.hasElapsed(1.75) && shouldTimeout);
   }
 }

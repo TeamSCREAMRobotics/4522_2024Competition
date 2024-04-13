@@ -3,32 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.042644547485956,
-        "y": 6.0076591479859145
+        "x": 4.920957288419569,
+        "y": 6.464381773271393
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.452523826588308,
-        "y": 6.8157068696448375
+        "x": 5.36416187280267,
+        "y": 6.695833056227012
       },
       "isLocked": false,
-      "linkedName": "AmpScoring"
-    },
-    {
-      "anchor": {
-        "x": 5.846113375536308,
-        "y": 6.569779302183426
-      },
-      "prevControl": {
-        "x": 5.376941817127753,
-        "y": 6.742631981597104
-      },
-      "nextControl": {
-        "x": 6.513631058645855,
-        "y": 6.323851734722014
-      },
-      "isLocked": false,
-      "linkedName": null
+      "linkedName": "AutoWingScoring"
     },
     {
       "anchor": {
@@ -36,8 +20,8 @@
         "y": 5.855418272890754
       },
       "prevControl": {
-        "x": 6.9000886646566455,
-        "y": 5.714888234341375
+        "x": 7.2326860203627295,
+        "y": 6.495602672555233
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,7 +30,25 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.85,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "RunIntake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.98,
     "maxAcceleration": 5.0,
@@ -55,11 +57,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -27.012665347938658,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Scoring To Piece Paths",
+  "folder": "4AmpBypass",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

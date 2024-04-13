@@ -41,8 +41,6 @@ import frc2024.subsystems.swerve.Swerve;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoIntakeFloor extends SequentialCommandGroup {
-    Timer timeout = new Timer();
-
     public AutoIntakeFloor(Elevator elevator, Pivot pivot, Conveyor conveyor, Intake intake, LED led){
         setName("AutoIntakeFloor");
 
@@ -52,11 +50,11 @@ public class AutoIntakeFloor extends SequentialCommandGroup {
             .alongWith(elevator.heightCommand(ElevatorConstants.HOME_HEIGHT))
             .alongWith(pivot.angleCommand(PivotConstants.HOME_ANGLE))
                 .until(conveyor.hasPiece(false))
-                .finallyDo((interrupted) -> {
-                    if(!interrupted){
+                .finallyDo(() -> {
+                    //if(!interrupted){
                         intake.stop();
                         conveyor.stop();
-                    }
+                    //}
                 })
         );
     }

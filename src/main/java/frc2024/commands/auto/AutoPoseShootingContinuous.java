@@ -54,10 +54,10 @@ public class AutoPoseShootingContinuous extends Command {
   Translation2d targetSpeaker;
   double directionCoefficient;
 
-  final Interpolator<Double> pivotDistanceInterpolator = Interpolator.forDouble();
+  Rotation2d overrideAngle = null;
 
   public AutoPoseShootingContinuous(Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor) {
-    addRequirements(pivot, elevator, shooter);
+    addRequirements(shooter);
     setName("AutoPoseShootingContinuous");
     this.swerve = swerve;
     this.pivot = pivot;
@@ -93,7 +93,7 @@ public class AutoPoseShootingContinuous extends Command {
     //swerve.resetPose_Apriltag();
     elevator.setTargetHeight(targetState.elevatorHeightInches());
     shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3000.0, 5000.0));
-    pivot.setTargetAngle(adjustedPivotAngle);
+    pivot.setTargetAngle(getTargetAngle(adjustedPivotAngle));
   }
 
   @Override
@@ -104,5 +104,16 @@ public class AutoPoseShootingContinuous extends Command {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  private Rotation2d getTargetAngle(Rotation2d measurement){
+    if(overrideAngle != null){
+      return overrideAngle;
+    }
+    return measurement;
+  }
+
+  public void overrideTargetAngle(Rotation2d angle){
+    overrideAngle = angle;
   }
 }

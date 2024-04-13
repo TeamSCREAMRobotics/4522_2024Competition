@@ -8,40 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.993775357022895,
-        "y": 4.215901156481343
+        "x": 7.110883722480709,
+        "y": 3.7591785311958645
       },
       "isLocked": false,
       "linkedName": "Piece3"
     },
     {
       "anchor": {
-        "x": 5.2137282020641065,
-        "y": 4.098792791023527
+        "x": 4.2885721149473675,
+        "y": 5.000527205048704
       },
       "prevControl": {
-        "x": 5.635968418508038,
-        "y": 4.309912899245493
-      },
-      "nextControl": {
-        "x": 4.838981432599099,
-        "y": 3.911419406291023
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 3.339994354739065,
-        "y": 3.103371684632099
-      },
-      "prevControl": {
-        "x": 4.440812990042526,
-        "y": 2.8223116075333428
+        "x": 4.780427249870191,
+        "y": 4.063660281386183
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "SourceScoring"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -55,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -39.26977829885814,
+    "rotation": -11.309932474020268,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Piece To Scoring Paths",
+  "folder": "4AmpBypass",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

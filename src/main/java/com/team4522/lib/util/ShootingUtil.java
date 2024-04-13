@@ -32,7 +32,7 @@ public class ShootingUtil {
       Rotation2d adjustedAngle = Rotation2d.fromDegrees((-baseAngle.getDegrees() + PivotConstants.RELATIVE_ENCODER_TO_HORIZONTAL.getDegrees()));
 
       //double tof = calculateTOF(elevatorHeightInches, targetHeightMeters);
-      double velocityRPM = horizontalDistance * 1500.0 - 300.0;
+      double velocityRPM = horizontalDistance * (1500.0 - 100.0); // - 300.0
 
       return new ShootState(adjustedAngle, VisionConstants.SHOOT_STATE_MAP.get(Units.metersToFeet(horizontalDistance)).elevatorHeightInches(), velocityRPM);
     }
