@@ -264,7 +264,7 @@ public class RobotContainer {
                             .andThen(m_stabilizers.stopCommand())))
             .onFalse(Commands.runOnce(() -> m_pivot.configCurrentLimit(PivotConstants.DEFAULT_CURRENT_CONFIG)));
 
-        Controlboard.advanceClimbSequence()
+        Controlboard.advanceClimbSequence().and(() -> DriverStation.getMatchTime() <= 30.0)
             .onTrue(
                 Commands.runOnce(() -> 
                     {
@@ -296,7 +296,7 @@ public class RobotContainer {
                     .andThen(
                         new ConditionalCommand(
                             new Feed(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_intake, m_led),
-                            new PoseShooting(Controlboard.getTranslation(), Controlboard.defendedMode().or(Controlboard.driverDefendedMode()), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_intake, m_led), 
+                            new PoseShooting(Controlboard.getTranslation(), Controlboard.defendedMode(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_intake, m_led), 
                             () -> ScreamUtil.calculateDistanceToTranslation(() -> m_swerve.getEstimatedPose().getTranslation(), () -> AllianceFlipUtil.getTargetSpeaker().getTranslation()).getAsDouble() >= Units.feetToMeters(25.0))))
             .onFalse(new GoHome(true, m_pivot, m_elevator, m_conveyor, m_intake));
 
@@ -310,7 +310,7 @@ public class RobotContainer {
         new Trigger(m_conveyor.hasPiece(false))
             .and(Controlboard.intakeFromFloor().or(Controlboard.intakeFromFloorEndgame()).or(Controlboard.driverController_Command.rightStick()))
             .onTrue(
-                Controlboard.driverRumbleCommand(RumbleType.kBothRumble, 0.8, 0.2)
+                Controlboard.driverRumbleCommand(RumbleType.kBothRumble, 0.8, Units.millisecondsToSeconds(300))
                     .alongWith(m_led.strobeCommand(Color.kGreen, 0.1).withTimeout(1)));
 
         (Controlboard.intakeFromFloorEndgame().or(Controlboard.driverController_Command.rightStick())).and(new Trigger(m_conveyor.hasPiece(true)).negate())
@@ -373,7 +373,7 @@ public class RobotContainer {
             Commands.runOnce(() -> m_climbSequence.cancel())
         );
 
-        new Trigger(Controlboard.driverDefendedMode()).or(Controlboard.defendedMode())
+        Controlboard.defendedMode()
             .onTrue(new InstantCommand(() -> m_led.setDefaultCommand(m_led.strobeCommand(Color.kRed, 0.07)))
                 .andThen(m_led.strobeCommand(Color.kRed, 0.07)))
             .onFalse(new InstantCommand(() -> m_led.setDefaultCommand(m_led.waveCommand(() -> (Color) AllianceFlipUtil.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, 22, 2)))

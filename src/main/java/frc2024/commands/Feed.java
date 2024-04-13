@@ -83,7 +83,7 @@ public class Feed extends Command {
     Rotation2d adjustedPivotAngle = 
       Rotation2d.fromDegrees(
         MathUtil.clamp(
-          targetState.pivotAngle().getDegrees() + (ShootingUtil.calculatePivotAngleAdjustment(swerve.getFieldRelativeSpeeds(), horizontalDistance, 0.5).getDegrees() * directionCoefficient), 
+          targetState.pivotAngle().getDegrees(), 
           elevator.getElevatorHeight() > 1.5 ? PivotConstants.SUBWOOFER_ANGLE.getDegrees() : 1, 
           28)
       );
@@ -92,11 +92,11 @@ public class Feed extends Command {
     swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle, Rotation2d.fromDegrees(3.0)));
     
     if(!illegalArea.isPoseWithinArea(swerve.getEstimatedPose())){
-      shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM() / 2.8, 0.0, 3000.0));
+      shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM() / 2.8, 0.0, 3100.0));
       pivot.setTargetAngle(adjustedPivotAngle);
       elevator.setTargetHeight(ElevatorConstants.SUBWOOFER_HEIGHT);
       led.strobe(Color.kGreen, 0.3);
-      if(shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean()){
+      if(shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotError().getDegrees() < 2.0){
         conveyor.setConveyorOutput(ConveyorConstants.SHOOT_OUTPUT);
         intake.setIntakeOutput(IntakeConstants.INTAKE_OUTPUT);
       }

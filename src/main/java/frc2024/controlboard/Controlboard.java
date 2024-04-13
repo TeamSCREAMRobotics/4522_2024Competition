@@ -40,7 +40,12 @@ public class Controlboard{
     public static final CommandXboxController operatorController_Command = new CommandXboxController(1);
     public static final Buttonboard buttonBoard = new Buttonboard(2, 3);
 
+    private static boolean driverDefended = false;
     public static boolean fieldCentric = true;
+    static{
+        driverController_Command.x().onTrue(Commands.runOnce(() -> driverDefended = !driverDefended));
+        driverController_Command.start().onTrue(Commands.runOnce(() -> fieldCentric = !fieldCentric));
+    }
 
     public static Command driverRumbleCommand(RumbleType type, double value, double time){
         return Commands.startEnd(
@@ -143,7 +148,6 @@ public class Controlboard{
      */
     public static BooleanSupplier getFieldCentric() {
         /* Toggles field-centric mode between true and false when the start button is pressed */
-        driverController_Command.start().onTrue(Commands.runOnce(() -> fieldCentric =! fieldCentric));
         return () -> fieldCentric;
     }
 
@@ -176,13 +180,7 @@ public class Controlboard{
 
     public static final Trigger defendedMode(){
         /* Uses a toggle switch to enable or disable wether we are being defended. This allows us to raise our elevator with auto shots */
-        return new Trigger(() -> buttonBoard.getRawSwitch(4));
-    }
-
-    static boolean driverDefended = false;
-    public static final BooleanSupplier driverDefendedMode(){
-        driverController_Command.x().onTrue(Commands.runOnce(() -> driverDefended =! driverDefended));
-        return () -> driverDefended;
+        return new Trigger(() -> buttonBoard.getRawSwitch(4) || driverDefended);
     }
 
     public static final Trigger virtualAutoFire(){
@@ -243,7 +241,7 @@ public class Controlboard{
     /* Elevator */
     public static final DoubleSupplier getManualElevatorOutput(boolean driverController){
         return () -> driverController
-               ? (-MathUtil.applyDeadband(driverController_Command.getRightY(), STICK_DEADBAND))*12.0
+               ? (-MathUtil.applyDeadband(driverController_Command.getRightY(), STICK_DEADBAND))*9.0
                : (-MathUtil.applyDeadband(operatorController_Command.getLeftY(), STICK_DEADBAND))*6.0;
     }
 
@@ -269,7 +267,7 @@ public class Controlboard{
     }
     
     public static final Trigger goToSubwooferPosition(){
-        return new Trigger(() -> buttonBoard.getRawButton(10)).or(driverController_Command.y()).and(defendedMode().negate().and(new Trigger(driverDefendedMode()).negate()));
+        return new Trigger(() -> buttonBoard.getRawButton(10)).or(driverController_Command.y()).and(defendedMode().negate());
     }
     
     public static final Trigger goToAmpPosition(){
@@ -278,7 +276,7 @@ public class Controlboard{
 
     public static final Trigger goToPodiumPosition(){
         return new Trigger(() -> buttonBoard.getRawButton(12)).and(defendedMode().negate())
-            .and(new Trigger(endGameMode()).negate()).and(new Trigger(driverDefendedMode()).negate());
+            .and(new Trigger(endGameMode()).negate());
     }
 
     public static final Trigger goToTrapPosition(){
@@ -290,11 +288,11 @@ public class Controlboard{
     }
     
     public static final Trigger goToSubwooferPositionDefended(){
-        return new Trigger(() -> buttonBoard.getRawButton(10)).and(defendedMode().or(driverDefendedMode()));
+        return new Trigger(() -> buttonBoard.getRawButton(10)).and(defendedMode());
     }
 
     public static final Trigger goToPodiumPositionDefended(){
-        return new Trigger(() -> buttonBoard.getRawButton(12)).and(defendedMode().or(driverDefendedMode()))
+        return new Trigger(() -> buttonBoard.getRawButton(12)).and(defendedMode())
             .and(new Trigger(endGameMode()).negate());
     }
 

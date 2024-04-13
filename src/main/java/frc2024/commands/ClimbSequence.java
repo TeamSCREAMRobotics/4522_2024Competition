@@ -63,7 +63,7 @@ public class ClimbSequence extends Command {
           manualMode = true;
         }
         if(manualMode){
-          elevator.setElevatorVoltage(Math.abs(elevatorVoltage.getAsDouble()) > 3.5 ? elevatorVoltage.getAsDouble() : 0);
+          elevator.setElevatorVoltage(Math.abs(elevatorVoltage.getAsDouble()) > 2.5 ? elevatorVoltage.getAsDouble() : 0);
         } else {
           elevator.setTargetHeight(ElevatorConstants.TRAP_CHAIN_HEIGHT);
         }
