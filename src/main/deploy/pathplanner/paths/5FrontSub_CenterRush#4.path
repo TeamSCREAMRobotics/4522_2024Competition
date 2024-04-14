@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.14,
-        "y": 4.12
+        "x": 4.4517496727301165,
+        "y": 4.686797835134132
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.828276278701299,
-        "y": 4.678952879570084
+        "x": 5.310173697270472,
+        "y": 3.8481076962153926
       },
       "isLocked": false,
-      "linkedName": "Piece3"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.000907299960106,
-        "y": 5.855418272890754
+        "x": 7.806510228405074,
+        "y": 3.8481076962153926
       },
       "prevControl": {
-        "x": 7.689183578661405,
-        "y": 5.296465393320669
+        "x": 6.9678200894863345,
+        "y": 3.8579746390262013
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Piece2"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -38,12 +38,12 @@
     "maxAngularAcceleration": 500.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 90.0,
+    "velocity": 5.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Split Off Paths",
+  "folder": "5FrontSub_CenterRush",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

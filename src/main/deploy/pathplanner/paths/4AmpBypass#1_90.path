@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2671762861357376,
-        "y": 7.108477783289376
+        "x": 1.5248146901429311,
+        "y": 7.330983677659224
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7238989114212162,
-        "y": 7.565200408574855
+        "x": 1.9815373154284102,
+        "y": 7.600332918212199
       },
       "isLocked": false,
-      "linkedName": "BypassStart"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.9066934025451485,
-        "y": 7.68
+        "x": 2.894982565999367,
+        "y": 7.76428462985314
       },
       "prevControl": {
-        "x": 2.4066934025451485,
-        "y": 7.68
+        "x": 2.394982565999367,
+        "y": 7.76428462985314
       },
       "nextControl": {
-        "x": 3.4066934025451485,
-        "y": 7.68
+        "x": 3.394982565999367,
+        "y": 7.76428462985314
       },
       "isLocked": false,
       "linkedName": null
@@ -62,9 +62,9 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.65,
+      "waypointRelativePos": 0.15,
       "rotationDegrees": 0,
-      "rotateFast": false
+      "rotateFast": true
     }
   ],
   "constraintZones": [
@@ -77,6 +77,17 @@
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 350.0,
         "maxAngularAcceleration": 300.0
+      }
+    },
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 1.1500000000000001,
+      "maxWaypointRelativePos": 1.7999999999999998,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 1.5,
+        "maxAngularVelocity": 570.0,
+        "maxAngularAcceleration": 500.0
       }
     }
   ],
@@ -118,9 +129,9 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.98,
-    "maxAcceleration": 4.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 570.0,
-    "maxAngularAcceleration": 360.0
+    "maxAngularAcceleration": 500.0
   },
   "goalEndState": {
     "velocity": 0,
@@ -130,8 +141,8 @@
   "reversed": false,
   "folder": "4AmpBypass",
   "previewStartingState": {
-    "rotation": 52.34,
+    "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

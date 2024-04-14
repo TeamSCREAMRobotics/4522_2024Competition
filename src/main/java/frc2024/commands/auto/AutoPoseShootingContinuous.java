@@ -56,7 +56,9 @@ public class AutoPoseShootingContinuous extends Command {
 
   Rotation2d overrideAngle = null;
 
-  public AutoPoseShootingContinuous(Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor) {
+  boolean rotTargetOverride;
+
+  public AutoPoseShootingContinuous(boolean rotTargetOverride, Swerve swerve, Pivot pivot, Elevator elevator, Shooter shooter, Conveyor conveyor) {
     addRequirements(shooter);
     setName("AutoPoseShootingContinuous");
     this.swerve = swerve;
@@ -64,12 +66,13 @@ public class AutoPoseShootingContinuous extends Command {
     this.elevator = elevator;
     this.shooter = shooter;
     this.conveyor = conveyor;
+    this.rotTargetOverride = rotTargetOverride;
   }
 
   @Override
   public void initialize() {
     directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();
-    targetSpeaker = AllianceFlipUtil.getTargetSpeaker().getTranslation().plus(FieldConstants.SPEAKER_GOAL_OFFSET.times(directionCoefficient));
+    targetSpeaker = AllianceFlipUtil.getTargetSpeaker().getTranslation().plus(FieldConstants.SPEAKER_GOAL_OFFSET_RIGHT.times(directionCoefficient));
   }
 
   @Override
@@ -80,19 +83,21 @@ public class AutoPoseShootingContinuous extends Command {
     Rotation2d adjustedPivotAngle = 
       Rotation2d.fromDegrees(
         MathUtil.clamp(
-          targetState.pivotAngle().getDegrees(), 
+          targetState.pivotAngle().getDegrees() - (horizontalDistance / 2.0), 
           1, 
           28)
       );
 
-    PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.of(targetAngle));
+    if(rotTargetOverride){
+      PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.of(targetAngle));
+    }
 
     if(!RobotContainer.isRunningPath){
       swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(new Translation2d(), targetAngle, Rotation2d.fromDegrees(1.5)));
     }
     //swerve.resetPose_Apriltag();
     elevator.setTargetHeight(targetState.elevatorHeightInches());
-    shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3000.0, 5000.0));
+    shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM(), 3500.0, 5000.0));
     pivot.setTargetAngle(getTargetAngle(adjustedPivotAngle));
   }
 

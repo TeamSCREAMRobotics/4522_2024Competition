@@ -98,8 +98,24 @@ public class Shooter extends SubsystemBase{
         return m_targetVelocity;
     }
 
+    public double getTopShooterRPMs(){
+        return m_topShooterMotor.getVelocity().getValueAsDouble()*60;
+    }
+
+    public double getBootomShooterRPMs(){
+        return m_bottomShooterMotor.getVelocity().getValueAsDouble()*60;
+    }
+
+    public boolean getShooterError_WithIn(){
+        return (Math.abs(getShooterError()) < ShooterConstants.TARGET_THRESHOLD);
+    }
+
+    public boolean getShooterOver(){
+        return getRPM() > m_targetVelocity;
+    }
+
     public BooleanSupplier getShooterAtTarget(){
-        return () -> Math.abs(getShooterError()) < ShooterConstants.TARGET_THRESHOLD;
+        return () -> (Math.abs(getShooterError()) < ShooterConstants.TARGET_THRESHOLD) || getRPM() > m_targetVelocity;
     }
 
     public double getShooterCurrent(){
@@ -117,7 +133,6 @@ public class Shooter extends SubsystemBase{
 
     @Override
     public void periodic() {
-        //System.out.println("Shooter Error: " + getShooterError());
         if(Constants.MODE == RobotMode.COMP){
             logOutputs();
         }

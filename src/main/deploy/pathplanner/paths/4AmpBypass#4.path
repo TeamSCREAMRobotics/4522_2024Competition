@@ -8,24 +8,40 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.0603534002684105,
-        "y": 6.1950627366683095
+        "x": 7.075751212843366,
+        "y": 6.581490138729208
       },
       "isLocked": false,
       "linkedName": "Piece2"
     },
     {
       "anchor": {
-        "x": 4.920957288419569,
-        "y": 6.464381773271393
+        "x": 5.904667558265215,
+        "y": 6.558068465637644
       },
       "prevControl": {
-        "x": 5.640071660124737,
-        "y": 6.680889326042841
+        "x": 6.404667558265215,
+        "y": 6.558068465637644
+      },
+      "nextControl": {
+        "x": 5.404667558265215,
+        "y": 6.558068465637644
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.300282951493148,
+        "y": 5.855418272890754
+      },
+      "prevControl": {
+        "x": 5.014643980785821,
+        "y": 6.405827590542485
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "AutoWingScoring"
+      "linkedName": "4AmpBypass#4_End"
     }
   ],
   "rotationTargets": [],

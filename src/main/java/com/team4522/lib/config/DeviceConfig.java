@@ -182,7 +182,7 @@ public class DeviceConfig {
         config.MotorOutput = FXMotorOutputConfig(ShooterConstants.MOTOR_INVERT, ShooterConstants.NEUTRAL_MODE);
         config.Feedback = FXFeedbackConfig(FeedbackSensorSourceValue.RotorSensor, 0, ShooterConstants.GEAR_RATIO, 1.0, Rotation2d.fromRotations(0));
         config.CurrentLimits = FXSupplyCurrentLimitsConfig(
-            ShooterConstants.CURRENT_LIMIT_ENABLE, 
+            ShooterConstants.CURRENT_LIMIT_ENABLE,
             ShooterConstants.SUPPLY_CURRENT_LIMIT, 
             ShooterConstants.SUPPLY_CURRENT_THRESHOLD, 
             ShooterConstants.SUPPLY_TIME_THRESHOLD);

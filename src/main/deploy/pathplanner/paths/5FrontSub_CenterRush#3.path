@@ -3,53 +3,43 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.300282951493148,
-        "y": 5.855418272890754
+        "x": 2.496814123442796,
+        "y": 4.286166175756032
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.31199378803893,
-        "y": 4.848286329953544
+        "x": 1.7530917578578578,
+        "y": 5.290843757335686
       },
       "isLocked": false,
-      "linkedName": "4AmpBypass#4_End"
+      "linkedName": "5FrontSub_CenterRush#2End_New"
     },
     {
       "anchor": {
-        "x": 5.541631625345989,
-        "y": 4.180768646843998
+        "x": 2.9066934025451485,
+        "y": 7.108477783289376
       },
       "prevControl": {
-        "x": 4.292650681869197,
-        "y": 4.231232523348112
-      },
-      "nextControl": {
-        "x": 6.041224002736702,
-        "y": 4.160583096242354
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 8.14,
-        "y": 4.12
-      },
-      "prevControl": {
-        "x": 7.144303382641105,
-        "y": 4.12
+        "x": 1.8994593187648459,
+        "y": 6.3682214084628885
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Piece3"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 31.5,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 1.75,
+      "waypointRelativePos": 0.45,
       "command": {
         "type": "parallel",
         "data": {
@@ -67,20 +57,20 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.98,
-    "maxAcceleration": 5.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 570.0,
-    "maxAngularAcceleration": 500.0
+    "maxAngularAcceleration": 360.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": 31.504266719204175,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "4AmpBypass",
+  "folder": "5FrontSub_CenterRush",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -23.31770838675511,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

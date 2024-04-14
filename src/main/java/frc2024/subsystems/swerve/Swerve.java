@@ -153,6 +153,14 @@ public class Swerve extends SubsystemBase {
         m_poseEstimator.resetPosition(getYaw(), getModulePositions(), new Pose2d(getOdometryPose().getTranslation(), rotation));
     }
 
+    public void resetOdometryPose(){
+        m_odometry.resetPosition(getYaw(), getModulePositions(), m_poseEstimator.getEstimatedPosition());
+    }
+
+    public Command resetOdometryPoseCommand(){
+        return Commands.runOnce(() -> resetOdometryPoseCommand());
+    }
+
     /**
      * Returns a new robot-relative ChassisSpeeds based on the given inputs.
      *
@@ -265,7 +273,7 @@ public class Swerve extends SubsystemBase {
      * @param pose The new pose to set.
      */
     public void resetPose(Pose2d pose) {
-        resetYaw(Rotation2d.fromDegrees(0.0)); //TODO needs testing
+        //resetYaw(Rotation2d.fromDegrees(0.0)); //TODO needs testing
         resetModulePositions();
         m_poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
         m_odometry.resetPosition(getYaw(), getModulePositions(), pose);

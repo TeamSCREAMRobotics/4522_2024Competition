@@ -1,0 +1,108 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.7518994781213513,
+        "y": 4.379852868122284
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.3023087957730821,
+        "y": 3.6069376561007047
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.2228859892812496,
+        "y": 2.974552482628502
+      },
+      "prevControl": {
+        "x": 2.7199482974976865,
+        "y": 2.9996993672176786
+      },
+      "nextControl": {
+        "x": 3.69131945111251,
+        "y": 2.9511308095369406
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.08490900006051,
+        "y": 3.876286896653679
+      },
+      "prevControl": {
+        "x": 4.741650348670919,
+        "y": 3.6016799755420053
+      },
+      "nextControl": {
+        "x": 5.494788279162862,
+        "y": 4.204190319935561
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.293678213604645,
+        "y": 4.11050362756931
+      },
+      "prevControl": {
+        "x": 7.274835434121653,
+        "y": 4.215901156481343
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Source_SubSideBypass#1_End"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.44999999999999996,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 2.65,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "RunIntake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.98,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 570.0,
+    "maxAngularAcceleration": 360.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "5Source_SubSideBypass",
+  "previewStartingState": {
+    "rotation": -59.981632572390915,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

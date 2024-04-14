@@ -1,0 +1,84 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.293678213604645,
+        "y": 4.11050362756931
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.239702924484309,
+        "y": 4.438407050851191
+      },
+      "isLocked": false,
+      "linkedName": "Source_SubSideBypass#1_End"
+    },
+    {
+      "anchor": {
+        "x": 5.354258240613484,
+        "y": 4.11050362756931
+      },
+      "prevControl": {
+        "x": 5.829557090433531,
+        "y": 4.265716395599974
+      },
+      "nextControl": {
+        "x": 4.878959390793438,
+        "y": 3.955290859538645
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.8435603262076694,
+        "y": 3.18534754045257
+      },
+      "prevControl": {
+        "x": 4.308637936873331,
+        "y": 3.3689308078205946
+      },
+      "nextControl": {
+        "x": 3.3784827155420083,
+        "y": 3.0017642730845453
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.004958988519973,
+        "y": 3.4078534348224188
+      },
+      "prevControl": {
+        "x": 2.7076091812668635,
+        "y": 3.0448175019031916
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "5Source_SubSideBypass#2_End"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.98,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 570.0,
+    "maxAngularAcceleration": 360.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -45.67403689798448,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "5Source_SubSideBypass",
+  "previewStartingState": {
+    "rotation": 0.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

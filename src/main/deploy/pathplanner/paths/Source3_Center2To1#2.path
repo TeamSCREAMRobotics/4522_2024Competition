@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.14,
-        "y": 4.12
+        "x": 8.036039809597451,
+        "y": 2.435854001522554
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.828276278701299,
-        "y": 4.678952879570084
+        "x": 6.806401972290393,
+        "y": 1.1008186353034626
       },
       "isLocked": false,
-      "linkedName": "Piece3"
+      "linkedName": "Source3_Center2To1#1_End"
     },
     {
       "anchor": {
-        "x": 8.000907299960106,
-        "y": 5.855418272890754
+        "x": 3.339994354739065,
+        "y": 3.103371684632099
       },
       "prevControl": {
-        "x": 7.689183578661405,
-        "y": 5.296465393320669
+        "x": 3.866981999299233,
+        "y": 1.6512279529551925
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Piece2"
+      "linkedName": "Source3_Center2To1#2_End"
     }
   ],
   "rotationTargets": [],
@@ -33,20 +33,20 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.98,
-    "maxAcceleration": 5.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 570.0,
-    "maxAngularAcceleration": 500.0
+    "maxAngularAcceleration": 360.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0,
+    "rotation": -33.976544036256826,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Split Off Paths",
+  "folder": "3Source_Center2-1",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

@@ -198,6 +198,12 @@ public class RobotContainer {
                             .alongWith(m_shooter.velocityCommand(ShooterConstants.SUBWOOFER_VELOCITY))))
             .onFalse(new GoHome(true, m_pivot, m_elevator, m_conveyor, m_intake));
 
+            /* Controlboard.goToSubwooferPosition()
+                .toggleOnTrue(
+                    new SuperstructureToPosition(SuperstructureState.BYPASS_START, m_elevator, m_pivot)
+                            .alongWith(m_shooter.velocityCommand(ShooterConstants.BYPASS_START_VELOCITY))
+                ); */
+
         Controlboard.goToAmpPosition()
             .toggleOnTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.AMP)
@@ -421,7 +427,13 @@ public class RobotContainer {
             new PPEvent("RunIntake", new AutoIntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, m_led)),
             new PPEvent("RunIntakeContinuous", m_conveyor.dutyCycleCommand(ConveyorConstants.SHOOT_OUTPUT).alongWith(m_intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT))),
             new PPEvent("RunShooterHigh", m_shooter.velocityCommand(4500)),
-            new PPEvent("Shoot", m_conveyor.dutyCycleCommand(ConveyorConstants.SHOOT_OUTPUT).withTimeout(1).andThen(m_conveyor.stopCommand()))
+            new PPEvent("Shoot", m_conveyor.dutyCycleCommand(ConveyorConstants.SHOOT_OUTPUT).withTimeout(1).andThen(m_conveyor.stopCommand())),
+            new PPEvent("StartIntake_Conveyor", m_conveyor.dutyCycleAutoEndCommand(ConveyorConstants.SHOOT_OUTPUT)
+                .alongWith(
+                    m_intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT)
+                )),
+            new PPEvent("StopIntake_Conveyor", m_conveyor.stopCommand().alongWith(m_intake.stopCommand())),
+            new PPEvent("Relocalize", new InstantCommand(() -> m_swerve.resetOdometryPoseCommand()))
         );
 
         Autonomous.addRoutines(
@@ -440,7 +452,10 @@ public class RobotContainer {
             Routines.Source3_NoStage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Center&NoStage"),
             Routines.Source3_Stage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Stage"),
             Routines.Source2_1Sweep(m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_intake, m_led).withName("Source2_Sweep1"),
-            Routines.Amp4Bypass(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp4_Bypass"),
+            Routines.Amp4Bypass_WithSkip_Relocalize(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp4_Bypass"),
+            Routines.Center2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Center2"),
+            Routines.Front5Sub_CenterRush(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Front5Sub_CenterRush"),
+            Routines.Source3_Center2To1(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Center2To1"),
 
             // Routines.Amp_1To2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_1-2"),
             // Routines.Amp_2To3(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_2-3"),

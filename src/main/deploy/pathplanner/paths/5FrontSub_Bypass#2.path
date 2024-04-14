@@ -3,45 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.14,
-        "y": 4.12
+        "x": 8.281967377058862,
+        "y": 4.098792791023527
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.886940489601378,
-        "y": 4.1902650192746895
+        "x": 6.724426116469921,
+        "y": 4.016816935203058
       },
       "isLocked": false,
-      "linkedName": "Piece3"
+      "linkedName": "5FrontSub_Bypass#1_End"
     },
     {
       "anchor": {
-        "x": 5.2137282020641065,
-        "y": 4.098792791023527
+        "x": 5.916378394810998,
+        "y": 3.9582627524741496
       },
       "prevControl": {
-        "x": 5.635968418508038,
-        "y": 4.309912899245493
+        "x": 7.338639723106836,
+        "y": 3.569609364611026
       },
       "nextControl": {
-        "x": 4.838981432599099,
-        "y": 3.911419406291023
+        "x": 5.434062307088201,
+        "y": 4.09006256857332
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.339994354739065,
-        "y": 3.103371684632099
+        "x": 1.3959954881393342,
+        "y": 5.550936522700434
       },
       "prevControl": {
-        "x": 4.440812990042526,
-        "y": 2.8223116075333428
+        "x": 2.6373441619921745,
+        "y": 5.293298118693241
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "SourceScoring"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -55,11 +55,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -39.26977829885814,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Piece To Scoring Paths",
+  "folder": "5FrontSub_Bypass",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

@@ -3,87 +3,55 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2671762861357376,
-        "y": 7.108477783289376
+        "x": 8.281967377058862,
+        "y": 7.436381206571257
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7238989114212162,
-        "y": 7.565200408574855
+        "x": 6.162305962272408,
+        "y": 5.855418272890754
       },
       "isLocked": false,
-      "linkedName": "BypassStart"
-    },
-    {
-      "anchor": {
-        "x": 2.9066934025451485,
-        "y": 7.68
-      },
-      "prevControl": {
-        "x": 2.4066934025451485,
-        "y": 7.68
-      },
-      "nextControl": {
-        "x": 3.4066934025451485,
-        "y": 7.68
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 5.2254390386098875,
-        "y": 7.436381206571257
-      },
-      "prevControl": {
-        "x": 4.216442254251101,
-        "y": 7.471301657619779
-      },
-      "nextControl": {
-        "x": 6.234435822968674,
-        "y": 7.401460755522735
-      },
-      "isLocked": false,
-      "linkedName": null
+      "linkedName": "Piece1"
     },
     {
       "anchor": {
         "x": 8.281967377058862,
-        "y": 7.436381206571257
+        "y": 5.773442417070284
       },
       "prevControl": {
-        "x": 7.34510045339634,
-        "y": 7.401248696933913
+        "x": 7.403654636125248,
+        "y": 5.04737055123183
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Piece1"
+      "linkedName": "4AmpBypass_Skip_Relocalize#1_End"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.65,
-      "rotationDegrees": 0,
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 33.63139291309288,
       "rotateFast": false
     }
   ],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.0,
-      "maxWaypointRelativePos": 0.8,
+      "minWaypointRelativePos": 0.3,
+      "maxWaypointRelativePos": 0.65,
       "constraints": {
-        "maxVelocity": 2.5,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 350.0,
-        "maxAngularAcceleration": 300.0
+        "maxVelocity": 1.0,
+        "maxAcceleration": 1.5,
+        "maxAngularVelocity": 570.0,
+        "maxAngularAcceleration": 360.0
       }
     }
   ],
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 2.4000000000000004,
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "parallel",
         "data": {
@@ -91,7 +59,7 @@
             {
               "type": "named",
               "data": {
-                "name": "RunIntake"
+                "name": "Relocalize"
               }
             }
           ]
@@ -100,7 +68,7 @@
     },
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 1.6,
+      "waypointRelativePos": 0.65,
       "command": {
         "type": "parallel",
         "data": {
@@ -108,7 +76,7 @@
             {
               "type": "named",
               "data": {
-                "name": "Shoot"
+                "name": "RunIntake"
               }
             }
           ]
@@ -124,13 +92,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": 1.1233027140754641,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "4AmpBypass",
   "previewStartingState": {
-    "rotation": 52.34,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": false

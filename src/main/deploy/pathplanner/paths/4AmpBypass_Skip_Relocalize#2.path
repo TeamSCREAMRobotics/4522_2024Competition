@@ -3,32 +3,38 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.452523826588308,
-        "y": 6.4292492636340475
+        "x": 8.281967377058862,
+        "y": 5.7617315805245015
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.89572841097141,
-        "y": 6.660700546589666
+        "x": 6.642408436766677,
+        "y": 5.7617315805245015
       },
       "isLocked": false,
-      "linkedName": "4AmpBypass#2_End"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.000907299960106,
-        "y": 5.855418272890754
+        "x": 8.281967377058862,
+        "y": 4.122214464115091
       },
       "prevControl": {
-        "x": 7.2326860203627295,
-        "y": 6.495602672555233
+        "x": 6.419612957002121,
+        "y": 4.122214464115091
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Piece2"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 25.0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {
@@ -47,18 +53,35 @@
           ]
         }
       }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Relocalize"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {
     "maxVelocity": 4.98,
-    "maxAcceleration": 5.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 570.0,
-    "maxAngularAcceleration": 500.0
+    "maxAngularAcceleration": 360.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -27.012665347938658,
-    "rotateFast": false
+    "rotation": 0.0,
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "4AmpBypass",
@@ -66,5 +89,5 @@
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

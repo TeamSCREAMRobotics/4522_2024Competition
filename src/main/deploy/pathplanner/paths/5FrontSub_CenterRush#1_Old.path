@@ -1,0 +1,186 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.3842846515935527,
+        "y": 5.550936522700434
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.3842846515935516,
+        "y": 5.550936522700434
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.9066934025451485,
+        "y": 5.550936522700434
+      },
+      "prevControl": {
+        "x": 2.406693402545149,
+        "y": 5.550936522700434
+      },
+      "nextControl": {
+        "x": 3.6566934025451485,
+        "y": 5.550936522700434
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.979511471148476,
+        "y": 4.333009521939157
+      },
+      "prevControl": {
+        "x": 4.221168473154225,
+        "y": 4.644329279010481
+      },
+      "nextControl": {
+        "x": 6.09204094299772,
+        "y": 3.876286896653679
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.964381313378012,
+        "y": 4.055313495242375
+      },
+      "prevControl": {
+        "x": 7.977218250188417,
+        "y": 3.7151346697666785
+      },
+      "nextControl": {
+        "x": 7.940959640286446,
+        "y": 4.675987832168796
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.979511471148476,
+        "y": 4.333009521939157
+      },
+      "prevControl": {
+        "x": 6.2505717704403105,
+        "y": 3.6433916999829488
+      },
+      "nextControl": {
+        "x": 3.8786928358450146,
+        "y": 4.930262185774015
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.122067353977788,
+        "y": 4.567226252854788
+      },
+      "prevControl": {
+        "x": 3.0396930353829963,
+        "y": 6.284074301935502
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "5FrontSub_CenterRush#1End"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 3.15,
+      "rotationDegrees": 8.301038523567373,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.15000000000000002,
+      "maxWaypointRelativePos": 0.8999999999999999,
+      "constraints": {
+        "maxVelocity": 0.5,
+        "maxAcceleration": 0.5,
+        "maxAngularVelocity": 570.0,
+        "maxAngularAcceleration": 500.0
+      }
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.35,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "StartIntake_Conveyor"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.75,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "StopIntake_Conveyor"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 2.5,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "RunIntake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.98,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 570.0,
+    "maxAngularAcceleration": 500.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -28.217355854729284,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "5FrontSub_CenterRush",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

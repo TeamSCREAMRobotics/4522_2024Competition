@@ -3,50 +3,52 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.339994354739065,
-        "y": 3.103371684632099
+        "x": 2.004958988519973,
+        "y": 3.4078534348224188
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.429102153496745,
-        "y": 3.279034232818822
+        "x": 2.004958988519973,
+        "y": 3.9466791925943157
       },
       "isLocked": false,
-      "linkedName": "SourceScoring"
+      "linkedName": "5Source_SubSideBypass#2_End"
     },
     {
       "anchor": {
-        "x": 4.838981432599097,
+        "x": 2.9066934025451485,
         "y": 4.098792791023527
       },
       "prevControl": {
-        "x": 4.395104166874632,
-        "y": 3.8686342087960273
-      },
-      "nextControl": {
-        "x": 5.282858698323562,
-        "y": 4.328951373251027
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 8.14,
-        "y": 4.12
-      },
-      "prevControl": {
-        "x": 6.781542960689346,
-        "y": 4.35421673091563
+        "x": 1.9066934025451485,
+        "y": 4.098792791023527
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Piece3"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.7,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "RunIntake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.98,
     "maxAcceleration": 5.0,
@@ -59,7 +61,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Scoring To Piece Paths",
+  "folder": "5Source_SubSideBypass",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

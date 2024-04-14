@@ -64,6 +64,10 @@ public final class AllianceFlipUtil {
         return shouldFlip().getAsBoolean() ? redValue : blueValue;
     }
 
+    public static boolean Boolean(boolean blueValue, boolean redValue){
+        return (boolean) Object(blueValue, redValue);
+    }
+
     public static double Number(double blueValue, double redValue){
         return (double) Object(blueValue, redValue);
     }

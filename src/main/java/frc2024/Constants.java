@@ -158,7 +158,7 @@ public final class Constants{
         public static final ScreamPIDConstants DRIVE_TO_TARGET_CONSTANTS = new ScreamPIDConstants(1.5, 0.0, 0.0);
 
         /* PathPlanner Constants */
-        public static final ScreamPIDConstants PATH_TRANSLATION_CONSTANTS = new ScreamPIDConstants(25.0, 0.0, 0.0);
+        public static final ScreamPIDConstants PATH_TRANSLATION_CONSTANTS = new ScreamPIDConstants(18.0, 0.0, 0.0);
         public static final ScreamPIDConstants PATH_ROTATION_CONSTANTS = new ScreamPIDConstants(10.0, 0.0, 0.0);
 
         public static final HolonomicPathFollowerConfig PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(
@@ -361,21 +361,21 @@ public final class Constants{
         public static final int SUPPLY_CURRENT_LIMIT = 40;
         public static final int SUPPLY_CURRENT_THRESHOLD = 50;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
-        public static final boolean CURRENT_LIMIT_ENABLE = false;
+        public static final boolean CURRENT_LIMIT_ENABLE = true;
 
         public static final double CRUISE_VELOCITY = 10;
         public static final double ACCELERATION = 5;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.1, 0.0, 0.0); //0.1
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.125, 0.0, 0.0); //0.1
 
         public static final double KS = 0.0;
-        public static final double KV = 0.1125;
+        public static final double KV = 0.1115;
         public static final double KA = 0.0;
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
 
-        public static final double TARGET_THRESHOLD = 100.0; // rpm
+        public static final double TARGET_THRESHOLD = 100.0 + 50.0; // rpm
 
         public static final double AUTO_SHOOT_VELOCITY_THRESHOLD = 4800; // rpm
         public static final double AUTO_SHOOT_DISTANCE_THRESHOLD = 6.5; // meters
@@ -388,6 +388,7 @@ public final class Constants{
         public static final double CHAIN_VELOCITY = 4000.0;
         public static final double PODIUM_VELOCITY = 3500.0;
         public static final double IDLE_VELOCITY = 1000.0;
+        public static final double BYPASS_START_VELOCITY = 3000.0;
 
         public static final double TRAJECTORY_VELOCITY_EXTRA = 1550.0; //1800
         public static final double ARBITRARY_VELOCITY_EXTRA = 0.0;
@@ -483,11 +484,12 @@ public final class Constants{
         public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(48.516 /* 56.0742 */).plus(PIVOT_ANGLE_OFFSET);
         public static final Rotation2d AMP5_CLOSESHOTS = Rotation2d.fromDegrees(16.25).plus(PIVOT_ANGLE_OFFSET);
         public static final Rotation2d EJECT_ANGLE = CHAIN_ANGLE;
+        public static final Rotation2d BYPASS_START_ANGLE = Rotation2d.fromDegrees(-4.0429);
 
         public static final double AUTO_ZERO_OUTPUT = 0.0;
 
         public static final Rotation2d ABSOLUTE_ENCODER_OFFSET = Rotation2d.fromRotations(0.2470703125); // 0.245849609375
-        public static final Rotation2d RELATIVE_ENCODER_TO_HORIZONTAL = Rotation2d.fromDegrees(44.824).minus(PIVOT_ANGLE_OFFSET); // TODO RE-MEASURE
+        public static final Rotation2d RELATIVE_ENCODER_TO_HORIZONTAL = Rotation2d.fromDegrees(43.417); // TODO RE-MEASURE
 
         public static final double AXLE_HEIGHT_HOME = Units.inchesToMeters(16.640069);
         public static final double AXLE_HEIGHT_TOP = Units.inchesToMeters(38.059638);
@@ -544,6 +546,7 @@ public final class Constants{
         public static final double AMP_HEIGHT = 19.70989;
         public static final double TRAP_CHAIN_HEIGHT = MAX_HEIGHT;
         public static final double EJECT_HEIGHT = MAX_HEIGHT/4.0;
+        public static final double BYPASS_START_HEIGHT = 3.464;
 
         public static final double REHOME_VOLTAGE = -5.0;
         public static final double REHOME_CURRENT_THRESHOLD = 0.0;
@@ -608,7 +611,8 @@ public final class Constants{
         SUBWOOFER_DEFENDED(ElevatorConstants.MAX_HEIGHT, PivotConstants.SUBWOOFER_ANGLE_DEFENDED),
         AUTO_FIRE(ElevatorConstants.HOME_HEIGHT, PivotConstants.HOME_ANGLE),
         AMP5_CLOSESHOTS(ElevatorConstants.HOME_HEIGHT, PivotConstants.AMP5_CLOSESHOTS),
-        EJECT(ElevatorConstants.EJECT_HEIGHT, PivotConstants.EJECT_ANGLE);
+        EJECT(ElevatorConstants.EJECT_HEIGHT, PivotConstants.EJECT_ANGLE),
+        BYPASS_START(ElevatorConstants.BYPASS_START_HEIGHT, PivotConstants.BYPASS_START_ANGLE);
 
         public double elevatorPosition;
         public Rotation2d pivotAngle;
@@ -728,8 +732,9 @@ public final class Constants{
         public static final Translation2d BLUE_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(7).get().getTranslation().toTranslation2d();
         public static final Translation2d RED_SPEAKER = AprilTagFields.kDefaultField.loadAprilTagLayoutField().getTagPose(4).get().getTranslation().toTranslation2d();
 
-        public static final Translation2d SPEAKER_GOAL_OFFSET = new Translation2d(Units.inchesToMeters(13.5), Units.inchesToMeters(12.0));
-
+        public static final Translation2d SPEAKER_GOAL_OFFSET_RIGHT = new Translation2d(Units.inchesToMeters(13.5), Units.inchesToMeters(12.0));
+        public static final Translation2d SPEAKER_GOAL_OFFSET_LEFT = new Translation2d(Units.inchesToMeters(5.0), Units.inchesToMeters(12.0));
+        
         public static final double SPEAKER_OPENING_HEIGHT = Units.inchesToMeters(80.567496); // 80.567496 - 3.0
 
         public static final double SPEAKER_TAG_HEIGHT = 1.468864;

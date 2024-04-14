@@ -1,0 +1,112 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.407706324685116,
+        "y": 5.539225686154654
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.7590314210585614,
+        "y": 5.059081387777612
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.7310308543584263,
+        "y": 4.836575493407763
+      },
+      "prevControl": {
+        "x": 2.2377655383999344,
+        "y": 4.918363805973614
+      },
+      "nextControl": {
+        "x": 3.224296170316918,
+        "y": 4.754787180841912
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.405680480405183,
+        "y": 4.836575493407763
+      },
+      "prevControl": {
+        "x": 3.907829872409133,
+        "y": 4.8828871778725125
+      },
+      "nextControl": {
+        "x": 4.909246451873788,
+        "y": 4.789732147224637
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.6001858080748965,
+        "y": 4.098792791023527
+      },
+      "prevControl": {
+        "x": 5.179050107744143,
+        "y": 4.36831963923521
+      },
+      "nextControl": {
+        "x": 5.892956721719433,
+        "y": 3.911419406291023
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.281967377058862,
+        "y": 4.098792791023527
+      },
+      "prevControl": {
+        "x": 7.281967377058862,
+        "y": 4.098792791023527
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "5FrontSub_Bypass#1_End"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.65,
+      "maxWaypointRelativePos": 1.35,
+      "constraints": {
+        "maxVelocity": 2.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 570.0,
+        "maxAngularAcceleration": 360.0
+      }
+    }
+  ],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.98,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 570.0,
+    "maxAngularAcceleration": 360.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "5FrontSub_Bypass",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

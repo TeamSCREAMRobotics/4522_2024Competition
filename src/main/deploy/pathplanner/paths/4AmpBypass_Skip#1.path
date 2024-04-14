@@ -3,45 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.300282951493148,
-        "y": 5.855418272890754
+        "x": 8.281967377058862,
+        "y": 7.436381206571257
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.31199378803893,
-        "y": 4.848286329953544
+        "x": 7.274835434121652,
+        "y": 7.424670370025476
       },
       "isLocked": false,
-      "linkedName": "4AmpBypass#4_End"
+      "linkedName": "Piece1"
     },
     {
       "anchor": {
-        "x": 5.541631625345989,
-        "y": 4.180768646843998
+        "x": 8.281967377058862,
+        "y": 5.773442417070284
       },
       "prevControl": {
-        "x": 4.292650681869197,
-        "y": 4.231232523348112
-      },
-      "nextControl": {
-        "x": 6.041224002736702,
-        "y": 4.160583096242354
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 8.14,
-        "y": 4.12
-      },
-      "prevControl": {
-        "x": 7.144303382641105,
-        "y": 4.12
+        "x": 7.281967377058862,
+        "y": 5.773442417070284
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Piece3"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -49,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 1.75,
+      "waypointRelativePos": 0.65,
       "command": {
         "type": "parallel",
         "data": {
@@ -67,13 +51,13 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.98,
-    "maxAcceleration": 5.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 570.0,
-    "maxAngularAcceleration": 500.0
+    "maxAngularAcceleration": 360.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -27.758540601060062,
     "rotateFast": false
   },
   "reversed": false,
@@ -82,5 +66,5 @@
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 4.920957288419569,
-        "y": 6.464381773271393
+        "x": 4.452523826588308,
+        "y": 6.4292492636340475
       },
       "prevControl": {
-        "x": 5.7940427485105435,
-        "y": 6.951948978257261
+        "x": 5.325609286679283,
+        "y": 6.916816468619915
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "AutoWingScoring"
+      "linkedName": "4AmpBypass#2_End"
     }
   ],
   "rotationTargets": [],
