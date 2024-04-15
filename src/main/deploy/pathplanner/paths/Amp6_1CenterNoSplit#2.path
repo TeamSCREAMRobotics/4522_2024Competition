@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.059461482689013,
-        "y": 7.471513716208602
+        "x": 8.106304828872139,
+        "y": 7.588622081666418
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.04775064614323,
-        "y": 7.237296985292972
+        "x": 7.555895511220408,
+        "y": 7.483224552754384
       },
       "isLocked": false,
       "linkedName": "Amp6_1Center#1_SplittingEnd"
@@ -20,8 +20,8 @@
         "y": 6.0076591479859145
       },
       "prevControl": {
-        "x": 4.979511471148476,
-        "y": 6.113056676897948
+        "x": 4.710162230595501,
+        "y": 6.558068465637644
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,9 +33,9 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.98,
-    "maxAcceleration": 5.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 570.0,
-    "maxAngularAcceleration": 500.0
+    "maxAngularAcceleration": 360.0
   },
   "goalEndState": {
     "velocity": 0,
@@ -48,5 +48,5 @@
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

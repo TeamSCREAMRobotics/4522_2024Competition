@@ -18,11 +18,13 @@ import com.team6328.GeomUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.filter.MedianFilter;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -92,9 +94,7 @@ public class PoseShooting extends Command {
   public void execute() {
     double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getEstimatedPose().getTranslation(), targetPoint);
     
-    targetPoint = (AllianceFlipUtil.Boolean(swerve.getEstimatedPose().getY() > 5.25, swerve.getEstimatedPose().getY() < 5.25)) ? 
-      speaker.plus(FieldConstants.SPEAKER_GOAL_OFFSET_LEFT.times(directionCoefficient))
-      : speaker.plus(FieldConstants.SPEAKER_GOAL_OFFSET_RIGHT.times(directionCoefficient));
+    targetPoint = ShootingUtil.determineGoalLocation(swerve.getEstimatedPose(), swerve);
 
     ShootState targetState = ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight());
     Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation(), targetPoint).minus(new Rotation2d(Math.PI));
@@ -103,7 +103,7 @@ public class PoseShooting extends Command {
     Rotation2d adjustedPivotAngle = 
       Rotation2d.fromDegrees(
         MathUtil.clamp(
-          targetState.pivotAngle().getDegrees() - (!isDefended.getAsBoolean() ? (horizontalDistance / 2.0) : 0), 
+          targetState.pivotAngle().getDegrees() - (!isDefended.getAsBoolean() ? (horizontalDistance / 2.6) : 0), 
           elevator.getElevatorHeight() > 1.5 ? PivotConstants.SUBWOOFER_ANGLE.getDegrees() : 1, 
           isDefended.getAsBoolean() ? 44 : 28)
       );
@@ -144,5 +144,17 @@ public class PoseShooting extends Command {
     }
 
     return Rotation2d.fromDegrees(m_angleFilter.calculate(rotation.getDegrees()));
+  }
+
+  private Translation2d determineGoalLocation(Pose2d pose){
+    if(pose.getY() < 6.0 && pose.getY() > 5.0){
+      return speaker.plus(FieldConstants.SPEAKER_GOAL_OFFSET_CENTER.times(directionCoefficient));
+    } else if(AllianceFlipUtil.Boolean(swerve.getEstimatedPose().getY() > 6.0, swerve.getEstimatedPose().getY() < 5.0)) {
+      return speaker.plus(FieldConstants.SPEAKER_GOAL_OFFSET_LEFT.times(directionCoefficient));
+    } else if(AllianceFlipUtil.Boolean(swerve.getEstimatedPose().getY() < 5.0, swerve.getEstimatedPose().getY() > 6.0)) {
+      return speaker.plus(FieldConstants.SPEAKER_GOAL_OFFSET_RIGHT.times(directionCoefficient));
+    } else {
+      return speaker;
+    }
   }
 }

@@ -51,7 +51,7 @@ public class AutoPoseShootingContinuous extends Command {
   Shooter shooter;
   Conveyor conveyor;
 
-  Translation2d targetSpeaker;
+  Translation2d targetPoint;
   double directionCoefficient;
 
   Rotation2d overrideAngle = null;
@@ -72,18 +72,19 @@ public class AutoPoseShootingContinuous extends Command {
   @Override
   public void initialize() {
     directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();
-    targetSpeaker = AllianceFlipUtil.getTargetSpeaker().getTranslation().plus(FieldConstants.SPEAKER_GOAL_OFFSET_RIGHT.times(directionCoefficient));
+    targetPoint = AllianceFlipUtil.getTargetSpeaker().getTranslation().plus(FieldConstants.SPEAKER_GOAL_OFFSET_RIGHT.times(directionCoefficient));
   }
 
   @Override
   public void execute() {
-    double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getEstimatedPose().getTranslation(), targetSpeaker);
+    double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getEstimatedPose().getTranslation(), targetPoint);
+    targetPoint = ShootingUtil.determineGoalLocation(swerve.getEstimatedPose(), swerve);
     ShootState targetState = ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight());
-    Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation(), targetSpeaker).minus(new Rotation2d(Math.PI));
+    Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation(), targetPoint).minus(new Rotation2d(Math.PI));
     Rotation2d adjustedPivotAngle = 
       Rotation2d.fromDegrees(
         MathUtil.clamp(
-          targetState.pivotAngle().getDegrees() - (horizontalDistance / 2.0), 
+          targetState.pivotAngle().getDegrees() - (horizontalDistance / 3.0), 
           1, 
           28)
       );

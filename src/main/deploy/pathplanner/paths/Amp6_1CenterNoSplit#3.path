@@ -3,37 +3,49 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.339994354739065,
-        "y": 3.103371684632099
+        "x": 4.042644547485956,
+        "y": 6.0076591479859145
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.089487893669082,
-        "y": 1.7800471549587875
+        "x": 5.248860711701451,
+        "y": 7.202164475655628
       },
       "isLocked": false,
-      "linkedName": "Source3_Center2To1#2_End"
+      "linkedName": "Amp5_1Center_1End"
     },
     {
       "anchor": {
-        "x": 8.012618136505887,
-        "y": 0.8666019043878308
+        "x": 8.071172319234796,
+        "y": 5.808574926707628
       },
       "prevControl": {
-        "x": 6.810086212033044,
-        "y": 0.9718098153072174
+        "x": 7.052329539751803,
+        "y": 6.534646792546081
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Source3_Center2To1#3_End"
+      "linkedName": "Amp6_1CenterNoSplit#3_End"
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.8,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 3.5,
+        "maxAcceleration": 3.5,
+        "maxAngularVelocity": 570.0,
+        "maxAngularAcceleration": 500.0
+      }
+    }
+  ],
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.85,
+      "waypointRelativePos": 0.65,
       "command": {
         "type": "parallel",
         "data": {
@@ -51,20 +63,20 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.98,
-    "maxAcceleration": 4.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 570.0,
-    "maxAngularAcceleration": 360.0
+    "maxAngularAcceleration": 500.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -9.090276920822319,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "3Source_Center2-1",
+  "folder": "Amp6_SplitOff",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

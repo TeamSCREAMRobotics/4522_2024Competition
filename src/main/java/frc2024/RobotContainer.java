@@ -301,8 +301,8 @@ public class RobotContainer {
                 new InstantCommand(() -> currentState = SuperstructureState.AUTO_FIRE)
                     .andThen(
                         new ConditionalCommand(
-                            new Feed(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_intake, m_led),
-                            new PoseShooting(Controlboard.getTranslation(), Controlboard.defendedMode(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_intake, m_led), 
+                            new Feed(Controlboard.getTranslation(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_intake, m_led).withInterruptBehavior(InterruptionBehavior.kCancelIncoming),
+                            new PoseShooting(Controlboard.getTranslation(), Controlboard.defendedMode(), m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_intake, m_led).withInterruptBehavior(InterruptionBehavior.kCancelIncoming), 
                             () -> ScreamUtil.calculateDistanceToTranslation(() -> m_swerve.getEstimatedPose().getTranslation(), () -> AllianceFlipUtil.getTargetSpeaker().getTranslation()).getAsDouble() >= Units.feetToMeters(25.0))))
             .onFalse(new GoHome(true, m_pivot, m_elevator, m_conveyor, m_intake));
 
@@ -436,8 +436,9 @@ public class RobotContainer {
             new PPEvent("Relocalize", new InstantCommand(() -> m_swerve.resetOdometryPoseCommand()))
         );
 
+        //TODO clean up
         Autonomous.addRoutines(
-            Routines.Amp4Close(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("Amp_4_Close"),
+            Routines.Amp4Close(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("Amp_4_Close"), //Tested
             Routines.Amp5_1Center(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_5.5_Close&Center"),
             //Routines.Amp6Center(m_swerve, m_elevator, m_pivot, m_intake, m_conveyor).withName("Amp_6_Close&Center"),
             //Routines.Source4Center(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_led).withName("Source_4_Center&Stage"),
@@ -448,14 +449,14 @@ public class RobotContainer {
             Routines.Amp5_Stage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_5_Close&Center"),
             Routines.Amp5_NoStage_2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp5_NoStage_2"),
             Routines.Amp5_1Center_Piece1(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp5.5_Piece1"),
-            Routines.Amp6_SplitOff(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp6_SplitOff"),
+            Routines.Amp6_SplitOff(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp6_SplitOff"), //Tested
             Routines.Source3_NoStage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Center&NoStage"),
             Routines.Source3_Stage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Stage"),
             Routines.Source2_1Sweep(m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_intake, m_led).withName("Source2_Sweep1"),
-            Routines.Amp4Bypass_WithSkip_Relocalize(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp4_Bypass"),
+            Routines.Amp4Bypass_WithSkip_Relocalize(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp4_Bypass"), //Tested
             Routines.Center2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Center2"),
-            Routines.Front5Sub_CenterRush(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Front5Sub_CenterRush"),
-            Routines.Source3_Center2To1(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Center2To1"),
+            Routines.Front5Sub_CenterRush(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Front5Sub_CenterRush"), //Tested
+            Routines.Source3_Center2To1(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Center2To1"), //Tested
 
             // Routines.Amp_1To2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_1-2"),
             // Routines.Amp_2To3(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_2-3"),
@@ -464,8 +465,8 @@ public class RobotContainer {
             // Routines.Amp_2To1(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_2-1"),
 
             Routines.Leave(m_swerve, 2.0).withName("Leave"),
-            Routines.testAuto(m_swerve).withName("test"),
-            Routines.Amp4Close_FastShootTest(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("4CloseTest")
+            Routines.testAuto(m_swerve).withName("test")
+            // Routines.Amp4Close_FastShootTest(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("4CloseTest")
         );
     }
 

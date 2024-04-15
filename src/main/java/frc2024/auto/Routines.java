@@ -51,7 +51,7 @@ public class Routines {
     private static final PathSequence Amp5_1Center = new PathSequence(Side.AMP,  "Amp5_1Center#1", "Amp5_1Center#2");
     private static final PathSequence Amp5_NoStage_2 = new PathSequence(Side.AMP, "Amp5_NoStage");
     private static final PathSequence Amp5_1Center_Piece1 = new PathSequence(Side.AMP, "Amp5_1Center_1#1", "Amp5_1Center_1#2", "Amp5_1Center_1#3");
-    private static final PathSequence Amp6_SplitOff = new PathSequence(Side.AMP, "Amp6_1Center#1", "Amp6_1CenterNoSplit#2", "Amp6_1CenterSplit#2", "Amp5_1Center_1#3");
+    private static final PathSequence Amp6_SplitOff = new PathSequence(Side.AMP, "Amp6_1Center#1", "Amp6_1CenterNoSplit#2", "Amp6Split_Skip_Relocalize#1","Amp5_1Center_1#3", "Amp6_1CenterNoSplit#3", "Amp6_1CenterSplit#3");
     private static final PathSequence Amp6Center = new PathSequence(Side.AMP, "Amp6Center#1", "Amp6Center#2", "Amp6Center#3");
     private static final PathSequence Source4Center = new PathSequence(Side.SOURCE, "Source4Center#1", "Source4Center#3");
     private static final PathSequence Amp4Center = new PathSequence(Side.AMP, "Amp4Center#1", "Amp4Center#2", "Amp4Center#3");
@@ -67,7 +67,7 @@ public class Routines {
     private static final PathSequence Amp4Bypass = new PathSequence(Side.AMP, "4AmpBypass#1", "4AmpBypass#2", "4AmpBypass#3", "4AmpBypass#4", "4AmpBypass#5", "4AmpBypass#6", /* Skips */ "4AmpBypass_Skip_Relocalize#1", "4AmpBypass_Skip_Relocalize#2");
     private static final PathSequence Center2 = new PathSequence(Side.CENTER, "Center3#1", "Center3#2");
     private static final PathSequence Front5Sub_CenterRush = new PathSequence(Side.AMP, "5FrontSub_CenterRush#1", "5FrontSub_CenterRush#2", "5FrontSub_CenterRush#3", "5FrontSub_CenterRush#4");
-    private static final PathSequence Source3_Center2To1 = new PathSequence(Side.CENTER, "Source3_Center2To1#1", "Source3_Center2To1#2", "Source3_Center2To1#3", "Source3_Center2To1#4", "Source3_Center2To1#5");
+    private static final PathSequence Source3_Center2To1 = new PathSequence(Side.CENTER, "Source3_Center2To1#1", "Source3_Center2To1#2", "Source3_Center2To1#3", "Source3_Center2To1#4", "Source3_Center2To1#5", "Source3_Center2To1_Skip");
 
     private static PathSequence getCurrentSequence(){
         return currentSequence;
@@ -89,14 +89,17 @@ public class Routines {
             new ShootSequence(SuperstructureState.SUBWOOFER, ShooterConstants.SUBWOOFER_VELOCITY, elevator, pivot, shooter, conveyor),
             // new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
             Amp4Close.getIndex(0),
-            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(1.5),
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+            swerve.resetOdometryPoseCommand(),
             Amp4Close.getIndex(1),
-            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(1.5),
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+            swerve.resetOdometryPoseCommand(),
             Amp4Close.getIndex(2),
-            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(1.5),
-            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+            swerve.resetOdometryPoseCommand()
         );
     }
 
@@ -332,15 +335,18 @@ public class Routines {
                     new SequentialCommandGroup(
                         Amp6_SplitOff.getIndex(1),
                         new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-                        Amp5_1Center_Piece1.getIndex(1),
-                        new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(1.0),
-                        Amp5_1Center_Piece1.getIndex(2),
-                        new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
+                        swerve.resetOdometryPoseCommand(),
+                        Amp6_SplitOff.getIndex(4),
+                        new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
+                        Amp6_SplitOff.getIndex(5),
+                        new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+                        swerve.resetOdometryPoseCommand()
                     ),
                     new SequentialCommandGroup(
                         Amp6_SplitOff.getIndex(2),
                         Amp6_SplitOff.getIndex(3),
-                        new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor)
+                        new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+                        swerve.resetOdometryPoseCommand()
                     ),
                     conveyor.hasPiece(false)){
                 }
@@ -523,8 +529,8 @@ public class Routines {
             Amp4Bypass.getIndex(0),
             new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
 
-            new ConditionalCommand(
-                new SequentialCommandGroup(
+            new ConditionalCommand( //First pick up note check
+                new SequentialCommandGroup( //If first note is picked up
                         new InstantCommand(() -> shooter.velocityCommand(4500.0)),
                     Amp4Bypass.getIndex(1).alongWith(
                         new InstantCommand(() -> pivot.angleCommand(Rotation2d.fromDegrees(23.0)))), //Arbitrary Pivot Angle
@@ -532,61 +538,70 @@ public class Routines {
                     swerve.resetOdometryPoseCommand(),
                     Amp4Bypass.getIndex(2),
                     new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
-                        new ConditionalCommand(
-                            new SequentialCommandGroup(
+                        new ConditionalCommand( //Second pick up note check
+                            new SequentialCommandGroup( //If second note is picked up
                                 Amp4Bypass.getIndex(3),
                                 new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
                                 swerve.resetOdometryPoseCommand(),
                                 Amp4Bypass.getIndex(4),
                                 new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
-                                    new ConditionalCommand(
-                                        new SequentialCommandGroup(
+                                    new ConditionalCommand( //Third pick up note check
+                                        new SequentialCommandGroup( //If third note is picked up
                                             Amp4Bypass.getIndex(5),
                                             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
                                             swerve.resetOdometryPoseCommand()
-                                        ), new SequentialCommandGroup(
-                                            new InstantCommand(
-                                                () -> DriverStation.reportWarning("No Note", false))
+                                        ), new SequentialCommandGroup( //If third note is not picked up
+                                           
                                         ), getHasPiece(conveyor))
-                            ), new SequentialCommandGroup(
+                            ), new SequentialCommandGroup( //If second note is not picked up
                                 Amp4Bypass.getIndex(7),
                                 new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
-                                    new ConditionalCommand(
+                                    new ConditionalCommand( //If third note is picked up
                                         new SequentialCommandGroup(
                                             Amp4Bypass.getIndex(5),
                                             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
                                             swerve.resetOdometryPoseCommand()
-                                        ), new SequentialCommandGroup(
-                                            
+                                        ), new SequentialCommandGroup( //If third note is not picked up
+                                           
                                         ), getHasPiece(conveyor))
                             ), getHasPiece(conveyor))
-                ), new SequentialCommandGroup(
+                ), new SequentialCommandGroup( //If first note is not picked up
                     Amp4Bypass.getIndex(6),
                     new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
-                        new ConditionalCommand(
-                            new SequentialCommandGroup(
+                        new ConditionalCommand( //Second pick up note check
+                            new SequentialCommandGroup( //If second note is picked up
                                 new InstantCommand(() -> shooter.velocityCommand(4500.0)),
                                 Amp4Bypass.getIndex(3).alongWith(
                                     new InstantCommand(() -> pivot.angleCommand(Rotation2d.fromDegrees(23.0)))),
                                 new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
                                 swerve.resetOdometryPoseCommand(),
                                 Amp4Bypass.getIndex(4),
-                                new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5)
-                            ), new SequentialCommandGroup(
-                                Amp4Bypass.getIndex(7),
                                 new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
-                                    new ConditionalCommand(
-                                        new SequentialCommandGroup(
+                                    new ConditionalCommand( //Third pick up note check
+                                        new SequentialCommandGroup( //If third note is picked up
                                             Amp4Bypass.getIndex(5),
                                             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
                                             swerve.resetOdometryPoseCommand()
-                                        ), new SequentialCommandGroup(
-                                            
+                                        ), new SequentialCommandGroup( //If third note is not picked up
+
+
+                                        ), getHasPiece(conveyor))
+                            ), new SequentialCommandGroup( //If second note is not picked up
+                                Amp4Bypass.getIndex(7),
+                                new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
+                                    new ConditionalCommand( //Third pick up note check
+                                        new SequentialCommandGroup( //If third note is picked up
+                                            Amp4Bypass.getIndex(5),
+                                            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+                                            swerve.resetOdometryPoseCommand()
+                                        ), new SequentialCommandGroup( //if third note is not picked up
+                                           
                                         ), getHasPiece(conveyor))
                             ), getHasPiece(conveyor))
                 ), getHasPiece(conveyor))
         );
     }
+
 
     public static Command Center2(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
         currentSequence = Center2;
@@ -641,6 +656,45 @@ public class Routines {
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
             swerve.resetOdometryPoseCommand(),
             Source3_Center2To1.getIndex(4)
+        );
+    }
+
+    public static Command Source3_Center2To1_WithSkip(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
+        currentSequence = Source3_Center2To1;
+        return new SequentialCommandGroup(
+            swerve.resetPoseCommand(Source3_Center2To1.getStartingPose()),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+            swerve.resetOdometryPoseCommand(),
+            Source3_Center2To1.getIndex(0),
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
+
+            new ConditionalCommand(
+                new SequentialCommandGroup(
+                    new InstantCommand(() -> shooter.velocityCommand(4500.0)),
+                    Source3_Center2To1.getIndex(1),
+                    new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+                    swerve.resetOdometryPoseCommand(),
+                    Source3_Center2To1.getIndex(2),
+                    new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
+                    new InstantCommand(() -> shooter.velocityCommand(4500.0)),
+                    Source3_Center2To1.getIndex(3),
+                    new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+                    swerve.resetOdometryPoseCommand(),
+                    Source3_Center2To1.getIndex(4)
+                ), new SequentialCommandGroup(
+                    Source3_Center2To1.getIndex(5),
+                    new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
+                        new ConditionalCommand(
+                            new SequentialCommandGroup(
+                                new InstantCommand(() -> shooter.velocityCommand(4500.0)),
+                                Source3_Center2To1.getIndex(3),
+                                new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+                                swerve.resetOdometryPoseCommand(),
+                                Source3_Center2To1.getIndex(4)
+                            ), new SequentialCommandGroup(
+                                
+                            ), getHasPiece(conveyor))
+                ), getHasPiece(conveyor))
         );
     }
 

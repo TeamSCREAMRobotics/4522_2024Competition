@@ -88,16 +88,16 @@ public class AutoPoseShooting extends Command {
   public void execute() {
     double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getEstimatedPose().getTranslation(), targetPoint);
     
-    targetPoint = (AllianceFlipUtil.Boolean(swerve.getEstimatedPose().getY() > 5.25, swerve.getEstimatedPose().getY() < 5.25)) ? 
+    targetPoint = ShootingUtil.determineGoalLocation(swerve.getEstimatedPose(), swerve); /* (AllianceFlipUtil.Boolean(swerve.getEstimatedPose().getY() > 5.25, swerve.getEstimatedPose().getY() < 5.25)) ? 
       speaker.plus(FieldConstants.SPEAKER_GOAL_OFFSET_LEFT.times(directionCoefficient))
-      : speaker.plus(FieldConstants.SPEAKER_GOAL_OFFSET_RIGHT.times(directionCoefficient));
+      : speaker.plus(FieldConstants.SPEAKER_GOAL_OFFSET_RIGHT.times(directionCoefficient)); */
       
     ShootState targetState = ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight());
     Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation(), targetPoint).minus(new Rotation2d(Math.PI));
     Rotation2d adjustedPivotAngle = 
       Rotation2d.fromDegrees(
         MathUtil.clamp(
-          targetState.pivotAngle().getDegrees() - (horizontalDistance / 2.0), 
+          targetState.pivotAngle().getDegrees() - (horizontalDistance / 2.6), 
           1, 
           28)
       );
@@ -111,9 +111,9 @@ public class AutoPoseShooting extends Command {
     pivot.setTargetAngle(adjustedPivotAngle);
 
     if((shooter.getShooterAtTarget().getAsBoolean() && pivot.getPivotAtTarget().getAsBoolean() && shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD) || (timeout.hasElapsed(1.5) && shouldTimeout)){
-      DriverStation.reportWarning("Shooter At Target: " + shooter.getShooterAtTarget().getAsBoolean() + " Pivot: " + pivot.getPivotAtTarget().getAsBoolean() + " Shooter Greater: " + (shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD), false);
-      DriverStation.reportWarning("Top Shooter: " + shooter.getTopShooterRPMs() + " Bottom Shooter: " + shooter.getBootomShooterRPMs(), false);
-      DriverStation.reportWarning("getShooterError_WithIn: " + shooter.getShooterError_WithIn() + " getShooterOver: " + shooter.getShooterOver(), false);
+      // DriverStation.reportWarning("Shooter At Target: " + shooter.getShooterAtTarget().getAsBoolean() + " Pivot: " + pivot.getPivotAtTarget().getAsBoolean() + " Shooter Greater: " + (shooter.getRPM() > ShooterConstants.TARGET_THRESHOLD), false);
+      // DriverStation.reportWarning("Top Shooter: " + shooter.getTopShooterRPMs() + " Bottom Shooter: " + shooter.getBootomShooterRPMs(), false);
+      // DriverStation.reportWarning("getShooterError_WithIn: " + shooter.getShooterError_WithIn() + " getShooterOver: " + shooter.getShooterOver(), false);
       conveyor.setConveyorOutput(ConveyorConstants.SHOOT_OUTPUT);
     }
   }

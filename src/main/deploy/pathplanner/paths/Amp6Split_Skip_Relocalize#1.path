@@ -8,44 +8,67 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.778401405590256,
-        "y": 6.979658581285779
+        "x": 5.986643414085685,
+        "y": 6.0076591479859145
       },
       "isLocked": false,
       "linkedName": "Amp6_1Center#1_SplittingEnd"
     },
     {
       "anchor": {
-        "x": 7.848666424864946,
-        "y": 5.6212015419751244
+        "x": 8.281967377058862,
+        "y": 5.773442417070284
       },
       "prevControl": {
-        "x": 7.555895511220409,
-        "y": 6.4175384270882665
+        "x": 7.309967943758997,
+        "y": 4.941973022319797
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Amp5_1Center_1#2End"
+      "linkedName": "4AmpBypass_Skip_Relocalize#1_End"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 33.63139291309288,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 1.0,
+      "minWaypointRelativePos": 0.3,
+      "maxWaypointRelativePos": 0.65,
       "constraints": {
-        "maxVelocity": 2.0,
-        "maxAcceleration": 2.5,
+        "maxVelocity": 1.0,
+        "maxAcceleration": 1.5,
         "maxAngularVelocity": 570.0,
-        "maxAngularAcceleration": 500.0
+        "maxAngularAcceleration": 360.0
       }
     }
   ],
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.7,
+      "waypointRelativePos": 0.5,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Relocalize"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.65,
       "command": {
         "type": "parallel",
         "data": {
@@ -63,20 +86,20 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.98,
-    "maxAcceleration": 5.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 570.0,
-    "maxAngularAcceleration": 500.0
+    "maxAngularAcceleration": 360.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -87.90474743537615,
+    "rotation": 1.1233027140754641,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Amp6_SplitOff",
   "previewStartingState": {
-    "rotation": -74.89890183861456,
+    "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

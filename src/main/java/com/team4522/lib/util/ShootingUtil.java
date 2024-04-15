@@ -3,6 +3,7 @@ package com.team4522.lib.util;
 import com.team4522.lib.math.Conversions;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.Interpolator;
@@ -15,6 +16,7 @@ import frc2024.Constants.PivotConstants;
 import frc2024.Constants.ShootState;
 import frc2024.Constants.ShooterConstants;
 import frc2024.Constants.VisionConstants;
+import frc2024.subsystems.swerve.Swerve;
 
 public class ShootingUtil {
 
@@ -34,7 +36,7 @@ public class ShootingUtil {
       //double tof = calculateTOF(elevatorHeightInches, targetHeightMeters);
       double velocityRPM = horizontalDistance * (1500.0 - 100.0); // - 300.0
 
-      return new ShootState(adjustedAngle, VisionConstants.SHOOT_STATE_MAP.get(Units.metersToFeet(horizontalDistance)).elevatorHeightInches(), velocityRPM);
+      return new ShootState(adjustedAngle, VisionConstants.ELEVATOR_HEIGHT_MAP.get(Units.metersToFeet(horizontalDistance)), velocityRPM);
     }
 
     public static ShootState oldCalculateShootState(double targetHeightMeters, double horizontalDistance, double elevatorHeightInches){
@@ -72,5 +74,19 @@ public class ShootingUtil {
 
     public static Translation2d calculateCurveOffset(double horizontalDistance){
       return new Translation2d(0, MathUtil.interpolate(0.3, 1.0, horizontalDistance / 6.0) * AllianceFlipUtil.getDirectionCoefficient());
+    }
+      
+    public static Translation2d determineGoalLocation(Pose2d pose, Swerve swerve){
+      Translation2d speaker = AllianceFlipUtil.getTargetSpeaker().getTranslation();
+      int directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();
+      if(pose.getY() < 6.0 && pose.getY() > 5.0){
+        return speaker.plus(FieldConstants.SPEAKER_GOAL_OFFSET_CENTER.times(directionCoefficient));
+      } else if(AllianceFlipUtil.Boolean(swerve.getEstimatedPose().getY() > 6.0, swerve.getEstimatedPose().getY() < 5.0)) {
+        return speaker.plus(FieldConstants.SPEAKER_GOAL_OFFSET_LEFT.times(directionCoefficient));
+      } else if(AllianceFlipUtil.Boolean(swerve.getEstimatedPose().getY() < 5.0, swerve.getEstimatedPose().getY() > 6.0)) {
+        return speaker.plus(FieldConstants.SPEAKER_GOAL_OFFSET_RIGHT.times(directionCoefficient));
+      } else {
+        return speaker;
+      }
     }
 }
