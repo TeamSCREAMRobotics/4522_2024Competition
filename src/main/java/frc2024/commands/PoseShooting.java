@@ -110,7 +110,7 @@ public class PoseShooting extends Command {
 
     swerve.setChassisSpeeds(swerve.snappedFieldRelativeSpeeds(translation, targetAngle, Rotation2d.fromDegrees(1.5)));
     elevator.setTargetHeight(isDefended.getAsBoolean() && swerve.atAngleThreshold(targetAngle, Rotation2d.fromDegrees(45.0)) ? ElevatorConstants.MAX_HEIGHT : targetState.elevatorHeightInches());
-    shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM() + ShooterConstants.ARBITRARY_VELOCITY_EXTRA, /* 3500.0 */4000.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
+    shooter.setTargetVelocity(MathUtil.clamp(targetState.velocityRPM() + ShooterConstants.ARBITRARY_VELOCITY_EXTRA, 3500.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
     pivot.setTargetAngle(adjustedPivotAngle);
 
     System.out.println("shooter: " + shooter.getShooterAtTarget().getAsBoolean());
