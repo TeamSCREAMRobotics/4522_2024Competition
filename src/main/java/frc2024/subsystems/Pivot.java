@@ -62,6 +62,8 @@ public class Pivot extends SubsystemBase{
         m_encoder = new CANcoder(Ports.PIVOT_ENCODER_ID, Ports.RIO_CANBUS_NAME);
          
         configureDevices(PivotConstants.SOFTWARE_LIMIT_ENABLE, PivotConstants.FORWARD_SOFT_LIMIT_ENDGAME, PivotConstants.REVERSE_SOFT_LIMIT_ENDGAME);
+
+        m_pivotMotor.getConfigurator().apply(PivotConstants.PID_CONSTANTS.toSlot0Configs(PivotConstants.FEEDFORWARD_CONSTANTS));
         
         OrchestraUtil.add(m_pivotMotor);
     }

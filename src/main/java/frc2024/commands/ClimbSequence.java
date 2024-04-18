@@ -56,6 +56,7 @@ public class ClimbSequence extends Command {
     led.rainbow(10, 1.5);
     Translation2d translation = new Translation2d(this.translation[0].getAsDouble(), this.translation[1].getAsDouble()).times((SwerveConstants.MAX_SPEED / 2.0));
     double rotation = this.rotation.getAsDouble() * (SwerveConstants.MAX_ANGULAR_VELOCITY / 2.0);
+    System.out.println(manualMode + " " + elevatorVoltage.getAsDouble());
     switch(index){
       case 0:
         swerve.setChassisSpeeds(swerve.robotRelativeSpeeds(translation, rotation));
@@ -63,7 +64,7 @@ public class ClimbSequence extends Command {
           manualMode = true;
         }
         if(manualMode){
-          elevator.setElevatorVoltage(Math.abs(elevatorVoltage.getAsDouble()) > 2.5 ? elevatorVoltage.getAsDouble() : 0);
+          elevator.setElevatorVoltage(Math.abs(elevatorVoltage.getAsDouble()) > 1.25 ? elevatorVoltage.getAsDouble() : 0);
         } else {
           elevator.setTargetHeight(ElevatorConstants.TRAP_CHAIN_HEIGHT);
         }

@@ -78,7 +78,7 @@ public class AutoPoseShootingContinuous extends Command {
   @Override
   public void execute() {
     double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getEstimatedPose().getTranslation(), targetPoint);
-    targetPoint = ShootingUtil.determineGoalLocation(swerve.getEstimatedPose(), swerve);
+    targetPoint = ShootingUtil.determineGoalLocation(swerve.getEstimatedPose());
     ShootState targetState = ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight());
     Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation(), targetPoint).minus(new Rotation2d(Math.PI));
     Rotation2d adjustedPivotAngle = 

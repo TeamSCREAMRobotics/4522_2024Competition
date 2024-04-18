@@ -241,7 +241,7 @@ public class Controlboard{
     /* Elevator */
     public static final DoubleSupplier getManualElevatorOutput(boolean driverController){
         return () -> driverController
-               ? (-MathUtil.applyDeadband(driverController_Command.getRightY(), STICK_DEADBAND))*9.0
+               ? (Math.signum(-driverController_Command.getRightY()) * Math.pow(-MathUtil.applyDeadband(driverController_Command.getRightY(), STICK_DEADBAND), 2.0)) * 8.0
                : (-MathUtil.applyDeadband(operatorController_Command.getLeftY(), STICK_DEADBAND))*6.0;
     }
 
@@ -288,7 +288,7 @@ public class Controlboard{
     }
     
     public static final Trigger goToSubwooferPositionDefended(){
-        return new Trigger(() -> buttonBoard.getRawButton(10)).and(defendedMode());
+        return new Trigger(() -> buttonBoard.getRawButton(10)).or(driverController_Command.y()).and(defendedMode());
     }
 
     public static final Trigger goToPodiumPositionDefended(){

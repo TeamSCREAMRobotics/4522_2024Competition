@@ -88,7 +88,7 @@ public class AutoPoseShooting extends Command {
   public void execute() {
     double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getEstimatedPose().getTranslation(), targetPoint);
     
-    targetPoint = ShootingUtil.determineGoalLocation(swerve.getEstimatedPose(), swerve); /* (AllianceFlipUtil.Boolean(swerve.getEstimatedPose().getY() > 5.25, swerve.getEstimatedPose().getY() < 5.25)) ? 
+    targetPoint = ShootingUtil.determineGoalLocation(swerve.getEstimatedPose()); /* (AllianceFlipUtil.Boolean(swerve.getEstimatedPose().getY() > 5.25, swerve.getEstimatedPose().getY() < 5.25)) ? 
       speaker.plus(FieldConstants.SPEAKER_GOAL_OFFSET_LEFT.times(directionCoefficient))
       : speaker.plus(FieldConstants.SPEAKER_GOAL_OFFSET_RIGHT.times(directionCoefficient)); */
       

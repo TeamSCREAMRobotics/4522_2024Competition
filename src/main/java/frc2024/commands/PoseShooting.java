@@ -94,7 +94,7 @@ public class PoseShooting extends Command {
   public void execute() {
     double horizontalDistance = ScreamUtil.calculateDistanceToTranslation(swerve.getEstimatedPose().getTranslation(), targetPoint);
     
-    targetPoint = ShootingUtil.determineGoalLocation(swerve.getEstimatedPose(), swerve);
+    targetPoint = ShootingUtil.determineGoalLocation(swerve.getEstimatedPose());
 
     ShootState targetState = ShootingUtil.calculateShootState(FieldConstants.SPEAKER_OPENING_HEIGHT, horizontalDistance, elevator.getElevatorHeight());
     Rotation2d targetAngle = ScreamUtil.calculateAngleToPoint(swerve.getEstimatedPose().getTranslation(), targetPoint).minus(new Rotation2d(Math.PI));
@@ -131,7 +131,9 @@ public class PoseShooting extends Command {
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    elevator.setTargetHeight(ElevatorConstants.HOME_HEIGHT);
+  }
 
   @Override
   public boolean isFinished() {
@@ -144,17 +146,5 @@ public class PoseShooting extends Command {
     }
 
     return Rotation2d.fromDegrees(m_angleFilter.calculate(rotation.getDegrees()));
-  }
-
-  private Translation2d determineGoalLocation(Pose2d pose){
-    if(pose.getY() < 6.0 && pose.getY() > 5.0){
-      return speaker.plus(FieldConstants.SPEAKER_GOAL_OFFSET_CENTER.times(directionCoefficient));
-    } else if(AllianceFlipUtil.Boolean(swerve.getEstimatedPose().getY() > 6.0, swerve.getEstimatedPose().getY() < 5.0)) {
-      return speaker.plus(FieldConstants.SPEAKER_GOAL_OFFSET_LEFT.times(directionCoefficient));
-    } else if(AllianceFlipUtil.Boolean(swerve.getEstimatedPose().getY() < 5.0, swerve.getEstimatedPose().getY() > 6.0)) {
-      return speaker.plus(FieldConstants.SPEAKER_GOAL_OFFSET_RIGHT.times(directionCoefficient));
-    } else {
-      return speaker;
-    }
   }
 }

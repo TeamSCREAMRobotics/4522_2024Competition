@@ -45,14 +45,14 @@ public class GoHome extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    pivot.setTargetAngle(PivotConstants.HOME_ANGLE);
     if(pivotFirst){
-      if(wait.hasElapsed(0.23)) {
+      if(wait.hasElapsed(0.1)) {
         elevator.setTargetHeight(ElevatorConstants.HOME_HEIGHT);
       }
     } else {
       elevator.setTargetHeight(ElevatorConstants.HOME_HEIGHT);
     }
-    pivot.setTargetAngle(PivotConstants.HOME_ANGLE);
   }
 
   // Called once the command ends or is interrupted.

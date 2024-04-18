@@ -59,6 +59,7 @@ import frc2024.auto.Routines;
 import frc2024.commands.AutoFire;
 import frc2024.commands.ClimbSequence;
 import frc2024.commands.Feed;
+import frc2024.commands.FeedForwardCharacterization;
 import frc2024.commands.GoHome;
 import frc2024.commands.Rehome;
 import frc2024.commands.ShooterIdle;
@@ -123,6 +124,7 @@ public class RobotContainer {
     private void configButtonBindings() {
         Controlboard.zeroGyro().onTrue(Commands.runOnce(() -> m_swerve.resetEstimatedHeading(AllianceFlipUtil.getForwardRotation())).ignoringDisable(true));
         Controlboard.resetPose_Apriltag().onTrue(Commands.runOnce(() -> m_swerve.resetPose_Apriltag()).ignoringDisable(true));
+        Controlboard.driverController_Command.povLeft().whileTrue(new FeedForwardCharacterization(m_shooter, m_shooter::setShooterVoltage, m_shooter::getMotorVelocity));
         //Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, new Rotation2d()))));
 
         Controlboard.snapAnglePresent()
@@ -170,9 +172,7 @@ public class RobotContainer {
 
         /* Pivot */
         Controlboard.manualMode()
-            .whileTrue(m_pivot.dutyCycleCommand(Controlboard.getManualPivotOutput())
-                .alongWith(Commands.runOnce(() -> m_pivot.configCurrentLimit(PivotConstants.SPRINGY_CURRENT_CONFIG))))
-            .onFalse(Commands.runOnce(() -> m_pivot.configCurrentLimit(PivotConstants.DEFAULT_CURRENT_CONFIG)));
+            .whileTrue(m_pivot.dutyCycleCommand(Controlboard.getManualPivotOutput()));
         Controlboard.resetPivotAngle().onTrue(Commands.runOnce(() -> m_pivot.resetToAbsolute()).ignoringDisable(true));
         
 
@@ -205,14 +205,12 @@ public class RobotContainer {
                 ); */
 
         Controlboard.goToAmpPosition()
-            .toggleOnTrue(
+            .whileTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.AMP)
-                    .alongWith(Commands.runOnce(() -> m_pivot.configCurrentLimit(PivotConstants.SPRINGY_CURRENT_CONFIG)))
                     .andThen(
                         new SuperstructureToPosition(SuperstructureState.AMP, m_elevator, m_pivot)))
             .onFalse(
-                new GoHome(false, m_pivot, m_elevator, m_conveyor, m_intake)
-                    .alongWith(Commands.runOnce(() -> m_pivot.configCurrentLimit(PivotConstants.DEFAULT_CURRENT_CONFIG))));
+                new GoHome(false, m_pivot, m_elevator, m_conveyor, m_intake).alongWith(new PrintCommand("GoHome")));
 
         Controlboard.goToPodiumPosition()
             .whileTrue(
@@ -250,16 +248,13 @@ public class RobotContainer {
         Controlboard.goToTrapPosition()
             .toggleOnTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.TRAP_CHAIN)
-                    .alongWith(Commands.runOnce(() -> m_pivot.configCurrentLimit(PivotConstants.SPRINGY_CURRENT_CONFIG)))
                     .andThen(
                         new SuperstructureToPosition(SuperstructureState.TRAP_CHAIN, m_elevator, m_pivot)
-                            .alongWith(m_shooter.stopCommand())))
-            .onFalse(Commands.runOnce(() -> m_pivot.configCurrentLimit(PivotConstants.DEFAULT_CURRENT_CONFIG)));
+                            .alongWith(m_shooter.stopCommand())));
 
         Controlboard.autoClimb()
             .toggleOnTrue(
                 new InstantCommand(() -> currentState = SuperstructureState.TRAP_CHAIN)
-                    .alongWith(Commands.runOnce(() -> m_pivot.configCurrentLimit(PivotConstants.SPRINGY_CURRENT_CONFIG)))
                     .andThen(
                         m_elevator.heightCommand(ElevatorConstants.TRAP_CHAIN_HEIGHT))
                     .alongWith(
@@ -267,8 +262,7 @@ public class RobotContainer {
                     .alongWith(
                         m_stabilizers.outputCommand(StabilizerConstants.OUT_OUTPUT)
                             .withTimeout(1)
-                            .andThen(m_stabilizers.stopCommand())))
-            .onFalse(Commands.runOnce(() -> m_pivot.configCurrentLimit(PivotConstants.DEFAULT_CURRENT_CONFIG)));
+                            .andThen(m_stabilizers.stopCommand())));
 
         Controlboard.advanceClimbSequence().and(() -> DriverStation.getMatchTime() <= 30.0)
             .onTrue(
@@ -394,7 +388,7 @@ public class RobotContainer {
             .onFalse(new InstantCommand(() -> m_led.setDefaultCommand(m_led.waveCommand(() -> (Color) AllianceFlipUtil.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, 22, 2)))
                 .andThen(m_led.waveCommand(() -> (Color) AllianceFlipUtil.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, LEDConstants.STRIP_LENGTH / 3.0, 1.5)));
 
-        new Trigger(() -> Timer.getMatchTime() < 20.0).onTrue(m_led.strobeCommand(Color.kWhite, 0.1).withTimeout(1));
+        //new Trigger(() -> Timer.getMatchTime() < 20.0).onTrue(m_led.strobeCommand(Color.kWhite, 0.1).withTimeout(1));
     }
 
     private void configDefaultCommands() { 
@@ -456,7 +450,8 @@ public class RobotContainer {
             Routines.Amp4Bypass_WithSkip_Relocalize(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp4_Bypass"), //Tested
             Routines.Center2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Center2"),
             Routines.Front5Sub_CenterRush(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Front5Sub_CenterRush"), //Tested
-            Routines.Source3_Center2To1(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Center2To1"), //Tested
+            Routines.Source3_Center2To1_WithSkip(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Center2To1"), //Tested
+            Routines.Source3_Center1To2_WithSkip(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Center1To2"),
 
             // Routines.Amp_1To2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_1-2"),
             // Routines.Amp_2To3(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_2-3"),

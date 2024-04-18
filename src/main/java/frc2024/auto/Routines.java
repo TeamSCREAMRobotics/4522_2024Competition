@@ -68,6 +68,7 @@ public class Routines {
     private static final PathSequence Center2 = new PathSequence(Side.CENTER, "Center3#1", "Center3#2");
     private static final PathSequence Front5Sub_CenterRush = new PathSequence(Side.AMP, "5FrontSub_CenterRush#1", "5FrontSub_CenterRush#2", "5FrontSub_CenterRush#3", "5FrontSub_CenterRush#4");
     private static final PathSequence Source3_Center2To1 = new PathSequence(Side.CENTER, "Source3_Center2To1#1", "Source3_Center2To1#2", "Source3_Center2To1#3", "Source3_Center2To1#4", "Source3_Center2To1#5", "Source3_Center2To1_Skip");
+    private static final PathSequence Source3_Center1To2 = new PathSequence(Side.CENTER, "3Source_Center_1-2#1", "3Source_Center_1-2#2", "3Source_Center_1-2#3", "3Source_Center_1-2#4", "3Source_Center_1-2#5", "Source3_Center_1-2Skip");
 
     private static PathSequence getCurrentSequence(){
         return currentSequence;
@@ -697,6 +698,46 @@ public class Routines {
                 ), getHasPiece(conveyor))
         );
     }
+
+    public static Command Source3_Center1To2_WithSkip(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
+        currentSequence = Source3_Center1To2;
+        return new SequentialCommandGroup(
+            swerve.resetPoseCommand(Source3_Center1To2.getStartingPose()),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+            swerve.resetOdometryPoseCommand(),
+            Source3_Center1To2.getIndex(0),
+            new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
+
+            new ConditionalCommand(
+                new SequentialCommandGroup(
+                    new InstantCommand(() -> shooter.velocityCommand(4500.0)),
+                    Source3_Center1To2.getIndex(1),
+                    new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+                    swerve.resetOdometryPoseCommand(),
+                    Source3_Center1To2.getIndex(2),
+                    new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
+                    new InstantCommand(() -> shooter.velocityCommand(4500.0)),
+                    Source3_Center1To2.getIndex(3),
+                    new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+                    swerve.resetOdometryPoseCommand(),
+                    Source3_Center1To2.getIndex(4)
+                ), new SequentialCommandGroup(
+                    Source3_Center1To2.getIndex(5),
+                    new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
+                        new ConditionalCommand(
+                            new SequentialCommandGroup(
+                                new InstantCommand(() -> shooter.velocityCommand(4500.0)),
+                                Source3_Center1To2.getIndex(3),
+                                new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+                                swerve.resetOdometryPoseCommand(),
+                                Source3_Center1To2.getIndex(4)
+                            ), new SequentialCommandGroup(
+                                
+                            ), getHasPiece(conveyor))
+                ), getHasPiece(conveyor))
+        );
+    }
+
 
     /* Amp Side Splitting Sequenced Autos */
     /* Final close4 to starting piece, first piece to scoring, first split, scoring to second piece, second piece to scoring, second split, scoring to third piece, third piece to scoring */

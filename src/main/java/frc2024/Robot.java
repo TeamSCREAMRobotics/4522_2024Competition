@@ -114,6 +114,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotPeriodic() {
+    // System.out.println(Controlboard.getManualElevatorOutput(true).getAsDouble());
     CommandScheduler.getInstance().run();
     // We have to do this so we can guarantee that the alliance has the correct value before configuring things that require it.
     autoConfigurator.runOnceWhen(

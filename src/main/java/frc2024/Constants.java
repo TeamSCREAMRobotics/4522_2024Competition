@@ -369,10 +369,10 @@ public final class Constants{
         public static final double ACCELERATION = 5;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, 0);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.125, 0.0, 0.0); //0.1
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(0.15, 0.0, 0.0); //0.1
 
-        public static final double KS = 0.0;
-        public static final double KV = 0.1115;
+        public static final double KS = 0.14173;
+        public static final double KV = 0.11;
         public static final double KA = 0.0;
         public static final double KG = 0.0;
         public static final FeedforwardConstants FEEDFORWARD_CONSTANTS = new FeedforwardConstants(KV, KS, KG, KA);
@@ -393,7 +393,7 @@ public final class Constants{
         public static final double BYPASS_START_VELOCITY = 3000.0;
 
         public static final double TRAJECTORY_VELOCITY_EXTRA = 1550.0; //1800
-        public static final double ARBITRARY_VELOCITY_EXTRA = 0.0;
+        public static final double ARBITRARY_VELOCITY_EXTRA = 100.0;
 
         public static final double SHOOT_OUTPUT = 0.8;
         public static final double EJECT_OUTPUT = 0.25;//0.5;
@@ -736,7 +736,7 @@ public final class Constants{
 
         public static final Translation2d SPEAKER_GOAL_OFFSET_RIGHT = new Translation2d(Units.inchesToMeters(12.5), Units.inchesToMeters(9.0));
         public static final Translation2d SPEAKER_GOAL_OFFSET_LEFT = new Translation2d(Units.inchesToMeters(5.0), Units.inchesToMeters(9.0));
-        public static final Translation2d SPEAKER_GOAL_OFFSET_CENTER = new Translation2d(Units.inchesToMeters(4.0), 0);
+        public static final Translation2d SPEAKER_GOAL_OFFSET_CENTER = new Translation2d(Units.inchesToMeters(4.0), Units.inchesToMeters(9.0));
         
         public static final double SPEAKER_OPENING_HEIGHT = Units.inchesToMeters(80.567496 + 1.25); // 80.567496 - 3.0
 

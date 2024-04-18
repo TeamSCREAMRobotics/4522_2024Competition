@@ -34,7 +34,7 @@ public class ShootingUtil {
       Rotation2d adjustedAngle = Rotation2d.fromDegrees((-baseAngle.getDegrees() + PivotConstants.RELATIVE_ENCODER_TO_HORIZONTAL.getDegrees()));
 
       //double tof = calculateTOF(elevatorHeightInches, targetHeightMeters);
-      double velocityRPM = horizontalDistance * (1500.0 - 100.0); // - 300.0
+      double velocityRPM = horizontalDistance * (1500.0 - 175.0); // - 300.0
 
       return new ShootState(adjustedAngle, VisionConstants.ELEVATOR_HEIGHT_MAP.get(Units.metersToFeet(horizontalDistance)), velocityRPM);
     }
@@ -76,14 +76,14 @@ public class ShootingUtil {
       return new Translation2d(0, MathUtil.interpolate(0.3, 1.0, horizontalDistance / 6.0) * AllianceFlipUtil.getDirectionCoefficient());
     }
       
-    public static Translation2d determineGoalLocation(Pose2d pose, Swerve swerve){
+    public static Translation2d determineGoalLocation(Pose2d pose){
       Translation2d speaker = AllianceFlipUtil.getTargetSpeaker().getTranslation();
       int directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();
       if(pose.getY() < 6.0 && pose.getY() > 5.0){
         return speaker.plus(FieldConstants.SPEAKER_GOAL_OFFSET_CENTER.times(directionCoefficient));
-      } else if(AllianceFlipUtil.Boolean(swerve.getEstimatedPose().getY() > 6.0, swerve.getEstimatedPose().getY() < 5.0)) {
+      } else if(AllianceFlipUtil.Boolean(pose.getY() > 6.0, pose.getY() < 5.0)) {
         return speaker.plus(FieldConstants.SPEAKER_GOAL_OFFSET_LEFT.times(directionCoefficient));
-      } else if(AllianceFlipUtil.Boolean(swerve.getEstimatedPose().getY() < 5.0, swerve.getEstimatedPose().getY() > 6.0)) {
+      } else if(AllianceFlipUtil.Boolean(pose.getY() < 5.0, pose.getY() > 6.0)) {
         return speaker.plus(FieldConstants.SPEAKER_GOAL_OFFSET_RIGHT.times(directionCoefficient));
       } else {
         return speaker;

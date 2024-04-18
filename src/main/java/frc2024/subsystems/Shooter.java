@@ -78,6 +78,10 @@ public class Shooter extends SubsystemBase{
         setShooter(m_dutyCyleRequest.withOutput(dutyCyle));
     }
 
+    public void setShooterVoltage(double voltage){
+        setShooter(new VoltageOut(voltage));
+    }
+
     public double getFeetPerSecond(){
         return Conversions.rpmToFTPS(getRPM(), ShooterConstants.WHEEL_CIRCUMFERENCE);
     }
@@ -102,7 +106,7 @@ public class Shooter extends SubsystemBase{
         return m_topShooterMotor.getVelocity().getValueAsDouble()*60;
     }
 
-    public double getBootomShooterRPMs(){
+    public double getBottomShooterRPMs(){
         return m_bottomShooterMotor.getVelocity().getValueAsDouble()*60;
     }
 
@@ -115,7 +119,7 @@ public class Shooter extends SubsystemBase{
     }
 
     public BooleanSupplier getShooterAtTarget(){
-        return () -> (Math.abs(getShooterError()) < ShooterConstants.TARGET_THRESHOLD) || getRPM() > m_targetVelocity;
+        return () -> (Math.abs(getShooterError()) < ShooterConstants.TARGET_THRESHOLD) || getRPM() >= m_targetVelocity;
     }
 
     public double getShooterCurrent(){
@@ -136,6 +140,8 @@ public class Shooter extends SubsystemBase{
         if(Constants.MODE == RobotMode.COMP){
             logOutputs();
         }
+        //System.out.println("Bottom: " + getTargetVelocity());
+        // System.out.println(getShooterError());
     }
 
     public void logOutputs(){

@@ -13,6 +13,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.pid.ScreamPIDConstants;
+import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.ScreamUtil;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -31,12 +32,14 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
+import frc2024.Constants.FieldConstants;
 import frc2024.Constants.Ports;
 import frc2024.Constants.RobotMode;
 import frc2024.Constants.SwerveConstants;
@@ -424,7 +427,7 @@ public class Swerve extends SubsystemBase {
         }
         Vision.updateEstimateWithValidMeasurements(Limelight.SHOOT_SIDE, m_poseEstimator);
         //Vision.updateEstimateWithValidMeasurements(Limelight.INTAKE_SIDE, m_poseEstimator);
-        // System.out.println(Units.metersToInches(Vision.getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER)));
+        //System.out.println(Units.metersToInches(ScreamUtil.calculateDistanceToTranslation(getEstimatedPose().getTranslation(), AllianceFlipUtil.getTargetSpeaker().getTranslation())));
         //System.out.println(getPose().getTranslation().getDistance(AllianceFlipUtil.getTargetSpeaker().getTranslation()));
         /* if(Constants.MODE == RobotMode.COMP){
             logOutputs();
