@@ -516,16 +516,12 @@ public class Routines {
     }
     /* "4AmpBypass#1", "4AmpBypass#2", "4AmpBypass#3", "4AmpBypass#4", "4AmpBypass#5", "4AmpBypass#6", "ForwardSplit_1-2", "ForwardSplit_2-3" */
 
-    //Rotation is 52.34
+    //Rotation is -52.34 on Red, 52.34 on Blue
+
     public static Command Amp4Bypass_WithSkip_Relocalize(Swerve swerve, Elevator elevator, Pivot pivot, Shooter shooter, Conveyor conveyor, Intake intake, LED led){
         currentSequence = Amp4Bypass;
         return new SequentialCommandGroup(
             swerve.resetPoseCommand(Amp4Bypass.getStartingPose()),
-            /* new SuperstructureToPosition(SuperstructureState.BYPASS_START, elevator, pivot).alongWith(
-                shooter.velocityCommand(ShooterConstants.BYPASS_START_VELOCITY).alongWith(
-                    new WaitCommand(0.5).andThen(conveyor.dutyCycleCommand(ConveyorConstants.SHOOT_OUTPUT))
-                )
-            ).until(() -> !getHasPiece(conveyor).getAsBoolean()), */
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor), //Preload
             Amp4Bypass.getIndex(0),
             new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),

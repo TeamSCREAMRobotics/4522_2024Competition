@@ -147,6 +147,7 @@ public class Robot extends LoggedRobot {
     if(((int) timeSinceDisabled.get()) == 5 && Constants.MODE == RobotMode.DEV){
       RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Coast, NeutralModeValue.Coast);
     }
+    System.out.println("Yaw: " + RobotContainer.getSwerve().getEstimatedHeading().getDegrees());
   }
 
   @Override
