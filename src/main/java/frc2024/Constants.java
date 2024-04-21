@@ -421,8 +421,8 @@ public final class Constants{
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
         
         /* Current Limits */
-        public static final int SUPPLY_CURRENT_LIMIT = 40;
-        public static final int SUPPLY_CURRENT_THRESHOLD = 0;
+        public static final int SUPPLY_CURRENT_LIMIT = 60;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 60;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
 
@@ -513,8 +513,8 @@ public final class Constants{
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
         
         /* Current Limits */
-        public static final int SUPPLY_CURRENT_LIMIT = 30;
-        public static final int SUPPLY_CURRENT_THRESHOLD = 0;
+        public static final int SUPPLY_CURRENT_LIMIT = 40;
+        public static final int SUPPLY_CURRENT_THRESHOLD = 60;
         public static final double SUPPLY_TIME_THRESHOLD = 0.1;
         public static final boolean CURRENT_LIMIT_ENABLE = true;
         

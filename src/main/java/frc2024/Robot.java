@@ -144,10 +144,11 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledPeriodic() {
+    // RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Coast, NeutralModeValue.Coast);
     if(((int) timeSinceDisabled.get()) == 5 && Constants.MODE == RobotMode.DEV){
       RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Coast, NeutralModeValue.Coast);
     }
-    System.out.println("Yaw: " + RobotContainer.getSwerve().getEstimatedHeading().getDegrees());
+    // System.out.println("Yaw: " + RobotContainer.getSwerve().getEstimatedHeading().getDegrees());
   }
 
   @Override

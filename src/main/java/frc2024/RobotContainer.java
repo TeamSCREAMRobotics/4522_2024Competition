@@ -195,7 +195,7 @@ public class RobotContainer {
                 new InstantCommand(() -> currentState = SuperstructureState.SUBWOOFER)
                     .andThen(
                         new SuperstructureToPosition(SuperstructureState.SUBWOOFER, m_elevator, m_pivot)
-                            .alongWith(m_shooter.velocityCommand(ShooterConstants.SUBWOOFER_VELOCITY))))
+                            .alongWith(m_shooter.velocityCommand(ShooterConstants.SUBWOOFER_VELOCITY)).andThen(m_elevator.heightCommand(ElevatorConstants.HOME_HEIGHT))))
             .onFalse(new GoHome(true, m_pivot, m_elevator, m_conveyor, m_intake));
 
             /* Controlboard.goToSubwooferPosition()

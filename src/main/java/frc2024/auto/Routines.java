@@ -660,7 +660,7 @@ public class Routines {
         currentSequence = Source3_Center2To1;
         return new SequentialCommandGroup(
             swerve.resetPoseCommand(Source3_Center2To1.getStartingPose()),
-            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
+            new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor).withTimeout(1.2),
             swerve.resetOdometryPoseCommand(),
             Source3_Center2To1.getIndex(0),
             new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
