@@ -2,26 +2,17 @@
 package frc2024.dashboard.tabs;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.RunOnce;
 
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
-import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc2024.RobotContainer;
-import frc2024.Constants.FieldConstants;
-import frc2024.auto.Routines;
 import frc2024.dashboard.ShuffleboardTabBase;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Pivot;

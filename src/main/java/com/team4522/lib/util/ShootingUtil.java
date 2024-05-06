@@ -6,7 +6,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import frc2024.Constants;
@@ -16,7 +15,6 @@ import frc2024.Constants.PivotConstants;
 import frc2024.Constants.ShootState;
 import frc2024.Constants.ShooterConstants;
 import frc2024.Constants.VisionConstants;
-import frc2024.subsystems.swerve.Swerve;
 
 public class ShootingUtil {
 
@@ -75,7 +73,8 @@ public class ShootingUtil {
     public static Translation2d calculateCurveOffset(double horizontalDistance){
       return new Translation2d(0, MathUtil.interpolate(0.3, 1.0, horizontalDistance / 6.0) * AllianceFlipUtil.getDirectionCoefficient());
     }
-      
+    
+    /* Determines what field pose to aim. Corrects issues with shot accuracy from the sides of the goals */
     public static Translation2d determineGoalLocation(Pose2d pose){
       Translation2d speaker = AllianceFlipUtil.getTargetSpeaker().getTranslation();
       int directionCoefficient = AllianceFlipUtil.getDirectionCoefficient();

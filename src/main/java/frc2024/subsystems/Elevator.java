@@ -5,19 +5,11 @@ import java.util.function.DoubleSupplier;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.controls.ControlRequest;
-import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.VelocityDutyCycle;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.mechanisms.DifferentialMechanism;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
@@ -26,18 +18,11 @@ import com.team4522.lib.pid.ScreamPIDConstants;
 import com.team4522.lib.util.OrchestraUtil;
 import com.team4522.lib.util.ScreamUtil;
 
-import edu.wpi.first.math.controller.ElevatorFeedforward;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc2024.Constants;
 import frc2024.RobotContainer;
-import frc2024.Constants.StabilizerConstants;
 import frc2024.Constants.ElevatorConstants;
-import frc2024.Constants.PivotConstants;
 import frc2024.Constants.Ports;
 import frc2024.Constants.RobotMode;
 

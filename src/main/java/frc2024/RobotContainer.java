@@ -1,35 +1,14 @@
 package frc2024;
 
-import java.lang.reflect.Field;
-import java.sql.Driver;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.locks.Condition;
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-import javax.crypto.spec.DESKeySpec;
-import javax.swing.text.html.Option;
-
 import org.littletonrobotics.junction.Logger;
-import org.photonvision.PhotonUtils;
-
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathPlannerPath;
 import com.team4522.lib.util.AllianceFlipUtil;
-import com.team4522.lib.util.ContinuousConditionalCommand;
 import com.team4522.lib.util.OrchestraUtil;
 import com.team4522.lib.util.ScreamUtil;
-import com.team4522.lib.util.PathSequence.Side;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,8 +17,6 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -47,34 +24,24 @@ import frc2024.Constants.StabilizerConstants;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.SuperstructureState;
-import frc2024.Constants.FieldConstants;
 import frc2024.Constants.IntakeConstants;
 import frc2024.Constants.LEDConstants;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.ShooterConstants;
-import frc2024.Constants.SwerveConstants;
 import frc2024.auto.Autonomous;
 import frc2024.auto.Autonomous.PPEvent;
 import frc2024.auto.Routines;
-import frc2024.commands.AutoFire;
 import frc2024.commands.ClimbSequence;
 import frc2024.commands.Feed;
 import frc2024.commands.FeedForwardCharacterization;
 import frc2024.commands.GoHome;
-import frc2024.commands.Rehome;
 import frc2024.commands.ShooterIdle;
 import frc2024.commands.SmartShootSequence;
 import frc2024.commands.PoseShooting;
 import frc2024.commands.SuperstructureToPosition;
-import frc2024.commands.auto.AutoShootSequence;
 import frc2024.commands.intake.AutoIntakeFloor;
 import frc2024.commands.intake.IntakeFloor;
 import frc2024.commands.swerve.TeleopDrive;
-import frc2024.commands.swerve.DodgeDrive.DodgeDirection;
-import frc2024.commands.swerve.DodgeDrive;
-import frc2024.commands.swerve.DriveToPose;
-import frc2024.commands.swerve.FacePoint;
-import frc2024.commands.swerve.FaceVisionTarget;
 import frc2024.commands.swerve.SnappedDrive;
 import frc2024.controlboard.Controlboard;
 import frc2024.dashboard.ShuffleboardTabManager;
@@ -85,8 +52,6 @@ import frc2024.subsystems.Intake;
 import frc2024.subsystems.LED;
 import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Shooter;
-import frc2024.subsystems.Vision;
-import frc2024.subsystems.Vision.Limelight;
 import frc2024.subsystems.swerve.Swerve;
 
 public class RobotContainer {
@@ -125,7 +90,6 @@ public class RobotContainer {
         Controlboard.zeroGyro().onTrue(Commands.runOnce(() -> m_swerve.resetEstimatedHeading(AllianceFlipUtil.getForwardRotation())).ignoringDisable(true));
         Controlboard.resetPose_Apriltag().onTrue(Commands.runOnce(() -> m_swerve.resetPose_Apriltag()).ignoringDisable(true));
         Controlboard.driverController_Command.povLeft().whileTrue(new FeedForwardCharacterization(m_shooter, m_shooter::setShooterVoltage, m_shooter::getMotorVelocity));
-        //Controlboard.resetPose().onTrue(Commands.runOnce(() -> m_swerve.resetPose(new Pose2d(FieldConstants.RED_PODIUM, new Rotation2d()))));
 
         Controlboard.snapAnglePresent()
             .whileTrue(
@@ -159,12 +123,9 @@ public class RobotContainer {
             .whileTrue(
                 new SuperstructureToPosition(SuperstructureState.EJECT, m_elevator, m_pivot)
                     .alongWith(m_stabilizers.positionCommand(StabilizerConstants.DOWN_POSITION)))
-                // .alongWith(m_stabilizers.outputCommand(StabilizerConstants.OUT_OUTPUT).withTimeout(1).andThen(m_stabilizers.stopCommand())))
             .onFalse(
                 new WaitCommand(0.4).andThen(new GoHome(false, m_pivot, m_elevator, m_conveyor, m_intake))
                     .alongWith(m_stabilizers.positionCommand(StabilizerConstants.UP_POSITION)));
-                    /* .alongWith(
-                        m_stabilizers.outputCommand(StabilizerConstants.IN_OUTPUT).withTimeout(1).andThen(m_stabilizers.stopCommand()))); */
 
         /* Elevator */
         Controlboard.manualMode().whileTrue(m_elevator.voltageCommand(Controlboard.getManualElevatorOutput(false)));
@@ -197,12 +158,6 @@ public class RobotContainer {
                         new SuperstructureToPosition(SuperstructureState.SUBWOOFER, m_elevator, m_pivot)
                             .alongWith(m_shooter.velocityCommand(ShooterConstants.SUBWOOFER_VELOCITY)).andThen(m_elevator.heightCommand(ElevatorConstants.HOME_HEIGHT))))
             .onFalse(new GoHome(true, m_pivot, m_elevator, m_conveyor, m_intake));
-
-            /* Controlboard.goToSubwooferPosition()
-                .toggleOnTrue(
-                    new SuperstructureToPosition(SuperstructureState.BYPASS_START, m_elevator, m_pivot)
-                            .alongWith(m_shooter.velocityCommand(ShooterConstants.BYPASS_START_VELOCITY))
-                ); */
 
         Controlboard.goToAmpPosition()
             .whileTrue(

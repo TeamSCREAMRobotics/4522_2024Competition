@@ -1,29 +1,17 @@
 package frc2024.controlboard;
 
-import java.util.DoubleSummaryStatistics;
-import java.util.Optional;
-import java.util.OptionalDouble;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-
-import javax.swing.text.html.Option;
-
 import com.team4522.lib.util.AllianceFlipUtil;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc2024.Constants.SwerveConstants;
 
 /**
  * A utility class that contains button bindings.

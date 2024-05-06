@@ -4,38 +4,16 @@
 
 package frc2024.commands.intake;
 
-import java.util.concurrent.locks.Condition;
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc2024.Constants.SuperstructureState;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.IntakeConstants;
 import frc2024.Constants.PivotConstants;
-import frc2024.Constants.SwerveConstants;
-import frc2024.Constants.VisionConstants;
-import frc2024.commands.SuperstructureToPosition;
-import frc2024.commands.swerve.FaceVisionTarget;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Intake;
 import frc2024.subsystems.LED;
 import frc2024.subsystems.Pivot;
-import frc2024.subsystems.Vision;
-import frc2024.subsystems.Vision.IntakePipeline;
-import frc2024.subsystems.Vision.LEDMode;
-import frc2024.subsystems.Vision.Limelight;
-import frc2024.subsystems.swerve.Swerve;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

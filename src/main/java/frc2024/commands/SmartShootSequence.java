@@ -102,7 +102,7 @@ public class SmartShootSequence extends Command{
             rotationValue = SmartShooting.getRotationToPoint(swerve, pivot, shooter, virtualTarget, false, false, rotationController); //virtualCalculation is false because we are passing in the virtualTarget already
 
             /* Sets the shooterRPMs and pivot angle based on the virtual target */
-            shooter.setTargetVelocity(MathUtil.clamp(SmartShooting.calculateShotTrajectory(() -> elevator.getElevatorHeight(), SmartShooting.getDistanceToTarget_SHOOTER(swerve, virtualTarget, FieldConstants.SPEAKER_OPENING_HEIGHT)).velocityRPM(), 3250.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
+            shooter.setTargetVelocity(MathUtil.clamp(SmartShooting.calculateShotTrajectory(() -> elevator.getElevatorHeight(), SmartShooting.getDistanceToTarget_SHOOTER(swerve, virtualTarget, FieldConstants.SPEAKER_OPENING_HEIGHT)).velocityRPM(), 4000.0, ShooterConstants.SHOOTER_MAX_VELOCITY));
             pivot.setTargetAngle(SmartShooting.calculateShotTrajectory(() -> elevator.getElevatorHeight(), SmartShooting.getDistanceToTarget_SHOOTER(swerve, virtualTarget, FieldConstants.SPEAKER_OPENING_HEIGHT)).pivotAngle());
         } else{
             /* Sets the shooterRPMs and pivot based on the physical target */

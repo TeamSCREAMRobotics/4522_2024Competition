@@ -6,26 +6,12 @@ package frc2024.commands.intake;
 
 import java.util.function.BooleanSupplier;
 
-import com.team4522.lib.util.COTSFalconSwerveConstants.driveGearRatios;
-
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
-import frc2024.Constants.SuperstructureState;
 import frc2024.Constants.IntakeConstants;
 import frc2024.Constants.PivotConstants;
-import frc2024.commands.SuperstructureToPosition;
-import frc2024.controlboard.Controlboard;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.Intake;

@@ -5,43 +5,21 @@
 package frc2024.commands.auto;
 
 import java.util.Optional;
-import java.util.function.DoubleSupplier;
-
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.util.PathPlannerLogging;
-import com.team4522.lib.math.Conversions;
 import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.ScreamUtil;
 import com.team4522.lib.util.ShootingUtil;
-import com.team6328.GeomUtil;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.interpolation.Interpolator;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc2024.Constants;
 import frc2024.RobotContainer;
-import frc2024.Constants.ConveyorConstants;
-import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.FieldConstants;
-import frc2024.Constants.PivotConstants;
 import frc2024.Constants.ShootState;
-import frc2024.Constants.ShooterConstants;
-import frc2024.Constants.SwerveConstants;
-import frc2024.Constants.VisionConstants;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
-import frc2024.subsystems.LED;
 import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Shooter;
-import frc2024.subsystems.Vision;
-import frc2024.subsystems.Vision.Limelight;
 import frc2024.subsystems.swerve.Swerve;
 
 public class AutoPoseShootingContinuous extends Command {

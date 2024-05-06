@@ -1,18 +1,10 @@
 
 package frc2024.dashboard.tabs;
 
-import com.team4522.lib.util.AllianceFlipUtil;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import frc2024.Constants.FieldConstants;
 import frc2024.Constants.ShuffleboardConstants;
 import frc2024.Constants.SwerveConstants.DriveConstants;
-import frc2024.commands.swerve.FacePoint;
 import frc2024.dashboard.ShuffleboardTabBase;
 import frc2024.subsystems.swerve.Swerve;
 

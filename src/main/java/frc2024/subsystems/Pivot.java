@@ -4,15 +4,11 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-import javax.swing.text.Position;
-
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.ParentDevice;
@@ -21,24 +17,14 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.pid.ScreamPIDConstants;
 import com.team4522.lib.util.OrchestraUtil;
-import com.team4522.lib.util.RunOnce;
 import com.team4522.lib.util.ScreamUtil;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.units.Current;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.RobotContainer;
-import frc2024.Constants.StabilizerConstants;
-import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.Ports;
 import frc2024.Constants.RobotMode;
@@ -54,8 +40,6 @@ public class Pivot extends SubsystemBase{
 
     private Rotation2d m_targetAngle = Rotation2d.fromDegrees(0);
     private Rotation2d m_tweakAngle = Rotation2d.fromDegrees(0);
-
-    private RunOnce m_currentLimitConfigurator = new RunOnce();
 
     public Pivot(){
         m_pivotMotor = new TalonFX(Ports.PIVOT_MOTOR_ID, Ports.RIO_CANBUS_NAME);
@@ -141,17 +125,11 @@ public class Pivot extends SubsystemBase{
 
     @Override
     public void periodic() {
-        // System.out.println("Pivot:" + m_targetAngle.getDegrees());
         if(Controlboard.operatorController_Command.getHID().getRightStickButtonPressed()){
             m_tweakAngle = m_tweakAngle.minus(Rotation2d.fromDegrees(0.5));
         } else if(Controlboard.operatorController_Command.getHID().getLeftStickButtonPressed()){
             m_tweakAngle = m_tweakAngle.plus(Rotation2d.fromDegrees(0.5));
         }
-        // System.out.println("Pivot: " + getPivotAngle().getDegrees());
-        // System.out.println("Encoder: " + getPivotAngle().getDegrees());
-        // System.out.println("Motor: " + Rotation2d.fromRotations(m_pivotMotor.getRotorPosition().refresh().getValue()).getDegrees());
-        // System.out.println("Current: " + getPivotAngle().getDegrees() + " Target: " + m_targetAngle.getDegrees());
-        // System.out.println(m_pivotMotor.getSupplyCurrent().getValueAsDouble());
         if(Constants.MODE == RobotMode.COMP){
             logOutputs();
         }

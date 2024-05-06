@@ -5,26 +5,16 @@
 package frc2024.subsystems;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-import com.ctre.phoenix.led.Animation;
-import com.ctre.phoenix.led.CANdle;
 import com.team4522.lib.math.Conversions;
-import com.team4522.lib.util.ScreamUtil;
-import com.team4522.lib.util.COTSFalconSwerveConstants.driveGearRatios;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer.IndexedColorIterator;
-import edu.wpi.first.wpilibj.simulation.AddressableLEDSim;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants.LEDConstants;
 import frc2024.Constants.Ports;

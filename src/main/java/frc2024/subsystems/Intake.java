@@ -1,33 +1,20 @@
 package frc2024.subsystems;
 
-import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.mechanisms.DifferentialMechanism;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.util.OrchestraUtil;
 import com.team4522.lib.util.ScreamUtil;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
-import frc2024.Constants.ConveyorConstants;
-import frc2024.Constants.ElevatorConstants;
-import frc2024.Constants.IntakeConstants;
-import frc2024.Constants.PivotConstants;
 import frc2024.Constants.Ports;
 import frc2024.Constants.RobotMode;
-import frc2024.Constants.SwerveConstants;
-import frc2024.commands.swerve.FaceVisionTarget;
-import frc2024.subsystems.Vision.Limelight;
-import frc2024.subsystems.swerve.Swerve;
 
 public class Intake extends SubsystemBase{
     private TalonFX m_intakeMotor;

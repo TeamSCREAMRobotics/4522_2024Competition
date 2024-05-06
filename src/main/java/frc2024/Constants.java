@@ -1,15 +1,9 @@
 package frc2024;
 
-import java.util.function.Supplier;
-
-import javax.swing.Spring;
-
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -17,7 +11,6 @@ import com.team4522.lib.pid.ScreamPIDConstants;
 import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.COTSFalconSwerveConstants;
 import com.team4522.lib.util.RectanglePoseArea;
-import com.team4522.lib.util.ScreamUtil;
 import com.team4522.lib.util.ShootStateInterpolatingTreeMap;
 
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -25,16 +18,12 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc2024.Constants.SwerveConstants.ModuleConstants.ModuleLocation;
-import frc2024.subsystems.Pivot;
 
 /**
  * A class for constants used in various places in the project.
@@ -486,7 +475,6 @@ public final class Constants{
         public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(48.516 /* 56.0742 */).plus(PIVOT_ANGLE_OFFSET);
         public static final Rotation2d AMP5_CLOSESHOTS = Rotation2d.fromDegrees(16.25).plus(PIVOT_ANGLE_OFFSET);
         public static final Rotation2d EJECT_ANGLE = CHAIN_ANGLE;
-        public static final Rotation2d BYPASS_START_ANGLE = Rotation2d.fromDegrees(-4.0429);
 
         public static final double AUTO_ZERO_OUTPUT = 0.0;
 
@@ -548,7 +536,6 @@ public final class Constants{
         public static final double AMP_HEIGHT = 19.70989;
         public static final double TRAP_CHAIN_HEIGHT = MAX_HEIGHT;
         public static final double EJECT_HEIGHT = MAX_HEIGHT/4.0;
-        public static final double BYPASS_START_HEIGHT = 3.464;
 
         public static final double REHOME_VOLTAGE = -5.0;
         public static final double REHOME_CURRENT_THRESHOLD = 0.0;
@@ -613,8 +600,7 @@ public final class Constants{
         SUBWOOFER_DEFENDED(ElevatorConstants.MAX_HEIGHT, PivotConstants.SUBWOOFER_ANGLE_DEFENDED),
         AUTO_FIRE(ElevatorConstants.HOME_HEIGHT, PivotConstants.HOME_ANGLE),
         AMP5_CLOSESHOTS(ElevatorConstants.HOME_HEIGHT, PivotConstants.AMP5_CLOSESHOTS),
-        EJECT(ElevatorConstants.EJECT_HEIGHT, PivotConstants.EJECT_ANGLE),
-        BYPASS_START(ElevatorConstants.BYPASS_START_HEIGHT, PivotConstants.BYPASS_START_ANGLE);
+        EJECT(ElevatorConstants.EJECT_HEIGHT, PivotConstants.EJECT_ANGLE);
 
         public double elevatorPosition;
         public Rotation2d pivotAngle;

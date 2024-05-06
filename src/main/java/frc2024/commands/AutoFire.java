@@ -2,7 +2,6 @@ package frc2024.commands;
 
 import java.util.function.DoubleSupplier;
 
-import com.pathplanner.lib.util.PIDConstants;
 import com.team1706.SmartShooting;
 import com.team4522.lib.math.Conversions;
 import com.team4522.lib.util.AllianceFlipUtil;
@@ -13,19 +12,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc2024.Constants.ConveyorConstants;
 import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.FieldConstants;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.ShootState;
 import frc2024.Constants.ShooterConstants;
-import frc2024.Constants.SuperstructureState;
 import frc2024.Constants.SwerveConstants;
-import frc2024.Constants.VisionConstants;
 import frc2024.subsystems.Conveyor;
 import frc2024.subsystems.Elevator;
 import frc2024.subsystems.LED;

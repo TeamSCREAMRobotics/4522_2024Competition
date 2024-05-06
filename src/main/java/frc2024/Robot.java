@@ -4,45 +4,21 @@
 
 package frc2024;
 
-import java.util.ResourceBundle.Control;
-
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
-import com.ctre.phoenix6.Orchestra;
-import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.team4522.lib.config.DeviceConfig;
-import com.team4522.lib.util.AllianceFlipUtil;
-import com.team4522.lib.util.OrchestraUtil;
 import com.team4522.lib.util.RunOnce;
-import com.team4522.lib.util.RunUntil;
-
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc2024.Constants.FieldConstants;
 import frc2024.Constants.RobotMode;
-import frc2024.Constants.VisionConstants;
-import frc2024.commands.AutoFire;
 import frc2024.controlboard.Controlboard;
-import frc2024.subsystems.Vision;
-import frc2024.subsystems.Vision.Limelight;
 
 /**
  * The VM is configured to automatically run this class, and to call the

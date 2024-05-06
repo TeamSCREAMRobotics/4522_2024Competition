@@ -1,7 +1,6 @@
 package frc2024.subsystems;
 
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -18,7 +17,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.RobotContainer;

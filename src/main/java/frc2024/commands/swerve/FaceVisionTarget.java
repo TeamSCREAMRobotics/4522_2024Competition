@@ -5,14 +5,12 @@
 package frc2024.commands.swerve;
 
 import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
 
 import com.team4522.lib.pid.ScreamPIDConstants;
 import com.team4522.lib.util.AllianceFlipUtil;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc2024.Constants.SwerveConstants;
 import frc2024.subsystems.Vision;

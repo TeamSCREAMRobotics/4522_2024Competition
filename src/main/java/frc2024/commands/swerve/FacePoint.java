@@ -6,19 +6,14 @@ package frc2024.commands.swerve;
 
 import java.util.function.DoubleSupplier;
 
-import org.photonvision.PhotonUtils;
-
-import com.team1706.FieldRelativeAccel;
 import com.team1706.SmartShooting;
 import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.ScreamUtil;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc2024.Constants.SwerveConstants;
 import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Shooter;

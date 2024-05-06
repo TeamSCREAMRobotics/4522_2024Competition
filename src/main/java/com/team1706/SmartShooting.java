@@ -6,19 +6,15 @@ import com.team4522.lib.util.AllianceFlipUtil;
 import com.team4522.lib.util.ScreamUtil;
 import com.team4522.lib.util.ShootingUtil;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import frc2024.Constants;
-import frc2024.Constants.ElevatorConstants;
 import frc2024.Constants.FieldConstants;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.ShootState;
-import frc2024.Constants.ShooterConstants;
 import frc2024.subsystems.Pivot;
 import frc2024.subsystems.Shooter;
 import frc2024.subsystems.swerve.Swerve;
@@ -139,14 +135,8 @@ public class SmartShooting {
     double heightDiff = targetHeight - PivotConstants.AXLE_HEIGHT_HOME;
     /* Calculates the horizontal distance to the target */
     double horizontalDistance = Math.sqrt(Math.pow(distanceToTarget, 2) - Math.pow(heightDiff, 2));
-    
-    /* Rotation2d baseAngle = new Translation2d(horizontalDistance, FieldConstants.SPEAKER_OPENING_HEIGHT).minus(ShootingUtil.calculateAbsolutePivotPosition(elevatorHeight.getAsDouble())).getAngle();
-    Rotation2d launchAngle = Rotation2d.fromDegrees(MathUtil.clamp((-baseAngle.getDegrees() + PivotConstants.RELATIVE_ENCODER_TO_HORIZONTAL.getDegrees()) - (horizontalDistance / 6), 1, 45));
 
-    double launchVelRPM = MathUtil.clamp(horizontalDistance * 1000, ShooterConstants.SUBWOOFER_VELOCITY, ShooterConstants.SHOOTER_MAX_VELOCITY);
-    launchVelRPM += ShooterConstants.shooterOffset.get(horizontalDistance); */
-
-    return ShootingUtil.oldCalculateShootState(targetHeight, horizontalDistance, elevatorHeight.getAsDouble());
+    return ShootingUtil.calculateShootState(targetHeight, horizontalDistance, elevatorHeight.getAsDouble());
   }
 
   private static PIDController targetController;

@@ -2,7 +2,6 @@ package com.team4522.lib.util;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
-import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import frc2024.Constants.ShootState;
 
 public class ShootStateInterpolatingTreeMap{

@@ -2,9 +2,6 @@ package com.team4522.lib.util;
 
 import java.util.function.BooleanSupplier;
 
-import com.fasterxml.jackson.databind.node.POJONode;
-import com.pathplanner.lib.util.GeometryUtil;
-import com.team4522.lib.math.Conversions;
 import com.team4522.lib.util.PathSequence.Side;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -15,7 +12,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc2024.RobotContainer;
 import frc2024.Constants.FieldConstants;
 import frc2024.subsystems.Vision.IntakePipeline;
 

@@ -5,7 +5,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc2024.RobotContainer;
 import frc2024.dashboard.tabs.MatchTab;
 
 /**

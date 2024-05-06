@@ -3,7 +3,6 @@ package com.team4522.lib.pid;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.Slot2Configs;
-import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.controller.PIDController;

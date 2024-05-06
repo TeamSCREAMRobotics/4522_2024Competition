@@ -7,19 +7,16 @@ import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.math.Conversions;
 import com.team4522.lib.util.OrchestraUtil;
 import com.team4522.lib.util.ScreamUtil;
 
-import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -29,8 +26,6 @@ import frc2024.RobotContainer;
 import frc2024.Constants.Ports;
 import frc2024.Constants.RobotMode;
 import frc2024.Constants.ShooterConstants;
-import frc2024.dashboard.tabs.SubsystemTestTab;
-import frc2024.subsystems.Vision.Limelight;
 
 public class Shooter extends SubsystemBase{
     

@@ -4,7 +4,6 @@
 
 package frc2024;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
