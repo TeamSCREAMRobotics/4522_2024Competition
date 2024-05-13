@@ -100,24 +100,6 @@ public class RobotContainer {
                     Controlboard.getSlowMode())
             );
         
-        /* Controlboard.dodgeLeft()
-            .whileTrue(
-                new DodgeDrive(m_swerve, 
-                    Controlboard.getTranslation(), 
-                    Controlboard.getRotation(), 
-                    DodgeDirection.LEFT,
-                    Controlboard.getSlowMode())
-            );
-
-        Controlboard.dodgeRight()
-            .whileTrue(
-                new DodgeDrive(m_swerve, 
-                    Controlboard.getTranslation(), 
-                    Controlboard.getRotation(), 
-                    DodgeDirection.RIGHT,
-                    Controlboard.getSlowMode())
-            ); */
-
         /* Conveyor */
         Controlboard.clearNote()
             .whileTrue(
@@ -256,7 +238,6 @@ public class RobotContainer {
             .onFalse(new GoHome(true, m_pivot, m_elevator, m_conveyor, m_intake));
 
         Controlboard.intakeFromFloor().and(new Trigger(m_conveyor.hasPiece(false)).negate())
-            /* .or(Controlboard.intakeOverride()) */
                 .whileTrue(
                     new IntakeFloor(m_elevator, m_pivot, m_conveyor, m_intake, m_led, () -> false)
                 )
@@ -309,15 +290,6 @@ public class RobotContainer {
             .whileTrue(m_conveyor.scoreCommand())
                 .onFalse(m_conveyor.stopCommand());
 
-        /* Controlboard.prepShot()
-            .whileTrue(m_shooter.velocityCommand(3000))
-            .onFalse(m_shooter.idleCommand()); */
-
-        /* Controlboard.autoPickupFromFloor()
-            .whileTrue(
-                new AutoIntakeFloor(Controlboard.getTranslation(), m_swerve, m_elevator, m_pivot, m_intake, m_conveyor)
-                    .until(() -> m_conveyor.hasPiece())); */
-
         Controlboard.elevatorDown_MAX().whileTrue(
             m_elevator.voltageCommand(-12.0)
         ).onFalse(
@@ -342,8 +314,6 @@ public class RobotContainer {
                 .andThen(m_led.rainbowCommand(10, 1.5)))
             .onFalse(new InstantCommand(() -> m_led.setDefaultCommand(m_led.waveCommand(() -> (Color) AllianceFlipUtil.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, 22, 2)))
                 .andThen(m_led.waveCommand(() -> (Color) AllianceFlipUtil.Object(Color.kBlue, Color.kRed), () -> Color.kBlack, LEDConstants.STRIP_LENGTH / 3.0, 1.5)));
-
-        //new Trigger(() -> Timer.getMatchTime() < 20.0).onTrue(m_led.strobeCommand(Color.kWhite, 0.1).withTimeout(1));
     }
 
     private void configDefaultCommands() { 
@@ -382,41 +352,29 @@ public class RobotContainer {
                     m_intake.dutyCycleCommand(IntakeConstants.INTAKE_OUTPUT)
                 )),
             new PPEvent("StopIntake_Conveyor", m_conveyor.stopCommand().alongWith(m_intake.stopCommand())),
-            new PPEvent("Relocalize", new InstantCommand(() -> m_swerve.resetOdometryPoseCommand()))
+            new PPEvent("Relocalize", new InstantCommand(() -> m_swerve.resetOdometryToEstimated()))
         );
 
-        //TODO clean up
         Autonomous.addRoutines(
-            Routines.Amp4Close(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("Amp_4_Close"), //Tested
+            Routines.Amp4Close(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("Amp_4_Close"),
             Routines.Amp5_1Center(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_5.5_Close&Center"),
-            //Routines.Amp6Center(m_swerve, m_elevator, m_pivot, m_intake, m_conveyor).withName("Amp_6_Close&Center"),
-            //Routines.Source4Center(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_led).withName("Source_4_Center&Stage"),
-            //Routines.Amp4Center(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("AmpLine_4_Center"),
             Routines.SweepSource(m_swerve, m_pivot, m_shooter, m_conveyor, m_intake).withName("SweepSource"),
             Routines.Sweep3_Source(m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_intake, m_led).withName("Sweep3_Source"),
             Routines.Amp5Center_2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("SubSide_4_1Close&Center"),
             Routines.Amp5_Stage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_5_Close&Center"),
             Routines.Amp5_NoStage_2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp5_NoStage_2"),
             Routines.Amp5_1Center_Piece1(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp5.5_Piece1"),
-            Routines.Amp6_SplitOff(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp6_SplitOff"), //Tested
+            Routines.Amp6_SplitOff(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp6_SplitOff"),
             Routines.Source3_NoStage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Center&NoStage"),
             Routines.Source3_Stage(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Stage"),
             Routines.Source2_1Sweep(m_swerve, m_pivot, m_elevator, m_shooter, m_conveyor, m_intake, m_led).withName("Source2_Sweep1"),
-            Routines.Amp4Bypass_WithSkip_Relocalize(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp4_Bypass"), //Tested
+            Routines.Amp4Bypass_WithSkip_Relocalize(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp4_Bypass"),
             Routines.Center2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Center2"),
-            Routines.Front5Sub_CenterRush(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Front5Sub_CenterRush"), //Tested
-            Routines.Source3_Center2To1_WithSkip(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Center2To1"), //Tested
+            Routines.Front5Sub_CenterRush(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Front5Sub_CenterRush"),
+            Routines.Source3_Center2To1_WithSkip(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Center2To1"),
             Routines.Source3_Center1To2_WithSkip(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Source3_Center1To2"),
-
-            // Routines.Amp_1To2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_1-2"),
-            // Routines.Amp_2To3(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_2-3"),
-            // //TODO
-            // Routines.Amp_3To2(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_3-2"),
-            // Routines.Amp_2To1(m_swerve, m_elevator, m_pivot, m_shooter, m_conveyor, m_intake, m_led).withName("Amp_2-1"),
-
             Routines.Leave(m_swerve, 2.0).withName("Leave"),
             Routines.testAuto(m_swerve).withName("test")
-            // Routines.Amp4Close_FastShootTest(m_swerve, m_shooter, m_elevator, m_pivot, m_conveyor, m_intake, m_led).withName("4CloseTest")
         );
     }
 

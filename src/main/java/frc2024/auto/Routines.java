@@ -10,7 +10,6 @@ import com.team4522.lib.util.PathSequence;
 import com.team4522.lib.util.PathSequence.Side;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -88,15 +87,15 @@ public class Routines {
             Amp4Close.getIndex(0),
             new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-            swerve.resetOdometryPoseCommand(),
+            swerve.resetOdometryToEstimated(),
             Amp4Close.getIndex(1),
             new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-            swerve.resetOdometryPoseCommand(),
+            swerve.resetOdometryToEstimated(),
             Amp4Close.getIndex(2),
             new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-            swerve.resetOdometryPoseCommand()
+            swerve.resetOdometryToEstimated()
         );
     }
 
@@ -347,18 +346,18 @@ public class Routines {
                     new SequentialCommandGroup(
                         Amp6_SplitOff.getIndex(1),
                         new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-                        swerve.resetOdometryPoseCommand(),
+                        swerve.resetOdometryToEstimated(),
                         Amp6_SplitOff.getIndex(4),
                         new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
                         Amp6_SplitOff.getIndex(5),
                         new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-                        swerve.resetOdometryPoseCommand()
+                        swerve.resetOdometryToEstimated()
                     ),
                     new SequentialCommandGroup(
                         Amp6_SplitOff.getIndex(2),
                         Amp6_SplitOff.getIndex(3),
                         new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-                        swerve.resetOdometryPoseCommand()
+                        swerve.resetOdometryToEstimated()
                     ),
                     conveyor.hasPiece(false)){
                 }
@@ -385,21 +384,21 @@ public class Routines {
                     Amp4Bypass.getIndex(1).alongWith(
                         new InstantCommand(() -> pivot.angleCommand(Rotation2d.fromDegrees(23.0)))), //Arbitrary Pivot Angle
                     new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor), //Second Shot
-                    swerve.resetOdometryPoseCommand(),
+                    swerve.resetOdometryToEstimated(),
                     Amp4Bypass.getIndex(2),
                     new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
                         new ConditionalCommand( //Second pick up note check
                             new SequentialCommandGroup( //If second note is picked up
                                 Amp4Bypass.getIndex(3),
                                 new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-                                swerve.resetOdometryPoseCommand(),
+                                swerve.resetOdometryToEstimated(),
                                 Amp4Bypass.getIndex(4),
                                 new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
                                     new ConditionalCommand( //Third pick up note check
                                         new SequentialCommandGroup( //If third note is picked up
                                             Amp4Bypass.getIndex(5),
                                             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-                                            swerve.resetOdometryPoseCommand()
+                                            swerve.resetOdometryToEstimated()
                                         ), new SequentialCommandGroup( //If third note is not picked up
                                            
                                         ), getHasPiece(conveyor))
@@ -410,7 +409,7 @@ public class Routines {
                                         new SequentialCommandGroup(
                                             Amp4Bypass.getIndex(5),
                                             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-                                            swerve.resetOdometryPoseCommand()
+                                            swerve.resetOdometryToEstimated()
                                         ), new SequentialCommandGroup( //If third note is not picked up
                                            
                                         ), getHasPiece(conveyor))
@@ -424,14 +423,14 @@ public class Routines {
                                 Amp4Bypass.getIndex(3).alongWith(
                                     new InstantCommand(() -> pivot.angleCommand(Rotation2d.fromDegrees(23.0)))),
                                 new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-                                swerve.resetOdometryPoseCommand(),
+                                swerve.resetOdometryToEstimated(),
                                 Amp4Bypass.getIndex(4),
                                 new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
                                     new ConditionalCommand( //Third pick up note check
                                         new SequentialCommandGroup( //If third note is picked up
                                             Amp4Bypass.getIndex(5),
                                             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-                                            swerve.resetOdometryPoseCommand()
+                                            swerve.resetOdometryToEstimated()
                                         ), new SequentialCommandGroup( //If third note is not picked up
 
 
@@ -443,7 +442,7 @@ public class Routines {
                                         new SequentialCommandGroup( //If third note is picked up
                                             Amp4Bypass.getIndex(5),
                                             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-                                            swerve.resetOdometryPoseCommand()
+                                            swerve.resetOdometryToEstimated()
                                         ), new SequentialCommandGroup( //if third note is not picked up
                                            
                                         ), getHasPiece(conveyor))
@@ -473,16 +472,16 @@ public class Routines {
             Front5Sub_CenterRush.getIndex(0).alongWith(
                 new AutoPoseShootingContinuous(false, swerve, pivot, elevator, shooter, conveyor).withTimeout(2.0)
             ),
-            swerve.resetOdometryPoseCommand(),
+            swerve.resetOdometryToEstimated(),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
             Front5Sub_CenterRush.getIndex(1),
             new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.7),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-            swerve.resetOdometryPoseCommand(),
+            swerve.resetOdometryToEstimated(),
             Front5Sub_CenterRush.getIndex(2),
             new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.7),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-            swerve.resetOdometryPoseCommand(),
+            swerve.resetOdometryToEstimated(),
             Front5Sub_CenterRush.getIndex(3)
         );
     }
@@ -495,7 +494,7 @@ public class Routines {
         return new SequentialCommandGroup(
             swerve.resetPoseCommand(Source3_Center2To1.getStartingPose()),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor).withTimeout(1.2),
-            swerve.resetOdometryPoseCommand(),
+            swerve.resetOdometryToEstimated(),
             Source3_Center2To1.getIndex(0),
             new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
 
@@ -504,13 +503,13 @@ public class Routines {
                     new InstantCommand(() -> shooter.velocityCommand(4500.0)),
                     Source3_Center2To1.getIndex(1),
                     new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-                    swerve.resetOdometryPoseCommand(),
+                    swerve.resetOdometryToEstimated(),
                     Source3_Center2To1.getIndex(2),
                     new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
                     new InstantCommand(() -> shooter.velocityCommand(4500.0)),
                     Source3_Center2To1.getIndex(3),
                     new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-                    swerve.resetOdometryPoseCommand(),
+                    swerve.resetOdometryToEstimated(),
                     Source3_Center2To1.getIndex(4)
                 ), new SequentialCommandGroup(
                     Source3_Center2To1.getIndex(5),
@@ -520,7 +519,7 @@ public class Routines {
                                 new InstantCommand(() -> shooter.velocityCommand(4500.0)),
                                 Source3_Center2To1.getIndex(3),
                                 new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-                                swerve.resetOdometryPoseCommand(),
+                                swerve.resetOdometryToEstimated(),
                                 Source3_Center2To1.getIndex(4)
                             ), new SequentialCommandGroup(
                                 
@@ -537,7 +536,7 @@ public class Routines {
         return new SequentialCommandGroup(
             swerve.resetPoseCommand(Source3_Center1To2.getStartingPose()),
             new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-            swerve.resetOdometryPoseCommand(),
+            swerve.resetOdometryToEstimated(),
             Source3_Center1To2.getIndex(0),
             new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
 
@@ -546,13 +545,13 @@ public class Routines {
                     new InstantCommand(() -> shooter.velocityCommand(4500.0)),
                     Source3_Center1To2.getIndex(1),
                     new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-                    swerve.resetOdometryPoseCommand(),
+                    swerve.resetOdometryToEstimated(),
                     Source3_Center1To2.getIndex(2),
                     new AutoIntakeFloor(elevator, pivot, conveyor, intake, led).withTimeout(0.5),
                     new InstantCommand(() -> shooter.velocityCommand(4500.0)),
                     Source3_Center1To2.getIndex(3),
                     new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-                    swerve.resetOdometryPoseCommand(),
+                    swerve.resetOdometryToEstimated(),
                     Source3_Center1To2.getIndex(4)
                 ), new SequentialCommandGroup(
                     Source3_Center1To2.getIndex(5),
@@ -562,7 +561,7 @@ public class Routines {
                                 new InstantCommand(() -> shooter.velocityCommand(4500.0)),
                                 Source3_Center1To2.getIndex(3),
                                 new AutoPoseShooting(true, swerve, pivot, elevator, shooter, conveyor),
-                                swerve.resetOdometryPoseCommand(),
+                                swerve.resetOdometryToEstimated(),
                                 Source3_Center1To2.getIndex(4)
                             ), new SequentialCommandGroup(
                                 

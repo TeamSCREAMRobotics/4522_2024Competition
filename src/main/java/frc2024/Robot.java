@@ -4,12 +4,7 @@
 
 package frc2024;
 
-import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.wpilog.WPILOGReader;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.util.RunOnce;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -42,6 +37,11 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
+    robotContainer = new RobotContainer();
+    timeSinceDisabled.reset();
+    timeSinceDisabled.start();
+
+    // Unused because we could never get it to work 🤷
     /* System.out.println("[Init] Starting AdvantageKit");
     Logger.recordMetadata("RuntimeType", getRuntimeType().toString());
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
@@ -61,14 +61,14 @@ public class Robot extends LoggedRobot {
         break;
     } */
 
-    switch (Constants.MODE) {
+    /* switch (Constants.MODE) {
       case COMP:
-        //Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
-        //Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-        //new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
-        //Logger.start();
-        //SignalLogger.start();
-        //SignalLogger.enableAutoLogging(true);
+        Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
+        Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+        new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
+        Logger.start();
+        SignalLogger.start();
+        SignalLogger.enableAutoLogging(true);
         break;
       case REPLAY:
         setUseTiming(false); // Run as fast as possible
@@ -81,29 +81,21 @@ public class Robot extends LoggedRobot {
         break;
       default:
         break;
-    } 
-
-    robotContainer = new RobotContainer();
-    timeSinceDisabled.reset();
-    timeSinceDisabled.start();
+    }  */
   }
 
   @Override
   public void robotPeriodic() {
-    // System.out.println(Controlboard.getManualElevatorOutput(true).getAsDouble());
     CommandScheduler.getInstance().run();
+
     // We have to do this so we can guarantee that the alliance has the correct value before configuring things that require it.
     autoConfigurator.runOnceWhen(
       () -> {
         RobotContainer.getSwerve().configureAutoBuilder();
         RobotContainer.configAuto();
-        //Vision.setPriorityTagID((int) AllianceFlipUtil.Number(7, 4), Limelight.SHOOT_SIDE);
         System.out.println("Ready To Enable");
       },
       DriverStation.getAlliance().isPresent());
-    //System.out.println("(" + RobotContainer.getPivot().getPivotAngle().getDegrees() + ", " + RobotContainer.getElevator().getElevatorHeight() + ", " + RobotContainer.getShooter().getRPM() + ")");
-    //Vision.periodic();
-    //if(Constants.MODE == RobotMode.COMP) RobotContainer.logOutputs();
   }
 
   @Override
@@ -112,19 +104,13 @@ public class Robot extends LoggedRobot {
     timeSinceDisabled.start();
     RobotContainer.stopAll();
     Controlboard.driverController_Command.getHID().setRumble(RumbleType.kBothRumble, 0);
-
-    /* if(Constants.MODE == RobotMode.COMP){
-      autoConfigurator.reset();
-    } */
   }
 
   @Override
   public void disabledPeriodic() {
-    // RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Coast, NeutralModeValue.Coast);
     if(((int) timeSinceDisabled.get()) == 5 && Constants.MODE == RobotMode.DEV){
       RobotContainer.getSwerve().setNeutralModes(NeutralModeValue.Coast, NeutralModeValue.Coast);
     }
-    // System.out.println("Yaw: " + RobotContainer.getSwerve().getEstimatedHeading().getDegrees());
   }
 
   @Override

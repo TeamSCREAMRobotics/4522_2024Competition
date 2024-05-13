@@ -19,8 +19,9 @@ import frc2024.Constants.VisionConstants;
 public class Vision{
 
     public enum Limelight{
+        // Planned on having 3 cameras, only used 1
         TRAP("limelight-trap", new Pose3d()), 
-        SHOOT_SIDE("limelight-shooter", new Pose3d(0.286, -0.162, 0.233, new Rotation3d(0, Math.toRadians(27), Math.toRadians(180.0)))), // z: 0.220615
+        SHOOT_SIDE("limelight-shooter", new Pose3d(0.286, -0.162, 0.233, new Rotation3d(0, Math.toRadians(27), Math.toRadians(180.0)))),
         INTAKE_SIDE("limelight-intake", new Pose3d());
 
         String name;
@@ -61,8 +62,6 @@ public class Vision{
             this.index = index;
         }
     }
-
-    public record TimestampedVisionMeasurement(Pose2d pose, double timestamp){}
 
     public enum LEDMode{
         OFF, ON, BLINK;
@@ -143,7 +142,6 @@ public class Vision{
 
         double poseDifference = poseEstimator.getEstimatedPosition().getTranslation()
             .getDistance(estimate.pose.getTranslation());
-        //LimelightHelpers.SetRobotOrientation(limelight.name, poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
 
         if (estimate.tagCount != 0) {
             double xyStds;
@@ -198,9 +196,7 @@ public class Vision{
         setPipeline(Limelight.TRAP, pipeline.index);
     }
 
-    public static void periodic() {
-        // System.out.println(Units.metersToInches(getDistanceToTargetMeters(FieldConstants.SPEAKER_TAG_HEIGHT, Limelight.SHOOTER)));
-    }
+    public static void periodic() {}
 
     public Command intakePipelineCommand(IntakePipeline pipeline){
         return Commands.runOnce(() -> setPipeline(pipeline));

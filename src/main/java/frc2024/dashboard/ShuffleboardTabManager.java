@@ -49,7 +49,7 @@ public class ShuffleboardTabManager extends SubsystemBase {
             if(swerve != null){
                 m_tabs.add(new SwerveTab(swerve));
             }
-                m_tabs.add(new SubsystemTestTab(stabilizers, conveyor, elevator, intake, pivot, shooter));
+                m_tabs.add(new SubsystemTestTab(conveyor, elevator, intake, pivot, shooter));
         }
 
         for (ShuffleboardTabBase tab : m_tabs) {

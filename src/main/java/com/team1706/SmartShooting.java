@@ -69,7 +69,7 @@ public class SmartShooting {
     return movingGoalLocation;
   }
 
-  /* Calculates the time of flight based on a distance */ //TODO don't believe it includes elevator height
+  /* Calculates the time of flight based on a distance */
   public static double calculateShotTimeToGoal(Pivot pivot, Shooter shooter, double distanceToTarget){
     Rotation2d pivotAngle = pivot.getPivotAngle();
     double shooterRPMs = shooter.getRPM();
@@ -101,7 +101,6 @@ public class SmartShooting {
     /* Calculate time of flight using the total vertical height */
     double timeToGoal = Math.sqrt(2 * totalVerticalHeight / GRAVITY) + timeToHorizontalDistance;
 
-    //TODO jank fix to unknown error with null times
     if(!(timeToGoal > 0)){
       return 1.0;
     }

@@ -179,10 +179,6 @@ public class Controlboard{
         return () -> buttonBoard.getRawSwitch(2);
     }
 
-    /* public static final Trigger rehome(){
-        return new Trigger(() -> buttonBoard.getRawButton(3));
-    } */
-
     public static final Trigger snapToSpeaker(){
         return driverController_Command.a();
     }

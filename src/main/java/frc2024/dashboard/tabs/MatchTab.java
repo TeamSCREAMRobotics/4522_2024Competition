@@ -5,7 +5,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team4522.lib.util.RunOnce;
 
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -29,14 +28,11 @@ public class MatchTab extends ShuffleboardTabBase {
         this.swerve = swerve;
         this.elevator = elevator;
         this.pivot = pivot;
-
-        checkNulls(this.swerve, this.elevator, this.pivot);
     }
 
     private ComplexWidget m_autoChooserEntry;
     private ComplexWidget m_field;
     private Field2d m_field2d = new Field2d();
-    private GenericEntry m_matchTimeEntry;
     
     private static GenericEntry m_coast;
     private static boolean m_lastNeutralMode;
@@ -47,7 +43,6 @@ public class MatchTab extends ShuffleboardTabBase {
         m_tab = Shuffleboard.getTab("Match");
 
         m_autoChooserEntry = createSendableEntry("Auto Chooser", m_autoChooser, new EntryProperties(0, 0, 4, 2));
-        //m_matchTimeEntry = createNumberEntry("Match Time", 0.0, new EntryProperties(4, 0, 19, 8), new Widget(BuiltInWidgets.kTextView));
         
         m_coast = createBooleanEntry("Coast Stuff", false, new EntryProperties(0, 2, 4, 4), new Widget(BuiltInWidgets.kToggleSwitch));
 
@@ -71,26 +66,9 @@ public class MatchTab extends ShuffleboardTabBase {
         m_field2d.setRobotPose(RobotContainer.getSwerve().getEstimatedPose());
         
         m_lastNeutralMode = m_coast.getBoolean(false);
-
-        //m_matchTimeEntry.setDouble(DriverStation.getMatchTime());
     }
 
     public static SendableChooser<Command> getAutoChooser(){
         return m_autoChooser;
-    }
-
-    public void checkNulls(Swerve swerve, Elevator elevator, Pivot pivot){
-        if(swerve == null){
-            swerve = new Swerve();
-            DriverStation.reportError("[Dashboard] Swerve not present, instantiating new", true);
-        }
-        if(elevator == null){
-            swerve = new Swerve();
-            DriverStation.reportError("[Dashboard] Elevator not present, instantiating new", true);
-        }
-        if(pivot == null){
-            swerve = new Swerve();
-            DriverStation.reportError("[Dashboard] Pivot not present, instantiating new", true);
-        }
     }
 }

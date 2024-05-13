@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.RobotContainer;
 import frc2024.Constants.Ports;
-import frc2024.Constants.RobotMode;
 import frc2024.Constants.ShooterConstants;
 
 public class Shooter extends SubsystemBase{
@@ -131,13 +130,7 @@ public class Shooter extends SubsystemBase{
     }
 
     @Override
-    public void periodic() {
-        if(Constants.MODE == RobotMode.COMP){
-            logOutputs();
-        }
-        //System.out.println("Bottom: " + getTargetVelocity());
-        // System.out.println(getShooterError());
-    }
+    public void periodic() {}
 
     public void logOutputs(){
         Logger.recordOutput("Shooter/Measured/AverageVelocity", getRPM());
@@ -146,7 +139,6 @@ public class Shooter extends SubsystemBase{
         Logger.recordOutput("Shooter/Setpoint/AtTarget", getShooterAtTarget().getAsBoolean());
         ScreamUtil.logBasicMotorOutputs("Shooter/Bottom", m_bottomShooterMotor);
         ScreamUtil.logBasicMotorOutputs("Shooter/Top", m_topShooterMotor);
-        //Logger.recordOutput("Shooter/CurrentCommand", getCurrentCommand().getName());
     }
 
     public Command dutyCycleCommand(double dutyCycle){

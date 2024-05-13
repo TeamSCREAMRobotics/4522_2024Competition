@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.Constants.Ports;
-import frc2024.Constants.RobotMode;
 
 public class Intake extends SubsystemBase{
     private TalonFX m_intakeMotor;
@@ -54,11 +53,7 @@ public class Intake extends SubsystemBase{
     }
 
     @Override
-    public void periodic() {
-        if(Constants.MODE == RobotMode.COMP){
-            logOutputs();
-        }
-    }
+    public void periodic() {}
 
     public void logOutputs(){
         ScreamUtil.logBasicMotorOutputs("Intake", m_intakeMotor);

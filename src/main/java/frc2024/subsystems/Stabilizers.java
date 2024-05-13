@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
 import frc2024.Constants.Ports;
-import frc2024.Constants.RobotMode;
 
 public class Stabilizers extends SubsystemBase{
 
@@ -78,11 +77,7 @@ public class Stabilizers extends SubsystemBase{
     }
 
     @Override
-    public void periodic() {
-        if(Constants.MODE == RobotMode.COMP){
-            logOutputs();
-        }
-    }
+    public void periodic() {}
 
     public void logOutputs(){
         ScreamUtil.logBasicMotorOutputs("Stabilizers", m_stabilizerMotor);

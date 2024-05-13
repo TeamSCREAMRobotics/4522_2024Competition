@@ -27,7 +27,6 @@ import frc2024.Constants;
 import frc2024.RobotContainer;
 import frc2024.Constants.PivotConstants;
 import frc2024.Constants.Ports;
-import frc2024.Constants.RobotMode;
 import frc2024.controlboard.Controlboard;
 
 public class Pivot extends SubsystemBase{
@@ -129,9 +128,6 @@ public class Pivot extends SubsystemBase{
             m_tweakAngle = m_tweakAngle.minus(Rotation2d.fromDegrees(0.5));
         } else if(Controlboard.operatorController_Command.getHID().getLeftStickButtonPressed()){
             m_tweakAngle = m_tweakAngle.plus(Rotation2d.fromDegrees(0.5));
-        }
-        if(Constants.MODE == RobotMode.COMP){
-            logOutputs();
         }
     }
 

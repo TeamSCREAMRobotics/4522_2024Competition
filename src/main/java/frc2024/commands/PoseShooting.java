@@ -110,9 +110,6 @@ public class PoseShooting extends Command {
     } else {
       led.scaledTarget(Color.kOrange, shooter.getRPM(), shooter.getTargetVelocity());
     }
-
-    //System.out.println("Horizontal Distance: " + horizontalDistance);
-    //Logger.recordOutput("Commands/PoseShooting/Distance", horizontalDistance);
   }
 
   @Override

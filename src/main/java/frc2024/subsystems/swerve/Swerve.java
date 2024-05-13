@@ -13,11 +13,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.team4522.lib.config.DeviceConfig;
 import com.team4522.lib.pid.ScreamPIDConstants;
-import com.team4522.lib.util.AllianceFlipUtil;
-import com.team4522.lib.util.ScreamUtil;
-
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -29,19 +25,13 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc2024.Constants;
-import frc2024.Constants.FieldConstants;
 import frc2024.Constants.Ports;
-import frc2024.Constants.RobotMode;
 import frc2024.Constants.SwerveConstants;
 import frc2024.Constants.VisionConstants;
 import frc2024.Constants.SwerveConstants.ModuleConstants;
@@ -156,12 +146,12 @@ public class Swerve extends SubsystemBase {
         m_poseEstimator.resetPosition(getYaw(), getModulePositions(), new Pose2d(getOdometryPose().getTranslation(), rotation));
     }
 
-    public void resetOdometryPose(){
-        m_odometry.resetPosition(getYaw(), getModulePositions(), m_poseEstimator.getEstimatedPosition());
+    public void resetOdometryPose(Pose2d pose){
+        m_odometry.resetPosition(getYaw(), getModulePositions(), pose);
     }
 
-    public Command resetOdometryPoseCommand(){
-        return Commands.runOnce(() -> resetOdometryPoseCommand());
+    public Command resetOdometryToEstimated(){
+        return Commands.runOnce(() -> resetOdometryPose(m_poseEstimator.getEstimatedPosition()));
     }
 
     /**
@@ -276,7 +266,6 @@ public class Swerve extends SubsystemBase {
      * @param pose The new pose to set.
      */
     public void resetPose(Pose2d pose) {
-        //resetYaw(Rotation2d.fromDegrees(0.0)); //TODO needs testing
         resetModulePositions();
         m_poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
         m_odometry.resetPosition(getYaw(), getModulePositions(), pose);
@@ -397,7 +386,6 @@ public class Swerve extends SubsystemBase {
         DeviceConfig.configurePigeon2("Swerve Pigeon", m_pigeon2, DeviceConfig.swervePigeonConfig(), Constants.LOOP_TIME_HZ);
         m_pigeon2.getAngularVelocityZWorld().setUpdateFrequency(100.0);
         m_pigeon2.optimizeBusUtilization();
-        //resetYaw(AllianceFlippable.getForwardRotation());
     }
 
    /**
@@ -426,12 +414,6 @@ public class Swerve extends SubsystemBase {
             m_poseEstimator.updateWithTime(Timer.getFPGATimestamp(), getYaw(), getModulePositions());
         }
         Vision.updateEstimateWithValidMeasurements(Limelight.SHOOT_SIDE, m_poseEstimator);
-        //Vision.updateEstimateWithValidMeasurements(Limelight.INTAKE_SIDE, m_poseEstimator);
-        // System.out.println(Units.metersToInches(ScreamUtil.calculateDistanceToTranslation(getEstimatedPose().getTranslation(), AllianceFlipUtil.getTargetSpeaker().getTranslation())));
-        // System.out.println(getPose().getTranslation().getDistance(AllianceFlipUtil.getTargetSpeaker().getTranslation()));
-        /* if(Constants.MODE == RobotMode.COMP){
-            logOutputs();
-        } */
     }
 
     public void logOutputs(){

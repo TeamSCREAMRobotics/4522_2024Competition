@@ -58,39 +58,36 @@ public final class Constants{
          *   • CANivore name or serial number 
          *   • "*" for any CANivore seen by the program
          */
-        public static final String CANIVORE_NAME = "canivore"; // TODO ROBOT SPECIFIC
+        public static final String CANIVORE_NAME = "canivore";
         public static final String RIO_CANBUS_NAME = "rio";
 
         public static final int LED_ID = 9;
 
         /* Misc */
-        public static final int PIGEON_ID = 0; // TODO ROBOT SPECIFIC
+        public static final int PIGEON_ID = 0;
         public static final int CANDLE_ID = 0;
         
         /* Stabilizers */
-        // public static final int LEFT_CLIMBER_MOTOR_ID = 13; //TODO
         public static final int BAR_MOTOR_ID = 13;
-        //public static final int RIGHT_CLIMBER_MOTOR_ID = 14; //TODO
 
         /* Shooter */
-        public static final int BOTTOM_SHOOTER_MOTOR_ID = 12; //TODO
-        public static final int TOP_SHOOTER_MOTOR_ID = 11; //TODO
+        public static final int BOTTOM_SHOOTER_MOTOR_ID = 12; 
+        public static final int TOP_SHOOTER_MOTOR_ID = 11;
 
         /* Pivot */
-        public static final int PIVOT_MOTOR_ID = 17; //TODO
-        public static final int PIVOT_ENCODER_ID = 4; //TODO
+        public static final int PIVOT_MOTOR_ID = 17;
+        public static final int PIVOT_ENCODER_ID = 4;
 
         /* Elevator */
-        public static final int LEFT_ELEVATOR_MOTOR_ID = 16; //TODO
-        public static final int RIGHT_ELEVATOR_MOTOR_ID = 15; //TODO
+        public static final int LEFT_ELEVATOR_MOTOR_ID = 16;
+        public static final int RIGHT_ELEVATOR_MOTOR_ID = 15;
         public static final int ELEVATOR_ENCODER_ID = 5;
 
         /* Conveyor */
-        public static final int CONVEYOR_MOTOR_ID = 10; //TODO
-        public static final int CONVEYOR_BEAM_ID = 2; // TODO
+        public static final int CONVEYOR_MOTOR_ID = 10;
+        public static final int CONVEYOR_BEAM_ID = 2;
 
         /* Intake */
-        //public static final int LEFT_INTAKE_MOTOR_ID = 9;
         public static final int RIGHT_INTAKE_MOTOR_ID = 9;
         public static final int INTAKE_BEAM_ID = 0;
     }
@@ -111,7 +108,6 @@ public final class Constants{
     public static final class SwerveConstants {
 
         /* Drivebase Constants */
-        // TODO ROBOT SPECIFIC
         public static final double TRACK_WIDTH = Units.inchesToMeters(22.75); // Distance from left wheels to right wheels
         public static final double WHEEL_BASE = Units.inchesToMeters(20.75); // Distance from front wheels to back wheels
 
@@ -120,9 +116,9 @@ public final class Constants{
 
         /* Swerve Kinematics */
         public static final double SHOOT_WHILE_MOVING_SCALAR = 0.75;
-        public static final double MAX_SPEED = 4.9; // m/s theoretical = 5.7
+        public static final double MAX_SPEED = 4.9; // m/s 
         public static final double MAX_ACCELERATION = 4.9; // m/s^2 theoretical
-        public static final double MAX_ANGULAR_VELOCITY = 9.0; // rad/s // 8.0
+        public static final double MAX_ANGULAR_VELOCITY = 9.0; // rad/s
         public static final double MAX_ANGULAR_ACCELERATION = 7.679;
 
         // No need to ever change this unless there are more than four modules.
@@ -145,7 +141,7 @@ public final class Constants{
         public static final ScreamPIDConstants VISION_MOVING_ROTATION_CONSTANTS = new ScreamPIDConstants(0.095, 0.0, 0.0);
         public static final ScreamPIDConstants VISION_TRANSLATION_X_CONSTANTS = new ScreamPIDConstants(1.0, 0.0, 0.0);
         public static final ScreamPIDConstants VISION_TRANSLATION_Y_CONSTANTS = new ScreamPIDConstants(4.5, 0.0, 0.0);
-        public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(0.095, 0.0, 0.001); //0.095
+        public static final ScreamPIDConstants SNAP_CONSTANTS = new ScreamPIDConstants(0.095, 0.0, 0.001);
         public static final ScreamPIDConstants DRIVE_TO_TARGET_CONSTANTS = new ScreamPIDConstants(1.5, 0.0, 0.0);
 
         /* PathPlanner Constants */
@@ -192,14 +188,14 @@ public final class Constants{
             public static final double CLOSED_LOOP_RAMP = 0.0;
 
             /* PID Constants */
-            public static final double KP = 0.12; // TODO ROBOT SPECIFIC
+            public static final double KP = 0.12;
             public static final double KI = 0.0;
             public static final double KD = 0.0;
             public static final double KF = 0.0;
             public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(KP, KI, KD, KF);
 
             /* Feedforward Constants */
-            public static final double KS = 0.32; // TODO ROBOT SPECIFIC
+            public static final double KS = 0.32;
             public static final double KV = 1.51;
             public static final double KA = 0.27;
             public static final double KG = 0.0;
@@ -261,7 +257,7 @@ public final class Constants{
                 1, 
                 0, 
                 0, 
-                Rotation2d.fromRotations(-0.326416015625) /* -0.211669921875 */
+                Rotation2d.fromRotations(-0.326416015625)
             );
 
             /* Front Right */
@@ -269,7 +265,7 @@ public final class Constants{
                 3, 
                 2, 
                 1, 
-                Rotation2d.fromRotations(-0.467529296875) /* -0.578125 */
+                Rotation2d.fromRotations(-0.467529296875)
             );
 
             /* Back Left */
@@ -277,7 +273,7 @@ public final class Constants{
                 5, 
                 4, 
                 2, 
-                Rotation2d.fromRotations(-0.076904296875) /* -0.073974609375 */
+                Rotation2d.fromRotations(-0.076904296875)
             );
 
             /* Back Right */
@@ -285,7 +281,7 @@ public final class Constants{
                 7, 
                 6, 
                 3, 
-                Rotation2d.fromRotations(-0.5048828125) /* -0.50439453125 */
+                Rotation2d.fromRotations(-0.5048828125)
             );
 
             public static final SwerveModuleConstants MODULE_4 = new SwerveModuleConstants(
@@ -304,7 +300,7 @@ public final class Constants{
         }
     }
 
-    public static final class StabilizerConstants { //TODO all values
+    public static final class StabilizerConstants {
         
         /* Gear Ratio */
         public static final double GEAR_RATIO = 16.0;
@@ -381,19 +377,11 @@ public final class Constants{
         public static final double IDLE_VELOCITY = 1000.0;
         public static final double BYPASS_START_VELOCITY = 3000.0;
 
-        public static final double TRAJECTORY_VELOCITY_EXTRA = 1550.0; //1800
+        public static final double TRAJECTORY_VELOCITY_EXTRA = 1550.0;
         public static final double ARBITRARY_VELOCITY_EXTRA = 100.0;
 
         public static final double SHOOT_OUTPUT = 0.8;
-        public static final double EJECT_OUTPUT = 0.25;//0.5;
-
-        public static final InterpolatingDoubleTreeMap shooterOffset = new InterpolatingDoubleTreeMap();
-        static{
-            //HorizontalDistance, RPM Offset
-            shooterOffset.put(0.0, 750.0);
-            shooterOffset.put(3.4, 750.0);
-            shooterOffset.put(3.5, 0.0);
-        }
+        public static final double EJECT_OUTPUT = 0.25;
     }
     
     public static final class PivotConstants {
@@ -425,16 +413,6 @@ public final class Constants{
             DEFAULT_CURRENT_CONFIG.StatorCurrentLimit = 0.0;
         }
 
-        public static final CurrentLimitsConfigs SPRINGY_CURRENT_CONFIG = DEFAULT_CURRENT_CONFIG;
-        static{
-            SPRINGY_CURRENT_CONFIG.SupplyCurrentLimitEnable = true;
-            SPRINGY_CURRENT_CONFIG.StatorCurrentLimitEnable = true;
-            SPRINGY_CURRENT_CONFIG.SupplyCurrentLimit = 4.0;
-            SPRINGY_CURRENT_CONFIG.SupplyCurrentThreshold = 0.0;
-            SPRINGY_CURRENT_CONFIG.SupplyTimeThreshold = 0.0;
-            SPRINGY_CURRENT_CONFIG.StatorCurrentLimit = 6.25;
-        }
-
         public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromDegrees(3.1);
         
         public static final boolean SOFTWARE_LIMIT_ENABLE = false;
@@ -456,7 +434,7 @@ public final class Constants{
         public static final int JERK = 0;
 
         public static final MotionMagicConstants MOTION_MAGIC_CONSTANTS = new MotionMagicConstants(CRUISE_VELOCITY, ACCELERATION, JERK);
-        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(400.0, 0.0, 0.0); //400.0
+        public static final ScreamPIDConstants PID_CONSTANTS = new ScreamPIDConstants(400.0, 0.0, 0.0);
         
         public static final double KS = 0.0;
         public static final double KV = 0.0;
@@ -467,9 +445,9 @@ public final class Constants{
         public static final Rotation2d HOME_ANGLE = Rotation2d.fromDegrees(14.0).plus(PIVOT_ANGLE_OFFSET);
         public static final Rotation2d HOME_ANGLE_ENDGAME = Rotation2d.fromDegrees(-13.623).plus(PIVOT_ANGLE_OFFSET);
         public static final Rotation2d SUBWOOFER_ANGLE = Rotation2d.fromDegrees(-5.3613-3.0-2.5).plus(PIVOT_ANGLE_OFFSET);
-        public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(16.9629).plus(PIVOT_ANGLE_OFFSET); //+4.25
+        public static final Rotation2d SUBWOOFER_ANGLE_DEFENDED = Rotation2d.fromDegrees(16.9629).plus(PIVOT_ANGLE_OFFSET);
         public static final Rotation2d AMP_ANGLE = Rotation2d.fromDegrees(29.0039 - 11.0).plus(PIVOT_ANGLE_OFFSET);
-        public static final Rotation2d CHAIN_ANGLE = Rotation2d.fromDegrees(22.93945).plus(PIVOT_ANGLE_OFFSET); //+4.25
+        public static final Rotation2d CHAIN_ANGLE = Rotation2d.fromDegrees(22.93945).plus(PIVOT_ANGLE_OFFSET);
         public static final Rotation2d PODIUM_ANGLE = Rotation2d.fromDegrees(13.7988).plus(PIVOT_ANGLE_OFFSET);
         public static final Rotation2d PODIUM_DEFENDED_ANGLE = Rotation2d.fromDegrees(24.1699).plus(PIVOT_ANGLE_OFFSET);
         public static final Rotation2d TRAP_CHAIN_ANGLE = Rotation2d.fromDegrees(48.516 /* 56.0742 */).plus(PIVOT_ANGLE_OFFSET);
@@ -478,8 +456,8 @@ public final class Constants{
 
         public static final double AUTO_ZERO_OUTPUT = 0.0;
 
-        public static final Rotation2d ABSOLUTE_ENCODER_OFFSET = Rotation2d.fromRotations(0.2470703125); // 0.245849609375
-        public static final Rotation2d RELATIVE_ENCODER_TO_HORIZONTAL = Rotation2d.fromDegrees(43.417); // TODO RE-MEASURE
+        public static final Rotation2d ABSOLUTE_ENCODER_OFFSET = Rotation2d.fromRotations(0.2470703125);
+        public static final Rotation2d RELATIVE_ENCODER_TO_HORIZONTAL = Rotation2d.fromDegrees(43.417);
 
         public static final double AXLE_HEIGHT_HOME = Units.inchesToMeters(16.640069);
         public static final double AXLE_HEIGHT_TOP = Units.inchesToMeters(38.059638);
@@ -494,8 +472,8 @@ public final class Constants{
     public static final class ElevatorConstants {
 
         /* Gear Ratio */
-        public static final double ROTOR_TO_SENSOR_RATIO = 14.0167; //6.0;
-        public static final double SENSOR_TO_MECH_RATIO = ROTOR_TO_SENSOR_RATIO/6.0;//1.0;
+        public static final double ROTOR_TO_SENSOR_RATIO = 14.0167;
+        public static final double SENSOR_TO_MECH_RATIO = ROTOR_TO_SENSOR_RATIO/6.0;
         
         /* Neutral Modes */
         public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
@@ -532,7 +510,7 @@ public final class Constants{
 
         public static final double HOME_HEIGHT = 0.0;
         public static final double HOME_HEIGHT_ENDGAME = 3.408;
-        public static final double SUBWOOFER_HEIGHT = 3.12684; //3.5;
+        public static final double SUBWOOFER_HEIGHT = 3.12684;
         public static final double AMP_HEIGHT = 19.70989;
         public static final double TRAP_CHAIN_HEIGHT = MAX_HEIGHT;
         public static final double EJECT_HEIGHT = MAX_HEIGHT/4.0;
@@ -724,7 +702,7 @@ public final class Constants{
         public static final Translation2d SPEAKER_GOAL_OFFSET_LEFT = new Translation2d(Units.inchesToMeters(5.0), Units.inchesToMeters(9.0));
         public static final Translation2d SPEAKER_GOAL_OFFSET_CENTER = new Translation2d(Units.inchesToMeters(4.0), Units.inchesToMeters(9.0));
         
-        public static final double SPEAKER_OPENING_HEIGHT = Units.inchesToMeters(80.567496 + 1.25); // 80.567496 - 3.0
+        public static final double SPEAKER_OPENING_HEIGHT = Units.inchesToMeters(80.567496 + 1.25);
 
         public static final double SPEAKER_TAG_HEIGHT = 1.468864;
         public static final double STAGE_TAG_HEIGHT = 1.320884;
